@@ -1,8 +1,7 @@
 package org.elaya.page.defaultTheme;
 
 import java.io.IOException;
-
-import javax.servlet.http.HttpServletResponse;
+import org.elaya.page.Theme;
 
 public class FormThemeItem extends org.elaya.page.FormThemeItem {
 
@@ -29,8 +28,8 @@ public class FormThemeItem extends org.elaya.page.FormThemeItem {
 	
 	 
 	
-	public FormThemeItem(HttpServletResponse p_response) throws IOException {
-		super(p_response);
+	public FormThemeItem(Theme p_theme) throws IOException {
+		super(p_theme);
 	}
 
 }

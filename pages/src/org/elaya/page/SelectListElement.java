@@ -1,8 +1,7 @@
 package org.elaya.page;
-
 import java.util.LinkedList;
 
-public class RadioElement extends BuildInFormElement {
+public class SelectListElement extends BuildInFormElement {
 	private LinkedList<OptionItem> items=new LinkedList<OptionItem>();
 	private boolean isHorizontal=false;
 	
@@ -16,13 +15,10 @@ public class RadioElement extends BuildInFormElement {
 		items.addAll(p_options);
 	}
 	
-	public boolean getIsHorizontal(){ return isHorizontal;}
-	public void setIsHorizontal(boolean p_horizontal){ isHorizontal=p_horizontal;}
-	
 	@Override
 	void display(String p_value) throws Exception {
 		
-		themeItem.radioElement(getName(), items, isHorizontal,p_value);
+		themeItem.selectElement(getName(), items,p_value);
 	}
 
 }

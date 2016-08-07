@@ -9,8 +9,8 @@ public abstract class PageThemeItem extends ThemeItemBase {
 	abstract public void pageHeader() throws IOException ;
 	abstract public void pageFooter() throws IOException ;
 	
-	public PageThemeItem(HttpServletResponse p_response) throws IOException {
-		super(p_response);
+	public PageThemeItem(Theme p_theme) throws IOException {
+		super(p_theme);
 	}
 
 }

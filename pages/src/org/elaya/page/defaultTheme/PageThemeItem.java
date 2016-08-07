@@ -4,12 +4,13 @@ package org.elaya.page.defaultTheme;
 import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
 
+import org.elaya.page.Theme;
 import org.springframework.core.io.UrlResource;
 
 public class PageThemeItem extends org.elaya.page.PageThemeItem {
 
-	public PageThemeItem(HttpServletResponse p_response) throws IOException {
-		super(p_response);
+	public PageThemeItem(Theme p_theme) throws IOException {
+		super(p_theme);
 	}
 	
 	@Override

@@ -8,6 +8,7 @@ import java.util.ListIterator;
 import javax.servlet.http.HttpServletResponse;
 
 public class Page {
+	
 	private Theme theme;
 	private PageThemeItem themeItem;
 	private LinkedList<Element> elements;;
@@ -26,21 +27,12 @@ public class Page {
 			l_iter.next().display();
 		}
 		themeItem.pageFooter();
-	}
-
-	private void init() throws ClassNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException
+	}	
+	
+	public Page(Application p_application) throws ClassNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException
 	{
+		theme=new Theme(p_application);
 		themeItem=(PageThemeItem)theme.getTheme("PageThemeItem");
 		elements=new LinkedList<Element>();
-	}
-	
-	public Page(HttpServletResponse p_response) throws ClassNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException{
-		theme=new Theme("org.elaya.page.defaultTheme",p_response);	
-		init();
-	}
-	
-	public Page(String p_themeBase,HttpServletResponse p_response) throws ClassNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException{
-		theme=new Theme(p_themeBase,p_response);		
-		init();
 	}
 }
