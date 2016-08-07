@@ -16,6 +16,11 @@ public class Application {
 		return response;
 	}
 	
+	public String getRealPath(String p_path)
+	{
+		return request.getSession().getServletContext().getRealPath(p_path);
+	}
+	
 	public String getBasePath(){
 		return request.getContextPath();
 	}

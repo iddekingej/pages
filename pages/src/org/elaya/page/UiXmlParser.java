@@ -41,7 +41,7 @@ public class UiXmlParser {
 		
 		Constructor<?> l_constructor;
 		try{
-			l_constructor=l_class.getConstructor(l_types);
+			l_constructor=l_class. getConstructor(l_types);
 		} catch(NoSuchMethodException l_e){
 			errors.add("Object doesn't have a constructor without parameters");
 			return null;

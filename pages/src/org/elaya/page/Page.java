@@ -7,11 +7,15 @@ import java.util.ListIterator;
 
 import javax.servlet.http.HttpServletResponse;
 
-public class Page {
+public class Page implements ElementSubList<Element> {
 	
 	private Theme theme;
 	private PageThemeItem themeItem;
-	private LinkedList<Element> elements;;
+	private LinkedList<Element> elements;
+	
+	public LinkedList<Element> getElements(){
+		return elements;
+	}
 	
 	public void addElement(Element p_element) throws Exception
 	{

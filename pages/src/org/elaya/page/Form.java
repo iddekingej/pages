@@ -5,10 +5,7 @@ import java.util.LinkedList;
 import java.util.ListIterator;
 import java.util.Map;
 
-public class Form extends Element<FormThemeItem>{
-	
-
-	
+public class Form extends Element<FormThemeItem> implements ElementSubList<FormElement>{
 	
 	private String title;
 	private String url;
