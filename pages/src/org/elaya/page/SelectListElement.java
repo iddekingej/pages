@@ -3,7 +3,6 @@ import java.util.LinkedList;
 
 public class SelectListElement extends BuildInFormElement {
 	private LinkedList<OptionItem> items=new LinkedList<OptionItem>();
-	private boolean isHorizontal=false;
 	
 	public LinkedList<OptionItem> getitems(){ return items;}
 	
@@ -16,7 +15,7 @@ public class SelectListElement extends BuildInFormElement {
 	}
 	
 	@Override
-	void display(String p_value) throws Exception {
+	public void display(String p_value) throws Exception {
 		
 		themeItem.selectElement(getName(), items,p_value);
 	}

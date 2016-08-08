@@ -14,6 +14,7 @@ public class ThemeItemBase {
 	public void print(String p_value) throws IOException
 	{
 		stream.print(p_value);
+		stream.flush();
 	}
 	
 	public String escape(String p_value)

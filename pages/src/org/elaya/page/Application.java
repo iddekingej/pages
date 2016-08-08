@@ -2,6 +2,7 @@ package org.elaya.page;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
 
 public class Application {
 	private HttpServletRequest request;
@@ -10,6 +11,14 @@ public class Application {
 	private String cssPath="pages/css/";
 	private String imgPath="pages/images/";
 	private String themeBase="org.elaya.page.defaultTheme";
+	Logger logger;
+	
+	public void setLogger(Logger p_logger)
+	{
+		logger=p_logger;
+	}
+	
+	public Logger getLogger(){ return logger;}
 	
 	public HttpServletResponse getResponse()
 	{

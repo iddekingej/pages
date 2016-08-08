@@ -20,7 +20,7 @@ public class RadioElement extends BuildInFormElement {
 	public void setIsHorizontal(boolean p_horizontal){ isHorizontal=p_horizontal;}
 	
 	@Override
-	void display(String p_value) throws Exception {
+	public void display(String p_value) throws Exception {
 		
 		themeItem.radioElement(getName(), items, isHorizontal,p_value);
 	}

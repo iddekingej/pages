@@ -1,7 +1,7 @@
 package org.elaya.page;
 
 public class FormExceptions {
-	static class ValueNotFoundException extends Exception{
+	static public class ValueNotFoundException extends Exception{
 		private String varName;
 		private static final long serialVersionUID = 1L;
 		String getVarName(){ return varName;}

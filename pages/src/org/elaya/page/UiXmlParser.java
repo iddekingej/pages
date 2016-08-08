@@ -3,18 +3,20 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.LinkedList;
+import java.util.Objects;
 
 import javax.xml.parsers.DocumentBuilder; 
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 
 import org.slf4j.Logger;
-import org.w3c.dom.DOMException;
+
 import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
+
 
 
 
@@ -27,6 +29,33 @@ public class UiXmlParser {
 	public LinkedList<String> getErrors()
 	{
 		return errors;
+	}
+	
+	private String getNodePath(Node p_node){
+		String l_path="";
+		Node l_node=p_node;
+		while(l_node!=null){
+			l_path=l_node.getNodeName()+"/"+l_path;
+			l_node=l_node.getParentNode();
+		}
+		return l_path;
+	}
+	
+	private void setProperty(Object p_object,String p_name,String p_value) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException
+	{
+		Method l_methods[]=p_object.getClass().getMethods();
+		Method l_method=null;
+		int l_cnt;
+		String l_name="set"+p_name;
+		for(l_cnt=0;l_cnt<l_methods.length;l_cnt++){
+			l_method=l_methods[l_cnt];
+			if(l_method.getName().toLowerCase().equals(l_name)){
+				l_method.invoke(p_object, p_value);
+				return;
+			}
+		}
+		
+		errors.add("Method "+p_name+" not find for object type "+p_object.getClass().getName());
 	}
 	
 	private Object createElementFromName(String p_name) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException{
@@ -107,27 +136,59 @@ public class UiXmlParser {
 		return null;	
 	}
 	
-	public void processElement(ElementSubList p_list,Node p_parent) throws Exception{
-		String l_type=getTypeValue(p_parent);
-		if(l_type != null){
-			Object l_object=createElementFromName(l_type);
-			if(l_object!=null){
-				p_list.addElement(l_object);
-			}
-		}
-	}
-	@SuppressWarnings("rawtypes")
-	public void ProcessElements(ElementSubList p_list,Node p_parent) throws Exception{
-		Node l_elements=findNodeByTag(p_parent,"elements");
-		if(l_elements==null) return;
-		Node l_current=l_elements.getFirstChild();
-		while(l_current != null){
-			if(l_current.getNodeName().equals("element")){
-				logger.debug("Found element");
-				processElement(p_list,l_current);
+	public void processElements(Element p_element,Node p_parent) throws Exception{
+		
+		String l_type;
+		Objects.requireNonNull(p_element,"p_element");
+		Objects.requireNonNull(p_parent,"p_parent");
+		Node l_current=p_parent.getFirstChild();
+		while(l_current!=null){
+			if(l_current.getNodeType()==Node.ELEMENT_NODE){
+				if(l_current.getNodeName().equals("element")){
+					l_type=getTypeValue(l_current);
+					if(l_type != null){
+						Object l_object=createElementFromName(l_type);
+						if(l_object!=null){
+							if(l_object instanceof Element){								
+								p_element.addElement((Element)l_object);
+								processNodeDef((Element)l_object,l_current);
+							}
+						}
+					} else {
+						errors.add("Missing type");
+					}
+				} else {
+					errors.add("Invalid node "+getNodePath(l_current)+" inside 'Elements' definition");
+				}
 			}
 			l_current=l_current.getNextSibling();
 		}
+
+	}
+	@SuppressWarnings("rawtypes")
+	public void processNodeDef(Element p_element,Node p_parent) throws Exception{		
+		Node l_currentDef=p_parent.getFirstChild();
+		NamedNodeMap l_properties=p_parent.getAttributes();
+		Node l_node;
+		
+		for(int l_cnt=0;l_cnt<l_properties.getLength();l_cnt++){
+			l_node=l_properties.item(l_cnt);
+			if(!l_node.getNodeName().equals("type") && !l_node.getNodeName().equals("file")){
+					setProperty(p_element,l_node.getNodeName(),l_node.getNodeValue());
+			}
+		}
+		
+		while(l_currentDef!=null){
+			if(l_currentDef.getNodeType()==javax.xml.soap.Node.ELEMENT_NODE){
+				if(l_currentDef.getNodeName().equals("elements")){					
+					processElements(p_element,l_currentDef);
+					
+				}
+				
+			}
+			l_currentDef=l_currentDef.getNextSibling();
+		}
+			
 	}
 	
 	public Page processRootNode(Node p_rootNode) throws Exception
@@ -139,7 +200,8 @@ public class UiXmlParser {
 			l_object=createObjectFromName(l_type);
 			if(l_object instanceof Page){
 				l_page=(Page)l_object;
-				ProcessElements(l_page,p_rootNode);
+		
+				processNodeDef(l_page,p_rootNode);
 			} else {
 				errors.add("Class '"+l_type+"' doesn't discent from Page");
 				return null;
