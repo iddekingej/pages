@@ -1,4 +1,4 @@
-package org.elaya.page;
+package org.elaya.page.form;
 
 import java.util.Objects;
 

@@ -1,9 +1,13 @@
-package org.elaya.page;
+package org.elaya.page.form;
 
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.ListIterator;
 import java.util.Map;
+
+import org.elaya.page.Element;
+import org.elaya.page.PageElement;
+import org.elaya.page.form.FormExceptions.InvalidElement;
 
 public class Form extends PageElement<FormThemeItem>{
 	
@@ -14,6 +18,11 @@ public class Form extends PageElement<FormThemeItem>{
 	public void setValue(String p_name,String p_value)
 	{
 		values.put(p_name,p_value);
+	}
+	
+	public void checkElement(Element p_element) throws InvalidElement
+	{
+		if(!(p_element instanceof FormElement)) throw new FormExceptions.InvalidElement(p_element, this, "org.elaya.form.FormElement"); 
 	}
 	
 	public void setTitle(String p_title)

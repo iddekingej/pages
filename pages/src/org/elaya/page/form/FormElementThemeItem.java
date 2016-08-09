@@ -1,8 +1,11 @@
-package org.elaya.page;
+package org.elaya.page.form;
 
 import java.io.IOException;
 import java.util.LinkedList;
 import javax.servlet.http.HttpServletResponse;
+
+import org.elaya.page.Theme;
+import org.elaya.page.ThemeItemBase;
 
 public abstract class FormElementThemeItem extends ThemeItemBase {
 

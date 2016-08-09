@@ -9,16 +9,16 @@ import java.util.Objects;
 
 import javax.xml.parsers.DocumentBuilder; 
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
+import org.elaya.page.form.OptionItem;
 import org.slf4j.Logger;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-
-
-
+import org.xml.sax.SAXException;
 
 public class UiXmlParser {
 
@@ -41,7 +41,7 @@ public class UiXmlParser {
 		return l_path;
 	}
 	
-	private void setProperty(Object p_object,String p_name,String p_value) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException
+	private <T> void setProperty(Object p_object,String p_name,T p_value) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException
 	{
 		Method l_methods[]=p_object.getClass().getMethods();
 		Method l_method=null;
@@ -50,12 +50,16 @@ public class UiXmlParser {
 		for(l_cnt=0;l_cnt<l_methods.length;l_cnt++){
 			l_method=l_methods[l_cnt];
 			if(l_method.getName().toLowerCase().equals(l_name)){
-				l_method.invoke(p_object, p_value);
-				return;
+				Class<?> l_types[]=l_method.getParameterTypes();
+				if(l_types.length != 1)continue;
+				if(l_types[0]==p_value.getClass()){
+					l_method.invoke(p_object, p_value);
+					return;
+				}				
 			}
 		}
 		
-		errors.add("Method "+p_name+" not find for object type "+p_object.getClass().getName());
+		errors.add("Method "+p_name+" not found for object type "+p_object.getClass().getName());
 	}
 	
 	private Object createElementFromName(String p_name) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException{
@@ -125,41 +129,141 @@ public class UiXmlParser {
 		return l_current;
 	}
 	
+	private String getAttributeValue(Node p_node,String p_name)
+	{
+		Node l_valueNode=p_node.getAttributes().getNamedItem(p_name);
+		if(l_valueNode !=null){
+			return l_valueNode.getNodeValue();
+		} else {
+			return null;
+		}
+	}
+	
+	private String getFileValue(Node p_node)
+	{
+		return getAttributeValue(p_node,"file");
+	}
 	private String getTypeValue(Node p_node)
 	{
-		Node l_typeNode=p_node.getAttributes().getNamedItem("type");
-		if(l_typeNode != null){
-			return l_typeNode.getNodeValue();
-		} else {
-			errors.add("Missing 'type' at '"+p_node.getNodeName()+"' tag ");
+		return getAttributeValue(p_node,"type");
+	}
+	
+	private LinkedList<OptionItem> processOptions(Node p_parent){
+			LinkedList<OptionItem> l_list=new LinkedList<OptionItem>();
+			Node l_child=p_parent.getFirstChild();
+			Node l_valueNode;
+			Node l_textNode;
+			while(l_child!=null){
+				if(l_child.getNodeType()==Node.ELEMENT_NODE){
+					if(l_child.getNodeName()=="option"){
+						l_valueNode=l_child.getAttributes().getNamedItem("value");
+						l_textNode=l_child.getAttributes().getNamedItem("text");
+						if(l_valueNode ==null){
+							errors.add("Missing 'value' attribute in tag "+getNodePath(l_child));				
+						}
+						if(l_textNode == null){
+							errors.add("Missing 'text' attribute in tag "+getNodePath(l_child));						
+						}
+						if(l_valueNode != null && l_textNode != null){
+							l_list.add(new OptionItem(l_valueNode.getNodeValue(),l_textNode.getNodeValue()));
+						}
+					} else {
+						errors.add("Options list contain invalid tag "+getNodePath(l_child));
+					}
+				}
+				l_child=l_child.getNextSibling();
+			}
+			return l_list;
+	}
+	
+	public void processSubStructure(Element p_element,String p_name,Node p_parent) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
+		Node l_child=p_parent.getFirstChild();
+		while(l_child != null){
+			if(l_child.getNodeType()==Node.ELEMENT_NODE){
+				if(l_child.getNodeName().equals("options")){
+					setProperty(p_element,p_name,processOptions(l_child));
+				} else {
+					errors.add("Invalid tag in options property definition "+getNodePath(l_child));
+				}
+			}
+			l_child=l_child.getNextSibling();
 		}
-		return null;	
+	}
+	public void processSubValue(Element p_element,Node p_parent) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
+		Node l_nameNode=p_parent.getAttributes().getNamedItem("name");
+		String l_name;
+		if(l_nameNode != null){
+			l_name=l_nameNode.getNodeValue();
+			if(p_parent.getChildNodes().getLength() ==0){
+				setProperty(p_element,l_name,"");
+			} else if(p_parent.getChildNodes().getLength()==1 &&  p_parent.getFirstChild().getNodeType()!=Node.ELEMENT_NODE){
+				setProperty(p_element,l_name,p_parent.getFirstChild().getTextContent());
+			} else {
+				processSubStructure(p_element,l_name,p_parent);
+			}
+		} else {
+			errors.add("Name attribute missing in property tag "+getNodePath(p_parent));
+		}
+	}
+	
+	
+	public void processProperties(Element p_element,Node p_parent) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
+		Objects.requireNonNull(p_element);
+		Objects.requireNonNull(p_parent);
+		Node l_current=p_parent.getFirstChild();
+		
+		while(l_current != null){
+			if(l_current.getNodeType()==Node.ELEMENT_NODE){
+				if(l_current.getNodeName().equals("property")){
+					processSubValue(p_element,l_current);
+				}  else {
+					errors.add("Invalid properties definition "+getNodePath(l_current));
+				}
+			}
+			l_current=l_current.getNextSibling();
+		}
+	}
+	
+	public Element processElement(Element p_element,Node p_node) throws Exception
+	{
+		String l_type;
+		String l_file;
+		Element l_element=null;
+		if(p_node.getNodeName().equals("element")){
+			l_type=getTypeValue(p_node);
+			if(l_type != null){
+				Object l_object=createElementFromName(l_type);
+				if(l_object!=null){
+					if(l_object instanceof Element){								
+						p_element.addElement((Element)l_object);
+						processNodeDef((Element)l_object,p_node);
+						l_element=(Element)l_object;
+					}
+				}
+			} else {
+				l_file=getFileValue(p_node);
+				if(l_file != null){					
+					UiXmlParser l_parser=new UiXmlParser(application);
+					l_element=l_parser.parseElementXml(p_element, l_file, logger);
+					if(l_element !=null)processNodeDef(l_element,p_node);					
+				}else {
+					errors.add("Missing 'type' or 'file' property :"+getNodePath(p_node));
+				}
+			}
+		} else {
+			errors.add("Invalid node "+getNodePath(p_node)+" inside 'Elements' definition");
+		}		
+		return l_element;
 	}
 	
 	public void processElements(Element p_element,Node p_parent) throws Exception{
 		
-		String l_type;
 		Objects.requireNonNull(p_element,"p_element");
 		Objects.requireNonNull(p_parent,"p_parent");
 		Node l_current=p_parent.getFirstChild();
 		while(l_current!=null){
 			if(l_current.getNodeType()==Node.ELEMENT_NODE){
-				if(l_current.getNodeName().equals("element")){
-					l_type=getTypeValue(l_current);
-					if(l_type != null){
-						Object l_object=createElementFromName(l_type);
-						if(l_object!=null){
-							if(l_object instanceof Element){								
-								p_element.addElement((Element)l_object);
-								processNodeDef((Element)l_object,l_current);
-							}
-						}
-					} else {
-						errors.add("Missing type");
-					}
-				} else {
-					errors.add("Invalid node "+getNodePath(l_current)+" inside 'Elements' definition");
-				}
+				processElement(p_element,l_current);
 			}
 			l_current=l_current.getNextSibling();
 		}
@@ -179,10 +283,11 @@ public class UiXmlParser {
 		}
 		
 		while(l_currentDef!=null){
-			if(l_currentDef.getNodeType()==javax.xml.soap.Node.ELEMENT_NODE){
+			if(l_currentDef.getNodeType()==Node.ELEMENT_NODE){
 				if(l_currentDef.getNodeName().equals("elements")){					
-					processElements(p_element,l_currentDef);
-					
+					processElements(p_element,l_currentDef);					
+				} else if (l_currentDef.getNodeName().equals("properties")){
+					processProperties(p_element,l_currentDef);
 				}
 				
 			}
@@ -201,14 +306,42 @@ public class UiXmlParser {
 			if(l_object instanceof Page){
 				l_page=(Page)l_object;
 		
-				processNodeDef(l_page,p_rootNode);
 			} else {
 				errors.add("Class '"+l_type+"' doesn't discent from Page");
 				return null;
 			}
-		} 
+		} else {
+			String l_file=getFileValue(p_rootNode);
+			if(l_file != null){
+				UiXmlParser  l_parser=new UiXmlParser(application);
+				l_page=l_parser.parseUiXml(l_file,logger);
+				errors.addAll(l_parser.getErrors());
+				if(l_page==null){
+					return null;
+				}
+			}
+		}
+		processNodeDef(l_page,p_rootNode);
 		return l_page;
 	}
+	
+	public Element parseElementXml(Element p_element,String p_fileName,Logger p_logger) throws Exception
+	{
+		logger=p_logger;
+		DocumentBuilderFactory l_factory=DocumentBuilderFactory.newInstance();
+		DocumentBuilder l_builder=l_factory.newDocumentBuilder();
+		Document l_doc=l_builder.parse(new File(application.getRealPath(p_fileName)));
+		NodeList l_nl=l_doc.getChildNodes();
+		Node l_rootNode=l_nl.item(0);
+		l_rootNode.normalize();
+		if(l_rootNode.getNodeName().equals("element")){
+			return processElement(p_element,l_rootNode);
+		} else {
+			errors.add("'element' tag expected");
+			return null;
+		}
+	}
+	
 	public Page parseUiXml(String p_fileName,Logger p_logger) throws Exception{
 		logger=p_logger;
 		DocumentBuilderFactory l_factory=DocumentBuilderFactory.newInstance();
@@ -216,6 +349,7 @@ public class UiXmlParser {
 		Document l_doc=l_builder.parse(new File(application.getRealPath(p_fileName)));
 		NodeList l_nl=l_doc.getChildNodes();
 		Node l_rootNode=l_nl.item(0);
+		l_rootNode.normalize();
 		if(l_rootNode.getNodeName().equals("page")){
 			return processRootNode(l_rootNode);
 		} else {

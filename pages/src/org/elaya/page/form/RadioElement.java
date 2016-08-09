@@ -1,6 +1,8 @@
-package org.elaya.page;
+package org.elaya.page.form;
 
 import java.util.LinkedList;
+
+import org.elaya.page.form.FormExceptions.InvalidPropertyValue;
 
 public class RadioElement extends BuildInFormElement {
 	private LinkedList<OptionItem> items=new LinkedList<OptionItem>();
@@ -12,13 +14,22 @@ public class RadioElement extends BuildInFormElement {
 		items.add(new OptionItem(p_value,p_text));
 	}
 
-	public void addOptions(LinkedList<OptionItem> p_options){
+	public void setOptions(LinkedList<OptionItem> p_options){
+		items.clear();
 		items.addAll(p_options);
 	}
 	
 	public boolean getIsHorizontal(){ return isHorizontal;}
 	public void setIsHorizontal(boolean p_horizontal){ isHorizontal=p_horizontal;}
-	
+	public void setIsHorizontal(String p_horizontal) throws InvalidPropertyValue{
+		if(p_horizontal.equals("true")){
+			setIsHorizontal(true);
+		} else if(p_horizontal.equals("false")){
+			setIsHorizontal(false);
+		} else {
+			throw new FormExceptions.InvalidPropertyValue("Invalid property values: RadioElement.SetIsHorizontal('"+p_horizontal+"')");
+		}
+	}
 	@Override
 	public void display(String p_value) throws Exception {
 		

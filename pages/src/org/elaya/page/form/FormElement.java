@@ -1,6 +1,8 @@
-package org.elaya.page;
+package org.elaya.page.form;
 
-public abstract class FormElement<themeType> extends ValueElement<themeType> {
+import org.elaya.page.*;
+
+public abstract class FormElement<themeType> extends Element<themeType> {
 		
 	private String label;
 	private String name;
@@ -9,6 +11,9 @@ public abstract class FormElement<themeType> extends ValueElement<themeType> {
 	public String getName(){ return name;}
 	public void setName(String p_name){ name=p_name;}
 	public boolean hasValue(){ return true;}
-
+	public  void display() throws Exception
+	{
+		
+	}
 	
 }

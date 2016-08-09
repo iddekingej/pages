@@ -1,4 +1,4 @@
-package org.elaya.page;
+package org.elaya.page.form;
 import java.util.LinkedList;
 
 public class SelectListElement extends BuildInFormElement {
@@ -10,7 +10,8 @@ public class SelectListElement extends BuildInFormElement {
 		items.add(new OptionItem(p_value,p_text));
 	}
 
-	public void addOptions(LinkedList<OptionItem> p_options){
+	public void setOptions(LinkedList<OptionItem> p_options){
+		items.clear();
 		items.addAll(p_options);
 	}
 	

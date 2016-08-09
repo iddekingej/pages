@@ -3,7 +3,7 @@ package org.elaya.page.defaultTheme;
 import java.io.IOException;
 import org.elaya.page.Theme;
 
-public class FormThemeItem extends org.elaya.page.FormThemeItem {
+public class FormThemeItem extends org.elaya.page.form.FormThemeItem {
 
 	public void formHeader(String p_title,String p_url) throws IOException
 	{

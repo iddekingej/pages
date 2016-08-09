@@ -23,6 +23,10 @@ public abstract class Element<themeType> {
 		}
 	}
 	
+	protected void checkSubElement(Element p_element)
+	{
+	}
+	
 	final public void addElement(Element p_element) throws Exception
 	{
 		Objects.requireNonNull(p_element,"addElement(p_element)");
