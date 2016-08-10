@@ -3,7 +3,12 @@ package org.elaya.page.form;
 import org.elaya.page.*;
 
 public abstract class FormElement<themeType> extends Element<themeType> {
-		
+	
+	public FormElement()	
+	{
+		super();
+	}
+	
 	private String label;
 	private String name;
 	public String getLabel(){ return label;}
@@ -15,5 +20,6 @@ public abstract class FormElement<themeType> extends Element<themeType> {
 	{
 		
 	}
+	abstract public String getJsType();
 	
 }

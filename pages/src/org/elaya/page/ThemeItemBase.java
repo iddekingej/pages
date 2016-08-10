@@ -27,6 +27,21 @@ public class ThemeItemBase {
 		return p_name+"=\""+escape(p_value)+"\" ";
 	}
 	
+	public String js_toString(String p_value){
+		return "\""+p_value.replace("\"","\\\"")+"\"";
+	}
+	
+	public void jsBegin() throws IOException
+	{
+		print("<script type='text/javascript'>");
+	}	
+	
+	public void jsEnd() throws IOException
+	{
+		print("</script>");
+	}
+	
+	
 	public ThemeItemBase(Theme p_theme) throws IOException{
 		theme=p_theme;
 		response=p_theme.getResponse();

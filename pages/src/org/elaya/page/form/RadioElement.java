@@ -8,6 +8,11 @@ public class RadioElement extends BuildInFormElement {
 	private LinkedList<OptionItem> items=new LinkedList<OptionItem>();
 	private boolean isHorizontal=false;
 	
+	public RadioElement()
+	{
+		super();
+	}
+	
 	public LinkedList<OptionItem> getitems(){ return items;}
 	
 	public void addOption(String p_value,String p_text){
@@ -36,4 +41,10 @@ public class RadioElement extends BuildInFormElement {
 		themeItem.radioElement(getName(), items, isHorizontal,p_value);
 	}
 
+	@Override
+	public String getJsType() {
+		return "radio";
+	}
+
+	
 }

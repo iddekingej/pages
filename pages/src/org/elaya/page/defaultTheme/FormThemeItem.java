@@ -13,6 +13,8 @@ public class FormThemeItem extends org.elaya.page.form.FormThemeItem {
 	
 	public void formFooter() throws IOException
 	{
+		print("<tr><td colspan='2'><input type='button' name='submit' value='save'></td></tr>");
+
 		print("</table></form>");
 	}
 	

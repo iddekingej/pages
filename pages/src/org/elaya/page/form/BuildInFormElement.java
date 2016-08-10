@@ -6,6 +6,11 @@ import org.elaya.page.form.FormExceptions.InvalidElement;
 
 public abstract class BuildInFormElement extends FormElement<FormElementThemeItem> {
 
+	public BuildInFormElement()
+	{
+		super();
+	}
+	
 	@Override
 	final public String getThemeName() {
 		return "FormElementThemeItem";

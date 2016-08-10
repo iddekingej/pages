@@ -3,8 +3,12 @@ import java.util.LinkedList;
 
 public class SelectListElement extends BuildInFormElement {
 	private LinkedList<OptionItem> items=new LinkedList<OptionItem>();
-	
 	public LinkedList<OptionItem> getitems(){ return items;}
+
+	public SelectListElement()
+	{
+		super();
+	}
 	
 	public void addOption(String p_value,String p_text){
 		items.add(new OptionItem(p_value,p_text));
@@ -19,6 +23,11 @@ public class SelectListElement extends BuildInFormElement {
 	public void display(String p_value) throws Exception {
 		
 		themeItem.selectElement(getName(), items,p_value);
+	}
+
+	@Override
+	public String getJsType() {
+		return "select";
 	}
 
 }

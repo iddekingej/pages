@@ -11,6 +11,10 @@ import org.elaya.page.form.FormExceptions.InvalidElement;
 
 public class Form extends PageElement<FormThemeItem>{
 	
+	public Form() {
+		super();
+	}
+
 	private String title;
 	private String url;
 	private HashMap<String,String> values=new HashMap<String,String>();
@@ -18,6 +22,21 @@ public class Form extends PageElement<FormThemeItem>{
 	public void setValue(String p_name,String p_value)
 	{
 		values.put(p_name,p_value);
+	}
+	
+	public void setValues(HashMap<String,String> p_data)
+	{
+		values.putAll(p_data);
+	}
+	
+	
+	public boolean hasValue(String p_name)
+	{
+		return values.containsKey(p_name);
+	}
+	public String getValue(String p_name)
+	{
+		return values.get(p_name);
 	}
 	
 	public void checkElement(Element p_element) throws InvalidElement
@@ -45,8 +64,8 @@ public class Form extends PageElement<FormThemeItem>{
 			l_item=(FormElement)l_iter.next();
 			themeItem.formElementBegin(l_item.getLabel());
 			if(l_item.hasValue()){
-				if(values.containsKey(l_item.getName())){
-					l_value=values.get(l_item.getName());
+				if(hasValue(l_item.getName())){
+					l_value=getValue(l_item.getName());
 				} else {
 					l_value="";
 				}
@@ -58,6 +77,16 @@ public class Form extends PageElement<FormThemeItem>{
 		}
 
 		themeItem.formFooter();
+		themeItem.jsBegin();
+		themeItem.print("{\n l_temp=[];");
+		for(Element l_element:elements){
+			if(l_element instanceof FormElement){
+				FormElement l_fe=(FormElement)l_element;
+				themeItem.print("   l_temp["+themeItem.js_toString(l_fe.getName())+"]="+themeItem.js_toString(l_fe.getJsType())+";\n");
+			}
+		}
+		themeItem.print("}\n");
+		themeItem.jsEnd();
 	}
 	
  
