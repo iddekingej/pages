@@ -1,12 +1,10 @@
 package org.elaya.page.form;
 
-import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.ListIterator;
-import java.util.Map;
-
+import java.util.Set;
 import org.elaya.page.Element;
 import org.elaya.page.PageElement;
+import org.elaya.page.ThemeItemBase;
 import org.elaya.page.form.FormExceptions.InvalidElement;
 
 public class Form extends PageElement<FormThemeItem>{
@@ -17,29 +15,19 @@ public class Form extends PageElement<FormThemeItem>{
 
 	private String title;
 	private String url;
-	private HashMap<String,String> values=new HashMap<String,String>();
 	
-	public void setValue(String p_name,String p_value)
+	public void addJsFile(Set<String> p_set)
 	{
-		values.put(p_name,p_value);
+		p_set.add("form.js");
+		ListIterator<Element<ThemeItemBase>> l_iter=elements.listIterator();
+		while(l_iter.hasNext()){
+			l_iter.next().addJsFile(p_set);
+		}
+		
 	}
 	
-	public void setValues(HashMap<String,String> p_data)
-	{
-		values.putAll(p_data);
-	}
-	
-	
-	public boolean hasValue(String p_name)
-	{
-		return values.containsKey(p_name);
-	}
-	public String getValue(String p_name)
-	{
-		return values.get(p_name);
-	}
-	
-	public void checkElement(Element p_element) throws InvalidElement
+		
+	public void checkElement(Element<ThemeItemBase> p_element) throws InvalidElement
 	{
 		if(!(p_element instanceof FormElement)) throw new FormExceptions.InvalidElement(p_element, this, "org.elaya.form.FormElement"); 
 	}
@@ -57,11 +45,11 @@ public class Form extends PageElement<FormThemeItem>{
 	public void display() throws Exception
 	{
 		themeItem.formHeader(title,url);
-		ListIterator<Element> l_iter=elements.listIterator();
-		FormElement l_item;
-		String l_value;
+		ListIterator<Element<ThemeItemBase>> l_iter=elements.listIterator();
+		FormElement<ThemeItemBase> l_item;
+		Object l_value;
 		while(l_iter.hasNext()){
-			l_item=(FormElement)l_iter.next();
+			l_item=(FormElement<ThemeItemBase>)l_iter.next();
 			themeItem.formElementBegin(l_item.getLabel());
 			if(l_item.hasValue()){
 				if(hasValue(l_item.getName())){

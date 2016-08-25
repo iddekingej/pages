@@ -2,12 +2,13 @@ package org.elaya.page;
 
 import java.util.LinkedList;
 import java.util.Objects;
+import java.util.Set;
 
 public abstract class Element<themeType> {
 	protected themeType themeItem;
 	protected Theme theme;
-	protected LinkedList<Element> elements=new LinkedList<Element>();
-	private   Element parent=null;
+	protected LinkedList<Element<ThemeItemBase>> elements=new LinkedList<Element<ThemeItemBase>>();
+	private   Element<ThemeItemBase> parent=null;
 	private static int idCnt=0;
 	private int id;
 	
@@ -17,11 +18,16 @@ public abstract class Element<themeType> {
 		idCnt++;
 	}
 	
-	public String getObject()
+	public void addJsFile(Set<String> p_set)
+	{
+		
+	}
+	
+	public String getObjectName()
 	{
 		return "object_"+Integer.toString(id);
 	}
-	public String getVar()
+	public String getVarname()
 	{
 		return "var_"+Integer.toString(id);
 	}
@@ -42,7 +48,7 @@ public abstract class Element<themeType> {
 	}
 	
 	public abstract void display() throws Exception;
-	public abstract void display(String p_string) throws Exception;
+	public abstract void display(Object p_string) throws Exception;
 	public abstract String getThemeName();
 	
 	@SuppressWarnings("unchecked")
@@ -55,11 +61,11 @@ public abstract class Element<themeType> {
 		}
 	}
 	
-	protected void checkSubElement(Element p_element)
+	protected void checkSubElement(Element<ThemeItemBase> p_element)
 	{
 	}
 	
-	final public void addElement(Element p_element) throws Exception
+	final public void addElement(Element<ThemeItemBase> p_element) throws Exception
 	{
 		Objects.requireNonNull(p_element,"addElement(p_element)");
 		p_element.setTheme(theme);
@@ -67,7 +73,7 @@ public abstract class Element<themeType> {
 		elements.add(p_element);
 	}
 	
-	final public LinkedList<Element> getElements()
+	final public LinkedList<Element<ThemeItemBase>> getElements()
 	{
 		return elements;
 	}

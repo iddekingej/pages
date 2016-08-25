@@ -10,6 +10,11 @@ public class Theme {
 	private HttpServletResponse response;
 	private Application application;
 	
+	public Application getApplication()
+	{
+		return application;
+	}
+	
 	public HttpServletResponse getResponse()
 	{
 		return response;

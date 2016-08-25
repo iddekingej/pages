@@ -16,7 +16,7 @@ public class StaticElement extends BuildInFormElement {
 	}
 	
 	@Override
-	public void display(String p_value) throws Exception {
+	public void display(Object p_value) throws Exception {
 		themeItem.StaticElement(getName(),getIsHtml(),p_value);
 	}
 	@Override

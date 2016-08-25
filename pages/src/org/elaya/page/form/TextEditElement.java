@@ -11,7 +11,7 @@ public  class TextEditElement extends BuildInFormElement {
 	}
 	
 	@Override
-	public void display(String p_value) throws Exception {
+	public void display(Object p_value) throws Exception {
 		Objects.requireNonNull(themeItem);		
 		themeItem.textElement(getName(),p_value);		
 	}

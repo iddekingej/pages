@@ -20,7 +20,7 @@ public class SelectListElement extends BuildInFormElement {
 	}
 	
 	@Override
-	public void display(String p_value) throws Exception {
+	public void display(Object p_value) throws Exception {
 		
 		themeItem.selectElement(getName(), items,p_value);
 	}

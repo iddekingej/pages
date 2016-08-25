@@ -2,10 +2,9 @@ package org.elaya.page.defaultTheme;
 
 
 import java.io.IOException;
-import javax.servlet.http.HttpServletResponse;
-
+import java.util.Iterator;
+import java.util.Set;
 import org.elaya.page.Theme;
-import org.springframework.core.io.UrlResource;
 
 public class PageThemeItem extends org.elaya.page.PageThemeItem {
 
@@ -14,8 +13,13 @@ public class PageThemeItem extends org.elaya.page.PageThemeItem {
 	}
 	
 	@Override
-	public void pageHeader() throws IOException{
-		print("<html>\n<head>\n<link "+property("href","/Gallerie/resources/form.css") +" rel=\"stylesheet\" type=\"text/css\"></head>\n<body>\n");
+	public void pageHeader(Set<String> p_js) throws IOException{
+		Iterator<String> l_iter=p_js.iterator();
+		print("<html>\n<head>\n<link "+property("href","/Gallerie/resources/form.css") +" rel=\"stylesheet\" type=\"text/css\">");
+		while(l_iter.hasNext()){
+			jsInclude(l_iter.next());
+		}
+		print("</head>\n<body>\n");
 	}
 
 	@Override
