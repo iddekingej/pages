@@ -41,4 +41,13 @@ public class FormExceptions {
 			super("Element "+p_where+" has no subelements");
 		}
 	}
+	
+	static public class propertyNotSet extends Exception{
+
+		private static final long serialVersionUID = -2937862517810211929L;
+
+		public propertyNotSet(String p_property,String p_formName){
+			super(p_property+" not set for form '"+p_formName+"'");
+		}
+	}
 }

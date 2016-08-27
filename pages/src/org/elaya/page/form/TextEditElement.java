@@ -13,7 +13,7 @@ public  class TextEditElement extends BuildInFormElement {
 	@Override
 	public void display(Object p_value) throws Exception {
 		Objects.requireNonNull(themeItem);		
-		themeItem.textElement(getName(),p_value);		
+		themeItem.textElement(getDomId(),getName(),p_value);		
 	}
 
 	@Override
@@ -21,4 +21,8 @@ public  class TextEditElement extends BuildInFormElement {
 		return "text";
 	}
 
+	@Override
+	public String getJsClassName() {
+		return "TTextEditElement";
+	}
 }

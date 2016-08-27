@@ -1,6 +1,7 @@
 package org.elaya.page;
 
 import java.io.IOException;
+import java.util.Set;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
@@ -16,6 +17,11 @@ public class ThemeItemBase {
 	public Application getApplication()
 	{
 		return theme.getApplication();
+	}
+	
+	public void getCssFiles(Set<String> p_files)
+	{
+		
 	}
 	
 	public void print(String p_value) throws IOException
@@ -46,21 +52,27 @@ public class ThemeItemBase {
 	}
 	
 	public String js_toString(Object p_value){
+		if(p_value==null) return "";
 		return "\""+p_value.toString().replace("\"","\\\"")+"\"";
 	}
 	
 	public void jsInclude(String p_path) throws IOException{
-		print("<script type='text/javascript' src='"+escape(theme.getApplication().getJsPath(p_path))+"'></script>");
+		print("<script type='text/javascript' "+property("src",theme.getApplication().getJsPath(p_path))+"></script>");
+	}
+	
+	public void cssInclude(String p_path) throws IOException{
+		String l_path=theme.getApplication().getCssPath(p_path);
+		print("<link rel='stylesheet' type='text/css' "+property("href",l_path)+"></link>");
 	}
 	
 	public void jsBegin() throws IOException
 	{
-		print("<script type='text/javascript'>");
+		print("<script type='text/javascript'>//<![CDATA[");
 	}	
 	
 	public void jsEnd() throws IOException
 	{
-		print("</script>");
+		print("//]]></script>");
 	}
 	
 	

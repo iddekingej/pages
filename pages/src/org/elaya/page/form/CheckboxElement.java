@@ -10,7 +10,7 @@ public class CheckboxElement extends BuildInFormElement {
 
 	@Override
 	public void  display(Object p_value) throws Exception {
-		themeItem.checkBoxElement(getName(),p_value);
+		themeItem.checkBoxElement(getDomId(),getName(),p_value);
 
 	}
 
@@ -18,6 +18,12 @@ public class CheckboxElement extends BuildInFormElement {
 	@Override
 	public String getJsType() {
 		return "checkbox";
+	}
+
+
+	@Override
+	public String getJsClassName() {
+		return "TCheckboxElement";
 	}
 
 }

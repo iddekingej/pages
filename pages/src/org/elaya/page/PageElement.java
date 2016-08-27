@@ -1,24 +1,24 @@
 package org.elaya.page;
 
-import java.util.Map;
+import org.elaya.page.data.Data;
 
 
-public abstract class PageElement<themeItem> extends Element<themeItem> {
-	private Map<String,Object> data;
+public abstract class PageElement<themeItem extends ThemeItemBase> extends Element<themeItem> {
+	private Data data;
 
-	public Map<String,Object> getData()
+	public Data getData()
 	{
 		return data;
 	}
 	
-	final public void setData(Map<String,Object> p_data)
+	final public void setData(Data p_data)
 	{
 		data=p_data;
 	}
 	
-	final public boolean hasValue(String p_name)
+	final public boolean hasValue(String p_name) throws Exception
 	{
-		return data.containsKey(p_name);
+		return data.contains(p_name);
 	}
 
 	final public Object getValue(String p_name)

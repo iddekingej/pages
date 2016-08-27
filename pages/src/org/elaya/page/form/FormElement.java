@@ -2,7 +2,7 @@ package org.elaya.page.form;
 
 import org.elaya.page.*;
 
-public abstract class FormElement<themeType> extends Element<themeType> {
+public abstract class FormElement<themeType extends ThemeItemBase> extends Element<themeType> {
 	
 	public FormElement()	
 	{
@@ -10,16 +10,20 @@ public abstract class FormElement<themeType> extends Element<themeType> {
 	}
 	
 	private String label;
-	private String name;
+
 	public String getLabel(){ return label;}
 	public void setLabel(String p_label){ label=p_label;}
-	public String getName(){ return name;}
-	public void setName(String p_name){ name=p_name;}
 	public boolean hasValue(){ return true;}
 	public  void display() throws Exception
 	{
 		
 	}
 	abstract public String getJsType();
+	abstract public String getJsClassName();
+	public String getObjectJs(String p_parentObject)
+	{
+		return p_parentObject+".addElement("+themeItem.js_toString(getJsName())+",new "+getJsClassName()+"("+p_parentObject+","+themeItem.js_toString(getName())+","+themeItem.js_toString(getDomId())+"));";
+	}
+
 	
 }

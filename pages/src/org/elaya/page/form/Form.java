@@ -15,18 +15,20 @@ public class Form extends PageElement<FormThemeItem>{
 
 	private String title;
 	private String url;
+	private String cmd;
+	
+	public void setCmd(String p_cmd)
+	{
+		cmd=p_cmd;
+	}
+	
+	public String getCmd(){ return cmd;}
 	
 	public void addJsFile(Set<String> p_set)
 	{
 		p_set.add("form.js");
-		ListIterator<Element<ThemeItemBase>> l_iter=elements.listIterator();
-		while(l_iter.hasNext()){
-			l_iter.next().addJsFile(p_set);
-		}
-		
 	}
 	
-		
 	public void checkElement(Element<ThemeItemBase> p_element) throws InvalidElement
 	{
 		if(!(p_element instanceof FormElement)) throw new FormExceptions.InvalidElement(p_element, this, "org.elaya.form.FormElement"); 
@@ -44,36 +46,40 @@ public class Form extends PageElement<FormThemeItem>{
 	
 	public void display() throws Exception
 	{
-		themeItem.formHeader(title,url);
-		ListIterator<Element<ThemeItemBase>> l_iter=elements.listIterator();
+		themeItem.formHeader(getDomId(),title,url);
+		
 		FormElement<ThemeItemBase> l_item;
-		Object l_value;
-		while(l_iter.hasNext()){
-			l_item=(FormElement<ThemeItemBase>)l_iter.next();
-			themeItem.formElementBegin(l_item.getLabel());
-			if(l_item.hasValue()){
-				if(hasValue(l_item.getName())){
-					l_value=getValue(l_item.getName());
+		Object l_value;		
+		for(Element<ThemeItemBase> l_element:elements){
+			if(l_element instanceof FormElement){
+				l_item=(FormElement<ThemeItemBase>)l_element;
+				themeItem.formElementBegin(l_item.getLabel());
+				if(l_item.hasValue()){
+					if(hasValue(l_item.getName())){
+						l_value=getValue(l_item.getName());
+					} else {
+						l_value="";
+					}
 				} else {
 					l_value="";
 				}
-			} else {
-				l_value="";
+				l_item.display(l_value);			
+				themeItem.formElementEnd();
 			}
-			l_item.display(l_value);			
-			themeItem.formElementEnd();
 		}
 
-		themeItem.formFooter();
+		themeItem.formFooter(getDomId());
 		themeItem.jsBegin();
-		themeItem.print("{\n l_temp=[];");
-		for(Element l_element:elements){
+		themeItem.print("\n{\n ");
+		themeItem.print("var l_form=new TForm("+getParent().getJsFullname()+","+themeItem.js_toString(getJsName())+","+themeItem.js_toString(getName())+","+themeItem.js_toString(getDomId())+");\n");
+		themeItem.print("l_form.cmd="+themeItem.js_toString(cmd)+";\n");
+		for(Element<ThemeItemBase> l_element:elements){
 			if(l_element instanceof FormElement){
-				FormElement l_fe=(FormElement)l_element;
-				themeItem.print("   l_temp["+themeItem.js_toString(l_fe.getName())+"]="+themeItem.js_toString(l_fe.getJsType())+";\n");
+				FormElement<ThemeItemBase> l_fe=(FormElement<ThemeItemBase>)l_element;
+				themeItem.print(l_fe.getObjectJs("l_form")+"\n");
 			}
 		}
-		themeItem.print("}\n");
+		themeItem.print("\n}\n");
 		themeItem.jsEnd();
 	}
 	

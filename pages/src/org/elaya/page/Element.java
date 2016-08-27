@@ -1,16 +1,18 @@
 package org.elaya.page;
 
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Objects;
 import java.util.Set;
 
-public abstract class Element<themeType> {
+public abstract class Element<themeType extends ThemeItemBase> {
 	protected themeType themeItem;
 	protected Theme theme;
 	protected LinkedList<Element<ThemeItemBase>> elements=new LinkedList<Element<ThemeItemBase>>();
 	private   Element<ThemeItemBase> parent=null;
 	private static int idCnt=0;
 	private int id;
+	private String name="";
 	
 	public Element()
 	{
@@ -18,9 +20,68 @@ public abstract class Element<themeType> {
 		idCnt++;
 	}
 	
-	public void addJsFile(Set<String> p_set)
+	public int getId()
 	{
+		return id;
+	}
+	
+	public String getDomId()
+	{
+		return "element_"+id;
+	}
+	
+	public void setName(String p_name)
+	{
+		name=p_name;
+	}
+	
+	public String getName()
+	{
+		return name;
+	}
+	
+	public String getJsName()
+	{
+		if(name.length()==0){
+			return "E"+Integer.toString(id);
+		}
+		return name;
+	}
+
+	public String getJsFullname() throws IOException
+	{
+		if(parent==null) return getJsName();
+		String l_parent=parent.getJsFullname();
+		if(l_parent.length()==0){
+			return getJsName();
+		}
+		return l_parent+".elements."+getJsName();
+	}
+	
+	public void getAllCssFiles(Set<String> p_files)
+	{
+		addCssFile(p_files);
+		for(Element<ThemeItemBase> l_element:elements){
+			l_element.getAllCssFiles(p_files);
+		}
+	}
+	
+	public void getAllJsFiles(Set<String> p_files)
+	{
+		addJsFile(p_files);
+		for(Element<ThemeItemBase> l_element:elements){
+			l_element.getAllJsFiles(p_files);
+		}		
+	}
+	
+	public void addJsFile(Set<String> p_set)
+	{ 
 		
+	}
+	
+	public void addCssFile(Set<String> p_files)
+	{
+			themeItem.getCssFiles(p_files);
 	}
 	
 	public String getObjectName()
@@ -33,16 +94,19 @@ public abstract class Element<themeType> {
 	}
 	
 	public Element getParent(){ return parent;}
-	void setParent(Element p_parent){
+	
+	void setParent(Element p_parent) throws IOException{
 		parent=p_parent;
 	}
 	
 	public Page getPage()
 	{
 		Element l_current=getParent();
-		while(l_current != null && !(l_current instanceof Page)) l_current=l_current.getParent();
-		if(l_current !=null){
-			return (Page)l_current;
+		while(l_current != null){
+			if(l_current instanceof Page){
+				return (Page)l_current;
+			}
+			l_current=l_current.getParent();
 		}
 		return null;
 	}
@@ -55,10 +119,9 @@ public abstract class Element<themeType> {
 	final public void setTheme(Theme p_theme) throws Exception
 	{
 		theme=p_theme;
+		ThemeItemBase l_theme=p_theme.getTheme(getThemeName());
+		Objects.requireNonNull(l_theme,"themeItem=>setTheme");
 		themeItem=(themeType)p_theme.getTheme(getThemeName());
-		if(themeItem==null){
-			throw new Exception("ThemeItem null for :"+getThemeName());
-		}
 	}
 	
 	protected void checkSubElement(Element<ThemeItemBase> p_element)
@@ -71,11 +134,12 @@ public abstract class Element<themeType> {
 		p_element.setTheme(theme);
 		p_element.setParent(this);
 		elements.add(p_element);
+
 	}
 	
 	final public LinkedList<Element<ThemeItemBase>> getElements()
 	{
 		return elements;
-	}
+	} 
 	
 }

@@ -22,7 +22,7 @@ public class SelectListElement extends BuildInFormElement {
 	@Override
 	public void display(Object p_value) throws Exception {
 		
-		themeItem.selectElement(getName(), items,p_value);
+		themeItem.selectElement(getDomId(),getName(), items,p_value);
 	}
 
 	@Override
@@ -30,4 +30,8 @@ public class SelectListElement extends BuildInFormElement {
 		return "select";
 	}
 
+	@Override
+	public String getJsClassName() {
+		return "TSelectListElement";
+	}
 }

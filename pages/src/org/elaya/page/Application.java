@@ -7,24 +7,25 @@ import org.slf4j.Logger;
 public class Application {
 	private HttpServletRequest request;
 	private HttpServletResponse response;
-	private String jsPath="pages/js/";
-	private String cssPath="pages/css/";
-	private String imgPath="pages/images/";
+	private String jsPath="resources/pages/js/";
+	private String cssPath="resources/pages/css/";
+	private String imgPath="resources/pages/images/";
 	private String themeBase="org.elaya.page.defaultTheme";
+	private String jsonPath="json";
 	Logger logger;
-	
+	 
 	public void setLogger(Logger p_logger)
 	{
 		logger=p_logger;
-	}
+	} 
 	
 	public Logger getLogger(){ return logger;}
 	
 	public HttpServletResponse getResponse()
 	{
 		return response;
-	}
-	
+	} 
+	 
 	public String getRealPath(String p_path)
 	{
 		return request.getSession().getServletContext().getRealPath(p_path);

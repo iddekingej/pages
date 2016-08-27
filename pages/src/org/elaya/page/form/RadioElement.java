@@ -38,7 +38,7 @@ public class RadioElement extends BuildInFormElement {
 	@Override
 	public void display(Object p_value) throws Exception {
 		
-		themeItem.radioElement(getName(), items, isHorizontal,p_value);
+		themeItem.radioElement(getDomId(),getName(), items, isHorizontal,p_value);
 	}
 
 	@Override
@@ -46,5 +46,9 @@ public class RadioElement extends BuildInFormElement {
 		return "radio";
 	}
 
+	@Override
+	public String getJsClassName() {
+		return "TRadioElement";
+	}
 	
 }

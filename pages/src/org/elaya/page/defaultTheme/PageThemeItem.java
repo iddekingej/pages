@@ -13,11 +13,15 @@ public class PageThemeItem extends org.elaya.page.PageThemeItem {
 	}
 	
 	@Override
-	public void pageHeader(Set<String> p_js) throws IOException{
+	public void pageHeader(Set<String> p_js,Set<String> p_css) throws IOException{
 		Iterator<String> l_iter=p_js.iterator();
-		print("<html>\n<head>\n<link "+property("href","/Gallerie/resources/form.css") +" rel=\"stylesheet\" type=\"text/css\">");
+		print("<html>\n<head>\n");
 		while(l_iter.hasNext()){
 			jsInclude(l_iter.next());
+		}
+		l_iter=p_css.iterator();
+		while(l_iter.hasNext()){
+			cssInclude(l_iter.next());
 		}
 		print("</head>\n<body>\n");
 	}

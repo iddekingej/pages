@@ -1,0 +1,28 @@
+.pages_elementLabel{
+	border:solid 1px #000;
+	background-color:#ddd;
+	padding-right:8px;
+	vertical-align:top;
+}
+
+.pages_formTable{
+	border-collapse:collapse;	
+}
+.pages_elementValue{
+	border:solid 1px #000;
+	background-color:#eee;
+	padding:2px;
+	
+}
+
+.pages_formTitle{
+	text-align:center;
+	font-size:15px;
+	background-color:#eee;
+	border-bottom:solid 1px #000;
+}
+
+element,td,body{
+	font-size:12px;
+	font-family:arial;
+}

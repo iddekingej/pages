@@ -1,30 +1,29 @@
 package org.elaya.page;
 import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.LinkedList;
 import java.util.Objects;
-
 import javax.xml.parsers.DocumentBuilder; 
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 
+import org.elaya.page.data.Data;
 import org.elaya.page.form.OptionItem;
 import org.slf4j.Logger;
-
+import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
+
 
 public class UiXmlParser {
 
 	Application application;
 	LinkedList<String> errors=new LinkedList<String>();
 	Logger logger;
+	Data data;
 	
 	public LinkedList<String> getErrors()
 	{
@@ -41,10 +40,43 @@ public class UiXmlParser {
 		return l_path;
 	}
 	
-	private <T> void setProperty(Object p_object,String p_name,T p_value) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException
+	private String replaceVariables(String p_value) throws Exception
+	{
+		int l_pos=0;
+		int l_newPos;
+		StringBuilder l_return=new StringBuilder();
+		String l_varName;
+		Object l_value;
+		while(true){
+			l_newPos=p_value.indexOf("${",l_pos);
+			if(l_newPos==-1){
+				l_return.append(p_value.substring(l_pos));
+				break;
+			}
+			l_return.append(p_value.substring(l_pos,l_newPos));
+			l_pos=p_value.indexOf("}",l_newPos);
+			if(l_pos==-1){
+				errors.add("Missing end }"); //TODO: Error Location
+				break;
+			}
+			l_varName=p_value.substring(l_newPos+2,l_pos);			
+			if(!data.contains(l_varName)){
+				errors.add("Variable '"+l_varName+"' not found in data:"+data.getClass().getName());
+			} else {
+				l_value=data.get(l_varName);				
+				if(l_value != null)	l_return.append(l_value.toString());
+			}
+			l_pos++;
+		}
+		return l_return.toString();
+	}
+	
+	
+	private <T> void setProperty(Object p_object,String p_name,T p_value) throws Exception
 	{
 		Method l_methods[]=p_object.getClass().getMethods();
 		Method l_method=null;
+		
 		int l_cnt;
 		String l_name="set"+p_name;
 		for(l_cnt=0;l_cnt<l_methods.length;l_cnt++){
@@ -53,7 +85,11 @@ public class UiXmlParser {
 				Class<?> l_types[]=l_method.getParameterTypes();
 				if(l_types.length != 1)continue;
 				if(l_types[0]==p_value.getClass()){
-					l_method.invoke(p_object, p_value);
+					if(p_value instanceof String){
+						l_method.invoke(p_object,replaceVariables((String)p_value));
+					} else {
+						l_method.invoke(p_object, p_value);
+					}
 					return;
 				}				
 			}
@@ -62,7 +98,7 @@ public class UiXmlParser {
 		errors.add("Method "+p_name+" not found for object type "+p_object.getClass().getName());
 	}
 	
-	private Object createElementFromName(String p_name) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException{
+	private Object createObjectFromNameP(String p_name,Class<?>[] p_types,Object[] p_params) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException{
 		Class<?> l_class;		
 		try{
 			l_class=Class.forName(p_name);			
@@ -70,54 +106,44 @@ public class UiXmlParser {
 			errors.add("Page class "+p_name+" not found");
 			return null;
 		}
-		Class<?>[] l_types={};
-		
+	
 		Constructor<?> l_constructor;
 		try{
-			l_constructor=l_class. getConstructor(l_types);
+			l_constructor=l_class. getConstructor(p_types);
 		} catch(NoSuchMethodException l_e){
 			errors.add("Object doesn't have a constructor without parameters");
 			return null;
 		}
 		
-		Object[] l_params={};
-		Object l_object=l_constructor.newInstance(l_params);
+		Object l_object=l_constructor.newInstance(p_params);
 
-				
-		
 		return l_object;  
 
 	}
-	
-	private Object createObjectFromName(String p_name) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException{
-		Class<?> l_class;		
-		try{
-			l_class=Class.forName(p_name);			
-		}catch(ClassNotFoundException l_e){
-			errors.add("Page class "+p_name+" not found");
-			return null;
-		}
-		Class<?>[] l_types={Application.class};
-		
-		Constructor<?> l_constructor;
-		try{
-			l_constructor=l_class.getConstructor(l_types);
-		} catch(NoSuchMethodException l_e){
-			errors.add("Object doesn't have a constructor without parameters");
-			return null;
-		}
-		
-		Object[] l_params={application};
-		Object l_object=l_constructor.newInstance(l_params);
 
-				
-		
-		return l_object;  
-
+	private Object createElementFromName(String p_name) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException
+	{		
+		return createObjectFromNameP(p_name, new Class<?>[]{},new Object[]{} );
 	}
 	
-	public UiXmlParser(Application p_application){
+	private Object createPageFromTypeName(String p_name) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException{
+		return createObjectFromNameP(p_name,new Class<?>[]{Application.class},new Object[]{application});
+	}
+	
+	private Data createDataFromTypeName(String p_name,Data p_parent) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException
+	{
+		Object l_object=createObjectFromNameP(p_name,new Class<?>[]{Data.class},new Object[]{p_parent});
+		if(l_object instanceof Data){
+			return (Data)l_object;
+		}
+		errors.add(p_name+" is not a descendant of 'Data'");
+		return null;
+	}
+	
+	public UiXmlParser(Application p_application,Data p_data){
 		application=p_application;
+		data=p_data;
+		logger=p_application.getLogger();
 	}
 	
 	public Node findNodeByTag(Node p_node,String p_tag){
@@ -176,7 +202,7 @@ public class UiXmlParser {
 			return l_list;
 	}
 	
-	public void processSubStructure(Element p_element,String p_name,Node p_parent) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
+	public void processSubStructure(Element p_element,String p_name,Node p_parent) throws Exception{
 		Node l_child=p_parent.getFirstChild();
 		while(l_child != null){
 			if(l_child.getNodeType()==Node.ELEMENT_NODE){
@@ -189,7 +215,7 @@ public class UiXmlParser {
 			l_child=l_child.getNextSibling();
 		}
 	}
-	public void processSubValue(Element p_element,Node p_parent) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
+	public void processSubValue(Element p_element,Node p_parent) throws DOMException, Exception{
 		Node l_nameNode=p_parent.getAttributes().getNamedItem("name");
 		String l_name;
 		if(l_nameNode != null){
@@ -207,7 +233,7 @@ public class UiXmlParser {
 	}
 	
 	
-	public void processProperties(Element p_element,Node p_parent) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
+	public void processProperties(Element p_element,Node p_parent) throws DOMException, Exception{
 		Objects.requireNonNull(p_element);
 		Objects.requireNonNull(p_parent);
 		Node l_current=p_parent.getFirstChild();
@@ -224,11 +250,11 @@ public class UiXmlParser {
 		}
 	}
 	
-	public Element processElement(Element p_element,Node p_node) throws Exception
+	public Element processElement(Element<ThemeItemBase> p_element,Node p_node) throws Exception
 	{
 		String l_type;
 		String l_file;
-		Element l_element=null;
+		Element<ThemeItemBase> l_element=null;
 		if(p_node.getNodeName().equals("element")){
 			l_type=getTypeValue(p_node);
 			if(l_type != null){
@@ -243,9 +269,10 @@ public class UiXmlParser {
 			} else {
 				l_file=getFileValue(p_node);
 				if(l_file != null){					
-					UiXmlParser l_parser=new UiXmlParser(application);
-					l_element=l_parser.parseElementXml(p_element, l_file, logger);
-					if(l_element !=null)processNodeDef(l_element,p_node);					
+					UiXmlParser l_parser=new UiXmlParser(application,data);
+					l_element=l_parser.parseElementXml(p_element, l_file);
+					if(l_element !=null)processNodeDef(l_element,p_node);			
+					errors.addAll(l_parser.getErrors());
 				}else {
 					errors.add("Missing 'type' or 'file' property :"+getNodePath(p_node));
 				}
@@ -274,10 +301,23 @@ public class UiXmlParser {
 		Node l_currentDef=p_parent.getFirstChild();
 		NamedNodeMap l_properties=p_parent.getAttributes();
 		Node l_node;
+		Data l_prvData=data;
+		
+		String l_adapterName=getAttributeValue(p_parent,"adapter");
+		if(p_element instanceof PageElement){
+			if(l_adapterName != null){				
+				data=createDataFromTypeName(l_adapterName,data);
+			}
+			((PageElement)p_element).setData(data);
+		} else {
+			if(l_adapterName != null){
+				errors.add("Adapter can only be used with page element ");//TODO position form node
+			}			
+		} 
 		
 		for(int l_cnt=0;l_cnt<l_properties.getLength();l_cnt++){
 			l_node=l_properties.item(l_cnt);
-			if(!l_node.getNodeName().equals("type") && !l_node.getNodeName().equals("file")){
+			if(!l_node.getNodeName().equals("type") && !l_node.getNodeName().equals("adapter") && !l_node.getNodeName().equals("file")){
 					setProperty(p_element,l_node.getNodeName(),l_node.getNodeValue());
 			}
 		}
@@ -293,6 +333,7 @@ public class UiXmlParser {
 			}
 			l_currentDef=l_currentDef.getNextSibling();
 		}
+		data=l_prvData;
 			
 	}
 	
@@ -302,7 +343,7 @@ public class UiXmlParser {
 		String l_type=getTypeValue(p_rootNode);
 		if(l_type != null){
 			Object l_object;
-			l_object=createObjectFromName(l_type);
+			l_object=createPageFromTypeName(l_type);
 			if(l_object instanceof Page){
 				l_page=(Page)l_object;
 		
@@ -313,8 +354,8 @@ public class UiXmlParser {
 		} else {
 			String l_file=getFileValue(p_rootNode);
 			if(l_file != null){
-				UiXmlParser  l_parser=new UiXmlParser(application);
-				l_page=l_parser.parseUiXml(l_file,logger);
+				UiXmlParser  l_parser=new UiXmlParser(application,data);
+				l_page=l_parser.parseUiXml(l_file);
 				errors.addAll(l_parser.getErrors());
 				if(l_page==null){
 					return null;
@@ -325,9 +366,8 @@ public class UiXmlParser {
 		return l_page;
 	}
 	
-	public Element parseElementXml(Element p_element,String p_fileName,Logger p_logger) throws Exception
-	{
-		logger=p_logger;
+	public Element parseElementXml(Element p_element,String p_fileName) throws Exception
+	{		
 		DocumentBuilderFactory l_factory=DocumentBuilderFactory.newInstance();
 		DocumentBuilder l_builder=l_factory.newDocumentBuilder();
 		Document l_doc=l_builder.parse(new File(application.getRealPath(p_fileName)));
@@ -342,8 +382,7 @@ public class UiXmlParser {
 		}
 	}
 	
-	public Page parseUiXml(String p_fileName,Logger p_logger) throws Exception{
-		logger=p_logger;
+	public Page parseUiXml(String p_fileName) throws Exception{		
 		DocumentBuilderFactory l_factory=DocumentBuilderFactory.newInstance();
 		DocumentBuilder l_builder=l_factory.newDocumentBuilder();
 		Document l_doc=l_builder.parse(new File(application.getRealPath(p_fileName)));

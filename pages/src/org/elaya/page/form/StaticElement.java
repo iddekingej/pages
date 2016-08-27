@@ -17,12 +17,17 @@ public class StaticElement extends BuildInFormElement {
 	
 	@Override
 	public void display(Object p_value) throws Exception {
-		themeItem.StaticElement(getName(),getIsHtml(),p_value);
+		themeItem.StaticElement(getDomId(),getName(),getIsHtml(),p_value);
 	}
 	@Override
 	public String getJsType() {
 
 		return "static";
+	}
+	
+	@Override
+	public String getJsClassName() {
+		return "TStaticElement";
 	}
 
 }
