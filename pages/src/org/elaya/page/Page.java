@@ -32,8 +32,8 @@ public class Page extends PageElement<PageThemeItem> {
  
 	public void display() throws Exception
 	{
-		ListIterator<Element<ThemeItemBase>> l_iter=getElements().listIterator();
-		Element<ThemeItemBase> l_element;
+		ListIterator<Element<?>> l_iter=getElements().listIterator();
+		Element<?> l_element;
 		Set<String> l_js=new HashSet<String>();
 		Set<String> l_css=new HashSet<String>();
 		getAllCssFiles(l_css);
@@ -45,7 +45,7 @@ public class Page extends PageElement<PageThemeItem> {
 		while(l_iter.hasNext()){
 			l_element = l_iter.next();
 			if(l_element instanceof PageElement){
-				((PageElement)l_element).setData(l_data);
+				((PageElement<?>)l_element).setData(l_data);
 			}
 			l_element.display();
 		}

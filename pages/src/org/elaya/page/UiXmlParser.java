@@ -24,12 +24,20 @@ public class UiXmlParser {
 	LinkedList<String> errors=new LinkedList<String>();
 	Logger logger;
 	Data data;
-	
+
+	public UiXmlParser(Application p_application,Data p_data){
+		Objects.requireNonNull(p_application,"p_application");
+		Objects.requireNonNull(p_data,"p_data");
+		application=p_application;
+		data=p_data;
+		logger=p_application.getLogger();
+	}
+
 	public LinkedList<String> getErrors()
 	{
 		return errors;
 	}
-	
+	 
 	private String getNodePath(Node p_node){
 		String l_path="";
 		Node l_node=p_node;
@@ -40,26 +48,27 @@ public class UiXmlParser {
 		return l_path;
 	}
 	
-	private String replaceVariables(String p_value) throws Exception
+	private String replaceVariables(String p_string) throws Exception
 	{
 		int l_pos=0;
 		int l_newPos;
 		StringBuilder l_return=new StringBuilder();
 		String l_varName;
 		Object l_value;
+		String l_string=(p_string==null?"":p_string);
 		while(true){
-			l_newPos=p_value.indexOf("${",l_pos);
+			l_newPos=l_string.indexOf("${",l_pos);
 			if(l_newPos==-1){
-				l_return.append(p_value.substring(l_pos));
+				l_return.append(l_string.substring(l_pos));
 				break;
 			}
-			l_return.append(p_value.substring(l_pos,l_newPos));
-			l_pos=p_value.indexOf("}",l_newPos);
+			l_return.append(l_string.substring(l_pos,l_newPos));
+			l_pos=l_string.indexOf("}",l_newPos);
 			if(l_pos==-1){
 				errors.add("Missing end }"); //TODO: Error Location
 				break;
 			}
-			l_varName=p_value.substring(l_newPos+2,l_pos);			
+			l_varName=l_string.substring(l_newPos+2,l_pos);	
 			if(!data.contains(l_varName)){
 				errors.add("Variable '"+l_varName+"' not found in data:"+data.getClass().getName());
 			} else {
@@ -111,7 +120,7 @@ public class UiXmlParser {
 		try{
 			l_constructor=l_class. getConstructor(p_types);
 		} catch(NoSuchMethodException l_e){
-			errors.add("Object doesn't have a constructor without parameters");
+			errors.add("Object doesn't have a constructor with the given parameters");
 			return null;
 		}
 		
@@ -133,18 +142,15 @@ public class UiXmlParser {
 	private Data createDataFromTypeName(String p_name,Data p_parent) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException
 	{
 		Object l_object=createObjectFromNameP(p_name,new Class<?>[]{Data.class},new Object[]{p_parent});
-		if(l_object instanceof Data){
-			return (Data)l_object;
+		if(l_object != null){
+			if(l_object instanceof org.elaya.page.data.Data){
+				return (Data)l_object;
+			}
+			errors.add(p_name+" is not a descendant of 'Data':"+l_object.getClass().getName());
 		}
-		errors.add(p_name+" is not a descendant of 'Data'");
 		return null;
 	}
 	
-	public UiXmlParser(Application p_application,Data p_data){
-		application=p_application;
-		data=p_data;
-		logger=p_application.getLogger();
-	}
 	
 	public Node findNodeByTag(Node p_node,String p_tag){
 		Node l_current=p_node.getFirstChild();
@@ -202,7 +208,7 @@ public class UiXmlParser {
 			return l_list;
 	}
 	
-	public void processSubStructure(Element p_element,String p_name,Node p_parent) throws Exception{
+	public void processSubStructure(Element<?> p_element,String p_name,Node p_parent) throws Exception{
 		Node l_child=p_parent.getFirstChild();
 		while(l_child != null){
 			if(l_child.getNodeType()==Node.ELEMENT_NODE){
@@ -215,7 +221,7 @@ public class UiXmlParser {
 			l_child=l_child.getNextSibling();
 		}
 	}
-	public void processSubValue(Element p_element,Node p_parent) throws DOMException, Exception{
+	public void processSubValue(Element<?> p_element,Node p_parent) throws DOMException, Exception{
 		Node l_nameNode=p_parent.getAttributes().getNamedItem("name");
 		String l_name;
 		if(l_nameNode != null){
@@ -233,7 +239,7 @@ public class UiXmlParser {
 	}
 	
 	
-	public void processProperties(Element p_element,Node p_parent) throws DOMException, Exception{
+	public void processProperties(Element<?> p_element,Node p_parent) throws DOMException, Exception{
 		Objects.requireNonNull(p_element);
 		Objects.requireNonNull(p_parent);
 		Node l_current=p_parent.getFirstChild();
@@ -250,20 +256,20 @@ public class UiXmlParser {
 		}
 	}
 	
-	public Element processElement(Element<ThemeItemBase> p_element,Node p_node) throws Exception
+	public Element<?> processElement(Element<?> p_element,Node p_node) throws Exception
 	{
 		String l_type;
 		String l_file;
-		Element<ThemeItemBase> l_element=null;
+		Element<?> l_element=null;
 		if(p_node.getNodeName().equals("element")){
 			l_type=getTypeValue(p_node);
 			if(l_type != null){
 				Object l_object=createElementFromName(l_type);
 				if(l_object!=null){
 					if(l_object instanceof Element){								
-						p_element.addElement((Element)l_object);
-						processNodeDef((Element)l_object,p_node);
-						l_element=(Element)l_object;
+						p_element.addElement((Element<?>)l_object);
+						processNodeDef((Element<?>)l_object,p_node);
+						l_element=(Element<?>)l_object;
 					}
 				}
 			} else {
@@ -283,7 +289,7 @@ public class UiXmlParser {
 		return l_element;
 	}
 	
-	public void processElements(Element p_element,Node p_parent) throws Exception{
+	public void processElements(Element<?> p_element,Node p_parent) throws Exception{
 		
 		Objects.requireNonNull(p_element,"p_element");
 		Objects.requireNonNull(p_parent,"p_parent");
@@ -296,19 +302,25 @@ public class UiXmlParser {
 		}
 
 	}
-	@SuppressWarnings("rawtypes")
-	public void processNodeDef(Element p_element,Node p_parent) throws Exception{		
+	public void processNodeDef(Element<?> p_element,Node p_parent) throws Exception{		
 		Node l_currentDef=p_parent.getFirstChild();
 		NamedNodeMap l_properties=p_parent.getAttributes();
 		Node l_node;
 		Data l_prvData=data;
 		
 		String l_adapterName=getAttributeValue(p_parent,"adapter");
+		
 		if(p_element instanceof PageElement){
 			if(l_adapterName != null){				
-				data=createDataFromTypeName(l_adapterName,data);
+				Data l_data=createDataFromTypeName(l_adapterName,data);
+				if(l_data==null){
+					errors.add("Adaptername return null "+l_adapterName);
+				} else {
+					l_data.init();
+					data=l_data;
+				}
 			}
-			((PageElement)p_element).setData(data);
+			((PageElement<?>)p_element).setData(data);
 		} else {
 			if(l_adapterName != null){
 				errors.add("Adapter can only be used with page element ");//TODO position form node
@@ -366,7 +378,7 @@ public class UiXmlParser {
 		return l_page;
 	}
 	
-	public Element parseElementXml(Element p_element,String p_fileName) throws Exception
+	public Element<?> parseElementXml(Element<?> p_element,String p_fileName) throws Exception
 	{		
 		DocumentBuilderFactory l_factory=DocumentBuilderFactory.newInstance();
 		DocumentBuilder l_builder=l_factory.newDocumentBuilder();

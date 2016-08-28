@@ -1,6 +1,5 @@
 package org.elaya.page.form;
 
-import java.util.ListIterator;
 import java.util.Set;
 import org.elaya.page.Element;
 import org.elaya.page.PageElement;
@@ -48,11 +47,11 @@ public class Form extends PageElement<FormThemeItem>{
 	{
 		themeItem.formHeader(getDomId(),title,url);
 		
-		FormElement<ThemeItemBase> l_item;
+		FormElement<?> l_item;
 		Object l_value;		
-		for(Element<ThemeItemBase> l_element:elements){
+		for(Element<?> l_element:elements){
 			if(l_element instanceof FormElement){
-				l_item=(FormElement<ThemeItemBase>)l_element;
+				l_item=(FormElement<?>)l_element;
 				themeItem.formElementBegin(l_item.getLabel());
 				if(l_item.hasValue()){
 					if(hasValue(l_item.getName())){
@@ -73,9 +72,9 @@ public class Form extends PageElement<FormThemeItem>{
 		themeItem.print("\n{\n ");
 		themeItem.print("var l_form=new TForm("+getParent().getJsFullname()+","+themeItem.js_toString(getJsName())+","+themeItem.js_toString(getName())+","+themeItem.js_toString(getDomId())+");\n");
 		themeItem.print("l_form.cmd="+themeItem.js_toString(cmd)+";\n");
-		for(Element<ThemeItemBase> l_element:elements){
+		for(Element<?> l_element:elements){
 			if(l_element instanceof FormElement){
-				FormElement<ThemeItemBase> l_fe=(FormElement<ThemeItemBase>)l_element;
+				FormElement<?> l_fe=(FormElement<?>)l_element;
 				themeItem.print(l_fe.getObjectJs("l_form")+"\n");
 			}
 		}

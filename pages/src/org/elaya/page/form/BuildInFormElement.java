@@ -16,7 +16,7 @@ public abstract class BuildInFormElement extends FormElement<FormElementThemeIte
 		return "FormElementThemeItem";
 	}
 
-	public void checkElement(Element p_element) throws InvalidElement, ElementNoSub
+	public void checkElement(Element<?> p_element) throws InvalidElement, ElementNoSub
 	{
 		throw new FormExceptions.ElementNoSub(this.getClass().getName());
 	}

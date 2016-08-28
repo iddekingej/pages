@@ -14,12 +14,15 @@ public class PageView extends AbstractView {
 
 	private String basePath;
 	Logger logger ;
+	Application application;
 	
 
-	public PageView(String p_file,Logger p_logger) {
+	public PageView(String p_file,Logger p_logger,Application p_application) {
 		super();
 		basePath=p_file;
 		logger=p_logger;
+		application=p_application;
+		application.setLogger(logger);
 	}
 
 	@Override
@@ -27,13 +30,12 @@ public class PageView extends AbstractView {
 			throws Exception {
 		// TODO Auto-generated method stub
 		
-	
-		Application l_app=new Application(p_request,p_response);
-		logger.info("Bla bla");
-		l_app.setLogger(logger);
-		MapData l_md=new MapData(null,p_map);
-		l_md.makeData();		
-		UiXmlParser l_parser=new UiXmlParser(l_app,l_md);
+		application.setRequest(p_request, p_response);
+		MapData l_md=new MapData(null);
+		l_md.setMap(p_map);
+		l_md.setContext(application.getContext());		
+		l_md.init();		
+		UiXmlParser l_parser=new UiXmlParser(application,l_md);
 		String l_fileName=p_request.getRequestURI().substring(p_request.getContextPath().length());
 		Page l_page=l_parser.parseUiXml(basePath+l_fileName+".xml");
 		LinkedList<String> l_errors=l_parser.getErrors();
@@ -42,7 +44,7 @@ public class PageView extends AbstractView {
 		}
 		l_page.setUrl(p_request.getRequestURI());
 		//p_request.getPathTranslated()
-		//p_request.getRequestURI()		
+		//p_request.getRequestURI()		 
 		l_page.display();
 	}
 

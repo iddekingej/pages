@@ -70,7 +70,7 @@ public class FormElementThemeItem extends org.elaya.page.form.FormElementThemeIt
 	
 	public void StaticElement(String p_idDom,String p_name,boolean p_isHtml,Object p_value) throws IOException
 	{
-		print("<div "+property("id",p_idDom));
+		print("<div "+property("id",p_idDom)+">");
 		if(p_isHtml){
 			print(p_value.toString());
 		} else {

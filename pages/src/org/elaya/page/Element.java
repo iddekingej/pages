@@ -8,8 +8,8 @@ import java.util.Set;
 public abstract class Element<themeType extends ThemeItemBase> {
 	protected themeType themeItem;
 	protected Theme theme;
-	protected LinkedList<Element<ThemeItemBase>> elements=new LinkedList<Element<ThemeItemBase>>();
-	private   Element<ThemeItemBase> parent=null;
+	protected LinkedList<Element<?>> elements=new LinkedList<Element<?>>();
+	private   Element<?> parent=null;
 	private static int idCnt=0;
 	private int id;
 	private String name="";
@@ -61,7 +61,7 @@ public abstract class Element<themeType extends ThemeItemBase> {
 	public void getAllCssFiles(Set<String> p_files)
 	{
 		addCssFile(p_files);
-		for(Element<ThemeItemBase> l_element:elements){
+		for(Element<?> l_element:elements){
 			l_element.getAllCssFiles(p_files);
 		}
 	}
@@ -69,7 +69,7 @@ public abstract class Element<themeType extends ThemeItemBase> {
 	public void getAllJsFiles(Set<String> p_files)
 	{
 		addJsFile(p_files);
-		for(Element<ThemeItemBase> l_element:elements){
+		for(Element<?> l_element:elements){
 			l_element.getAllJsFiles(p_files);
 		}		
 	}
@@ -93,15 +93,15 @@ public abstract class Element<themeType extends ThemeItemBase> {
 		return "var_"+Integer.toString(id);
 	}
 	
-	public Element getParent(){ return parent;}
+	public Element<?> getParent(){ return parent;}
 	
-	void setParent(Element p_parent) throws IOException{
+	void setParent(Element<?> p_parent) throws IOException{
 		parent=p_parent;
 	}
 	
 	public Page getPage()
 	{
-		Element l_current=getParent();
+		Element<?> l_current=getParent();
 		while(l_current != null){
 			if(l_current instanceof Page){
 				return (Page)l_current;
@@ -128,7 +128,7 @@ public abstract class Element<themeType extends ThemeItemBase> {
 	{
 	}
 	
-	final public void addElement(Element<ThemeItemBase> p_element) throws Exception
+	final public void addElement(Element<?> p_element) throws Exception
 	{
 		Objects.requireNonNull(p_element,"addElement(p_element)");
 		p_element.setTheme(theme);
@@ -137,7 +137,7 @@ public abstract class Element<themeType extends ThemeItemBase> {
 
 	}
 	
-	final public LinkedList<Element<ThemeItemBase>> getElements()
+	final public LinkedList<Element<?>> getElements()
 	{
 		return elements;
 	} 

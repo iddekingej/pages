@@ -2,11 +2,14 @@ package org.elaya.page;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.elaya.page.data.Context;
 import org.slf4j.Logger;
 
 public class Application {
 	private HttpServletRequest request;
 	private HttpServletResponse response;
+	private Context context=null;
 	private String jsPath="resources/pages/js/";
 	private String cssPath="resources/pages/css/";
 	private String imgPath="resources/pages/images/";
@@ -14,6 +17,14 @@ public class Application {
 	private String jsonPath="json";
 	Logger logger;
 	 
+	public Context getContext()
+	{
+		if(context==null){
+			context=new Context();
+		}
+		return context;
+	}
+	
 	public void setLogger(Logger p_logger)
 	{
 		logger=p_logger;
@@ -59,9 +70,13 @@ public class Application {
 		themeBase=p_base;
 	}
 	
-	public Application(HttpServletRequest p_request,HttpServletResponse p_response) {
+	public void setRequest(HttpServletRequest p_request,HttpServletResponse p_response)
+	{
 		request=p_request;
 		response=p_response;
+	}
+	
+	public Application() {		
 	}
 
 }

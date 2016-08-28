@@ -10,7 +10,7 @@ public class HorizontalLayout extends Layout{
 	public void display() throws Exception
 	{
 		themeItem.HorizontalHeader();
-		for(Element<ThemeItemBase> l_element:getElements()){
+		for(Element<?> l_element:getElements()){
 			themeItem.HorizontalItemHeader();
 			l_element.display();
 			themeItem.HorizontalItemFooter();

@@ -1,7 +1,7 @@
 package org.elaya.page.form;
 
 public class StaticElement extends BuildInFormElement {
-	private boolean isHtml;
+	private boolean isHtml=false;
 	
 	public StaticElement()
 	{
