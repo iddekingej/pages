@@ -1,4 +1,4 @@
-package org.elaya.page.form;
+package org.elaya.page.quickform;
 
 public class StaticElement extends BuildInFormElement {
 	private boolean isHtml=false;

@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.Set;
 import org.elaya.page.Theme;
 
-public class FormThemeItem extends org.elaya.page.form.FormThemeItem {
+public class FormThemeItem extends org.elaya.page.quickform.FormThemeItem {
 
 	public void getCssFiles(Set<String> p_files){ 
 		p_files.add("form.css");

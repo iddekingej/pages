@@ -1,4 +1,4 @@
-package org.elaya.page.form;
+package org.elaya.page.quickform;
 
 import java.io.IOException;
 import org.elaya.page.Theme;

@@ -1,8 +1,8 @@
-package org.elaya.page.form;
+package org.elaya.page.quickform;
 
 import java.util.LinkedList;
 
-import org.elaya.page.form.FormExceptions.InvalidPropertyValue;
+import org.elaya.page.quickform.FormExceptions.InvalidPropertyValue;
 
 public class RadioElement extends BuildInFormElement {
 	private LinkedList<OptionItem> items=new LinkedList<OptionItem>();

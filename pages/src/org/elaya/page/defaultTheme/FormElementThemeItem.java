@@ -4,9 +4,9 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.LinkedList;
 import org.elaya.page.*;
-import org.elaya.page.form.OptionItem;
+import org.elaya.page.quickform.OptionItem;
 
-public class FormElementThemeItem extends org.elaya.page.form.FormElementThemeItem {
+public class FormElementThemeItem extends org.elaya.page.quickform.FormElementThemeItem {
 
 		
 	public void textElement(String p_idDom,String p_name,Object p_value) throws IOException

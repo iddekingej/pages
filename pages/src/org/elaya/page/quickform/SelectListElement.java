@@ -1,4 +1,4 @@
-package org.elaya.page.form;
+package org.elaya.page.quickform;
 import java.util.LinkedList;
 
 public class SelectListElement extends BuildInFormElement {

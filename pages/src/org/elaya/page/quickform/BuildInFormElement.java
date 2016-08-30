@@ -1,8 +1,8 @@
-package org.elaya.page.form;
+package org.elaya.page.quickform;
 
 import org.elaya.page.Element;
-import org.elaya.page.form.FormExceptions.ElementNoSub;
-import org.elaya.page.form.FormExceptions.InvalidElement;
+import org.elaya.page.quickform.FormExceptions.ElementNoSub;
+import org.elaya.page.quickform.FormExceptions.InvalidElement;
 
 public abstract class BuildInFormElement extends FormElement<FormElementThemeItem> {
 

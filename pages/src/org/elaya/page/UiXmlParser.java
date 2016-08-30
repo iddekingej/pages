@@ -9,7 +9,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.elaya.page.data.Data;
-import org.elaya.page.form.OptionItem;
+import org.elaya.page.quickform.OptionItem;
 import org.slf4j.Logger;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
@@ -22,9 +22,14 @@ public class UiXmlParser {
 
 	Application application;
 	LinkedList<String> errors=new LinkedList<String>();
+	int cnt=0;
 	Logger logger;
 	Data data;
 
+	public void addError(String p_message){
+		errors.add(cnt+"-"+p_message);
+		cnt++;
+	}
 	public UiXmlParser(Application p_application,Data p_data){
 		Objects.requireNonNull(p_application,"p_application");
 		Objects.requireNonNull(p_data,"p_data");
@@ -50,7 +55,7 @@ public class UiXmlParser {
 	
 	private Object replaceVariables(String p_string) throws Exception
 	{
-		if(p_string.startsWith("${") && p_string.endsWith("}")){
+		if(p_string.startsWith("@{") && p_string.endsWith("}")){
 			String l_varName=p_string.substring(2,p_string.length()-1);
 			Object l_return;
 			if(!data.contains(l_varName)){
@@ -61,12 +66,13 @@ public class UiXmlParser {
 			}
 			return l_return;
 		}
+	
 		int l_pos=0;
 		int l_newPos;
 		StringBuilder l_return=new StringBuilder();
 		String l_varName;
 		Object l_value;
-		String l_string=(p_string==null?"":p_string);
+		String l_string=(p_string==null?"":p_string);		
 		while(true){
 			l_newPos=l_string.indexOf("${",l_pos);
 			if(l_newPos==-1){
@@ -98,25 +104,26 @@ public class UiXmlParser {
 		Method l_method=null;
 		
 		int l_cnt;
+
 		String l_name="set"+p_name;
 		for(l_cnt=0;l_cnt<l_methods.length;l_cnt++){
 			l_method=l_methods[l_cnt];
+			
 			if(l_method.getName().toLowerCase().equals(l_name)){
 				Class<?> l_types[]=l_method.getParameterTypes();
 				if(l_types.length != 1)continue;
-				if(l_types[0]==p_value.getClass()){
+				if((p_value==null) ||(l_types[0]==p_value.getClass())){
 					l_method.invoke(p_object, p_value);
 					return;
 				}				
 			}
-		}
-		
+		}		
 		errors.add("Method "+p_name+" not found for object type "+p_object.getClass().getName());
 	}
 	
 	private void setPropertyFromExpression(Object p_object,String p_name,String p_expression) throws Exception
 	{
-		Object l_value=replaceVariables((String)p_expression);
+		Object l_value=replaceVariables((String)p_expression);		
 		setProperty(p_object,p_name,l_value);
 	
 	}
@@ -132,7 +139,7 @@ public class UiXmlParser {
 	 
 		Constructor<?> l_constructor;
 		try{
-			l_constructor=l_class. getConstructor(p_types);
+			l_constructor=l_class.getConstructor(p_types);
 		} catch(NoSuchMethodException l_e){
 			errors.add("Object doesn't have a constructor with the given parameters");
 			return null;

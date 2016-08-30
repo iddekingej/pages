@@ -1,10 +1,10 @@
-package org.elaya.page.form;
+package org.elaya.page.quickform;
 
 import java.util.Set;
 import org.elaya.page.Element;
 import org.elaya.page.PageElement;
 import org.elaya.page.ThemeItemBase;
-import org.elaya.page.form.FormExceptions.InvalidElement;
+import org.elaya.page.quickform.FormExceptions.InvalidElement;
 
 public class Form extends PageElement<FormThemeItem>{
 	

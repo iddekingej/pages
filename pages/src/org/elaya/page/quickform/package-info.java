@@ -5,4 +5,4 @@
  * @author jeroen
  *
  */
-package org.elaya.page.form;
+package org.elaya.page.quickform;
