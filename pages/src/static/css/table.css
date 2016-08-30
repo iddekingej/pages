@@ -1,0 +1,16 @@
+.default_table_header{
+	border-collapse:collapse;
+}
+
+.default_table_header_cell{
+	text-align:center;
+	font-weight:700;
+	background-color:eee;
+	border:solid 1px #888;
+	
+}
+
+.default_table_cell{
+	border:solid 1px #888;
+	padding:3px;
+}

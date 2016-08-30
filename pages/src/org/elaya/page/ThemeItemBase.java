@@ -39,7 +39,7 @@ public class ThemeItemBase {
 	
 	public String escape(String p_value)
 	{
-		return HtmlUtils.htmlEscape(p_value);
+		return HtmlUtils.htmlEscape(str(p_value));
 	}
 	
 	public String escape(Object p_value){

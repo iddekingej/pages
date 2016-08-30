@@ -11,14 +11,15 @@ public class TableThemeItem extends org.elaya.page.table.TableThemeItem {
 		super(p_theme);
 	}
 
-	public void addCssFile(Set<String> p_files)
+	
+	public void getCssFiles(Set<String> p_files)
 	{
 		p_files.add("table.css");
 	}
 	
 	@Override
 	public void tableHeader(String p_domId) throws IOException {
-		print("<table "+property("id",p_domId)+">");
+		print("<table class='default_table_header' "+property("id",p_domId)+">");
 	}
 
 	@Override
@@ -34,7 +35,7 @@ public class TableThemeItem extends org.elaya.page.table.TableThemeItem {
 
 	@Override
 	public void title(String p_title) throws IOException {
-		print("<td>"+escape(p_title)+"</td>");
+		print("<td class='default_table_header_cell'>"+escape(p_title)+"</td>");
 
 	}
 
@@ -42,20 +43,38 @@ public class TableThemeItem extends org.elaya.page.table.TableThemeItem {
 	public void titleFooter() throws IOException {
 		print("</tr>");
 	}
-
+ 
 	@Override
 	public void rowHeader() throws IOException {
 		print("<tr>");
 	}
 
 	@Override
-	public void staticItem(String p_text) throws IOException {
-		print("<td>"+escape(p_text)+"</td>");
+	public void staticItem(String p_domId,Object p_text) throws IOException {
+		print(escape(p_text));
 	}
 
 	@Override
-	public void linkItem(String p_text, String p_url) throws IOException {
+	public void linkItem(String p_url,String p_text) throws IOException {
 		print("<a "+property("href",p_url)+">"+escape(p_text)+"</a>");
+	}
+
+	@Override
+	public void rowFooter() throws IOException {
+		print("</tr>");
+		
+	}
+
+	@Override
+	public void itemHeader() throws IOException {
+		print("<td class='default_table_cell'>");
+		
+	}
+
+	@Override
+	public void itemFooter() throws IOException {
+		print("</td>");
+		
 	}
 
 }

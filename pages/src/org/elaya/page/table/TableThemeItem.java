@@ -17,7 +17,10 @@ abstract public class TableThemeItem extends ThemeItemBase {
 	abstract public void title(String p_title) throws IOException;
 	abstract public void titleFooter() throws IOException;
 	abstract public void rowHeader() throws IOException;
-	abstract public void staticItem(String p_text) throws IOException;
-	abstract public void linkItem(String p_text,String p_url) throws IOException;
+	abstract public void rowFooter() throws IOException;
+	abstract public void itemHeader() throws IOException;
+	abstract public void itemFooter() throws IOException;
+	abstract public void staticItem(String p_domId,Object p_text) throws IOException;
+	abstract public void linkItem(String p_url,String p_text) throws IOException;
 	
 }

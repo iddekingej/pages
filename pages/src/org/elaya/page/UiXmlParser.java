@@ -48,8 +48,19 @@ public class UiXmlParser {
 		return l_path;
 	}
 	
-	private String replaceVariables(String p_string) throws Exception
+	private Object replaceVariables(String p_string) throws Exception
 	{
+		if(p_string.startsWith("${") && p_string.endsWith("}")){
+			String l_varName=p_string.substring(2,p_string.length()-1);
+			Object l_return;
+			if(!data.contains(l_varName)){
+				errors.add("Variable "+l_varName+" not found");
+				l_return=null;
+			} else {
+				l_return=data.get(l_varName);
+			}
+			return l_return;
+		}
 		int l_pos=0;
 		int l_newPos;
 		StringBuilder l_return=new StringBuilder();
@@ -94,17 +105,20 @@ public class UiXmlParser {
 				Class<?> l_types[]=l_method.getParameterTypes();
 				if(l_types.length != 1)continue;
 				if(l_types[0]==p_value.getClass()){
-					if(p_value instanceof String){
-						l_method.invoke(p_object,replaceVariables((String)p_value));
-					} else {
-						l_method.invoke(p_object, p_value);
-					}
+					l_method.invoke(p_object, p_value);
 					return;
 				}				
 			}
 		}
 		
 		errors.add("Method "+p_name+" not found for object type "+p_object.getClass().getName());
+	}
+	
+	private void setPropertyFromExpression(Object p_object,String p_name,String p_expression) throws Exception
+	{
+		Object l_value=replaceVariables((String)p_expression);
+		setProperty(p_object,p_name,l_value);
+	
 	}
 	
 	private Object createObjectFromNameP(String p_name,Class<?>[] p_types,Object[] p_params) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException{
@@ -115,7 +129,7 @@ public class UiXmlParser {
 			errors.add("Page class "+p_name+" not found");
 			return null;
 		}
-	
+	 
 		Constructor<?> l_constructor;
 		try{
 			l_constructor=l_class. getConstructor(p_types);
@@ -229,7 +243,7 @@ public class UiXmlParser {
 			if(p_parent.getChildNodes().getLength() ==0){
 				setProperty(p_element,l_name,"");
 			} else if(p_parent.getChildNodes().getLength()==1 &&  p_parent.getFirstChild().getNodeType()!=Node.ELEMENT_NODE){
-				setProperty(p_element,l_name,p_parent.getFirstChild().getTextContent());
+				setPropertyFromExpression(p_element,l_name,p_parent.getFirstChild().getTextContent());
 			} else {
 				processSubStructure(p_element,l_name,p_parent);
 			}
@@ -330,7 +344,7 @@ public class UiXmlParser {
 		for(int l_cnt=0;l_cnt<l_properties.getLength();l_cnt++){
 			l_node=l_properties.item(l_cnt);
 			if(!l_node.getNodeName().equals("type") && !l_node.getNodeName().equals("adapter") && !l_node.getNodeName().equals("file")){
-					setProperty(p_element,l_node.getNodeName(),l_node.getNodeValue());
+					setPropertyFromExpression(p_element,l_node.getNodeName(),l_node.getNodeValue());
 			}
 		}
 		
