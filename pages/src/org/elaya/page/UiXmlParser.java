@@ -2,13 +2,14 @@ package org.elaya.page;
 import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Objects;
 import javax.xml.parsers.DocumentBuilder; 
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.elaya.page.data.Data;
+import org.elaya.page.data.DynamicMethod;
 import org.elaya.page.quickform.OptionItem;
 import org.slf4j.Logger;
 import org.w3c.dom.DOMException;
@@ -25,17 +26,19 @@ public class UiXmlParser {
 	int cnt=0;
 	Logger logger;
 	Data data;
-
+	HashMap<String,String> aliasses;
+	
 	public void addError(String p_message){
 		errors.add(cnt+"-"+p_message);
 		cnt++;
 	}
-	public UiXmlParser(Application p_application,Data p_data){
+	public UiXmlParser(Application p_application,Data p_data,HashMap<String,String> p_aliasses){
 		Objects.requireNonNull(p_application,"p_application");
 		Objects.requireNonNull(p_data,"p_data");
 		application=p_application;
 		data=p_data;
 		logger=p_application.getLogger();
+		aliasses=p_aliasses;
 	}
 
 	public LinkedList<String> getErrors()
@@ -98,42 +101,34 @@ public class UiXmlParser {
 	}
 	
 	
-	private <T> void setProperty(Object p_object,String p_name,T p_value) throws Exception
-	{
-		Method l_methods[]=p_object.getClass().getMethods();
-		Method l_method=null;
-		
-		int l_cnt;
-
-		String l_name="set"+p_name;
-		for(l_cnt=0;l_cnt<l_methods.length;l_cnt++){
-			l_method=l_methods[l_cnt];
-			
-			if(l_method.getName().toLowerCase().equals(l_name)){
-				Class<?> l_types[]=l_method.getParameterTypes();
-				if(l_types.length != 1)continue;
-				if((p_value==null) ||(l_types[0]==p_value.getClass())){
-					l_method.invoke(p_object, p_value);
-					return;
-				}				
-			}
-		}		
-		errors.add("Method "+p_name+" not found for object type "+p_object.getClass().getName());
-	}
 	
-	private void setPropertyFromExpression(Object p_object,String p_name,String p_expression) throws Exception
+	private void setPropertyFromExpression(DynamicMethod p_object,String p_name,String p_expression) throws Exception
 	{
 		Object l_value=replaceVariables((String)p_expression);		
-		setProperty(p_object,p_name,l_value);
+		p_object.put(p_name,l_value);
+	}
 	
+	private String normelizeClassName(String p_className)
+	{
+		
+		if(p_className.startsWith("@")){			
+			String l_className=aliasses.get(p_className.substring(1));
+			if(l_className!=null){
+				return l_className;
+			}
+			
+		}
+		return p_className;
 	}
 	
 	private Object createObjectFromNameP(String p_name,Class<?>[] p_types,Object[] p_params) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException{
-		Class<?> l_class;		
+		Class<?> l_class;
+		String l_className="";
 		try{
-			l_class=Class.forName(p_name);			
+			l_className=normelizeClassName(p_name);
+			l_class=Class.forName(l_className);			
 		}catch(ClassNotFoundException l_e){
-			errors.add("Page class "+p_name+" not found");
+			errors.add("Class "+l_className+" not found");
 			return null;
 		}
 	 
@@ -234,7 +229,7 @@ public class UiXmlParser {
 		while(l_child != null){
 			if(l_child.getNodeType()==Node.ELEMENT_NODE){
 				if(l_child.getNodeName().equals("options")){
-					setProperty(p_element,p_name,processOptions(l_child));
+					p_element.put(p_name,processOptions(l_child));
 				} else {
 					errors.add("Invalid tag in options property definition "+getNodePath(l_child));
 				}
@@ -248,7 +243,7 @@ public class UiXmlParser {
 		if(l_nameNode != null){
 			l_name=l_nameNode.getNodeValue();
 			if(p_parent.getChildNodes().getLength() ==0){
-				setProperty(p_element,l_name,"");
+				p_element.put(l_name,"");
 			} else if(p_parent.getChildNodes().getLength()==1 &&  p_parent.getFirstChild().getNodeType()!=Node.ELEMENT_NODE){
 				setPropertyFromExpression(p_element,l_name,p_parent.getFirstChild().getTextContent());
 			} else {
@@ -296,7 +291,7 @@ public class UiXmlParser {
 			} else {
 				l_file=getFileValue(p_node);
 				if(l_file != null){					
-					UiXmlParser l_parser=new UiXmlParser(application,data);
+					UiXmlParser l_parser=new UiXmlParser(application,data,aliasses);
 					l_element=l_parser.parseElementXml(p_element, l_file);
 					if(l_element !=null)processNodeDef(l_element,p_node);			
 					errors.addAll(l_parser.getErrors());
@@ -387,7 +382,7 @@ public class UiXmlParser {
 		} else {
 			String l_file=getFileValue(p_rootNode);
 			if(l_file != null){
-				UiXmlParser  l_parser=new UiXmlParser(application,data);
+				UiXmlParser  l_parser=new UiXmlParser(application,data,aliasses);
 				l_page=l_parser.parseUiXml(l_file);
 				errors.addAll(l_parser.getErrors());
 				if(l_page==null){

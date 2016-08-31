@@ -3,6 +3,7 @@ package org.elaya.page.table;
 import org.elaya.page.Element;
 import org.elaya.page.Errors;
 import org.elaya.page.PageElement;
+import org.elaya.page.data.DynamicData;
 
 public class Table extends PageElement<TableThemeItem> {
 

@@ -5,7 +5,9 @@ import java.util.LinkedList;
 import java.util.Objects;
 import java.util.Set;
 
-public abstract class Element<themeType extends ThemeItemBase> {
+import org.elaya.page.data.DynamicMethod;
+
+public abstract class Element<themeType extends ThemeItemBase> extends DynamicMethod {
 	protected themeType themeItem;
 	protected Theme theme;
 	protected LinkedList<Element<?>> elements=new LinkedList<Element<?>>();
@@ -136,6 +138,9 @@ public abstract class Element<themeType extends ThemeItemBase> {
 		p_element.setTheme(theme);
 		p_element.setParent(this);
 		elements.add(p_element);
+		if(p_element.getName().length()>0){
+			getPage().addToNameIndex(p_element);
+		}
 
 	}
 	

@@ -1,9 +1,11 @@
 package org.elaya.page;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.ListIterator;
 import java.util.Set;
 
+import org.elaya.page.Errors.duplicateElementOnPage;
 import org.elaya.page.data.Data;
 
 
@@ -11,6 +13,16 @@ import org.elaya.page.data.Data;
 public class Page extends PageElement<PageThemeItem> {
 
 	String url;
+	
+	HashMap<String,Element<?>> nameIndex=new HashMap<String,Element<?>>();
+	
+	void addToNameIndex(Element<?> p_element) throws duplicateElementOnPage
+	{
+		if(nameIndex.containsKey(p_element.getName())){
+			throw new Errors.duplicateElementOnPage(p_element.getName());
+		}
+		nameIndex.put(p_element.getName(),p_element);
+	}
 	
 	public Page()
 	{

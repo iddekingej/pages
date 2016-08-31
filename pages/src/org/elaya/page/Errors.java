@@ -19,4 +19,15 @@ public class Errors {
 			super("Value '"+p_name+"' not found");
 		}
 	}
+	
+	public static class duplicateElementOnPage extends Exception
+	{
+		private static final long serialVersionUID = 5670782478614650834L;
+		
+		public duplicateElementOnPage(String p_name)
+		{
+			super("Duplicate element name on page:"+p_name);
+		}
+		
+	}
 }

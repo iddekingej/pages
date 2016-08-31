@@ -1,4 +1,4 @@
-package org.elaya.page.table;
+package org.elaya.page.data;
 
 import java.lang.reflect.Field;
 
@@ -25,6 +25,7 @@ public class DynamicDataBase implements DynamicData {
 	@Override
 	public boolean containsKey(String p_name) {
 		try{
+			@SuppressWarnings("unused")
 			Field l_field=getClass().getField(p_name);
 		} catch(NoSuchFieldException l_e)
 		{
