@@ -51,6 +51,15 @@ public class ThemeItemBase {
 		return p_name+"=\""+escape(p_value)+"\" ";
 	}
 	
+	public String propertyF(String p_name,Object p_value)
+	{
+		String l_str=str(p_value);
+		if(l_str.length()>0){
+			return property(p_name,p_value);
+		}
+		return "";
+	}
+	
 	public String js_toString(Object p_value){
 		if(p_value==null) return "";
 		return "\""+p_value.toString().replace("\"","\\\"")+"\"";

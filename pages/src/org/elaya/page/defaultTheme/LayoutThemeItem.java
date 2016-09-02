@@ -15,10 +15,27 @@ public class LayoutThemeItem extends org.elaya.page.LayoutThemeItem {
 		p_files.add("page.css");
 	}
 	
+	public void verticalHeader() throws IOException{
+		print("<table>");
+	}
+	
+	public void verticalItemHeader()throws IOException{
+		print("<tr><td>");
+	}
+	
+	public void verticalItemFooter() throws IOException{
+		print("</td></tr>");
+	}
+	
+	public void verticalFooter() throws IOException{
+		print("</table>");
+	}
+	
 	public void HorizontalHeader() throws IOException {
 		print("<table><tr>");
 	}
 
+	
 	@Override
 	public void HorizontalItemHeader() throws IOException {
 		// TODO Auto-generated method stub
@@ -35,6 +52,39 @@ public class LayoutThemeItem extends org.elaya.page.LayoutThemeItem {
 	public void HorizontalFooter() throws IOException {
 		print("</tr></table>");
 
+	}
+
+	@Override
+	public void gridHeader() throws IOException {
+		print("<table>");
+	}
+
+	@Override
+	public void gridRowHeader() throws IOException {
+		print("<tr>");
+		
+	}
+
+	@Override
+	public void gridItemHeader() throws IOException {
+		print("<td>");
+		
+	}
+
+	@Override
+	public void gridItemFooter() throws IOException {
+		print("</td>");
+		
+	}
+
+	@Override
+	public void gridRowFooter() throws IOException {
+		print("</tr>");
+	}
+
+	@Override
+	public void gridFooter() throws IOException {
+		print("</table>");
 	}
 
 }

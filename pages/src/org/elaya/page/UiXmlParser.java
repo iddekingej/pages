@@ -104,7 +104,7 @@ public class UiXmlParser {
 	
 	private void setPropertyFromExpression(DynamicMethod p_object,String p_name,String p_expression) throws Exception
 	{
-		Object l_value=replaceVariables((String)p_expression);		
+		Object l_value=replaceVariables((String)p_expression);	
 		p_object.put(p_name,l_value);
 	}
 	
@@ -323,8 +323,14 @@ public class UiXmlParser {
 		NamedNodeMap l_properties=p_parent.getAttributes();
 		Node l_node;
 		Data l_prvData=data;
+		String l_adapterName;
+		String l_condition;
 		
-		String l_adapterName=getAttributeValue(p_parent,"adapter");
+		l_condition=getAttributeValue(p_parent,"condition");
+		if(l_condition != null){
+			if(data.get(l_condition) != Boolean.TRUE) return ;
+		}
+		l_adapterName=getAttributeValue(p_parent,"adapter");
 		
 		if(p_element instanceof PageElement){
 			if(l_adapterName != null){				
@@ -345,7 +351,7 @@ public class UiXmlParser {
 		
 		for(int l_cnt=0;l_cnt<l_properties.getLength();l_cnt++){
 			l_node=l_properties.item(l_cnt);
-			if(!l_node.getNodeName().equals("type") && !l_node.getNodeName().equals("adapter") && !l_node.getNodeName().equals("file")){
+			if(!l_node.getNodeName().equals("type") && !l_node.getNodeName().equals("adapter") && !l_node.getNodeName().equals("file") && !l_node.getNodeName().equals("condition")){
 					setPropertyFromExpression(p_element,l_node.getNodeName(),l_node.getNodeValue());
 			}
 		}

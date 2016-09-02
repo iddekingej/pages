@@ -35,10 +35,19 @@ public class DynamicMethod implements DynamicData{
 	}
 
 	@Override
-	public void put(String p_name, Object p_value) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, methodNotFound
+	public void put(String p_name, Object p_value) throws Exception
 	{
 		Method l_method=getMethod("set"+p_name);
-		l_method.invoke(this, p_value);		
+		Class<?> l_params[]=l_method.getParameterTypes();
+		Object l_value=p_value;
+		if(l_params.length>=1 && p_value != null){
+			if(!l_params[0].getName().equals(p_value.getClass().getName())){
+				
+				Method l_methodConv=l_params[0].getMethod("valueOf",p_value.getClass());
+				l_value=l_methodConv.invoke(null,l_value);
+			}
+		}
+		l_method.invoke(this, l_value);		
 	}
 
 	@Override
