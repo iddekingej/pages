@@ -11,7 +11,7 @@ public class HorizontalLayout extends Layout{
 	{
 		themeItem.HorizontalHeader();
 		for(Element<?> l_element:getElements()){
-			themeItem.HorizontalItemHeader();
+			themeItem.HorizontalItemHeader(l_element.getHorizontalAlign(),l_element.getVerticalAlign(),l_element.getLayoutWidth(),l_element.geLayoutHeight());
 			l_element.display();
 			themeItem.HorizontalItemFooter();
 		}

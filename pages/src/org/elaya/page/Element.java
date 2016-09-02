@@ -15,13 +15,56 @@ public abstract class Element<themeType extends ThemeItemBase> extends DynamicMe
 	private static int idCnt=0;
 	private int id;
 	private String name="";
-	
-
+	private HorizontalAlign horizontalAlign=HorizontalAlign.left;
+	private VerticalAlign  verticalAlign=VerticalAlign.top;
+	private String layoutWidth;
+	private String layoutHeight;
 	
 	public Element()
 	{
 		id=idCnt;
 		idCnt++;
+	}
+	
+	public void setLayoutWidth(String p_width)
+	{
+		layoutWidth=p_width;
+	}
+	
+	public String getLayoutWidth()
+	{
+		return layoutWidth;
+	}
+	
+	
+	public void setLayoutHeight(String p_height)
+	{
+		layoutHeight=p_height;
+	}
+	
+	public String geLayoutHeight()
+	{
+		return layoutHeight;
+	}
+	
+	public HorizontalAlign getHorizontalAlign()
+	{
+		return horizontalAlign;
+	}
+	
+	public VerticalAlign getVerticalAlign()
+	{
+		return verticalAlign;
+	}
+	
+	public void setHorizontalAlign(HorizontalAlign p_align)
+	{
+		horizontalAlign=p_align;
+	}
+	
+	public void setVerticalalign(VerticalAlign p_align)
+	{
+		verticalAlign=p_align;
 	}
 	
 	public int getId()
@@ -33,6 +76,8 @@ public abstract class Element<themeType extends ThemeItemBase> extends DynamicMe
 	{
 		return "element_"+id;
 	}
+	
+
 	
 	public void setName(String p_name)
 	{

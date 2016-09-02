@@ -26,7 +26,7 @@ public class GridLayout extends Layout {
 				themeItem.gridRowHeader();
 				l_hasEnd=false;
 			}
-			themeItem.gridItemHeader();
+			themeItem.gridItemHeader(l_element.getHorizontalAlign(),l_element.getVerticalAlign(),l_element.getLayoutWidth(),l_element.geLayoutHeight());
 			l_element.display();
 			themeItem.gridItemFooter();
 			l_col++;
@@ -38,7 +38,7 @@ public class GridLayout extends Layout {
 		}
 		if(!l_hasEnd){
 			while(l_col<columns){
-				themeItem.gridItemHeader();
+				themeItem.gridItemHeader(HorizontalAlign.left,VerticalAlign.top,"","");
 				themeItem.gridItemFooter();
 				l_col++;
 			}

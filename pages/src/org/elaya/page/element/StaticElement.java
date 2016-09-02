@@ -13,8 +13,8 @@ public class StaticElement extends PageElement<ElementThemeItem> {
 		text=p_text;
 	}
 	
-	public void setIsHtml(String p_flag){
-		isHtml=(p_flag.toLowerCase()=="true");
+	public void setIsHtml(Boolean p_flag){
+		isHtml=p_flag;
 	}
 	
 	public void setClassName(String p_className){

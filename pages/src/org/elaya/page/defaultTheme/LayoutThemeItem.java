@@ -3,10 +3,22 @@ package org.elaya.page.defaultTheme;
 import java.io.IOException;
 import java.util.Set;
 
+import org.elaya.page.HorizontalAlign;
 import org.elaya.page.Theme;
+import org.elaya.page.VerticalAlign;
 
 public class LayoutThemeItem extends org.elaya.page.LayoutThemeItem {
 
+	private void makeCell(HorizontalAlign p_horizontalAlign,VerticalAlign p_verticalAlign,String p_layoutWidth,String p_layoutHeight) throws IOException
+	{
+		String l_style="";
+		String l_layoutWidth=str(p_layoutWidth);
+		String l_layoutHeight=str(p_layoutHeight);
+		if(l_layoutWidth.length()>0) l_style += "width:"+l_layoutWidth+";";
+		if(l_layoutHeight.length()>0) l_style += "height:"+l_layoutHeight+";";
+		print("<td "+property("align",p_horizontalAlign.gettagValue())+property("valign",p_verticalAlign)+propertyF("style",l_style)+">");
+	}
+	
 	public LayoutThemeItem(Theme p_theme) throws IOException {
 		super(p_theme);
 	}
@@ -16,11 +28,12 @@ public class LayoutThemeItem extends org.elaya.page.LayoutThemeItem {
 	}
 	
 	public void verticalHeader() throws IOException{
-		print("<table>");
+		print("<table style='width:100%'>");
 	}
 	
-	public void verticalItemHeader()throws IOException{
-		print("<tr><td>");
+	public void verticalItemHeader(HorizontalAlign p_horizontalAlign,VerticalAlign p_verticalAlign,String p_layoutWidth,String p_layoutHeight)throws IOException{
+		print("<tr>");
+		makeCell(p_horizontalAlign,p_verticalAlign,p_layoutWidth,p_layoutHeight);
 	}
 	
 	public void verticalItemFooter() throws IOException{
@@ -32,14 +45,13 @@ public class LayoutThemeItem extends org.elaya.page.LayoutThemeItem {
 	}
 	
 	public void HorizontalHeader() throws IOException {
-		print("<table><tr>");
+		print("<table style='width:100%'><tr>");
 	}
 
 	
 	@Override
-	public void HorizontalItemHeader() throws IOException {
-		// TODO Auto-generated method stub
-		print("<td>");
+	public void HorizontalItemHeader(HorizontalAlign p_horizontalAlign,VerticalAlign p_verticalAlign,String p_layoutWidth,String p_layoutHeight) throws IOException {
+		makeCell(p_horizontalAlign,p_verticalAlign,p_layoutWidth,p_layoutHeight);
 	}
 
 	@Override
@@ -56,7 +68,7 @@ public class LayoutThemeItem extends org.elaya.page.LayoutThemeItem {
 
 	@Override
 	public void gridHeader() throws IOException {
-		print("<table>");
+		print("<table style='width:100%'>");
 	}
 
 	@Override
@@ -66,9 +78,8 @@ public class LayoutThemeItem extends org.elaya.page.LayoutThemeItem {
 	}
 
 	@Override
-	public void gridItemHeader() throws IOException {
-		print("<td>");
-		
+	public void gridItemHeader(HorizontalAlign p_horizontalAlign,VerticalAlign p_verticalAlign,String p_layoutWidth,String p_layoutHeight) throws IOException {
+		makeCell(p_horizontalAlign,p_verticalAlign,p_layoutWidth,p_layoutHeight);
 	}
 
 	@Override
