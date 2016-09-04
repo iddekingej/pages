@@ -1,6 +1,5 @@
 package org.elaya.page.quickform;
 
-import org.elaya.page.Element;
 
 public class FormExceptions {
 	static public class ValueNotFoundException extends Exception{
@@ -25,13 +24,7 @@ public class FormExceptions {
 		}
 	}
 	
-	static public class InvalidElement extends Exception{
 
-		private static final long serialVersionUID = -4997959418112427282L;
-		public InvalidElement(Element<?> p_element,Element<?> p_where,String p_requeredClass){
-			super("Wrong type of element("+p_element.getClass().getName()+"), a subelement of "+p_element.getClass().getName()+" requires a "+p_requeredClass);
-		}
-	}
 	
 	static public class ElementNoSub extends Exception{
 

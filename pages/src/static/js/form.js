@@ -4,37 +4,53 @@
 
 function TForm(p_parent,p_jsName,p_name,p_id){
 	this.form=document.getElementById(p_id);
+	this.form._control=this;
 	this.parent=p_parent;
 	this.name=p_name;
-	this.cmd=p_cmd;
+	this.cmd="";
+	this.url="";
 	this.parent.addElement(p_jsName,this);
 	this.elements={};
-	this.submitButton=document.getElementById(p_id+"_submit");
-	if(this.submitButton){
-		var l_this=this;
-		this.submitButton.onclick=function(){
-				l_this.sendData();
-		}
-	}
 }
 
+TForm.prototype.submit=function()
+{
+	this.form.submit();
+}
+
+TForm.prototype.success=function(p_data)
+{
+	console.log(p_data);
+}
 TForm.prototype.sendData=function()
 {
-	var l_element;
-	var l_data={};
-	for(var l_key in this.elements){
-		l_data[l_key]=this.elements[l_key].getValue();
+	try{
+	
+		pages.page.lock();
+		var l_element;
+		var l_data={};
+		for(var l_key in this.elements){
+			l_data[l_key]=this.elements[l_key].getValue();
+		}
+
+		var l_message={
+				cmd:this.cmd
+				,	form:this.name
+				,	data:l_data
+		};
+		l_this=this;
+		$.ajax({
+			url:this.url
+			,	type:'POST'
+			,	contentType:'application/json'
+			,	async:false
+			,	data:JSON.stingify(l_message)
+			,   success:function(p_data){ l_this.success(p_data);}
+			,	complete(p_xhr,p_status){ pages.page.unlock();}
+		});
+	} catch(e){
+		pages.page.unlock();
 	}
-	var l_int=new XMLHttpRequest();
-	l_int.open("POST","",false);
-	var l_message={
-		cmd:""
-	,	form:name
-	,	data:l_data
-	};
-	l_int.send(JSON.stringify(l_message));
-	console.log(JSON.parse(l_int.responseText));
-	return false;
 }
 
 TForm.prototype.addElement=function(p_jsName,p_element)
@@ -108,3 +124,10 @@ function TTextEditElement(p_form,p_name,p_id)
 }
 
 TTextEditElement.prototype=Object.create(TFormElement.prototype);
+
+TTextAreaElement.prototype=Object.create(TFormElement.prototype);
+
+function TTextAreaElement(p_form,p_name,p_id)
+{
+	TFormElement.call(this,p_form,p_name,p_id);
+}

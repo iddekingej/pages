@@ -9,15 +9,15 @@ import org.elaya.page.quickform.OptionItem;
 public class FormElementThemeItem extends org.elaya.page.quickform.FormElementThemeItem {
 
 		
-	public void textElement(String p_idDom,String p_name,Object p_value) throws IOException
+	public void textElement(String p_idDom,String p_name,Object p_value,int p_maxLength) throws IOException
 	{
-		print("<input "+property("id",p_idDom)+property("type","text")+property("name",p_name)+property("value",p_value)+">");
+		print("<input style='width:100%' "+property("id",p_idDom)+property("type","text")+property("name",p_name)+property("value",p_value)+propertyF("maxlength",(p_maxLength>0?String.valueOf(p_maxLength):""))+">");
 	}
 	
 
 	public void selectElementHeader(String p_idDom,String p_name) throws IOException
 	{
-		print("<select "+property("id",p_idDom)+property("name",p_name)+">");
+		print("<select  "+property("id",p_idDom)+property("name",p_name)+">");
 	}
 	
 	public void selectElementOption(Object p_value,String p_text,boolean p_selected) throws IOException
@@ -83,6 +83,16 @@ public class FormElementThemeItem extends org.elaya.page.quickform.FormElementTh
 	
 	public FormElementThemeItem(Theme p_theme) throws IOException {
 		super(p_theme);
+	}
+
+
+	@Override
+	public void textArea(String p_idDom, String p_name, String p_height, String p_width, Object p_value)
+			throws IOException {
+		String l_css="";
+		if(p_width.length()>0) l_css += "width:"+p_width+";";
+		if(p_height.length()>0) l_css += "height:"+p_height+";";
+		print("<textarea "+property("id",p_idDom)+property("name",p_name)+property("style",l_css)+">"+escape(p_value)+"</textarea>");
 	}
 
 }

@@ -13,15 +13,22 @@ import org.springframework.web.servlet.view.AbstractView;
 
 public class PageView extends AbstractView {
 
-	private String basePath;
+	
+	private String path;	
+	PageMode mode;
 	Logger logger ;
 	Application application;
 	HashMap<String,String> aliasses=new HashMap<String,String>();
 	
-
-	public PageView(String p_file,Logger p_logger,Application p_application) {
+	
+	public PageView()
+	{
+		
+	}
+	public PageView(PageMode p_mode,String p_file,Logger p_logger,Application p_application) {
 		super(); 
-		basePath=p_file;
+		mode=p_mode;
+		path=p_file;
 		logger=p_logger;
 		application=p_application;
 		application.setLogger(logger);
@@ -30,7 +37,7 @@ public class PageView extends AbstractView {
 	public void addAliasses(String p_fileName) throws Exception
 	{
 		AliasParser l_parser=new AliasParser(application);
-		l_parser.parseAliases(basePath+"/"+p_fileName, aliasses);
+		l_parser.parseAliases("resources/"+p_fileName, aliasses);
 		for(String l_error:l_parser.getErrors()){
 			logger.info(l_error);
 		}
@@ -48,16 +55,25 @@ public class PageView extends AbstractView {
 		l_md.init();		
 		addAliasses("alias.xml");
 		UiXmlParser l_parser=new UiXmlParser(application,l_md,aliasses);
-		String l_fileName=p_request.getRequestURI().substring(p_request.getContextPath().length());
-		Page l_page=l_parser.parseUiXml(basePath+l_fileName+".xml");
+		
+		String l_fileName="";
+		if(mode.equals(PageMode.path)){
+			l_fileName=path+p_request.getRequestURI().substring(p_request.getContextPath().length())+".xml";
+		} else if(mode.equals(PageMode.filename)) {
+			l_fileName=path;
+		}
+		Page l_page=l_parser.parseUiXml(l_fileName);
 		LinkedList<String> l_errors=l_parser.getErrors();
 		for(String l_error:l_errors){
 			logger.info(l_error);
 		}
+		if(l_page != null){
 		l_page.setUrl(p_request.getRequestURI());
-		//p_request.getPathTranslated()
-		//p_request.getRequestURI()		 
-		l_page.display();
+			p_response.setContentType("application/xml;charset=UTF-8");
+			l_page.display();
+		} else {
+			logger.info("Page =null");
+		}
 	}
 
 }

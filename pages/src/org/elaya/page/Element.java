@@ -12,8 +12,8 @@ public abstract class Element<themeType extends ThemeItemBase> extends DynamicMe
 	protected Theme theme;
 	protected LinkedList<Element<?>> elements=new LinkedList<Element<?>>();
 	private   Element<?> parent=null;
-	private static int idCnt=0;
-	private int id;
+
+	private int id=-1;
 	private String name="";
 	private HorizontalAlign horizontalAlign=HorizontalAlign.left;
 	private VerticalAlign  verticalAlign=VerticalAlign.top;
@@ -22,8 +22,14 @@ public abstract class Element<themeType extends ThemeItemBase> extends DynamicMe
 	
 	public Element()
 	{
-		id=idCnt;
-		idCnt++;
+	}
+	
+	public void process()
+	{
+		id=getPage().newId();//TODO check is getPage =null
+		for(Element<?> l_element:getElements()){
+			l_element.process();
+		}
 	}
 	
 	public void setLayoutWidth(String p_width)
@@ -145,12 +151,22 @@ public abstract class Element<themeType extends ThemeItemBase> extends DynamicMe
 	public Element<?> getParent(){ return parent;}
 	
 	void setParent(Element<?> p_parent) throws IOException{
+		Objects.requireNonNull(p_parent);
 		parent=p_parent;
+	}
+	public Element<?> getFirstWidget()
+	{
+		return this;
+	}
+	
+	public Element<?> getWidgetParent()
+	{
+		return getParent().getFirstWidget();
 	}
 	
 	public Page getPage()
 	{
-		Element<?> l_current=getParent();
+		Element<?> l_current=this;
 		while(l_current != null){
 			if(l_current instanceof Page){
 				return (Page)l_current;
@@ -179,7 +195,11 @@ public abstract class Element<themeType extends ThemeItemBase> extends DynamicMe
 	
 	final public void addElement(Element<?> p_element) throws Exception
 	{
+		Objects.requireNonNull(this);
 		Objects.requireNonNull(p_element,"addElement(p_element)");
+		if(!checkElement(p_element)){
+			throw new Errors.InvalidElement(p_element,this);
+		}
 		p_element.setTheme(theme);
 		p_element.setParent(this);
 		elements.add(p_element);
@@ -194,4 +214,7 @@ public abstract class Element<themeType extends ThemeItemBase> extends DynamicMe
 		return elements;
 	} 
 	
+	public boolean checkElement(Element<?> p_element){
+		return false;
+	}
 }

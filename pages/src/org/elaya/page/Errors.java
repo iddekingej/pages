@@ -30,4 +30,12 @@ public class Errors {
 		}
 		
 	}
+	
+	static public class InvalidElement extends Exception{
+
+		private static final long serialVersionUID = -4997959418112427282L;
+		public InvalidElement(Element<?> p_element,Element<?> p_where){
+			super("Wrong type of element("+p_element.getClass().getName()+"), a subelement of "+p_element.getClass().getName());
+		}
+	}
 }

@@ -12,9 +12,26 @@ import org.elaya.page.data.Data;
 
 public class Page extends PageElement<PageThemeItem> {
 
-	String url;
+	private String url;
+	private int idCnt=0;
+	private boolean toWindowSize=false;
+	private HashMap<String,Element<?>> nameIndex=new HashMap<String,Element<?>>();
 	
-	HashMap<String,Element<?>> nameIndex=new HashMap<String,Element<?>>();
+	public void setToWindowSize(Boolean p_flag)
+	{
+		toWindowSize=p_flag;
+	}
+	
+	public boolean getToWindowSize()
+	{
+		return toWindowSize;
+	}
+	
+	public int newId()
+	{
+		idCnt++;
+		return idCnt;
+	}
 	
 	void addToNameIndex(Element<?> p_element) throws duplicateElementOnPage
 	{
@@ -51,6 +68,7 @@ public class Page extends PageElement<PageThemeItem> {
 		getAllCssFiles(l_css);
 		getAllJsFiles(l_js);
 		l_js.add("pages.js");
+		l_js.add("jquery.js");
 		themeItem.pageHeader(l_js,l_css);
 		Data l_data=getData();
 		l_iter=getElements().listIterator();
@@ -61,12 +79,22 @@ public class Page extends PageElement<PageThemeItem> {
 			}
 			l_element.display();
 		}
+		if(toWindowSize){
+			themeItem.jsBegin();
+			themeItem.print("pages.page.initToWindowSize();");
+			themeItem.jsEnd();
+			
+		}
 		themeItem.pageFooter();
 	}	
 	
 	public String getThemeName()
 	{
 			return "PageThemeItem";
+	}
+	
+	public boolean checkElement(Element<?> p_element){
+		return p_element instanceof PageElement;
 	}
 	
 	public Page(Application p_application) throws Exception

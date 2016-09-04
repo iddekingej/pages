@@ -16,7 +16,8 @@ public abstract class FormElement<themeType extends ThemeItemBase> extends Eleme
 	public boolean hasValue(){ return true;}
 	public  void display() throws Exception
 	{
-		
+		//TODO error should be raised
+
 	}
 	abstract public String getJsType();
 	abstract public String getJsClassName();

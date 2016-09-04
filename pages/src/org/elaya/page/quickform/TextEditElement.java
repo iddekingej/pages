@@ -4,16 +4,28 @@ import java.util.Objects;
 
 public  class TextEditElement extends BuildInFormElement {
 
+	int maxLength=-1;
 	
 	public TextEditElement()	
 	{
 		super();
 	}
 	
+	public void setMaxLength(Integer p_size)
+	{
+		maxLength=p_size;
+	}
+	
+	public int getMaxLength()
+	{
+		return maxLength;
+	}
+	
 	@Override
 	public void display(Object p_value) throws Exception {
-		Objects.requireNonNull(themeItem);		
-		themeItem.textElement(getDomId(),getName(),p_value);		
+		Objects.requireNonNull(themeItem);
+		
+		themeItem.textElement(getDomId(),getName(),p_value,maxLength);		
 	}
 
 	@Override

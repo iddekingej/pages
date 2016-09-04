@@ -28,7 +28,7 @@ public class LayoutThemeItem extends org.elaya.page.LayoutThemeItem {
 	}
 	
 	public void verticalHeader() throws IOException{
-		print("<table style='width:100%'>");
+		print("<table style='width:100%;height:100%'>");
 	}
 	
 	public void verticalItemHeader(HorizontalAlign p_horizontalAlign,VerticalAlign p_verticalAlign,String p_layoutWidth,String p_layoutHeight)throws IOException{

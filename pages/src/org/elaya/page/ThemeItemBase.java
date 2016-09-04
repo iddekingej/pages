@@ -61,7 +61,7 @@ public class ThemeItemBase {
 	}
 	
 	public String js_toString(Object p_value){
-		if(p_value==null) return "";
+		if(p_value==null) return "\"\"";
 		return "\""+p_value.toString().replace("\"","\\\"")+"\"";
 	}
 	

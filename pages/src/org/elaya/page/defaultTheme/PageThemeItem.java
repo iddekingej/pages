@@ -15,7 +15,8 @@ public class PageThemeItem extends org.elaya.page.PageThemeItem {
 	@Override
 	public void pageHeader(Set<String> p_js,Set<String> p_css) throws IOException{
 		Iterator<String> l_iter=p_js.iterator();
-		print("<html>\n<head>\n");
+		print("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">");
+		print("<html xmlns=\"http://www.w3.org/1999/xhtml\">\n<head>\n");
 		while(l_iter.hasNext()){
 			jsInclude(l_iter.next());
 		}
@@ -23,12 +24,12 @@ public class PageThemeItem extends org.elaya.page.PageThemeItem {
 		while(l_iter.hasNext()){
 			cssInclude(l_iter.next());
 		}
-		print("</head>\n<body>\n");
+		print("</head>\n<body><div id='pageContainer'>\n");
 	}
 
 	@Override
 	public void pageFooter()throws IOException  {
-		print("</body></html>");
+		print("</div></body></html>");
 
 	}
 

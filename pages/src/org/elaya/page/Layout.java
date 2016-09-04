@@ -7,7 +7,10 @@ public abstract class Layout extends PageElement<LayoutThemeItem> {
 		super();
 	}
 
-	
+	public Element<?> getFirstWidget()
+	{
+		return this.getParent().getFirstWidget();
+	}
 	public void display(Object p_value) throws Exception
 	{
 		display();

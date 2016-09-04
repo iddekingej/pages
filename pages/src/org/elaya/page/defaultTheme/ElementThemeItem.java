@@ -44,4 +44,9 @@ public class ElementThemeItem extends org.elaya.page.element.ElementThemeItem {
 		print("<a "+property("href",p_url)+propertyF("class",p_class)+propertyF("style",p_css)+">"+escape(p_text)+"</a>");
 	}
 
+	@Override
+	public void verticalSpacer() throws IOException {
+		print("<div style='width:100%'>&nbsp;</div>");
+	}
+
 }

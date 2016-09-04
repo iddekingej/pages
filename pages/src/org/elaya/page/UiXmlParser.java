@@ -27,6 +27,18 @@ public class UiXmlParser {
 	Logger logger;
 	Data data;
 	HashMap<String,String> aliasses;
+	HashMap<String,Element<?>> elementIndex=null;
+	
+	public void addToElementIndex(Element<?> p_element){
+		if(p_element.getName().length()>0){
+			elementIndex.put(p_element.getName(),p_element);
+		}
+	}
+	
+	public void setElementIndex(HashMap<String,Element<?>> p_index)
+	{
+		elementIndex=p_index;
+	}
 	
 	public void addError(String p_message){
 		errors.add(cnt+"-"+p_message);
@@ -187,6 +199,11 @@ public class UiXmlParser {
 		}
 	}
 	
+	private String getRefValue(Node p_node)
+	{
+		return getAttributeValue(p_node,"ref");
+	}
+	
 	private String getFileValue(Node p_node)
 	{
 		return getAttributeValue(p_node,"file");
@@ -237,7 +254,7 @@ public class UiXmlParser {
 			l_child=l_child.getNextSibling();
 		}
 	}
-	public void processSubValue(Element<?> p_element,Node p_parent) throws DOMException, Exception{
+	public void processProperty(Element<?> p_element,Node p_parent) throws DOMException, Exception{
 		Node l_nameNode=p_parent.getAttributes().getNamedItem("name");
 		String l_name;
 		if(l_nameNode != null){
@@ -255,23 +272,6 @@ public class UiXmlParser {
 	}
 	
 	
-	public void processProperties(Element<?> p_element,Node p_parent) throws DOMException, Exception{
-		Objects.requireNonNull(p_element);
-		Objects.requireNonNull(p_parent);
-		Node l_current=p_parent.getFirstChild();
-		
-		while(l_current != null){
-			if(l_current.getNodeType()==Node.ELEMENT_NODE){
-				if(l_current.getNodeName().equals("property")){
-					processSubValue(p_element,l_current);
-				}  else {
-					errors.add("Invalid properties definition "+getNodePath(l_current));
-				}
-			}
-			l_current=l_current.getNextSibling();
-		}
-	}
-	
 	public Element<?> processElement(Element<?> p_element,Node p_node) throws Exception
 	{
 		String l_type;
@@ -282,21 +282,38 @@ public class UiXmlParser {
 			if(l_type != null){
 				Object l_object=createElementFromName(l_type);
 				if(l_object!=null){
-					if(l_object instanceof Element){								
-						p_element.addElement((Element<?>)l_object);
-						processNodeDef((Element<?>)l_object,p_node);
-						l_element=(Element<?>)l_object;
+					if(l_object instanceof Element){						
+						if(!p_element.checkElement((Element <?>)l_object)){
+							errors.add("Can add object of type "+l_object.getClass().getName()+" to parent of type "+p_element.getClass().getName()) ;
+						} else {
+							p_element.addElement((Element<?>)l_object);
+							processNodeDef((Element<?>)l_object,p_node);
+							l_element=(Element<?>)l_object;
+						}
+					} else {
+						errors.add("Object is not a element :"+l_object.getClass().getName());
 					}
 				}
 			} else {
 				l_file=getFileValue(p_node);
 				if(l_file != null){					
 					UiXmlParser l_parser=new UiXmlParser(application,data,aliasses);
+					l_parser.setElementIndex(elementIndex);
 					l_element=l_parser.parseElementXml(p_element, l_file);
 					if(l_element !=null)processNodeDef(l_element,p_node);			
 					errors.addAll(l_parser.getErrors());
 				}else {
-					errors.add("Missing 'type' or 'file' property :"+getNodePath(p_node));
+					String l_ref=getRefValue(p_node);
+					if(l_ref != null){
+						l_element=elementIndex.get(l_ref);
+						if(l_element != null){
+							processNodeDef(l_element,p_node);
+						} else {
+							errors.add("Reference '"+l_ref+"' not found");
+						}
+					} else {
+						errors.add("Missing 'type' , 'file' or 'ref property :"+getNodePath(p_node));
+					}
 				}
 			}
 		} else {
@@ -305,19 +322,6 @@ public class UiXmlParser {
 		return l_element;
 	}
 	
-	public void processElements(Element<?> p_element,Node p_parent) throws Exception{
-		
-		Objects.requireNonNull(p_element,"p_element");
-		Objects.requireNonNull(p_parent,"p_parent");
-		Node l_current=p_parent.getFirstChild();
-		while(l_current!=null){
-			if(l_current.getNodeType()==Node.ELEMENT_NODE){
-				processElement(p_element,l_current);
-			}
-			l_current=l_current.getNextSibling();
-		}
-
-	}
 	public void processNodeDef(Element<?> p_element,Node p_parent) throws Exception{		
 		Node l_currentDef=p_parent.getFirstChild();
 		NamedNodeMap l_properties=p_parent.getAttributes();
@@ -351,17 +355,20 @@ public class UiXmlParser {
 		
 		for(int l_cnt=0;l_cnt<l_properties.getLength();l_cnt++){
 			l_node=l_properties.item(l_cnt);
-			if(!l_node.getNodeName().equals("type") && !l_node.getNodeName().equals("adapter") && !l_node.getNodeName().equals("file") && !l_node.getNodeName().equals("condition")){
+			if(!l_node.getNodeName().equals("type") && !l_node.getNodeName().equals("adapter") && !l_node.getNodeName().equals("file") && !l_node.getNodeName().equals("ref") && !l_node.getNodeName().equals("condition")){
 					setPropertyFromExpression(p_element,l_node.getNodeName(),l_node.getNodeValue());
 			}
 		}
 		
+		addToElementIndex(p_element);
 		while(l_currentDef!=null){
 			if(l_currentDef.getNodeType()==Node.ELEMENT_NODE){
-				if(l_currentDef.getNodeName().equals("elements")){					
-					processElements(p_element,l_currentDef);					
-				} else if (l_currentDef.getNodeName().equals("properties")){
-					processProperties(p_element,l_currentDef);
+				if(l_currentDef.getNodeName().equals("element")){					
+					processElement(p_element,l_currentDef);					
+				} else if (l_currentDef.getNodeName().equals("property")){
+					processProperty(p_element,l_currentDef);
+				} else{
+					errors.add("Invalid tag '"+l_currentDef.getNodeName()+"',expect 'property'  or 'element'");
 				}
 				
 			}
@@ -377,7 +384,7 @@ public class UiXmlParser {
 		String l_type=getTypeValue(p_rootNode);
 		if(l_type != null){
 			Object l_object;
-			l_object=createPageFromTypeName(l_type);
+			l_object=createPageFromTypeName(l_type);			
 			if(l_object instanceof Page){
 				l_page=(Page)l_object;
 		
@@ -389,19 +396,43 @@ public class UiXmlParser {
 			String l_file=getFileValue(p_rootNode);
 			if(l_file != null){
 				UiXmlParser  l_parser=new UiXmlParser(application,data,aliasses);
+				logger.info("1 element index length="+elementIndex.size());
+				l_parser.setElementIndex(elementIndex);
 				l_page=l_parser.parseUiXml(l_file);
+				logger.info("2 element index length="+elementIndex.size());
 				errors.addAll(l_parser.getErrors());
 				if(l_page==null){
 					return null;
 				}
+			} else {
+				String l_ref=getRefValue(p_rootNode);
+				if(l_ref != null){
+					Element<?> l_element=elementIndex.get(l_ref);
+					if(l_element ==null){
+						errors.add("Page with reference '"+l_ref+"' not found");
+						return null;
+					} else {
+						if(l_element instanceof Page){
+							l_page=(Page)l_element;
+						} else {
+							errors.add("Refenced object '"+l_ref+"is not a page" );
+							return null;
+						}
+					}
+				} else {
+					errors.add("A Type,file of is missing");
+				}
+					
 			}
 		}
 		processNodeDef(l_page,p_rootNode);
+		l_page.process();
 		return l_page;
 	}
 	
 	public Element<?> parseElementXml(Element<?> p_element,String p_fileName) throws Exception
 	{		
+		if(elementIndex==null) elementIndex=new HashMap<>();
 		DocumentBuilderFactory l_factory=DocumentBuilderFactory.newInstance();
 		DocumentBuilder l_builder=l_factory.newDocumentBuilder();
 		Document l_doc=l_builder.parse(new File(application.getRealPath(p_fileName)));
@@ -416,7 +447,11 @@ public class UiXmlParser {
 		}
 	}
 	
-	public Page parseUiXml(String p_fileName) throws Exception{		
+	public Page parseUiXml(String p_fileName) throws Exception{
+		if(elementIndex==null){
+			elementIndex=new HashMap<>();
+			logger.info("new index");
+		}
 		DocumentBuilderFactory l_factory=DocumentBuilderFactory.newInstance();
 		DocumentBuilder l_builder=l_factory.newDocumentBuilder();
 		Document l_doc=l_builder.parse(new File(application.getRealPath(p_fileName)));
