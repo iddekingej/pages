@@ -11,7 +11,7 @@ public class FormElementThemeItem extends org.elaya.page.quickform.FormElementTh
 		
 	public void textElement(String p_idDom,String p_name,Object p_value,int p_maxLength) throws IOException
 	{
-		print("<input style='width:100%' "+property("id",p_idDom)+property("type","text")+property("name",p_name)+property("value",p_value)+propertyF("maxlength",(p_maxLength>0?String.valueOf(p_maxLength):""))+">");
+		print("<input style='width:100%' "+property("id",p_idDom)+property("type","text")+property("name",p_name)+property("value",p_value)+propertyF("maxlength",(p_maxLength>0?String.valueOf(p_maxLength):""))+"/>");
 	}
 	
 

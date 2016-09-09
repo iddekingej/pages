@@ -44,12 +44,13 @@ TForm.prototype.sendData=function()
 			,	type:'POST'
 			,	contentType:'application/json'
 			,	async:false
-			,	data:JSON.stingify(l_message)
+			,	data:JSON.stringify(l_message)
 			,   success:function(p_data){ l_this.success(p_data);}
 			,	complete(p_xhr,p_status){ pages.page.unlock();}
 		});
 	} catch(e){
 		pages.page.unlock();
+		alert(e.message);
 	}
 }
 

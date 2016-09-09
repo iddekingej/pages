@@ -14,7 +14,7 @@ var pages={
 			},
 			lock:function()
 			{
-				$("<div>&nbsp;</div>").attr("id","locker").css({
+				$("<div>&#160;</div>").attr("id","locker").css({
 					"position":"absolute"
 				,	"top":0
 				,   "left":0
@@ -31,3 +31,15 @@ var pages={
 			}
 		}
 };
+
+function TDummy(p_parent,p_jsName,p_name,p_id)
+{
+	this.parent=p_parent;
+	this.elements={};
+	this.parent.addElement(p_jsName,this);
+}
+
+TDummy.prototype.addElement=function(p_jsName,p_element)
+{
+	this.elements[p_jsName]=p_element;
+}

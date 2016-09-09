@@ -38,4 +38,13 @@ public class Errors {
 			super("Wrong type of element("+p_element.getClass().getName()+"), a subelement of "+p_element.getClass().getName());
 		}
 	}
+	
+	static public class InvalidObjectType extends Exception{
+		
+		private static final long serialVersionUID = -2061874935260687214L;
+
+		public InvalidObjectType(Object p_object,String p_expected){
+			super("Invalid type, "+p_object.getClass().getName()+" found but "+p_expected+" expected");
+		}
+	}
 }

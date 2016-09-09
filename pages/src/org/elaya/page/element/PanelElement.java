@@ -27,11 +27,15 @@ public class PanelElement extends PageElement<ElementThemeItem> {
 	
 	@Override
 	public void display() throws Exception {
+		themeItem.jsBegin();
+		themeItem.print("var l_dummy=new TDummy("+getWidgetParent().getJsFullname()+","+themeItem.js_toString(getJsName())+","+themeItem.js_toString(getName())+","+themeItem.js_toString(getDomId())+");\n");
+		themeItem.jsEnd();
 		themeItem.panelHeader(className, css);
 		for(Element<?> l_element:getElements()){
 			l_element.display();
 		}
 		themeItem.panelFooter();
+
 	}
 
 	@Override

@@ -396,10 +396,8 @@ public class UiXmlParser {
 			String l_file=getFileValue(p_rootNode);
 			if(l_file != null){
 				UiXmlParser  l_parser=new UiXmlParser(application,data,aliasses);
-				logger.info("1 element index length="+elementIndex.size());
 				l_parser.setElementIndex(elementIndex);
 				l_page=l_parser.parseUiXml(l_file);
-				logger.info("2 element index length="+elementIndex.size());
 				errors.addAll(l_parser.getErrors());
 				if(l_page==null){
 					return null;

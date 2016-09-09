@@ -12,7 +12,7 @@ public class Form extends PageElement<FormThemeItem>{
 	}
 
 	private String title;
-	private String url;
+	private String url="";
 	private String cmd;
 	private String width="300px";
 	private String submitText="save";

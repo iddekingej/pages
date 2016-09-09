@@ -106,7 +106,7 @@ public abstract class Element<themeType extends ThemeItemBase> extends DynamicMe
 	public String getJsFullname() throws IOException
 	{
 		if(parent==null) return getJsName();
-		String l_parent=parent.getJsFullname();
+		String l_parent=getWidgetParent().getJsFullname();
 		if(l_parent.length()==0){
 			return getJsName();
 		}

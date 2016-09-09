@@ -76,7 +76,7 @@ public class ThemeItemBase {
 	
 	public void jsBegin() throws IOException
 	{
-		print("<script type='text/javascript'>//<![CDATA[");
+		print("<script type='text/javascript'>//<![CDATA[\n");
 	}	
 	
 	public void jsEnd() throws IOException

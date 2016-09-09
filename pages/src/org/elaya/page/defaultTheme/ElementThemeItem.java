@@ -46,7 +46,7 @@ public class ElementThemeItem extends org.elaya.page.element.ElementThemeItem {
 
 	@Override
 	public void verticalSpacer() throws IOException {
-		print("<div style='width:100%'>&nbsp;</div>");
+		print("<div style='width:100%'>&#160;</div>");
 	}
 
 }

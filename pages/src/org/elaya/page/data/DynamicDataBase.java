@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 
 public class DynamicDataBase implements DynamicData {
 
+	
 	public DynamicDataBase() {
 		// TODO Auto-generated constructor stub
 	}
@@ -17,8 +18,13 @@ public class DynamicDataBase implements DynamicData {
 
 	@Override
 	public void put(String p_name, Object p_value) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
-		Field l_field=getClass().getField(p_name);
-		l_field.set(p_name,p_value);
+		Field l_field;
+		try{
+			l_field=getClass().getField(p_name);
+		} catch(java.lang.NoSuchFieldException l_e){
+			throw new  java.lang.NoSuchFieldException(l_e.getMessage()+"(Classname="+getClass().getName()+")");
+		}
+		l_field.set(this,p_value);
 		
 	}
 

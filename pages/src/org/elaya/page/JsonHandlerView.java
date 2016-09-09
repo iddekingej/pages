@@ -1,46 +1,44 @@
 package org.elaya.page;
 
-import java.io.BufferedReader;
+import java.util.LinkedList;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.json.JSONObject;
+import org.elaya.page.reciever.Reciever;
+import org.elaya.page.reciever.RecieverParser;
 import org.slf4j.Logger;
 import org.springframework.web.servlet.view.AbstractView;
 
 public class JsonHandlerView extends AbstractView {
 	PageMode mode;
-	String path;
+	String file;
 	Logger logger;
 	Application application;
-	
+		
 	public JsonHandlerView(PageMode p_mode,String p_file,Logger p_logger,Application p_application) {
 		super(); 
 		mode=p_mode;
-		path=p_file;
+		file=p_file;
 		logger=p_logger;
 		application=p_application;
-		application.setLogger(logger);
+		application.setLogger(logger);		
 	}
  
 	@Override
 	protected void renderMergedOutputModel(Map<String, Object> model, HttpServletRequest p_request,
 			HttpServletResponse p_response) throws Exception {
-		// TODO Auto-generated method stub
-		StringBuffer l_data=new StringBuffer();
-		String l_part;
-		BufferedReader l_reader=p_request.getReader(); 
-		while((l_part=l_reader.readLine())!= null) l_data.append(l_part);
-		JSONObject l_json=new JSONObject(l_data.toString());		
-		String l_fileName="";
-		if(mode.equals(PageMode.path)){
-			l_fileName=path+p_request.getRequestURI().substring(p_request.getContextPath().length())+".xml";
-		} else if(mode.equals(PageMode.filename)) {
-			l_fileName=path;
+		application.setRequest(p_request, p_response);
+		RecieverParser l_parser=new RecieverParser(logger,application,null);
+		Reciever<?> l_rec=l_parser.parseXml(file);
+		LinkedList<String> l_errors=l_parser.getErrors();
+		if(l_errors.size()>0){
+			for(String l_error:l_errors){
+				logger.info(l_error);
+			}
+		} else {
+			l_rec.handleRequest(p_request, p_response);
 		}
-		p_response.getOutputStream().print("{\"ok\":\"1\"}");   
 	}
 
 }

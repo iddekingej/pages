@@ -12,12 +12,12 @@ public class FormThemeItem extends org.elaya.page.quickform.FormThemeItem {
 	public void formHeader(String p_domId,String p_title,String p_url,String p_method,String p_width) throws IOException
 	{
 		print("<form "+property("id",p_domId)+property("method",p_method)+propertyF("action",p_url)+"><table class=\"pages_formTable\">\n");
-		print("<tr><td colspan='2' class='pages_formTitle' style='width:"+p_width+";\'>"+escape(p_title)+"</td>");
+		print("<tr><td colspan='2' class='pages_formTitle' style='width:"+p_width+";\'>"+escape(p_title)+"</td></tr>");
 	}
 	
 	public void formFooter(String p_domId,String p_saveText,String p_submitJs) throws IOException
 	{
-		print("<tr><td colspan='2'><input "+property("id",p_domId+"_submit")+property("onclick",p_submitJs)+"type='button' "+property("value",p_saveText)+"></td></tr>");
+		print("<tr><td colspan='2'><input "+property("id",p_domId+"_submit")+property("onclick",p_submitJs)+"type='button' "+property("value",p_saveText)+"/></td></tr>");
 
 		print("</table></form>");
 	}

@@ -1,5 +1,6 @@
 package org.elaya.page;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -14,7 +15,6 @@ public class Application {
 	private String cssPath="resources/pages/css/";
 	private String imgPath="resources/pages/images/";
 	private String themeBase="org.elaya.page.defaultTheme";
-	private String jsonPath="json";
 	Logger logger;
 	 
 	public Context getContext()
@@ -73,7 +73,7 @@ public class Application {
 	public void setRequest(HttpServletRequest p_request,HttpServletResponse p_response)
 	{
 		request=p_request;
-		response=p_response;
+		response=p_response;	
 	}
 	
 	public Application() {		
