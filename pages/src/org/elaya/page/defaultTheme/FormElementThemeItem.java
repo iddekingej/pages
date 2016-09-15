@@ -43,8 +43,8 @@ public class FormElementThemeItem extends org.elaya.page.quickform.FormElementTh
 
 	
 	public void radioOption(String p_idDom,String p_name,Object p_value,String p_text,boolean p_selected) throws IOException{
-		print("<input "+property("id",p_idDom)+property("type","radio")+property("name",p_name)+property("value",p_value)+(p_selected?"checked='1'":"")+">");
-		print(escape(p_text));
+		print("<input "+property("id",p_idDom)+property("type","radio")+property("name",p_name)+property("value",p_value)+(p_selected?"checked='1'":"")+"/>");
+		print("<label "+property("for",p_idDom)+">"+escape(p_text)+"</label>");
 	}
 	
 	

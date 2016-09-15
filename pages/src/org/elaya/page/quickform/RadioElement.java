@@ -2,10 +2,9 @@ package org.elaya.page.quickform;
 
 import java.util.LinkedList;
 
-import org.elaya.page.quickform.FormExceptions.InvalidPropertyValue;
+import org.elaya.page.data.Data;
 
-public class RadioElement extends BuildInFormElement {
-	private LinkedList<OptionItem> items=new LinkedList<OptionItem>();
+public class RadioElement extends OptionsElement {
 	private boolean isHorizontal=false;
 	
 	public RadioElement()
@@ -13,32 +12,16 @@ public class RadioElement extends BuildInFormElement {
 		super();
 	}
 	
-	public LinkedList<OptionItem> getitems(){ return items;}
-	
-	public void addOption(String p_value,String p_text){
-		items.add(new OptionItem(p_value,p_text));
-	}
-
-	public void setOptions(LinkedList<OptionItem> p_options){
-		items.clear();
-		items.addAll(p_options);
-	}
 	
 	public boolean getIsHorizontal(){ return isHorizontal;}
-	public void setIsHorizontal(boolean p_horizontal){ isHorizontal=p_horizontal;}
-	public void setIsHorizontal(String p_horizontal) throws InvalidPropertyValue{
-		if(p_horizontal.equals("true")){
-			setIsHorizontal(true);
-		} else if(p_horizontal.equals("false")){
-			setIsHorizontal(false);
-		} else {
-			throw new FormExceptions.InvalidPropertyValue("Invalid property values: RadioElement.SetIsHorizontal('"+p_horizontal+"')");
-		}
-	}
+	public void setIsHorizontal(Boolean p_horizontal){ isHorizontal=p_horizontal;}
+
 	@Override
-	public void display(Object p_value) throws Exception {
-		
-		themeItem.radioElement(getDomId(),getName(), items, isHorizontal,p_value);
+	public void display(Data p_data) throws Exception {
+		Data l_data=getData(p_data);
+		Object l_value=getValueByName(l_data);
+		LinkedList<OptionItem> l_items=getOptions(l_data);
+		themeItem.radioElement(getDomId(),getName(), l_items, isHorizontal,l_value);
 	}
 
 	@Override

@@ -1,6 +1,7 @@
 package org.elaya.page.element;
 
 import org.elaya.page.PageElement;
+import org.elaya.page.data.Data;
 
 public class VerticalSpacer extends PageElement<ElementThemeItem> {
 
@@ -10,7 +11,7 @@ public class VerticalSpacer extends PageElement<ElementThemeItem> {
 	}
 
 	@Override
-	public void display() throws Exception {
+	public void display(Data p_data) throws Exception {
 		themeItem.verticalSpacer();
 	}
 

@@ -2,6 +2,8 @@ package org.elaya.page.quickform;
 
 import java.util.Objects;
 
+import org.elaya.page.data.Data;
+
 public  class TextEditElement extends BuildInFormElement {
 
 	int maxLength=-1;
@@ -22,10 +24,10 @@ public  class TextEditElement extends BuildInFormElement {
 	}
 	
 	@Override
-	public void display(Object p_value) throws Exception {
+	public void display(Data p_data) throws Exception {
 		Objects.requireNonNull(themeItem);
-		
-		themeItem.textElement(getDomId(),getName(),p_value,maxLength);		
+		Object l_value=getValueByName(p_data);
+		themeItem.textElement(getDomId(),getName(),l_value,maxLength);		
 	}
 
 	@Override

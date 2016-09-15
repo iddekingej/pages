@@ -11,10 +11,6 @@ public abstract class Layout extends PageElement<LayoutThemeItem> {
 	{
 		return this.getParent().getFirstWidget();
 	}
-	public void display(Object p_value) throws Exception
-	{
-		display();
-	}
 	
 	public String getThemeName() {
 		return "LayoutThemeItem";

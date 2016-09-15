@@ -16,7 +16,8 @@ public class JsonHandlerView extends AbstractView {
 	Logger logger;
 	Application application;
 		
-	public JsonHandlerView(PageMode p_mode,String p_file,Logger p_logger,Application p_application) {
+	public JsonHandlerView(PageMode p_mode,String p_file,Logger p_logger,Application p_application) 
+	{
 		super(); 
 		mode=p_mode;
 		file=p_file;

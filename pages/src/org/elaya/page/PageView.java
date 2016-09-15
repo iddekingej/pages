@@ -49,28 +49,29 @@ public class PageView extends AbstractView {
 		// TODO Auto-generated method stub
 		
 		application.setRequest(p_request, p_response);
-		MapData l_md=new MapData(null);
-		l_md.setMap(p_map);
-		l_md.setContext(application.getContext());		
-		l_md.init();		
+		MapData l_md=new MapData("___TOP",null);
+		l_md.setByMap(p_map);
+		logger.info("data_size="+l_md.getSize());
 		addAliasses("alias.xml");
-		UiXmlParser l_parser=new UiXmlParser(application,l_md,aliasses);
+		UiXmlParser l_parser=new UiXmlParser(application,aliasses);
 		
 		String l_fileName="";
+		
 		if(mode.equals(PageMode.path)){
 			l_fileName=path+p_request.getRequestURI().substring(p_request.getContextPath().length())+".xml";
 		} else if(mode.equals(PageMode.filename)) {
 			l_fileName=path;
 		}
 		Page l_page=l_parser.parseUiXml(l_fileName);
+		l_page.calculateData(l_md);
 		LinkedList<String> l_errors=l_parser.getErrors();
 		for(String l_error:l_errors){
 			logger.info(l_error);
 		}
 		if(l_page != null){
-		l_page.setUrl(p_request.getRequestURI());
+			l_page.setUrl(p_request.getRequestURI());
 			p_response.setContentType("application/xml;charset=UTF-8");
-			l_page.display();
+			l_page.display(l_md);
 		} else {
 			logger.info("Page =null");
 		}

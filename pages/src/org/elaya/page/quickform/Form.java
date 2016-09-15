@@ -4,6 +4,7 @@ import java.util.Set;
 import org.elaya.page.Element;
 import org.elaya.page.PageElement;
 import org.elaya.page.SubmitType;
+import org.elaya.page.data.Data;
 
 public class Form extends PageElement<FormThemeItem>{
 	
@@ -85,35 +86,32 @@ public class Form extends PageElement<FormThemeItem>{
 		return "FormThemeItem";		
 	}
 	
-	public void display() throws Exception
+	public void preElement(Element<?> p_element) throws Exception
 	{
+		String l_label="";
+		if(p_element instanceof FormElement){
+			l_label=((FormElement<?>)p_element).getLabel();
+		}
+		themeItem.formElementBegin(l_label);		
+	}
+	
+	public void postElement(Element<?> p_element) throws Exception
+	{
+		themeItem.formElementEnd();
+	}
+	
+	public void display(Data p_data) throws Exception
+	{
+		Data l_data=getData(p_data);		
 		String l_method="";
 		if(submitType.equals(SubmitType.get)){
 			l_method="get";
 		} else if(submitType.equals(SubmitType.post)){
 			l_method="post";
 		}
-		themeItem.formHeader(getDomId(),title,theme.getApplication().getBasePath()+url,l_method,getWidth());
+		themeItem.formHeader(getDomId(),replaceVariables(l_data,title),theme.getApplication().getBasePath()+replaceVariables(l_data,url),l_method,getWidth());
 		
-		FormElement<?> l_item;
-		Object l_value;		
-		for(Element<?> l_element:elements){
-			if(l_element instanceof FormElement){
-				l_item=(FormElement<?>)l_element;
-				themeItem.formElementBegin(l_item.getLabel());
-				if(l_item.hasValue()){
-					if(hasValue(l_item.getName())){
-						l_value=getValue(l_item.getName());
-					} else {
-						l_value="";
-					}
-				} else {
-					l_value="";
-				}
-				l_item.display(l_value);			
-				themeItem.formElementEnd();
-			}
-		}
+		displaySubElements(l_data);
 		String l_submitJs="";
 		if(submitType.equals(SubmitType.json)){
 			l_submitJs="this.form._control.sendData();";
@@ -125,7 +123,7 @@ public class Form extends PageElement<FormThemeItem>{
 		themeItem.jsBegin();
 		themeItem.print("\n{\n ");
 		themeItem.print("var l_form=new TForm("+getWidgetParent().getJsFullname()+","+themeItem.js_toString(getJsName())+","+themeItem.js_toString(getName())+","+themeItem.js_toString(getDomId())+");\n");
-		themeItem.print("l_form.cmd="+themeItem.js_toString(cmd)+";\n");
+		themeItem.print("l_form.cmd="+themeItem.js_toString(replaceVariables(l_data,cmd))+";\n");
 		for(Element<?> l_element:elements){
 			if(l_element instanceof FormElement){
 				FormElement<?> l_fe=(FormElement<?>)l_element;

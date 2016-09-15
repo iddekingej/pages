@@ -1,28 +1,24 @@
 package org.elaya.page.quickform;
-import java.util.LinkedList;
 
-public class SelectListElement extends BuildInFormElement {
-	private LinkedList<OptionItem> items=new LinkedList<OptionItem>();
-	public LinkedList<OptionItem> getitems(){ return items;}
+import java.util.LinkedList;
+import org.elaya.page.data.Data;
+
+public class SelectListElement extends OptionsElement {
+
+	
 
 	public SelectListElement()
 	{
 		super();
 	}
 	
-	public void addOption(String p_value,String p_text){
-		items.add(new OptionItem(p_value,p_text));
-	}
-
-	public void setOptions(LinkedList<OptionItem> p_options){
-		items.clear();
-		items.addAll(p_options);
-	}
-	
 	@Override
-	public void display(Object p_value) throws Exception {
-		
-		themeItem.selectElement(getDomId(),getName(), items,p_value);
+	public void display(Data p_data) throws Exception {
+		Data l_data=getData(p_data);
+		Object l_value=getValueByName(l_data);
+		LinkedList<OptionItem> l_items=getOptions(p_data);
+
+		themeItem.selectElement(getDomId(),getName(), l_items,l_value);
 	}
 
 	@Override

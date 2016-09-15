@@ -3,7 +3,7 @@ package org.elaya.page.data;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-public class DynamicMethod implements DynamicData{
+public class DynamicMethod implements Dynamic{
 	public static class methodNotFound extends Exception{
 		private static final long serialVersionUID = 3175898698076086965L;
 		

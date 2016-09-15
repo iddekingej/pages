@@ -1,5 +1,7 @@
 package org.elaya.page.quickform;
 
+import org.elaya.page.data.Data;
+
 public class TextAreaElement extends BuildInFormElement {
 	String width="100%";
 	String height="100px";
@@ -38,8 +40,9 @@ public class TextAreaElement extends BuildInFormElement {
 	}
 
 	@Override
-	public void display(Object p_value) throws Exception {
-		themeItem.textArea(getDomId(), getName(), getHeight(), getWidth(), p_value);
+	public void display(Data p_data) throws Exception {
+		Object l_value=getValueByName(p_data);
+		themeItem.textArea(getDomId(), getName(), getHeight(), getWidth(), l_value);
 	}
 
 }

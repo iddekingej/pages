@@ -1,5 +1,6 @@
 package org.elaya.page.listmenu;
 import org.elaya.page.LinkType;
+import org.elaya.page.data.Data;
 public class LinkMenuItem extends BuildinListMenuItem{
 
 	private String text;
@@ -39,14 +40,15 @@ public class LinkMenuItem extends BuildinListMenuItem{
 	}
 
 	@Override
-	public void display(Object p_value) throws Exception {
+	public void display(Data p_data) throws Exception {
+		Data l_data=getData(p_data);
 		String l_url="";
 		if(linkType.equals(LinkType.LINK_ABSOLUTE)||linkType.equals(LinkType.LINK_RELATIVE)){
 			l_url=url;
 		} else if(linkType.equals(LinkType.LINK_APPLICATION)){
 			l_url=themeItem.getApplication().getBasePath()+l_url;
 		}
-		themeItem.linkItem(getDomId(),text, url);
+		themeItem.linkItem(getDomId(),replaceVariables(l_data,text), replaceVariables(l_data,url));
 	}
 
 

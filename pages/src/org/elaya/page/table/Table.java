@@ -1,9 +1,11 @@
 package org.elaya.page.table;
 
+import java.io.IOException;
+
 import org.elaya.page.Element;
 import org.elaya.page.Errors;
 import org.elaya.page.PageElement;
-import org.elaya.page.data.DynamicData;
+import org.elaya.page.data.Data;
 
 public class Table extends PageElement<TableThemeItem> {
 
@@ -35,34 +37,37 @@ public class Table extends PageElement<TableThemeItem> {
 		return fieldName;
 	}
 	
-	public void displayRow(DynamicData p_row) throws Exception
+	public void preElement(Element<?> p_element) throws IOException
 	{
-		Object     l_value;
+		themeItem.itemHeader();
+	}
+	public void postElement(Element<?> p_element) throws IOException
+	{
+		themeItem.itemFooter();
+	}
+	
+	public void displayRow(Data p_data) throws Exception
+	{
+		
 		themeItem.rowHeader();
-		for(Element<?> l_element:getElements()){
-			if(!p_row.containsKey(l_element.getName())){
-				throw new Errors.ValueNotFound(fieldName+"."+l_element.getName());
-			}
-			l_value=p_row.get(l_element.getName());
-			themeItem.itemHeader();
-			l_element.display(l_value);
-			themeItem.itemFooter();
-		}
+		displaySubElements(p_data);
 		themeItem.rowFooter();	
 	}
 	@Override
-	public void display() throws Exception {
+	public void display(Data p_data) throws Exception {
 		
 		Iterable<?> l_list;
 		Object      l_abstractList;
-		DynamicData l_row;
+		Data l_row;
+		
 		if(fieldName.length()==0){
 			throw new Errors.PropertyNotSet("fieldName");
 		}
-		if(!getData().contains(fieldName)){
+		Data l_data=getData(p_data);
+		if(!l_data.containsKey(fieldName)){
 			throw new Errors.ValueNotFound(fieldName);
 		}
-		l_abstractList=getData().get(fieldName);
+		l_abstractList=l_data.get(fieldName);
 		if(l_abstractList instanceof Iterable){
 			l_list=(Iterable<?>)l_abstractList;
 			themeItem.tableHeader("");
@@ -70,7 +75,7 @@ public class Table extends PageElement<TableThemeItem> {
 			for(Element <?>l_element:getElements()){
 				String l_title;
 				if(l_element instanceof TableElement){
-					l_title=((TableElement<?>)l_element).getTitle();
+					l_title=replaceVariables(l_data,((TableElement<?>)l_element).getTitle());
 				} else {
 					l_title="";
 				}
@@ -78,8 +83,8 @@ public class Table extends PageElement<TableThemeItem> {
 			}
 			themeItem.titleFooter();
 			for(Object l_abstractRow:l_list){
-				if(l_abstractRow instanceof DynamicData){
-					l_row=(DynamicData)l_abstractRow;
+				if(l_abstractRow instanceof Data){
+					l_row=(Data)l_abstractRow;
 					displayRow(l_row);
 				} else {
 					throw new NotADynamicData(l_abstractRow.getClass().getName());

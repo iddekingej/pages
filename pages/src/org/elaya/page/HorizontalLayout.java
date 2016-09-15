@@ -1,5 +1,8 @@
 package org.elaya.page;
 
+import java.io.IOException;
+
+import org.elaya.page.data.Data;
 
 public class HorizontalLayout extends Layout{
 
@@ -7,14 +10,20 @@ public class HorizontalLayout extends Layout{
 	{
 		super();
 	}
-	public void display() throws Exception
+	
+	public void preElement(Element<?> p_element) throws IOException
 	{
+			themeItem.HorizontalItemHeader(p_element.getHorizontalAlign(),p_element.getVerticalAlign(),p_element.getLayoutWidth(),p_element.geLayoutHeight());
+	}
+	
+	public void postElement(Element<?> p_element) throws IOException{
+		themeItem.HorizontalItemFooter();
+	}
+	public void display(Data p_data) throws Exception
+	{
+		Data l_data=getData(p_data);
 		themeItem.HorizontalHeader();
-		for(Element<?> l_element:getElements()){
-			themeItem.HorizontalItemHeader(l_element.getHorizontalAlign(),l_element.getVerticalAlign(),l_element.getLayoutWidth(),l_element.geLayoutHeight());
-			l_element.display();
-			themeItem.HorizontalItemFooter();
-		}
+		displaySubElements(l_data);
 		themeItem.HorizontalFooter();
 	}
 }

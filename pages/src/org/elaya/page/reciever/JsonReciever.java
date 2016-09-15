@@ -6,11 +6,11 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.elaya.page.data.DynamicData;
+import org.elaya.page.data.Dynamic;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public abstract class JsonReciever<T extends DynamicData> extends Reciever<T> {
+public abstract class JsonReciever<T extends Dynamic> extends Reciever<T> {
 
 	private JSONObject getJson(HttpServletRequest p_request) throws IOException
 	{
@@ -26,7 +26,7 @@ public abstract class JsonReciever<T extends DynamicData> extends Reciever<T> {
 	@SuppressWarnings("unchecked")
 	public void handleRequest(HttpServletRequest p_request,HttpServletResponse p_response ) throws Exception
 	{
-		DynamicData l_object=getObject();
+		Dynamic l_object=getObject();
 		//TODO fail when mandatory and parameter is not given				
 				
 		JSONObject l_json=getJson(p_request);

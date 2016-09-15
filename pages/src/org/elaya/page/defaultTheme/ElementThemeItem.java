@@ -24,7 +24,7 @@ public class ElementThemeItem extends org.elaya.page.element.ElementThemeItem {
 
 	@Override
 	public void image(String p_url, String p_class, String p_css) throws IOException {
-		print("<img "+property("src",p_url)+propertyF("class",p_class)+propertyF("style",p_css)+">");
+		print("<img "+property("src",p_url)+propertyF("class",p_class)+propertyF("style",p_css)+"/>");
 
 	}
 

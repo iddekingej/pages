@@ -1,5 +1,7 @@
 package org.elaya.page.table;
 
+import org.elaya.page.data.Data;
+
 public class StaticElement extends BuildInElement {
 
 	public StaticElement() {
@@ -9,8 +11,9 @@ public class StaticElement extends BuildInElement {
 
 
 	@Override
-	public void display(Object p_string) throws Exception {
-		themeItem.staticItem(getDomId(),p_string);
+	public void display(Data p_data) throws Exception {
+		Object l_value=getValueByName(p_data);
+		themeItem.staticItem(getDomId(),l_value);
 	}
 
 

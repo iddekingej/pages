@@ -1,5 +1,7 @@
 package org.elaya.page.quickform;
 
+import org.elaya.page.data.Data;
+
 public class StaticElement extends BuildInFormElement {
 	private boolean isHtml=false;
 	
@@ -16,8 +18,9 @@ public class StaticElement extends BuildInFormElement {
 	}
 	
 	@Override
-	public void display(Object p_value) throws Exception {
-		themeItem.StaticElement(getDomId(),getName(),getIsHtml(),p_value);
+	public void display(Data p_data) throws Exception {
+		Object l_value=getValueByName(p_data);
+		themeItem.StaticElement(getDomId(),getName(),getIsHtml(),l_value);
 	}
 	@Override
 	public String getJsType() {

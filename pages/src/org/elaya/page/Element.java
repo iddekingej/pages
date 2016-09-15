@@ -1,11 +1,18 @@
 package org.elaya.page;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.Objects;
 import java.util.Set;
 
+import org.elaya.page.Errors;
+import org.elaya.page.Errors.ValueNotFound;
+import org.elaya.page.data.Data;
+import org.elaya.page.data.DataModel;
 import org.elaya.page.data.DynamicMethod;
+import org.elaya.page.data.MapData;
 
 public abstract class Element<themeType extends ThemeItemBase> extends DynamicMethod {
 	protected themeType themeItem;
@@ -19,6 +26,100 @@ public abstract class Element<themeType extends ThemeItemBase> extends DynamicMe
 	private VerticalAlign  verticalAlign=VerticalAlign.top;
 	private String layoutWidth;
 	private String layoutHeight;
+	private DataModel dataModel;
+	private String condition="";
+	
+	public void setCondition(String p_condition)
+	{
+		condition=p_condition;
+	}
+	
+	public String getConidition()
+	{
+		return condition;
+	}
+	
+	public boolean checkCondition(Data p_data) throws ValueNotFound, NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException
+	{ 
+		if(condition.length()==0) return true;
+		if(!p_data.containsKey(condition)){
+			throw new Errors.ValueNotFound(condition);
+		}
+		Object l_value=p_data.get(condition);
+		return l_value.equals(true);
+	}
+	
+	public void calculateData(MapData p_data) throws UnsupportedEncodingException, NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException, SQLException, ValueNotFound{
+		MapData l_data=p_data;
+		if(dataModel != null){
+			l_data=dataModel.processData(p_data);
+		}
+		for(Element<?>l_element:getElements()){
+			if(l_element.checkCondition(l_data)){
+				l_element.calculateData(l_data);
+			}
+		}
+	}
+	
+	protected String replaceVariables(Data p_data,String p_string) throws Exception
+	{
+		int l_pos=0;
+		int l_newPos;
+		StringBuilder l_return=new StringBuilder();
+		String l_varName;
+		Object l_value;
+		String l_string=(p_string==null?"":p_string);		
+		while(true){
+			l_newPos=l_string.indexOf("${",l_pos);
+			if(l_newPos==-1){
+				l_return.append(l_string.substring(l_pos));
+				break;
+			}
+			l_return.append(l_string.substring(l_pos,l_newPos));
+			l_pos=l_string.indexOf("}",l_newPos);
+			if(l_pos==-1){
+				throw new Exception("Missing end }"); //TODO: Error Location				
+			}
+			l_varName=l_string.substring(l_newPos+2,l_pos);	
+			if(!p_data.containsKey(l_varName)){
+				throw new Exception("Variable '"+l_varName+"' not found in data:"+p_data.getClass().getName());
+			} else {
+				l_value=p_data.get(l_varName);				
+				if(l_value != null)	l_return.append(l_value.toString());
+			}
+			l_pos++;
+		}
+		return l_return.toString();
+	}
+	
+	public void setDataModel(DataModel p_dataModel)
+	{
+		dataModel=p_dataModel;
+	}
+	
+	public DataModel getDataModel()
+	{
+		return dataModel;
+	}
+	
+	public Data getData(Data p_data)
+	{
+		Data l_data=null;
+		if(dataModel != null){
+			l_data=p_data.getChild(dataModel);			
+		}
+		if(l_data != null) return l_data;
+		return p_data;
+	}
+	
+	public Object getValueByName(Data p_data) throws ValueNotFound, NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException
+	{
+		if(p_data.containsKey(getName())){
+			return p_data.get(getName());
+		} else {
+			throw new Errors.ValueNotFound(getName());
+		}
+	}
 	
 	public Element()
 	{
@@ -98,7 +199,7 @@ public abstract class Element<themeType extends ThemeItemBase> extends DynamicMe
 	public String getJsName()
 	{
 		if(name.length()==0){
-			return "E"+Integer.toString(id);
+			return "E"+id;
 		}
 		return name;
 	}
@@ -176,8 +277,27 @@ public abstract class Element<themeType extends ThemeItemBase> extends DynamicMe
 		return null;
 	}
 	
-	public abstract void display() throws Exception;
-	public abstract void display(Object p_string) throws Exception;
+	protected void preElement(Element<?> p_element) throws IOException, Exception
+	{
+		
+	}
+	protected void postElement(Element<?> p_element) throws IOException, Exception
+	{		
+	}
+	
+	public void displaySubElements(Data p_data) throws Exception
+	{
+		for(Element<?> l_element:getElements())
+		{
+			if(l_element.checkCondition(p_data)){
+				preElement(l_element);
+				l_element.display(p_data);
+				postElement(l_element);
+			}
+		}
+	}
+	
+	public abstract void display(Data p_data) throws Exception;
 	public abstract String getThemeName();
 	
 	@SuppressWarnings("unchecked")

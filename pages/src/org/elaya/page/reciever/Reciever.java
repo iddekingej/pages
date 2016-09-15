@@ -7,12 +7,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.elaya.page.Errors;
 import org.elaya.page.Errors.InvalidObjectType;
-import org.elaya.page.data.DynamicData;
+import org.elaya.page.data.Dynamic;
 import org.elaya.page.data.DynamicMethod;
 import org.elaya.page.data.DynamicObject;
 
 
-abstract public class Reciever<T extends DynamicData> extends DynamicMethod {
+abstract public class Reciever<T extends Dynamic> extends DynamicMethod {
 
 	
 	
@@ -22,12 +22,12 @@ abstract public class Reciever<T extends DynamicData> extends DynamicMethod {
 	
 	
 	
-	protected DynamicData getObject() throws NoSuchMethodException, ClassNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, InvalidObjectType
+	protected Dynamic getObject() throws NoSuchMethodException, ClassNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, InvalidObjectType
 	{ 
 		dataConstructor=DynamicObject.getConstructorByName(dataClass,new Class<?>[]{},null);
 		Object l_object=dataConstructor.newInstance();
-		if(l_object instanceof DynamicData){
-			return (DynamicData)l_object;
+		if(l_object instanceof Dynamic){
+			return (Dynamic)l_object;
 		}
 		
 		throw new Errors.InvalidObjectType(l_object,"DynamicData");

@@ -7,8 +7,8 @@ import java.util.LinkedList;
 import java.util.Objects;
 import javax.xml.parsers.DocumentBuilder; 
 import javax.xml.parsers.DocumentBuilderFactory;
-
-import org.elaya.page.data.Data;
+import org.elaya.page.data.Context;
+import org.elaya.page.data.DataModel;
 import org.elaya.page.data.DynamicMethod;
 import org.elaya.page.quickform.OptionItem;
 import org.slf4j.Logger;
@@ -25,7 +25,6 @@ public class UiXmlParser {
 	LinkedList<String> errors=new LinkedList<String>();
 	int cnt=0;
 	Logger logger;
-	Data data;
 	HashMap<String,String> aliasses;
 	HashMap<String,Element<?>> elementIndex=null;
 	
@@ -44,11 +43,9 @@ public class UiXmlParser {
 		errors.add(cnt+"-"+p_message);
 		cnt++;
 	}
-	public UiXmlParser(Application p_application,Data p_data,HashMap<String,String> p_aliasses){
+	public UiXmlParser(Application p_application,HashMap<String,String> p_aliasses){
 		Objects.requireNonNull(p_application,"p_application");
-		Objects.requireNonNull(p_data,"p_data");
 		application=p_application;
-		data=p_data;
 		logger=p_application.getLogger();
 		aliasses=p_aliasses;
 	}
@@ -67,57 +64,10 @@ public class UiXmlParser {
 		}
 		return l_path;
 	}
-	
-	private Object replaceVariables(String p_string) throws Exception
-	{
-		if(p_string.startsWith("@{") && p_string.endsWith("}")){
-			String l_varName=p_string.substring(2,p_string.length()-1);
-			Object l_return;
-			if(!data.contains(l_varName)){
-				errors.add("Variable "+l_varName+" not found");
-				l_return=null;
-			} else {
-				l_return=data.get(l_varName);
-			}
-			return l_return;
-		}
-	
-		int l_pos=0;
-		int l_newPos;
-		StringBuilder l_return=new StringBuilder();
-		String l_varName;
-		Object l_value;
-		String l_string=(p_string==null?"":p_string);		
-		while(true){
-			l_newPos=l_string.indexOf("${",l_pos);
-			if(l_newPos==-1){
-				l_return.append(l_string.substring(l_pos));
-				break;
-			}
-			l_return.append(l_string.substring(l_pos,l_newPos));
-			l_pos=l_string.indexOf("}",l_newPos);
-			if(l_pos==-1){
-				errors.add("Missing end }"); //TODO: Error Location
-				break;
-			}
-			l_varName=l_string.substring(l_newPos+2,l_pos);	
-			if(!data.contains(l_varName)){
-				errors.add("Variable '"+l_varName+"' not found in data:"+data.getClass().getName());
-			} else {
-				l_value=data.get(l_varName);				
-				if(l_value != null)	l_return.append(l_value.toString());
-			}
-			l_pos++;
-		}
-		return l_return.toString();
-	}
-	
-	
-	
+	//TODO: bij gebruik vervangen door p_object.put
 	private void setPropertyFromExpression(DynamicMethod p_object,String p_name,String p_expression) throws Exception
 	{
-		Object l_value=replaceVariables((String)p_expression);	
-		p_object.put(p_name,l_value);
+		p_object.put(p_name,p_expression);
 	}
 	
 	private String normelizeClassName(String p_className)
@@ -167,12 +117,12 @@ public class UiXmlParser {
 		return createObjectFromNameP(p_name,new Class<?>[]{Application.class},new Object[]{application});
 	}
 	
-	private Data createDataFromTypeName(String p_name,Data p_parent) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException
+	private DataModel createDataModelFromTypeName(String p_name,Context context) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException
 	{
-		Object l_object=createObjectFromNameP(p_name,new Class<?>[]{Data.class},new Object[]{p_parent});
+		Object l_object=createObjectFromNameP(p_name,new Class<?>[]{Context.class},new Object[]{context});
 		if(l_object != null){
-			if(l_object instanceof org.elaya.page.data.Data){
-				return (Data)l_object;
+			if(l_object instanceof DataModel){
+				return (DataModel)l_object;
 			}
 			errors.add(p_name+" is not a descendant of 'Data':"+l_object.getClass().getName());
 		}
@@ -297,7 +247,7 @@ public class UiXmlParser {
 			} else {
 				l_file=getFileValue(p_node);
 				if(l_file != null){					
-					UiXmlParser l_parser=new UiXmlParser(application,data,aliasses);
+					UiXmlParser l_parser=new UiXmlParser(application,aliasses);
 					l_parser.setElementIndex(elementIndex);
 					l_element=l_parser.parseElementXml(p_element, l_file);
 					if(l_element !=null)processNodeDef(l_element,p_node);			
@@ -326,36 +276,23 @@ public class UiXmlParser {
 		Node l_currentDef=p_parent.getFirstChild();
 		NamedNodeMap l_properties=p_parent.getAttributes();
 		Node l_node;
-		Data l_prvData=data;
-		String l_adapterName;
-		String l_condition;
+		String l_dataModelName;
 		
-		l_condition=getAttributeValue(p_parent,"condition");
-		if(l_condition != null){
-			if(data.get(l_condition) != Boolean.TRUE) return ;
-		}
-		l_adapterName=getAttributeValue(p_parent,"adapter");
+		//TODO Process first datamodel and then condition?
+		l_dataModelName=getAttributeValue(p_parent,"datamodel");
 		
-		if(p_element instanceof PageElement){
-			if(l_adapterName != null){				
-				Data l_data=createDataFromTypeName(l_adapterName,data);
-				if(l_data==null){
-					errors.add("Adaptername return null "+l_adapterName);
+		if(l_dataModelName != null){				
+			DataModel l_dataModel=createDataModelFromTypeName(l_dataModelName,application.getContext());
+				if(l_dataModel==null){
+					errors.add("Adaptername return null "+l_dataModelName);
 				} else {
-					l_data.init();
-					data=l_data;
+					((PageElement<?>)p_element).setDataModel(l_dataModel);
 				}
-			}
-			((PageElement<?>)p_element).setData(data);
-		} else {
-			if(l_adapterName != null){
-				errors.add("Adapter can only be used with page element ");//TODO position form node
-			}			
-		} 
-		
+		}
+			
 		for(int l_cnt=0;l_cnt<l_properties.getLength();l_cnt++){
 			l_node=l_properties.item(l_cnt);
-			if(!l_node.getNodeName().equals("type") && !l_node.getNodeName().equals("adapter") && !l_node.getNodeName().equals("file") && !l_node.getNodeName().equals("ref") && !l_node.getNodeName().equals("condition")){
+			if(!l_node.getNodeName().equals("type") && !l_node.getNodeName().equals("datamodel") && !l_node.getNodeName().equals("file") && !l_node.getNodeName().equals("ref") ){
 					setPropertyFromExpression(p_element,l_node.getNodeName(),l_node.getNodeValue());
 			}
 		}
@@ -374,7 +311,6 @@ public class UiXmlParser {
 			}
 			l_currentDef=l_currentDef.getNextSibling();
 		}
-		data=l_prvData;
 			
 	}
 	
@@ -395,7 +331,7 @@ public class UiXmlParser {
 		} else {
 			String l_file=getFileValue(p_rootNode);
 			if(l_file != null){
-				UiXmlParser  l_parser=new UiXmlParser(application,data,aliasses);
+				UiXmlParser  l_parser=new UiXmlParser(application,aliasses);
 				l_parser.setElementIndex(elementIndex);
 				l_page=l_parser.parseUiXml(l_file);
 				errors.addAll(l_parser.getErrors());

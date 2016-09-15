@@ -17,10 +17,6 @@ abstract public class ListMenuItem<itemBase extends ThemeItemBase> extends Eleme
 		return value;
 	}
 
-	@Override
-	final public void display(){
-		
-	}
 
 
 }

@@ -2,7 +2,6 @@ package org.elaya.page;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.ListIterator;
 import java.util.Set;
 
 import org.elaya.page.Errors.duplicateElementOnPage;
@@ -16,6 +15,8 @@ public class Page extends PageElement<PageThemeItem> {
 	private int idCnt=0;
 	private boolean toWindowSize=false;
 	private HashMap<String,Element<?>> nameIndex=new HashMap<String,Element<?>>();
+	
+	public String getUrl(){ return url;}
 	
 	public void setToWindowSize(Boolean p_flag)
 	{
@@ -59,26 +60,17 @@ public class Page extends PageElement<PageThemeItem> {
 	{
 	} 
  
-	public void display() throws Exception
+	public void display(Data p_data) throws Exception
 	{
-		ListIterator<Element<?>> l_iter=getElements().listIterator();
-		Element<?> l_element;
+		Data l_data=getData(p_data);
 		Set<String> l_js=new HashSet<String>();
 		Set<String> l_css=new HashSet<String>();
 		getAllCssFiles(l_css);
 		getAllJsFiles(l_js);
 		l_js.add("pages.js");
 		l_js.add("jquery.js");
-		themeItem.pageHeader(l_js,l_css);
-		Data l_data=getData();
-		l_iter=getElements().listIterator();
-		while(l_iter.hasNext()){
-			l_element = l_iter.next();
-			if(l_element instanceof PageElement){
-				((PageElement<?>)l_element).setData(l_data);
-			}
-			l_element.display();
-		}
+		themeItem.pageHeader(l_js,l_css);	
+		displaySubElements(l_data);
 		if(toWindowSize){
 			themeItem.jsBegin();
 			themeItem.print("pages.page.initToWindowSize();");

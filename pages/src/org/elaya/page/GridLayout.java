@@ -1,5 +1,7 @@
 package org.elaya.page;
 
+import org.elaya.page.data.Data;
+
 public class GridLayout extends Layout {
 
 	private Integer columns;
@@ -17,7 +19,8 @@ public class GridLayout extends Layout {
 	}
 
 	@Override
-	public void display() throws Exception {
+	public void display(Data p_data) throws Exception {
+		Data l_data=getData(p_data);
 		themeItem.gridHeader();
 		int l_col=0;
 		boolean l_hasEnd=true;
@@ -27,7 +30,7 @@ public class GridLayout extends Layout {
 				l_hasEnd=false;
 			}
 			themeItem.gridItemHeader(l_element.getHorizontalAlign(),l_element.getVerticalAlign(),l_element.getLayoutWidth(),l_element.geLayoutHeight());
-			l_element.display();
+			l_element.display(l_data);
 			themeItem.gridItemFooter();
 			l_col++;
 			if(l_col>=columns) l_col=0;

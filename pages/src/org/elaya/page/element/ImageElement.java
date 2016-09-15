@@ -1,6 +1,7 @@
 package org.elaya.page.element;
 
 import org.elaya.page.PageElement;
+import org.elaya.page.data.Data;
 
 public class ImageElement extends PageElement<ElementThemeItem> {
 	private String url;
@@ -35,8 +36,9 @@ public class ImageElement extends PageElement<ElementThemeItem> {
 	}
 	
 	@Override
-	public void display() throws Exception {
-		themeItem.image(url,className,css);
+	public void display(Data p_data) throws Exception {
+		Data l_data=getData(p_data);
+		themeItem.image(replaceVariables(l_data,url),replaceVariables(l_data,className),replaceVariables(l_data,css));
 	}
 
 	@Override
