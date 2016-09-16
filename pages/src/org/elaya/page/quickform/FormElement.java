@@ -20,11 +20,6 @@ public abstract class FormElement<themeType extends ThemeItemBase> extends Eleme
 
 	}
 	abstract public String getJsType();
-	abstract public String getJsClassName();
-	public String getObjectJs(String p_parentObject)
-	{
-		return p_parentObject+".addElement("+themeItem.js_toString(getJsName())+",new "+getJsClassName()+"("+p_parentObject+","+themeItem.js_toString(getName())+","+themeItem.js_toString(getDomId())+"));";
-	}
-
+	
 	
 }

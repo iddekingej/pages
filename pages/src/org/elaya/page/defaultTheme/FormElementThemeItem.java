@@ -94,5 +94,10 @@ public class FormElementThemeItem extends org.elaya.page.quickform.FormElementTh
 		if(p_height.length()>0) l_css += "height:"+p_height+";";
 		print("<textarea "+property("id",p_idDom)+property("name",p_name)+property("style",l_css)+">"+escape(p_value)+"</textarea>");
 	}
+	
+	public void dateElement(String p_domId,String p_name,Object p_value) throws IOException
+	{
+		print("<input type='text' "+property("id",p_domId)+property("value",str(p_value))+"/>");
+	}
 
 }

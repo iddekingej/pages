@@ -323,7 +323,6 @@ public class UiXmlParser {
 			l_object=createPageFromTypeName(l_type);			
 			if(l_object instanceof Page){
 				l_page=(Page)l_object;
-		
 			} else {
 				errors.add("Class '"+l_type+"' doesn't discent from Page");
 				return null;

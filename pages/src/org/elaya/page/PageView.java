@@ -70,7 +70,7 @@ public class PageView extends AbstractView {
 		}
 		if(l_page != null){
 			l_page.setUrl(p_request.getRequestURI());
-			p_response.setContentType("application/xml;charset=UTF-8");
+			//p_response.setContentType("application/xml;charset=UTF-8");
 			l_page.display(l_md);
 		} else {
 			logger.info("Page =null");

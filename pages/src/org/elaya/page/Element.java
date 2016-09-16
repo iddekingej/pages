@@ -22,12 +22,23 @@ public abstract class Element<themeType extends ThemeItemBase> extends DynamicMe
 
 	private int id=-1;
 	private String name="";
+	private String classPrefix="";
 	private HorizontalAlign horizontalAlign=HorizontalAlign.left;
 	private VerticalAlign  verticalAlign=VerticalAlign.top;
 	private String layoutWidth;
 	private String layoutHeight;
 	private DataModel dataModel;
 	private String condition="";
+	
+	public void setClassPrefix(String p_classPrefix)
+	{
+		themeItem.setClassPrefix(p_classPrefix);		
+	}
+	
+	public String getClassPrefix()
+	{
+		return themeItem.getClassPrefix();
+	}
 	
 	public void setCondition(String p_condition)
 	{
@@ -277,6 +288,7 @@ public abstract class Element<themeType extends ThemeItemBase> extends DynamicMe
 		return null;
 	}
 	
+	
 	protected void preElement(Element<?> p_element) throws IOException, Exception
 	{
 		
@@ -327,6 +339,48 @@ public abstract class Element<themeType extends ThemeItemBase> extends DynamicMe
 			getPage().addToNameIndex(p_element);
 		}
 
+	}
+	
+	protected String getJsClassName()
+	{
+		return "TElement";
+	}
+	
+	protected void makeSetupJs(Data p_data) throws Exception
+	{
+		
+	}
+	
+	protected void makeJsObject(Data p_data) throws Exception
+	{
+		themeItem.print("var l_element=new "+getJsClassName()+"("+getWidgetParent().getJsFullname()+","+themeItem.js_toString(getJsName())+","+themeItem.js_toString(getName())+","+themeItem.js_toString(getDomId())+");\n");
+		themeItem.print("l_element.config=function(){");
+		makeSetupJs(p_data);
+		themeItem.print("}\n l_element.setup();\n");
+	}
+	
+	
+	protected void preSubJs(Data p_data) throws Exception
+	{
+		
+	}
+	
+	protected void postSubJs(Data p_data) throws Exception
+	{
+		
+	}
+	
+	final protected void generateJs(Data p_data) throws IOException, Exception
+	{
+		Data l_data=getData(p_data);
+		makeJsObject(l_data);
+		preSubJs(l_data);
+		for(Element<?> l_element:getElements()){
+			if(this.checkCondition(p_data)){
+				l_element.generateJs(l_data);
+			}
+		}
+		postSubJs(l_data);
 	}
 	
 	final public LinkedList<Element<?>> getElements()

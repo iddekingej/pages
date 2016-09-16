@@ -32,14 +32,22 @@ var pages={
 		}
 };
 
-function TDummy(p_parent,p_jsName,p_name,p_id)
+function TElement(p_parent,p_jsName,p_name,p_id)
 {
 	this.parent=p_parent;
 	this.elements={};
+	this.id=p_id;
+	this.name=p_name;
 	this.parent.addElement(p_jsName,this);
+	this.element=$("#"+p_id);
 }
 
-TDummy.prototype.addElement=function(p_jsName,p_element)
+TElement.prototype.addElement=function(p_jsName,p_element)
 {
 	this.elements[p_jsName]=p_element;
+}
+
+TElement.prototype.setup=function()
+{
+	this.config();
 }

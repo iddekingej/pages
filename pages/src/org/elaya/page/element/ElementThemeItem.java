@@ -17,4 +17,5 @@ public abstract class ElementThemeItem extends ThemeItemBase {
 	public abstract void  panelFooter() throws IOException;
 	public abstract void  link(String p_url,String p_text,String p_class,String p_css) throws IOException;
 	public abstract void  verticalSpacer() throws IOException;
+
 }

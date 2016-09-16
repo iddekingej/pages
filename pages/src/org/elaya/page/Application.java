@@ -13,7 +13,7 @@ public class Application {
 	private String jsPath="resources/pages/js/";
 	private String cssPath="resources/pages/css/";
 	private String imgPath="resources/pages/images/";
-	private String themeBase="org.elaya.page.defaultTheme";
+	private String themeBase="org.elaya.page.defaultTheme";	
 	Logger logger;
 	 
 	public Context getContext()

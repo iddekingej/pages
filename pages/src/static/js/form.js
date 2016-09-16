@@ -3,19 +3,22 @@
  */
 
 function TForm(p_parent,p_jsName,p_name,p_id){
-	this.form=document.getElementById(p_id);
-	this.form._control=this;
-	this.parent=p_parent;
-	this.name=p_name;
+	TElement.call(this,p_parent,p_jsName,p_name,p_id);
+	this.element[0]._control=this;
 	this.cmd="";
-	this.url="";
-	this.parent.addElement(p_jsName,this);
-	this.elements={};
+	this.url="";	
+	this.submitType="";
 }
 
-TForm.prototype.submit=function()
+TForm.prototype=Object.create(TElement.prototype);
+
+TForm.prototype.save=function()
 {
-	this.form.submit();
+	if(this.submitType=="json"){
+		this.sendData();
+	} else {
+		this.element.submit();
+	}
 }
 
 TForm.prototype.success=function(p_data)
@@ -54,33 +57,28 @@ TForm.prototype.sendData=function()
 	}
 }
 
-TForm.prototype.addElement=function(p_jsName,p_element)
+function TFormElement(p_parent,p_jsName,p_name,p_id)
 {
-	this.elements[p_jsName]=p_element;
+	TElement.call(this,p_parent,p_jsName,p_name,p_id);	
 }
 
-function TFormElement(p_form,p_name,p_id)
-{
-	this.form=p_form;
-	this.name=p_name;
-	this.element=document.getElementById(p_id);
-}
+TFormElement.prototype=Object.create(TElement.prototype);
 
 TFormElement.prototype.getValue=function()
 {
 	return this.element.value;
 }
 
-function TCheckboxElement(p_form,p_name,p_id)
+function TCheckboxElement(p_form,p_jsName,p_name,p_id)
 {
-	TFormElement.call(this,p_form,p_name,p_id);
+	TFormElement.call(this,p_form,p_jsName,p_name,p_id);
 }
 
 TCheckboxElement.prototype=Object.create(TFormElement.prototype);
 
-function TRadioElement(p_form,p_name,p_id)
+function TRadioElement(p_form,p_jsName,p_name,p_id)
 {
-	TFormElement.call(this,p_form,p_name,p_id);
+	TFormElement.call(this,p_form,p_jsName,p_name,p_id);
 	this.elements=[];
 	var l_cnt=0;
 	var l_element;
@@ -105,30 +103,51 @@ TRadioElement.prototype.getValue=function()
 }
 
 
-function TSelectListElement(p_form,p_name,p_id)
+function TSelectListElement(p_form,p_jsName,p_name,p_id)
 {
-	TFormElement.call(this,p_form,p_name,p_id);
+	TFormElement.call(this,p_form,p_jsName,p_name,p_id);
 }
 
 TSelectListElement.prototype=Object.create(TFormElement.prototype);
 
-function TStaticElement(p_form,p_name,p_id)
+function TStaticElement(p_form,p_jsName,p_name,p_id)
 {
-	TFormElement.call(this,p_form,p_name,p_id);
+	TFormElement.call(this,p_form,p_jsName,p_name,p_id);
 }
 
 TStaticElement.prototype=Object.create(TFormElement.prototype);
 
-function TTextEditElement(p_form,p_name,p_id)
+function TTextEditElement(p_form,p_jsName,p_name,p_id)
 {
-	TFormElement.call(this,p_form,p_name,p_id);
+	TFormElement.call(this,p_form,p_jsName,p_name,p_id);
 }
 
 TTextEditElement.prototype=Object.create(TFormElement.prototype);
 
+
+
+function TTextAreaElement(p_form,p_jsName,p_name,p_id)
+{
+	TFormElement.call(this,p_form,p_jsName,p_name,p_id);
+}
+
 TTextAreaElement.prototype=Object.create(TFormElement.prototype);
 
-function TTextAreaElement(p_form,p_name,p_id)
+function TDateElement(p_form,p_jsName,p_name,p_id)
 {
-	TFormElement.call(this,p_form,p_name,p_id);
+	TFormElement.call(this,p_form,p_jsName,p_name,p_id);
+	this.showOn="";
+	this.buttonText="";
+}
+
+TDateElement.prototype=Object.create(TFormElement.prototype);
+
+TDateElement.prototype.setup=function()
+{
+	this.config();
+	var l_element=this.element.datepicker({
+		showOn:this.showOn,
+		buttonText:this.buttonText
+	});
+
 }

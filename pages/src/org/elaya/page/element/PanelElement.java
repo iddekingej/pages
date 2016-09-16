@@ -28,13 +28,9 @@ public class PanelElement extends PageElement<ElementThemeItem> {
 	@Override
 	public void display(Data p_data) throws Exception {
 		Data l_data=getData(p_data);
-		themeItem.jsBegin();
-		themeItem.print("var l_dummy=new TDummy("+getWidgetParent().getJsFullname()+","+themeItem.js_toString(getJsName())+","+themeItem.js_toString(getName())+","+themeItem.js_toString(getDomId())+");\n");
-		themeItem.jsEnd();
 		themeItem.panelHeader(replaceVariables(l_data,className), replaceVariables(l_data,css));
 		displaySubElements(l_data);
 		themeItem.panelFooter();
-
 	}
 
 	@Override

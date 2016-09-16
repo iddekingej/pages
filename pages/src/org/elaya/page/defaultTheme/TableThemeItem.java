@@ -19,7 +19,7 @@ public class TableThemeItem extends org.elaya.page.table.TableThemeItem {
 	
 	@Override
 	public void tableHeader(String p_domId) throws IOException {
-		print("<table class='default_table_header' "+property("id",p_domId)+">");
+		print("<table "+classProperty("table_header")+property("id",p_domId)+">");
 	}
 
 	@Override
@@ -35,7 +35,7 @@ public class TableThemeItem extends org.elaya.page.table.TableThemeItem {
 
 	@Override
 	public void title(String p_title) throws IOException {
-		print("<td class='default_table_header_cell'>"+escape(p_title)+"</td>");
+		print("<td "+classProperty("table_header_cell")+">"+escape(p_title)+"</td>");
 
 	}
 
@@ -67,7 +67,7 @@ public class TableThemeItem extends org.elaya.page.table.TableThemeItem {
 
 	@Override
 	public void itemHeader() throws IOException {
-		print("<td class='default_table_cell'>");
+		print("<td "+classProperty("table_cell")+">");
 		
 	}
 

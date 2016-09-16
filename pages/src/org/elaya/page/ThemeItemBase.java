@@ -10,9 +10,19 @@ import org.springframework.web.util.HtmlUtils;
 
 public class ThemeItemBase {
 	private Theme theme;
+	private String classPrefix="";
 	protected HttpServletResponse response;
 	private ServletOutputStream stream;
 	
+	public void setClassPrefix(String p_classPrefix)
+	{
+		classPrefix=p_classPrefix;	
+	}
+
+	public String getClassPrefix()
+	{
+		return classPrefix;
+	}
 	
 	public Application getApplication()
 	{
@@ -62,7 +72,7 @@ public class ThemeItemBase {
 	
 	public String js_toString(Object p_value){
 		if(p_value==null) return "\"\"";
-		return "\""+p_value.toString().replace("\"","\\\"")+"\"";
+		return "\""+str(p_value).replace("\"","\\\"")+"\"";
 	}
 	
 	public void jsInclude(String p_path) throws IOException{
@@ -84,10 +94,15 @@ public class ThemeItemBase {
 		print("//]]></script>");
 	}
 	
+	protected String classProperty(String p_className)
+	{
+		return property("class",classPrefix+p_className);
+	}
 	
 	public ThemeItemBase(Theme p_theme) throws IOException{
 		theme=p_theme;
 		response=p_theme.getResponse();
 		stream=response.getOutputStream();
+		
 	}
 }

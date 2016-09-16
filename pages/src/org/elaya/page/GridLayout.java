@@ -29,9 +29,11 @@ public class GridLayout extends Layout {
 				themeItem.gridRowHeader();
 				l_hasEnd=false;
 			}
-			themeItem.gridItemHeader(l_element.getHorizontalAlign(),l_element.getVerticalAlign(),l_element.getLayoutWidth(),l_element.geLayoutHeight());
-			l_element.display(l_data);
-			themeItem.gridItemFooter();
+			if(l_element.checkCondition(l_data)){
+				themeItem.gridItemHeader(getClassPrefix(),l_element.getHorizontalAlign(),l_element.getVerticalAlign(),l_element.getLayoutWidth(),l_element.geLayoutHeight());
+				l_element.display(l_data);
+				themeItem.gridItemFooter();
+			}
 			l_col++;
 			if(l_col>=columns) l_col=0;
 			if(l_col==0){
@@ -41,7 +43,7 @@ public class GridLayout extends Layout {
 		}
 		if(!l_hasEnd){
 			while(l_col<columns){
-				themeItem.gridItemHeader(HorizontalAlign.left,VerticalAlign.top,"","");
+				themeItem.gridItemHeader(getClassPrefix(),HorizontalAlign.left,VerticalAlign.top,"","");
 				themeItem.gridItemFooter();
 				l_col++;
 			}

@@ -18,7 +18,7 @@ public abstract  class LayoutThemeItem extends ThemeItemBase {
 	public abstract void verticalFooter() throws IOException;
 	public abstract void gridHeader() throws IOException;
 	public abstract void gridRowHeader() throws IOException;
-	public abstract void gridItemHeader(HorizontalAlign p_horizontalAlign,VerticalAlign p_verticalAlign,String p_layoutWidth,String p_layoutHeight) throws IOException;
+	public abstract void gridItemHeader(String p_classPrefix,HorizontalAlign p_horizontalAlign,VerticalAlign p_verticalAlign,String p_layoutWidth,String p_layoutHeight) throws IOException;
 	public abstract void gridItemFooter() throws IOException;
 	public abstract void gridRowFooter() throws IOException;
 	public abstract void gridFooter() throws IOException;
