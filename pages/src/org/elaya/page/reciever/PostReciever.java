@@ -2,6 +2,8 @@ package org.elaya.page.reciever;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.elaya.page.Application;
 import org.elaya.page.data.Dynamic;
 
 abstract public class PostReciever<T extends Dynamic> extends Reciever<T> {

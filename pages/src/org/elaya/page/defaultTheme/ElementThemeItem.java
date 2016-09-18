@@ -3,6 +3,7 @@ package org.elaya.page.defaultTheme;
 import java.io.IOException;
 
 import org.elaya.page.Theme;
+import org.elaya.page.Writer;
 
 public class ElementThemeItem extends org.elaya.page.element.ElementThemeItem {
 
@@ -11,42 +12,42 @@ public class ElementThemeItem extends org.elaya.page.element.ElementThemeItem {
 	}
 
 	@Override
-	public void staticElement(String p_text, boolean p_isHtml, String p_class, String p_css) throws IOException {
-		print("<div "+propertyF("class",p_class)+propertyF("style",p_css)+">");
+	public void staticElement(Writer p_writer,String p_text, boolean p_isHtml, String p_class, String p_css) throws IOException {
+		p_writer.print("<div "+propertyF("class",p_class)+propertyF("style",p_css)+">");
 		if(p_isHtml){
-			print(p_text);
+			p_writer.print(p_text);
 		} else {
-			print(escape(p_text));
+			p_writer.print(escape(p_text));
 		}
-		print("</div>");
+		p_writer.print("</div>");
 
 	}
 
 	@Override
-	public void image(String p_url, String p_class, String p_css) throws IOException {
-		print("<img "+property("src",p_url)+propertyF("class",p_class)+propertyF("style",p_css)+"/>");
+	public void image(Writer p_writer,String p_url, String p_class, String p_css) throws IOException {
+		p_writer.print("<img "+property("src",p_url)+propertyF("class",p_class)+propertyF("style",p_css)+"/>");
 
 	}
 
 	@Override
-	public void panelHeader(String p_class, String p_css) throws IOException {
-		print("<div "+propertyF("class",p_class)+propertyF("style",p_css)+">");
+	public void panelHeader(Writer p_writer,String p_class, String p_css) throws IOException {
+		p_writer.print("<div "+propertyF("class",p_class)+propertyF("style",p_css)+">");
 
 	}
 
 	@Override
-	public void panelFooter() throws IOException {
-		print("</div>");
+	public void panelFooter(Writer p_writer) throws IOException {
+		p_writer.print("</div>");
 	}
 
 	@Override
-	public void link(String p_url, String p_text, String p_class, String p_css) throws IOException {
-		print("<a "+property("href",p_url)+propertyF("class",p_class)+propertyF("style",p_css)+">"+escape(p_text)+"</a>");
+	public void link(Writer p_writer,String p_url, String p_text, String p_class, String p_css) throws IOException {
+		p_writer.print("<a "+property("href",p_url)+propertyF("class",p_class)+propertyF("style",p_css)+">"+escape(p_text)+"</a>");
 	}
 
 	@Override
-	public void verticalSpacer() throws IOException {
-		print("<div style='width:100%'>&#160;</div>");
+	public void verticalSpacer(Writer p_writer) throws IOException {
+		p_writer.print("<div style='width:100%'>&#160;</div>");
 	}
 
 

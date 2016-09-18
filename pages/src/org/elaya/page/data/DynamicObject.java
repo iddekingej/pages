@@ -49,10 +49,12 @@ public class DynamicObject {
 		public static Object createObjectFromName(String p_name,Class<?>[] p_types,Object[] p_params,LinkedList<String> p_errors) throws NoSuchMethodException, ClassNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		
 			Constructor<?>l_constructor=getConstructorByName(p_name,p_types,p_errors);
-			Object l_object=l_constructor.newInstance(p_params);
-
-			return l_object;  
-
+			if(l_constructor != null){
+				Object l_object=l_constructor.newInstance(p_params);
+				return l_object;
+			} else {
+				return null;
+			}
 		}
 	
 

@@ -43,10 +43,10 @@ public class UiXmlParser {
 		errors.add(cnt+"-"+p_message);
 		cnt++;
 	}
-	public UiXmlParser(Application p_application,HashMap<String,String> p_aliasses){
+	public UiXmlParser(Application p_application,HashMap<String,String> p_aliasses,Logger p_logger){
 		Objects.requireNonNull(p_application,"p_application");
 		application=p_application;
-		logger=p_application.getLogger();
+		logger=p_logger;
 		aliasses=p_aliasses;
 	}
 
@@ -75,11 +75,13 @@ public class UiXmlParser {
 		
 		if(p_className.startsWith("@")){			
 			String l_className=aliasses.get(p_className.substring(1));
+			logger.info(p_className+">>"+l_className);
 			if(l_className!=null){
-				return l_className;
+				return l_className;				
 			}
 			
 		}
+		errors.add("Alias "+p_className+" not found");
 		return p_className;
 	}
 	
@@ -247,7 +249,7 @@ public class UiXmlParser {
 			} else {
 				l_file=getFileValue(p_node);
 				if(l_file != null){					
-					UiXmlParser l_parser=new UiXmlParser(application,aliasses);
+					UiXmlParser l_parser=new UiXmlParser(application,aliasses,logger);
 					l_parser.setElementIndex(elementIndex);
 					l_element=l_parser.parseElementXml(p_element, l_file);
 					if(l_element !=null)processNodeDef(l_element,p_node);			
@@ -330,7 +332,7 @@ public class UiXmlParser {
 		} else {
 			String l_file=getFileValue(p_rootNode);
 			if(l_file != null){
-				UiXmlParser  l_parser=new UiXmlParser(application,aliasses);
+				UiXmlParser  l_parser=new UiXmlParser(application,aliasses,logger);
 				l_parser.setElementIndex(elementIndex);
 				l_page=l_parser.parseUiXml(l_file);
 				errors.addAll(l_parser.getErrors());

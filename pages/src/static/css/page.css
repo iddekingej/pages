@@ -1,6 +1,7 @@
-body,table,input{
+body,table,input,input,textare,td{
 	font-size:13px;
 	font-family:arial;
 }
 
 .page_gridLayout{ width:100%}
+.page_error{color:#f00}

@@ -1,10 +1,10 @@
 package org.elaya.page.quickform;
 
-import java.io.IOException;
 import java.util.Set;
 import org.elaya.page.Element;
 import org.elaya.page.PageElement;
 import org.elaya.page.SubmitType;
+import org.elaya.page.Writer;
 import org.elaya.page.data.Data;
 
 public class Form extends PageElement<FormThemeItem>{
@@ -113,21 +113,21 @@ public class Form extends PageElement<FormThemeItem>{
 		return "FormThemeItem";		
 	}
 	
-	public void preElement(Element<?> p_element) throws Exception
+	public void preElement(Writer p_writer,Element<?> p_element) throws Exception
 	{
 		String l_label="";
 		if(p_element instanceof FormElement){
 			l_label=((FormElement<?>)p_element).getLabel();
 		}
-		themeItem.formElementBegin(l_label);		
+		themeItem.formElementBegin(p_writer,l_label);		
 	}
 	
-	public void postElement(Element<?> p_element) throws Exception
+	public void postElement(Writer p_writer,Element<?> p_element) throws Exception
 	{
-		themeItem.formElementEnd();
+		themeItem.formElementEnd(p_writer);
 	}
 	
-	public void display(Data p_data) throws Exception
+	public void display(Writer p_writer,Data p_data) throws Exception
 	{
 		Data l_data=getData(p_data);		
 		String l_method="";
@@ -136,15 +136,16 @@ public class Form extends PageElement<FormThemeItem>{
 		} else if(submitType.equals(SubmitType.post)){
 			l_method="post";
 		}
-		themeItem.formHeader(getDomId(),replaceVariables(l_data,title),theme.getApplication().getBasePath()+replaceVariables(l_data,url),l_method,getWidth());		
-		displaySubElements(l_data);
-		themeItem.formFooter(getDomId(),getSubmitText(),"this.form._control.save()");
+		themeItem.formHeader(p_writer,getDomId(),replaceVariables(l_data,title),theme.getApplication().getBasePath()+replaceVariables(l_data,url),l_method,getWidth());		
+		displaySubElements(p_writer,l_data);
+		themeItem.formFooter(p_writer,getDomId(),getSubmitText(),"this.form._control.save()");
 	}
 	
-	protected void makeSetupJs(Data p_data) throws Exception
+	protected void makeSetupJs(Writer p_writer,Data p_data) throws Exception
 	{
-		themeItem.print("this.cmd="+themeItem.js_toString(replaceVariables(p_data,cmd))+";\n");
-		themeItem.print("this.submitType="+themeItem.js_toString(submitType.getValue()));
+		p_writer.print("this.cmd="+themeItem.js_toString(replaceVariables(p_data,cmd))+";\n");
+		p_writer.print("this.nextUrl="+themeItem.js_toString(replaceVariables(p_data,nextUrl))+";\n");
+		p_writer.print("this.submitType="+themeItem.js_toString(submitType.getValue()));
 	}
 	
  

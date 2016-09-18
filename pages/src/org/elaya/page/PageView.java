@@ -1,12 +1,8 @@
 package org.elaya.page;
 
-import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.elaya.page.data.MapData;
 import org.slf4j.Logger;
 import org.springframework.web.servlet.view.AbstractView;
@@ -18,8 +14,6 @@ public class PageView extends AbstractView {
 	PageMode mode;
 	Logger logger ;
 	Application application;
-	HashMap<String,String> aliasses=new HashMap<String,String>();
-	
 	
 	public PageView()
 	{
@@ -31,30 +25,17 @@ public class PageView extends AbstractView {
 		path=p_file;
 		logger=p_logger;
 		application=p_application;
-		application.setLogger(logger);
 	}
-	
-	public void addAliasses(String p_fileName) throws Exception
-	{
-		AliasParser l_parser=new AliasParser(application);
-		l_parser.parseAliases("resources/"+p_fileName, aliasses);
-		for(String l_error:l_parser.getErrors()){
-			logger.info(l_error);
-		}
-	}
+
 
 	@Override
 	protected void renderMergedOutputModel(Map<String, Object> p_map, HttpServletRequest p_request, HttpServletResponse p_response)
 			throws Exception {
 		// TODO Auto-generated method stub
-		
-		application.setRequest(p_request, p_response);
+		application.setRequest(p_request);
+		application.setLogger(logger);
 		MapData l_md=new MapData("___TOP",null);
 		l_md.setByMap(p_map);
-		logger.info("data_size="+l_md.getSize());
-		addAliasses("alias.xml");
-		UiXmlParser l_parser=new UiXmlParser(application,aliasses);
-		
 		String l_fileName="";
 		
 		if(mode.equals(PageMode.path)){
@@ -62,16 +43,16 @@ public class PageView extends AbstractView {
 		} else if(mode.equals(PageMode.filename)) {
 			l_fileName=path;
 		}
-		Page l_page=l_parser.parseUiXml(l_fileName);
-		l_page.calculateData(l_md);
-		LinkedList<String> l_errors=l_parser.getErrors();
-		for(String l_error:l_errors){
-			logger.info(l_error);
-		}
+
+		Page l_page=application.loadPage(l_fileName);
+
+		Writer l_writer=new Writer(p_response);
 		if(l_page != null){
+			l_page.calculateData(l_md);
 			l_page.setUrl(p_request.getRequestURI());
 			//p_response.setContentType("application/xml;charset=UTF-8");
-			l_page.display(l_md);
+			l_page.display(l_writer,l_md);
+			l_writer.flush();
 		} else {
 			logger.info("Page =null");
 		}

@@ -5,6 +5,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedList;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.elaya.page.Application;
 import org.elaya.page.Errors;
 import org.elaya.page.Errors.InvalidObjectType;
 import org.elaya.page.data.Dynamic;
@@ -15,13 +17,20 @@ import org.elaya.page.data.DynamicObject;
 abstract public class Reciever<T extends Dynamic> extends DynamicMethod {
 
 	
-	
 	private Constructor<?> dataConstructor;
 	private String dataClass;
 	private LinkedList<Parameter> parameters=new LinkedList<Parameter>();
+	private Application application;
 	
+	void setApplication(Application p_application)
+	{
+		application=p_application;
+	}
 	
-	
+	protected Application getApplication()
+	{
+			return application;
+	}
 	protected Dynamic getObject() throws NoSuchMethodException, ClassNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, InvalidObjectType
 	{ 
 		dataConstructor=DynamicObject.getConstructorByName(dataClass,new Class<?>[]{},null);

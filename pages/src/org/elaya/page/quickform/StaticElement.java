@@ -1,5 +1,6 @@
 package org.elaya.page.quickform;
 
+import org.elaya.page.Writer;
 import org.elaya.page.data.Data;
 
 public class StaticElement extends BuildInFormElement {
@@ -18,9 +19,9 @@ public class StaticElement extends BuildInFormElement {
 	}
 	
 	@Override
-	public void display(Data p_data) throws Exception {
+	public void display(Writer p_writer,Data p_data) throws Exception {
 		Object l_value=getValueByName(p_data);
-		themeItem.StaticElement(getDomId(),getName(),getIsHtml(),l_value);
+		themeItem.StaticElement(p_writer,getDomId(),getName(),getIsHtml(),l_value);
 	}
 	@Override
 	public String getJsType() {

@@ -8,6 +8,8 @@ function TForm(p_parent,p_jsName,p_name,p_id){
 	this.cmd="";
 	this.url="";	
 	this.submitType="";
+	this.nextUrl="";
+	this.cancelUrl="";
 }
 
 TForm.prototype=Object.create(TElement.prototype);
@@ -23,7 +25,13 @@ TForm.prototype.save=function()
 
 TForm.prototype.success=function(p_data)
 {
-	console.log(p_data);
+	pages.page.unlock();
+	if("errors" in p_data){
+		var l_errors="";
+		pages.page.addErrors(p_data.errors);
+	} else {
+		if(this.nextUrl) window.location=this.nextUrl;
+	}
 }
 TForm.prototype.sendData=function()
 {
@@ -47,9 +55,9 @@ TForm.prototype.sendData=function()
 			,	type:'POST'
 			,	contentType:'application/json'
 			,	async:false
-			,	data:JSON.stringify(l_message)
+			,	data:JSON.stringify(l_message)			
 			,   success:function(p_data){ l_this.success(p_data);}
-			,	complete(p_xhr,p_status){ pages.page.unlock();}
+			,	complete:function(p_xhr,p_status){ pages.page.unlock();}
 		});
 	} catch(e){
 		pages.page.unlock();
@@ -122,9 +130,9 @@ function TTextEditElement(p_form,p_jsName,p_name,p_id)
 	TFormElement.call(this,p_form,p_jsName,p_name,p_id);
 }
 
-TTextEditElement.prototype=Object.create(TFormElement.prototype);
-
-
+TTextEditElement.prototype=TFormElement.prototype;
+TTextEditElement.prototype.getValue=function(){ return this.element.val();}
+TTextEditElement.prototype.dummy=function(){};
 
 function TTextAreaElement(p_form,p_jsName,p_name,p_id)
 {

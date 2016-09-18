@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Set;
 
 import org.elaya.page.Theme;
+import org.elaya.page.Writer;
 
 public class ListMenuThemeItem extends org.elaya.page.listmenu.ListMenuThemeItem {
 
@@ -13,36 +14,36 @@ public class ListMenuThemeItem extends org.elaya.page.listmenu.ListMenuThemeItem
 	}
 
 	@Override
-	public void header(String p_title) throws IOException {
-		print("<div class='listmenu_title'>"+escape(p_title)+"</div><div class='listmenu_header'>");
+	public void header(Writer p_writer,String p_title) throws IOException {
+		p_writer.print("<div class='listmenu_title'>"+escape(p_title)+"</div><div class='listmenu_header'>");
 	}
 
 	@Override
-	public void preItem() throws IOException 
+	public void preItem(Writer p_writer) throws IOException 
 	{
-		print("<div class='listmenu_item'>");
+		p_writer.print("<div class='listmenu_item'>");
 	}
 
 	@Override
-	public void preItemSelected() throws IOException 
+	public void preItemSelected(Writer p_writer) throws IOException 
 	{
-		print("<div class='listmenu_item_selected'>");
+		p_writer.print("<div class='listmenu_item_selected'>");
 	}
 
 	
 	@Override
-	public void linkItem(String p_domId, String p_text, String p_url) throws IOException {
-		print("<a class='listitem_link' "+property("id",p_domId)+property("href",p_url)+">"+escape(p_text)+"</a>");
+	public void linkItem(Writer p_writer,String p_domId, String p_text, String p_url) throws IOException {
+		p_writer.print("<a class='listitem_link' "+property("id",p_domId)+property("href",p_url)+">"+escape(p_text)+"</a>");
 	}
 
 	@Override
-	public void postItem() throws IOException {
-		print("</div>");
+	public void postItem(Writer p_writer) throws IOException {
+		p_writer.print("</div>");
 	}
 
 	@Override
-	public void footer() throws IOException {
-		print("</div>");
+	public void footer(Writer p_writer) throws IOException {
+		p_writer.print("</div>");
 	}
 	
 	public void getCssFiles(Set<String> p_files)
@@ -51,13 +52,13 @@ public class ListMenuThemeItem extends org.elaya.page.listmenu.ListMenuThemeItem
 	}
 
 	@Override
-	public void groupHeader(String p_title) throws IOException {
-		print("<div class='listmenu_grouptitle'>"+escape(p_title)+"</div><div class='listmenu_groupheader'>");
+	public void groupHeader(Writer p_writer,String p_title) throws IOException {
+		p_writer.print("<div class='listmenu_grouptitle'>"+escape(p_title)+"</div><div class='listmenu_groupheader'>");
 	}
 
 	@Override
-	public void groupFooter() throws IOException {
-		print("</div>");
+	public void groupFooter(Writer p_writer) throws IOException {
+		p_writer.print("</div>");
 		
 	}
 

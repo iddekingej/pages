@@ -2,6 +2,7 @@ package org.elaya.page.listmenu;
 
 import org.elaya.page.Element;
 import org.elaya.page.Errors;
+import org.elaya.page.Writer;
 import org.elaya.page.data.Data;
 
 public class ListMenuGroup extends BuildinListMenuItem {
@@ -29,9 +30,9 @@ public class ListMenuGroup extends BuildinListMenuItem {
 	}
 
 	@Override
-	public void display(Data p_data) throws Exception {
+	public void display(Writer p_writer,Data p_data) throws Exception {
 		Data l_data=getData(p_data);
-		themeItem.groupHeader(replaceVariables(l_data,title));
+		themeItem.groupHeader(p_writer,replaceVariables(l_data,title));
 		Object l_object=null;
 		String l_selectionVariable="";
 		if(getParent() instanceof ListMenu){
@@ -50,17 +51,17 @@ public class ListMenuGroup extends BuildinListMenuItem {
 				if(l_element.checkCondition(l_data)){
 					String l_value=((ListMenuItem<?>)l_element).getValue();
 					if( (l_value != null)? l_value.equals(l_object):false){
-						themeItem.preItemSelected();
+						themeItem.preItemSelected(p_writer);
 					} else {
-						themeItem.preItem();
+						themeItem.preItem(p_writer);
 					}
-					l_element.display(l_data);
-					themeItem.postItem();
+					l_element.display(p_writer,l_data);
+					themeItem.postItem(p_writer);
 				}
 			}
 
 		}
-		themeItem.groupFooter();		
+		themeItem.groupFooter(p_writer);		
 
 	}
 

@@ -2,34 +2,34 @@ package org.elaya.page.defaultTheme;
 
 import java.io.IOException;
 import java.util.Set;
-import org.elaya.page.Theme;
+import org.elaya.page.*;
 
 public class FormThemeItem extends org.elaya.page.quickform.FormThemeItem {
 
+	@Override
 	public void getCssFiles(Set<String> p_files){ 
 		p_files.add("form.css");
 	}
-	public void formHeader(String p_domId,String p_title,String p_url,String p_method,String p_width) throws IOException
+	public void formHeader(Writer p_writer,String p_domId,String p_title,String p_url,String p_method,String p_width) throws IOException
 	{
-		print("<form "+property("id",p_domId)+property("method",p_method)+propertyF("action",p_url)+"><table class=\"pages_formTable\">\n");
-		print("<tr><td colspan='2' class='pages_formTitle' style='width:"+p_width+";\'>"+escape(p_title)+"</td></tr>");
+		p_writer.print("<form "+property("id",p_domId)+property("method",p_method)+propertyF("action",p_url)+"><table class=\"pages_formTable\">\n");
+		p_writer.print("<tr><td colspan='2' class='pages_formTitle' style='width:"+p_width+";\'>"+escape(p_title)+"</td></tr>");
 	}
 	
-	public void formFooter(String p_domId,String p_saveText,String p_submitJs) throws IOException
+	public void formFooter(Writer p_writer,String p_domId,String p_saveText,String p_submitJs) throws IOException
 	{
-		print("<tr><td colspan='2'><input "+property("id",p_domId+"_submit")+property("onclick",p_submitJs)+"type='button' "+property("value",p_saveText)+"/></td></tr>");
-
-		print("</table></form>");
+		p_writer.print("<tr><td colspan='2'><input "+property("id",p_domId+"_submit")+property("onclick",p_submitJs)+"type='button' "+property("value",p_saveText)+"/></td></tr>");
+		p_writer.print("</table></form>");
 	}
 	
-	public void formElementBegin(String p_label) throws Exception
+	public void formElementBegin(Writer p_writer,String p_label) throws Exception
 	{
-		print("<tr><td "+property("class","pages_elementLabel")+">"+escape(p_label)+"</td><td class=\"pages_elementValue\">");
+		p_writer.print("<tr><td "+property("class","pages_elementLabel")+">"+escape(p_label)+"</td><td class=\"pages_elementValue\">");
 	}
 	
-	public void formElementEnd() throws Exception
+	public void formElementEnd(Writer p_writer) throws Exception
 	{
-		print("</td></tr>\n");
+		p_writer.print("</td></tr>\n");
 	}
 	
 	 

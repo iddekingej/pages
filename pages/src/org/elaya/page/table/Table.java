@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.elaya.page.Element;
 import org.elaya.page.Errors;
 import org.elaya.page.PageElement;
+import org.elaya.page.Writer;
 import org.elaya.page.data.Data;
 
 public class Table extends PageElement<TableThemeItem> {
@@ -37,24 +38,27 @@ public class Table extends PageElement<TableThemeItem> {
 		return fieldName;
 	}
 	
-	public void preElement(Element<?> p_element) throws IOException
+	@Override
+	public void preElement(Writer p_writer,Element<?> p_element) throws IOException
 	{
-		themeItem.itemHeader();
-	}
-	public void postElement(Element<?> p_element) throws IOException
-	{
-		themeItem.itemFooter();
+		themeItem.itemHeader(p_writer);
 	}
 	
-	public void displayRow(Data p_data) throws Exception
+	@Override
+	public void postElement(Writer p_writer,Element<?> p_element) throws IOException
+	{
+		themeItem.itemFooter(p_writer);
+	}
+	
+	public void displayRow(Writer p_writer,Data p_data) throws Exception
 	{
 		
-		themeItem.rowHeader();
-		displaySubElements(p_data);
-		themeItem.rowFooter();	
+		themeItem.rowHeader(p_writer);
+		displaySubElements(p_writer,p_data);
+		themeItem.rowFooter(p_writer);	
 	}
 	@Override
-	public void display(Data p_data) throws Exception {
+	public void display(Writer p_writer,Data p_data) throws Exception {
 		
 		Iterable<?> l_list;
 		Object      l_abstractList;
@@ -70,8 +74,8 @@ public class Table extends PageElement<TableThemeItem> {
 		l_abstractList=l_data.get(fieldName);
 		if(l_abstractList instanceof Iterable){
 			l_list=(Iterable<?>)l_abstractList;
-			themeItem.tableHeader("");
-			themeItem.titleHeader();
+			themeItem.tableHeader(p_writer,"");
+			themeItem.titleHeader(p_writer);
 			for(Element <?>l_element:getElements()){
 				String l_title;
 				if(l_element instanceof TableElement){
@@ -79,18 +83,18 @@ public class Table extends PageElement<TableThemeItem> {
 				} else {
 					l_title="";
 				}
-				themeItem.title(l_title);
+				themeItem.title(p_writer,l_title);
 			}
-			themeItem.titleFooter();
+			themeItem.titleFooter(p_writer);
 			for(Object l_abstractRow:l_list){
 				if(l_abstractRow instanceof Data){
 					l_row=(Data)l_abstractRow;
-					displayRow(l_row);
+					displayRow(p_writer,l_row);
 				} else {
 					throw new NotADynamicData(l_abstractRow.getClass().getName());
 				}
 			}
-			themeItem.tableFooter();
+			themeItem.tableFooter(p_writer);
 		} else {
 			throw new DataIsNotIterable(fieldName);
 		}

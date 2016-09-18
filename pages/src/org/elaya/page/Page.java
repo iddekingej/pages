@@ -3,6 +3,9 @@ package org.elaya.page;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Set;
+
+import javax.servlet.http.HttpServletResponse;
+
 import org.elaya.page.Errors.duplicateElementOnPage;
 import org.elaya.page.data.Data;
 
@@ -57,7 +60,7 @@ public class Page extends PageElement<PageThemeItem> {
 	{
 	} 
  
-	public void display(Data p_data) throws Exception
+	public void display(Writer p_writer,Data p_data) throws Exception
 	{
 		Data l_data=getData(p_data);
 		Set<String> l_js=new LinkedHashSet<String>();
@@ -70,25 +73,26 @@ public class Page extends PageElement<PageThemeItem> {
 		getAllCssFiles(l_css);
 		getAllJsFiles(l_js);
 		
-		themeItem.pageHeader(l_js,l_css);	
-		displaySubElements(l_data);
-		themeItem.jsBegin();
-		generateJs(p_data);
-		themeItem.jsEnd();
+		themeItem.pageHeader(p_writer,l_js,l_css);	
+		displaySubElements(p_writer,l_data);
+		p_writer.jsBegin();
+		generateJs(p_writer,p_data);
+		p_writer.jsEnd();
 		
 
-		themeItem.pageFooter();
+		themeItem.pageFooter(p_writer);
 	}	
 	
-	protected void makeJsObject(Data p_data)
+	@Override
+	protected void makeJsObject(Writer p_writer,Data p_data)
 	{
 		
 	}
-	
-	public void preSubJs(Data p_data) throws Exception
+
+	public void preSubJs(Writer p_writer,Data p_data) throws Exception
 	{
 		if(toWindowSize){
-			themeItem.print("pages.page.initToWindowSize();");
+			p_writer.print("pages.page.initToWindowSize();");
 		}
 	}
 	

@@ -1,5 +1,6 @@
 package org.elaya.page.quickform;
 
+import org.elaya.page.Writer;
 import org.elaya.page.data.Data;
 
 public class CheckboxElement extends BuildInFormElement {
@@ -9,20 +10,17 @@ public class CheckboxElement extends BuildInFormElement {
 		super();
 	}
 
-
 	@Override
-	public void  display(Data p_data) throws Exception {
+	public void  display(Writer p_writer,Data p_data) throws Exception {
 		Object l_value=getValueByName(p_data);
-		themeItem.checkBoxElement(getDomId(),getName(),l_value);
+		themeItem.checkBoxElement(p_writer,getDomId(),getName(),l_value);
 
 	}
-
 
 	@Override
 	public String getJsType() {
 		return "checkbox";
 	}
-
 
 	@Override
 	public String getJsClassName() {

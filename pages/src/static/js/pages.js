@@ -1,9 +1,19 @@
 var pages={		
 		page:{
 			elements:{},
+			byName:{},
 			parent:null,
 			addElement:function(p_name,p_object){
 				this.elements[p_name]=p_object;
+			},
+			getByName:function(p_name){
+				if(p_name in this.byName){
+					return this.byName[p_name];
+				}
+				return null;
+			},
+			addByName:function(p_name,p_object){
+				this.byName[p_name]=p_object;
 			},
 			initToWindowSize:function(){
 				$(window).resize(function(){
@@ -12,6 +22,21 @@ var pages={
 						l_container.width($(window).width());
 				});
 			},
+			removeErrors()
+			{
+					$(".page_error").remove();
+			},
+			addErrors:function(p_data){
+				this.removeErrors();
+				for(var l_cnt=0;l_cnt<p_data.length;l_cnt++){
+					var l_element=this.getByName(p_data[l_cnt].field);
+					if(l_element){
+						var l_node=$('<div>').attr('class','page_error').appendTo(l_element.element.parent());
+						l_node.append(document.createTextNode(p_data[l_cnt].msg));
+					}
+				}
+			}
+			,
 			lock:function()
 			{
 				$("<div>&#160;</div>").attr("id","locker").css({
@@ -26,7 +51,7 @@ var pages={
 				}).appendTo('body');
 			},
 			unlock:function(){
-				var l_element=$("locker");
+				var l_element=$("#locker");
 				if(l_element)l_element.remove();				
 			}
 		}
@@ -40,6 +65,9 @@ function TElement(p_parent,p_jsName,p_name,p_id)
 	this.name=p_name;
 	this.parent.addElement(p_jsName,this);
 	this.element=$("#"+p_id);
+	if(this.name!= ""){
+		pages.page.addByName(this.name,this);
+	}
 }
 
 TElement.prototype.addElement=function(p_jsName,p_element)

@@ -1,6 +1,7 @@
 package org.elaya.page.element;
 
 import org.elaya.page.PageElement;
+import org.elaya.page.Writer;
 import org.elaya.page.data.Data;
 
 public class PanelElement extends PageElement<ElementThemeItem> {
@@ -26,11 +27,11 @@ public class PanelElement extends PageElement<ElementThemeItem> {
 	}
 	
 	@Override
-	public void display(Data p_data) throws Exception {
+	public void display(Writer p_writer,Data p_data) throws Exception {
 		Data l_data=getData(p_data);
-		themeItem.panelHeader(replaceVariables(l_data,className), replaceVariables(l_data,css));
-		displaySubElements(l_data);
-		themeItem.panelFooter();
+		themeItem.panelHeader(p_writer,replaceVariables(l_data,className), replaceVariables(l_data,css));
+		displaySubElements(p_writer,l_data);
+		themeItem.panelFooter(p_writer);
 	}
 
 	@Override

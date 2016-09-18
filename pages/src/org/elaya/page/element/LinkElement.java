@@ -2,6 +2,7 @@ package org.elaya.page.element;
 
 import org.elaya.page.LinkType;
 import org.elaya.page.PageElement;
+import org.elaya.page.Writer;
 import org.elaya.page.data.Data;
 
 public class LinkElement extends PageElement<ElementThemeItem> {
@@ -49,14 +50,14 @@ public class LinkElement extends PageElement<ElementThemeItem> {
 	}
 	
 	@Override
-	public void display(Data p_data) throws Exception {
+	public void display(Writer p_writer,Data p_data) throws Exception {
 		Data l_data=getData(p_data);
 		String l_url=replaceVariables(l_data,url);
 		
 		if(linkType==LinkType.LINK_APPLICATION){
 			l_url=themeItem.getApplication().getBasePath()+l_url;
 		}
-		themeItem.link(l_url, replaceVariables(l_data,text), replaceVariables(l_data,className), replaceVariables(l_data,css)); 
+		themeItem.link(p_writer,l_url, replaceVariables(l_data,text), replaceVariables(l_data,className), replaceVariables(l_data,css)); 
 		
 	}
 

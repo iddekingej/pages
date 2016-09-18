@@ -6,13 +6,9 @@ import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.Objects;
 import java.util.Set;
-
 import org.elaya.page.Errors;
 import org.elaya.page.Errors.ValueNotFound;
-import org.elaya.page.data.Data;
-import org.elaya.page.data.DataModel;
-import org.elaya.page.data.DynamicMethod;
-import org.elaya.page.data.MapData;
+import org.elaya.page.data.*;
 
 public abstract class Element<themeType extends ThemeItemBase> extends DynamicMethod {
 	protected themeType themeItem;
@@ -22,7 +18,6 @@ public abstract class Element<themeType extends ThemeItemBase> extends DynamicMe
 
 	private int id=-1;
 	private String name="";
-	private String classPrefix="";
 	private HorizontalAlign horizontalAlign=HorizontalAlign.left;
 	private VerticalAlign  verticalAlign=VerticalAlign.top;
 	private String layoutWidth;
@@ -289,27 +284,27 @@ public abstract class Element<themeType extends ThemeItemBase> extends DynamicMe
 	}
 	
 	
-	protected void preElement(Element<?> p_element) throws IOException, Exception
+	protected void preElement(Writer p_writer,Element<?> p_element) throws IOException, Exception
 	{
 		
 	}
-	protected void postElement(Element<?> p_element) throws IOException, Exception
+	protected void postElement(Writer p_writer,Element<?> p_element) throws IOException, Exception
 	{		
 	}
 	
-	public void displaySubElements(Data p_data) throws Exception
+	public void displaySubElements(Writer p_writer,Data p_data) throws Exception
 	{
 		for(Element<?> l_element:getElements())
 		{
 			if(l_element.checkCondition(p_data)){
-				preElement(l_element);
-				l_element.display(p_data);
-				postElement(l_element);
+				preElement(p_writer,l_element);
+				l_element.display(p_writer,p_data);
+				postElement(p_writer,l_element);
 			}
 		}
 	}
 	
-	public abstract void display(Data p_data) throws Exception;
+	public abstract void display(Writer p_stream,Data p_data) throws Exception;
 	public abstract String getThemeName();
 	
 	@SuppressWarnings("unchecked")
@@ -346,17 +341,17 @@ public abstract class Element<themeType extends ThemeItemBase> extends DynamicMe
 		return "TElement";
 	}
 	
-	protected void makeSetupJs(Data p_data) throws Exception
+	protected void makeSetupJs(Writer p_writer,Data p_data) throws Exception
 	{
 		
 	}
 	
-	protected void makeJsObject(Data p_data) throws Exception
+	protected void makeJsObject(Writer p_writer,Data p_data) throws Exception
 	{
-		themeItem.print("var l_element=new "+getJsClassName()+"("+getWidgetParent().getJsFullname()+","+themeItem.js_toString(getJsName())+","+themeItem.js_toString(getName())+","+themeItem.js_toString(getDomId())+");\n");
-		themeItem.print("l_element.config=function(){");
-		makeSetupJs(p_data);
-		themeItem.print("}\n l_element.setup();\n");
+		p_writer.print("var l_element=new "+getJsClassName()+"("+getWidgetParent().getJsFullname()+","+themeItem.js_toString(getJsName())+","+themeItem.js_toString(getName())+","+themeItem.js_toString(getDomId())+");\n");
+		p_writer.print("l_element.config=function(){");
+		makeSetupJs(p_writer,p_data);
+		p_writer.print("}\n l_element.setup();\n");
 	}
 	
 	
@@ -370,14 +365,14 @@ public abstract class Element<themeType extends ThemeItemBase> extends DynamicMe
 		
 	}
 	
-	final protected void generateJs(Data p_data) throws IOException, Exception
+	final protected void generateJs(Writer p_writer,Data p_data) throws IOException, Exception
 	{
 		Data l_data=getData(p_data);
-		makeJsObject(l_data);
+		makeJsObject(p_writer,l_data);
 		preSubJs(l_data);
 		for(Element<?> l_element:getElements()){
 			if(this.checkCondition(p_data)){
-				l_element.generateJs(l_data);
+				l_element.generateJs(p_writer,l_data);
 			}
 		}
 		postSubJs(l_data);

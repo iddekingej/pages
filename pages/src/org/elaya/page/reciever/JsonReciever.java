@@ -2,16 +2,16 @@ package org.elaya.page.reciever;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-
+import java.sql.SQLException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.elaya.page.data.Dynamic;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 public abstract class JsonReciever<T extends Dynamic> extends Reciever<T> {
 
+	abstract protected void handleJson(JSONResult p_result,T p_data) throws SQLException;
+	
 	private JSONObject getJson(HttpServletRequest p_request) throws IOException
 	{
 		StringBuffer l_data=new StringBuffer();
@@ -21,9 +21,8 @@ public abstract class JsonReciever<T extends Dynamic> extends Reciever<T> {
 		return new JSONObject(l_data.toString());
 	}
 	
-	abstract public JSONObject handleRequest(T p_data) throws JSONException;
-	
 	@SuppressWarnings("unchecked")
+	@Override
 	public void handleRequest(HttpServletRequest p_request,HttpServletResponse p_response ) throws Exception
 	{
 		Dynamic l_object=getObject();
@@ -33,17 +32,16 @@ public abstract class JsonReciever<T extends Dynamic> extends Reciever<T> {
 		JSONObject l_data=l_json.getJSONObject("data");
 		//TODO Handle exception and when parameter does not exists
 		for(Parameter l_parameter:getParameters()){
-			l_object.put(l_parameter.getName(),new String(l_data.getString(l_parameter.getName())));
+			l_object.put(l_parameter.getName(),l_data.getString(l_parameter.getName()));
 		}
 		
 		T l_information;
+		
 		l_information=(T)l_object;
-		JSONObject l_jsonSend=handleRequest(l_information);
-		if(l_jsonSend !=null){
-			p_response.getOutputStream().print(l_jsonSend.toString());
-		} else {
-			p_response.getOutputStream().print("{}");
-		}
+		JSONResult l_result=new JSONResult();
+		handleJson(l_result,l_information);
+		p_response.setContentType("application/json");
+		p_response.getOutputStream().print(l_result.toString());
 	}
 	
 }

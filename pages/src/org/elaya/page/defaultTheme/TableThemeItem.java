@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Set;
 
 import org.elaya.page.Theme;
+import org.elaya.page.Writer;
 
 public class TableThemeItem extends org.elaya.page.table.TableThemeItem {
 
@@ -18,62 +19,61 @@ public class TableThemeItem extends org.elaya.page.table.TableThemeItem {
 	}
 	
 	@Override
-	public void tableHeader(String p_domId) throws IOException {
-		print("<table "+classProperty("table_header")+property("id",p_domId)+">");
+	public void tableHeader(Writer p_writer,String p_domId) throws IOException {
+		p_writer.print("<table "+classProperty("table_header")+property("id",p_domId)+">");
 	}
 
 	@Override
-	public void tableFooter() throws IOException {
-		print("</table>");
+	public void tableFooter(Writer p_writer) throws IOException {
+		p_writer.print("</table>");
 	}
 
 	@Override
-	public void titleHeader() throws IOException {
-		print("<tr>");
+	public void titleHeader(Writer p_writer) throws IOException {
+		p_writer.print("<tr>");
+	}
+
+	@Override
+	public void title(Writer p_writer,String p_title) throws IOException {
+		p_writer.print("<td "+classProperty("table_header_cell")+">"+escape(p_title)+"</td>");
 
 	}
 
 	@Override
-	public void title(String p_title) throws IOException {
-		print("<td "+classProperty("table_header_cell")+">"+escape(p_title)+"</td>");
-
-	}
-
-	@Override
-	public void titleFooter() throws IOException {
-		print("</tr>");
+	public void titleFooter(Writer p_writer) throws IOException {
+		p_writer.print("</tr>");
 	}
  
 	@Override
-	public void rowHeader() throws IOException {
-		print("<tr>");
+	public void rowHeader(Writer p_writer) throws IOException {
+		p_writer.print("<tr>");
 	}
 
 	@Override
-	public void staticItem(String p_domId,Object p_text) throws IOException {
-		print(escape(p_text));
+	public void staticItem(Writer p_writer,String p_domId,Object p_text) throws IOException {
+		p_writer.print(escape(p_text));
 	}
 
 	@Override
-	public void linkItem(String p_url,String p_text) throws IOException {
-		print("<a "+property("href",p_url)+">"+escape(p_text)+"</a>");
+	public void linkItem(Writer p_writer,String p_url,String p_text) throws IOException {
+		p_writer.print("<a "+property("href",p_url)+">"+escape(p_text)+"</a>");
 	}
 
 	@Override
-	public void rowFooter() throws IOException {
-		print("</tr>");
+	public void rowFooter(Writer p_writer) throws IOException {
+		p_writer.print("</tr>");
 		
 	}
 
 	@Override
-	public void itemHeader() throws IOException {
-		print("<td "+classProperty("table_cell")+">");
+	public void itemHeader(Writer p_writer) throws IOException {
+		p_writer.print("<td "+classProperty("table_cell")+">");
 		
 	}
 
 	@Override
-	public void itemFooter() throws IOException {
-		print("</td>");
+	public void itemFooter(Writer p_writer) throws IOException {
+		p_writer.print("</td>");
 		
 	}
 

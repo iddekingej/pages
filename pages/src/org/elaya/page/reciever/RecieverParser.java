@@ -80,10 +80,12 @@ public class RecieverParser {
 			errors.add("Missing 'class' property");
 		} else {
 			Object l_object=DynamicObject.createObjectFromName(normelizeClassName(l_class),errors);
-			if(p_class.isAssignableFrom(l_object.getClass())){
-				l_return=(T) l_object;
-			} else {
-				errors.add("Wrong class name class "+l_class+" is not descended of "+p_class.getName());
+			if(l_object != null){
+				if(p_class.isAssignableFrom(l_object.getClass())){
+					l_return=(T) l_object;
+				} else {
+					errors.add("Wrong class name class "+l_class+" is not descended of "+p_class.getName());
+				}
 			}
 		}
 		if(l_return != null && l_return instanceof DynamicMethod){
@@ -111,6 +113,7 @@ public class RecieverParser {
 		if(l_reciever==null){
 			return null;
 		}
+		l_reciever.setApplication(application);
 		Node l_node=p_node.getFirstChild();
 		while(l_node != null){
 			if(l_node.getNodeType()==Node.ELEMENT_NODE){

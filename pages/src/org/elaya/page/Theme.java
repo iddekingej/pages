@@ -7,17 +7,11 @@ import javax.servlet.http.HttpServletResponse;
 public class Theme {
 	private String baseName;
 	private String defaultTheme;
-	private HttpServletResponse response;
 	private Application application;
 	
 	public Application getApplication()
 	{
 		return application;
-	}
-	
-	public HttpServletResponse getResponse()
-	{
-		return response;
 	}
 	
 	public ThemeItemBase getTheme(String p_name) throws ClassNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException
@@ -40,6 +34,5 @@ public class Theme {
 		application=p_application;
 		baseName=p_application.getThemeBase();
 		defaultTheme="org.elaya.page.defaultTheme";
-		response=p_application.getResponse();
 	}
 }

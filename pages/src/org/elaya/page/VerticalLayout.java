@@ -10,21 +10,23 @@ public class VerticalLayout extends Layout {
 		super();
 	}
 
-	protected void preElement(Element<?> p_element) throws IOException
+	@Override
+	protected void preElement(Writer p_writer,Element<?> p_element) throws IOException
 	{
-			themeItem.verticalItemHeader(p_element.getHorizontalAlign(),p_element.getVerticalAlign(),p_element.getLayoutWidth(),p_element.geLayoutHeight());		
+			themeItem.verticalItemHeader(p_writer,p_element.getHorizontalAlign(),p_element.getVerticalAlign(),p_element.getLayoutWidth(),p_element.geLayoutHeight());		
 	}
 	
-	protected void postElement(Element<?> p_element) throws IOException
+	@Override
+	protected void postElement(Writer p_writer,Element<?> p_element) throws IOException
 	{
-		themeItem.verticalItemFooter();
+		themeItem.verticalItemFooter(p_writer);
 	}
 	@Override
-	public void display(Data p_data) throws Exception {
+	public void display(Writer p_writer,Data p_data) throws Exception {
 		Data l_data=getData(p_data);
-		themeItem.verticalHeader();
-		displaySubElements(l_data);
-		themeItem.verticalFooter();
+		themeItem.verticalHeader(p_writer);
+		displaySubElements(p_writer,l_data);
+		themeItem.verticalFooter(p_writer);
 	}
 
 }

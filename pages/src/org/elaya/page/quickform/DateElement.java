@@ -1,5 +1,6 @@
 package org.elaya.page.quickform;
 
+import org.elaya.page.Writer;
 import org.elaya.page.data.Data;
 
 public class DateElement extends BuildInFormElement {
@@ -57,17 +58,18 @@ public class DateElement extends BuildInFormElement {
 	}
 
 	@Override
-	public void display(Data p_data) throws Exception {
+	public void display(Writer p_writer,Data p_data) throws Exception {
 		Data l_data=getData(p_data);
 		Object l_value=getValueByName(l_data);
-		themeItem.dateElement(getDomId(),getName(),l_value);
+		themeItem.dateElement(p_writer,getDomId(),getName(),l_value);
 	}
 
-	protected void makeSetupJs(Data p_data) throws Exception
+	@Override
+	protected void makeSetupJs(Writer p_writer,Data p_data) throws Exception
 	{
-		themeItem.print("this.showOn='"+showMode.getValue()+"';\n");
+		p_writer.print("this.showOn='"+showMode.getValue()+"';\n");
 		if(buttonText != null && buttonText.length() >0){
-			themeItem.print("this.buttonText="+themeItem.js_toString(buttonText)+";");
+			p_writer.print("this.buttonText="+themeItem.js_toString(buttonText)+";");
 		}
 	}
 

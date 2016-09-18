@@ -1,6 +1,7 @@
 package org.elaya.page.element;
 
 import org.elaya.page.PageElement;
+import org.elaya.page.Writer;
 import org.elaya.page.data.Data;
 
 public class StaticElement extends PageElement<ElementThemeItem> {
@@ -47,9 +48,9 @@ public class StaticElement extends PageElement<ElementThemeItem> {
 	}
 	
 	@Override
-	public void display(Data p_data) throws Exception {
+	public void display(Writer p_writer,Data p_data) throws Exception {
 		Data l_data=getData(p_data);
-		themeItem.staticElement(replaceVariables(l_data,text), isHtml, replaceVariables(l_data,className), replaceVariables(l_data,css));
+		themeItem.staticElement(p_writer,replaceVariables(l_data,text), isHtml, replaceVariables(l_data,className), replaceVariables(l_data,css));
 	}
 
 	@Override

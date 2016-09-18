@@ -2,6 +2,7 @@ package org.elaya.page.quickform;
 
 import java.util.Objects;
 
+import org.elaya.page.Writer;
 import org.elaya.page.data.Data;
 
 public  class TextEditElement extends BuildInFormElement {
@@ -24,10 +25,10 @@ public  class TextEditElement extends BuildInFormElement {
 	}
 	
 	@Override
-	public void display(Data p_data) throws Exception {
+	public void display(Writer p_writer,Data p_data) throws Exception {
 		Objects.requireNonNull(themeItem);
 		Object l_value=getValueByName(p_data);
-		themeItem.textElement(getDomId(),getName(),l_value,maxLength);		
+		themeItem.textElement(p_writer,getDomId(),getName(),l_value,maxLength);		
 	}
 
 	@Override

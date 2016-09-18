@@ -1,5 +1,6 @@
 package org.elaya.page.table;
 
+import org.elaya.page.Writer;
 import org.elaya.page.data.Data;
 import org.elaya.page.data.LinkData;
 
@@ -13,12 +14,12 @@ public class LinkElement extends BuildInElement {
 		}
 	}
 	@Override
-	public void display(Data p_data) throws Exception {
+	public void display(Writer p_writer,Data p_data) throws Exception {
 		Data l_data=getData(p_data);
 		Object l_value=getValueByName(p_data);
 		if(l_value instanceof LinkData){
 			LinkData l_linkData=(LinkData)l_value;
-			themeItem.linkItem(replaceVariables(l_data,l_linkData.getUrlText()), replaceVariables(l_data,l_linkData.getText()));
+			themeItem.linkItem(p_writer,replaceVariables(l_data,l_linkData.getUrlText()), replaceVariables(l_data,l_linkData.getText()));
 		} else {
 			throw new ValueNotLinkData();
 		}

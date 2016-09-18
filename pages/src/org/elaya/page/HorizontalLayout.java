@@ -11,19 +11,21 @@ public class HorizontalLayout extends Layout{
 		super();
 	}
 	
-	public void preElement(Element<?> p_element) throws IOException
+	@Override
+	public void preElement(Writer p_writer,Element<?> p_element) throws IOException
 	{
-			themeItem.HorizontalItemHeader(p_element.getHorizontalAlign(),p_element.getVerticalAlign(),p_element.getLayoutWidth(),p_element.geLayoutHeight());
+			themeItem.HorizontalItemHeader(p_writer,p_element.getHorizontalAlign(),p_element.getVerticalAlign(),p_element.getLayoutWidth(),p_element.geLayoutHeight());
 	}
 	
-	public void postElement(Element<?> p_element) throws IOException{
-		themeItem.HorizontalItemFooter();
+	@Override
+	public void postElement(Writer p_writer,Element<?> p_element) throws IOException{
+		themeItem.HorizontalItemFooter(p_writer);
 	}
-	public void display(Data p_data) throws Exception
+	public void display(Writer p_writer,Data p_data) throws Exception
 	{
 		Data l_data=getData(p_data);
-		themeItem.HorizontalHeader();
-		displaySubElements(l_data);
-		themeItem.HorizontalFooter();
+		themeItem.HorizontalHeader(p_writer);
+		displaySubElements(p_writer,l_data);
+		themeItem.HorizontalFooter(p_writer);
 	}
 }

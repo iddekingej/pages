@@ -6,8 +6,8 @@ import java.util.Set;
 
 public abstract class PageThemeItem extends ThemeItemBase {
 
-	abstract public void pageHeader(Set<String> p_js,Set<String> p_css) throws IOException;
-	abstract public void pageFooter() throws IOException ;
+	abstract public void pageHeader(Writer p_writer,Set<String> p_js,Set<String> p_css) throws IOException;
+	abstract public void pageFooter(Writer p_writer) throws IOException ;
 	
 	public PageThemeItem(Theme p_theme) throws IOException {
 		super(p_theme);

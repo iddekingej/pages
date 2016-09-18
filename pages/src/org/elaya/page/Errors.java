@@ -47,4 +47,12 @@ public class Errors {
 			super("Invalid type, "+p_object.getClass().getName()+" found but "+p_expected+" expected");
 		}
 	}
+	
+	static public class LoadingPageFailed extends Exception{
+
+		private static final long serialVersionUID = -5787713033565235846L;
+		public LoadingPageFailed(String p_fileName){
+			super("Loading page '"+p_fileName+" failed");
+		}
+	}
 }

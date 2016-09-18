@@ -1,36 +1,41 @@
 package org.elaya.page;
 
-import java.io.File;
+import java.io.InputStream;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Objects;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-
 import org.slf4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 public class AliasParser {
-	private Application application;
-	private Logger  logger;
+	private Logger      logger;
 	private LinkedList<String> errors=new LinkedList<String>();
+
+/**
+ * Returns list of errors during parsing of the Alias file
+ * @return LinkedList<String> of error strings
+ */
 	
 	public LinkedList<String> getErrors()
 	{
 		return errors;
 	}
 	
-	public AliasParser(Application p_application)
+/**
+ * Constructor of  AliasParser
+ * @param p_logger Logger used for logging
+ */
+	public AliasParser(Logger p_logger)
 	{
-		Objects.requireNonNull(p_application,"p_application");
-		application=p_application;
-		logger=p_application.getLogger();
+		Objects.requireNonNull(p_logger);
+		logger=p_logger;
 	}
 	
-	void parseAlias(Node p_parent,Map<String,String> p_map)
+	protected void parseAlias(Node p_parent,Map<String,String> p_map)
 	{
 		Node l_currentDef=p_parent.getFirstChild();
 		Node l_alias;
@@ -49,7 +54,7 @@ public class AliasParser {
 							l_aliasValue=l_alias.getNodeValue();
 							if(p_map.containsKey(l_aliasValue)){
 								errors.add("Alias '"+l_aliasValue+"' allready defined");
-							} else {								
+							} else {		
 								p_map.put(l_aliasValue,l_class.getNodeValue());
 							}
 						}
@@ -62,10 +67,17 @@ public class AliasParser {
 			l_currentDef=l_currentDef.getNextSibling();
 		}
 	}
-	void parseAliases(String p_fileName,Map<String,String> p_map) throws Exception{		
+	
+	/**
+	 * Parse Alias file
+	 * @param p_fileName Name of file to parse 
+	 * @param p_map Found aliases are added to this map
+	 * @throws Exception
+	 */
+	void parseAliases(InputStream p_input,Map<String,String> p_map) throws Exception{		
 		DocumentBuilderFactory l_factory=DocumentBuilderFactory.newInstance();
 		DocumentBuilder l_builder=l_factory.newDocumentBuilder();
-		Document l_doc=l_builder.parse(new File(application.getRealPath(p_fileName)));
+		Document l_doc=l_builder.parse(p_input);
 		NodeList l_nl=l_doc.getChildNodes();
 		Node l_rootNode=l_nl.item(0);
 		l_rootNode.normalize();

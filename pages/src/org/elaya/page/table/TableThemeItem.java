@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import org.elaya.page.Theme;
 import org.elaya.page.ThemeItemBase;
+import org.elaya.page.Writer;
 
 abstract public class TableThemeItem extends ThemeItemBase {
 
@@ -11,16 +12,16 @@ abstract public class TableThemeItem extends ThemeItemBase {
 		super(p_theme);
 	}
 	
-	abstract public void tableHeader(String p_domId) throws IOException;
-	abstract public void tableFooter() throws IOException;
-	abstract public void titleHeader() throws IOException;
-	abstract public void title(String p_title) throws IOException;
-	abstract public void titleFooter() throws IOException;
-	abstract public void rowHeader() throws IOException;
-	abstract public void rowFooter() throws IOException;
-	abstract public void itemHeader() throws IOException;
-	abstract public void itemFooter() throws IOException;
-	abstract public void staticItem(String p_domId,Object p_text) throws IOException;
-	abstract public void linkItem(String p_url,String p_text) throws IOException;
+	abstract public void tableHeader(Writer p_writer,String p_domId) throws IOException;
+	abstract public void tableFooter(Writer p_writer) throws IOException;
+	abstract public void titleHeader(Writer p_writer) throws IOException;
+	abstract public void title(Writer p_writer,String p_title) throws IOException;
+	abstract public void titleFooter(Writer p_writer) throws IOException;
+	abstract public void rowHeader(Writer p_writer) throws IOException;
+	abstract public void rowFooter(Writer p_writer) throws IOException;
+	abstract public void itemHeader(Writer p_writer) throws IOException;
+	abstract public void itemFooter(Writer p_writer) throws IOException;
+	abstract public void staticItem(Writer p_writer,String p_domId,Object p_text) throws IOException;
+	abstract public void linkItem(Writer p_writer,String p_url,String p_text) throws IOException;
 	
 }

@@ -1,6 +1,6 @@
 .pages_elementLabel{
-	border:solid 1px #000;
-	background-color:#ddd;
+	border-bottom:solid 1px #888;
+	background-color:#fff;
 	padding-right:8px;
 	vertical-align:top;
 }
@@ -10,7 +10,7 @@
 }
 .pages_elementValue{
 	border:solid 1px #000;
-	background-color:#eee;
+	background-color:#fff;
 	padding:2px;
 	
 }
@@ -19,10 +19,6 @@
 	text-align:center;
 	font-size:15px;
 	background-color:#eee;
-	border-bottom:solid 1px #000;
+	border-bottom:solid 1px #888;
 }
 
-element,td,body{
-	font-size:12px;
-	font-family:arial;
-}
