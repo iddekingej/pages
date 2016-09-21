@@ -7,7 +7,8 @@ import org.elaya.page.data.Data;
 
 public  class TextEditElement extends BuildInFormElement {
 
-	int maxLength=-1;
+	private int maxLength=-1;
+	private boolean password=false;
 	
 	public TextEditElement()	
 	{
@@ -24,18 +25,26 @@ public  class TextEditElement extends BuildInFormElement {
 		return maxLength;
 	}
 	
+	public void setPassword(Boolean p_password)
+	{
+		password=p_password;
+	}
+	
+	public boolean getPassword()
+	{
+		return password;
+	}
+
 	@Override
 	public void display(Writer p_writer,Data p_data) throws Exception {
 		Objects.requireNonNull(themeItem);
 		Object l_value=getValueByName(p_data);
-		themeItem.textElement(p_writer,getDomId(),getName(),l_value,maxLength);		
+		if(password){
+			themeItem.passwordElement(p_writer,getDomId(),getName(),l_value,maxLength);
+		} else {
+			themeItem.textElement(p_writer,getDomId(),getName(),l_value,maxLength);
+		}
 	}
-
-	@Override
-	public String getJsType() {
-		return "text";
-	}
-
 	@Override
 	public String getJsClassName() {
 		return "TTextEditElement";

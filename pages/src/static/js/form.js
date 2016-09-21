@@ -1,7 +1,3 @@
-/**
- * 
- */
-
 function TForm(p_parent,p_jsName,p_name,p_id){
 	TElement.call(this,p_parent,p_jsName,p_name,p_id);
 	this.element[0]._control=this;
@@ -13,6 +9,11 @@ function TForm(p_parent,p_jsName,p_name,p_id){
 }
 
 TForm.prototype=Object.create(TElement.prototype);
+
+TForm.prototype.cancel=function()
+{
+	window.location=this.cancelUrl;
+}
 
 TForm.prototype.save=function()
 {
@@ -27,21 +28,29 @@ TForm.prototype.success=function(p_data)
 {
 	pages.page.unlock();
 	if("errors" in p_data){
-		var l_errors="";
+		
 		pages.page.addErrors(p_data.errors);
+		var l_errors="";
+		for(var l_cnt in p_data.errors){
+			if(p_data.errors[l_cnt].field=="") l_errors += p_data.errors[l_cnt].msg+"\n";
+		}
+		if(l_errors != "")alert(l_errors);
 	} else {
 		if(this.nextUrl) window.location=this.nextUrl;
 	}
 }
+
 TForm.prototype.sendData=function()
 {
-	try{
+	
 	
 		pages.page.lock();
 		var l_element;
 		var l_data={};
 		for(var l_key in this.elements){
-			l_data[l_key]=this.elements[l_key].getValue();
+			if("fillData" in this.elements[l_key]){				
+				this.elements[l_key].fillData(l_data);
+			}
 		}
 
 		var l_message={
@@ -50,6 +59,7 @@ TForm.prototype.sendData=function()
 				,	data:l_data
 		};
 		l_this=this;
+	try{
 		$.ajax({
 			url:this.url
 			,	type:'POST'

@@ -18,8 +18,9 @@ public class Form extends PageElement<FormThemeItem>{
 	private String cmd;
 	private String width="300px";
 	private String submitText="save";
-	private String nextUrl;
-	private String cancelUrl;
+	private String cancelText="cancel";
+	private String nextUrl="";
+	private String cancelUrl="";
 	private SubmitType submitType=SubmitType.json;
 	
 	public void setNextUrl(String p_nextUrl)
@@ -41,6 +42,7 @@ public class Form extends PageElement<FormThemeItem>{
 	{
 		return cancelUrl;
 	}
+	
 	
 	public void setWidth(String p_width)
 	{
@@ -71,6 +73,17 @@ public class Form extends PageElement<FormThemeItem>{
 	{
 		return submitText;
 	}
+	
+	public void setCancelText(String p_text)
+	{
+		cancelText=p_text;
+	}
+	
+	public String getCancelText()
+	{
+		return cancelText;
+	}
+
 	public void setSubmitType(SubmitType p_submitType)
 	{
 		submitType=p_submitType;
@@ -113,20 +126,6 @@ public class Form extends PageElement<FormThemeItem>{
 		return "FormThemeItem";		
 	}
 	
-	public void preElement(Writer p_writer,Element<?> p_element) throws Exception
-	{
-		String l_label="";
-		if(p_element instanceof FormElement){
-			l_label=((FormElement<?>)p_element).getLabel();
-		}
-		themeItem.formElementBegin(p_writer,l_label);		
-	}
-	
-	public void postElement(Writer p_writer,Element<?> p_element) throws Exception
-	{
-		themeItem.formElementEnd(p_writer);
-	}
-	
 	public void display(Writer p_writer,Data p_data) throws Exception
 	{
 		Data l_data=getData(p_data);		
@@ -138,13 +137,19 @@ public class Form extends PageElement<FormThemeItem>{
 		}
 		themeItem.formHeader(p_writer,getDomId(),replaceVariables(l_data,title),theme.getApplication().getBasePath()+replaceVariables(l_data,url),l_method,getWidth());		
 		displaySubElements(p_writer,l_data);
-		themeItem.formFooter(p_writer,getDomId(),getSubmitText(),"this.form._control.save()");
+		themeItem.formFooterBegin(p_writer);
+		themeItem.FormFooterOk(p_writer, getDomId(), getSubmitText());
+		themeItem.FormFooterBetween(p_writer);
+		if(cancelUrl.length()>0)themeItem.FormFooterCancel(p_writer, getDomId(), getCancelText());
+		themeItem.formFooter(p_writer);
+		
 	}
 	
 	protected void makeSetupJs(Writer p_writer,Data p_data) throws Exception
 	{
 		p_writer.print("this.cmd="+themeItem.js_toString(replaceVariables(p_data,cmd))+";\n");
 		p_writer.print("this.nextUrl="+themeItem.js_toString(replaceVariables(p_data,nextUrl))+";\n");
+		if(this.cancelUrl.length()>0)p_writer.print("this.cancelUrl="+themeItem.js_toString(replaceVariables(p_data,cancelUrl))+";\n");
 		p_writer.print("this.submitType="+themeItem.js_toString(submitType.getValue()));
 	}
 	

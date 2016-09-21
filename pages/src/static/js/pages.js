@@ -70,6 +70,21 @@ function TElement(p_parent,p_jsName,p_name,p_id)
 	}
 }
 
+TElement.prototype.fillThisData=function(p_data)
+{
+	if("getValue" in this){
+		p_data[this.name]=this.getValue();
+	}
+}
+
+TElement.prototype.fillData=function(p_data)
+{
+	this.fillThisData(p_data);
+	for(var l_name in this.elements){
+		this.elements[l_name].fillData(p_data);
+	}
+}
+
 TElement.prototype.addElement=function(p_jsName,p_element)
 {
 	this.elements[p_jsName]=p_element;

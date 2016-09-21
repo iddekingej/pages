@@ -30,11 +30,6 @@ public class TextAreaElement extends BuildInFormElement {
 	}
 
 	@Override
-	public String getJsType() {
-		return "textarea";
-	}
-
-	@Override
 	public String getJsClassName() {
 		// TODO Auto-generated method stub
 		return "TTextareaElement";

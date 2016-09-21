@@ -80,6 +80,8 @@ public class UiXmlParser {
 				return l_className;				
 			}
 			
+		} else {
+			return p_className;
 		}
 		errors.add("Alias "+p_className+" not found");
 		return p_className;

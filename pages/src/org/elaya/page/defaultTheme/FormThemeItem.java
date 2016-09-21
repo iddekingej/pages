@@ -10,32 +10,50 @@ public class FormThemeItem extends org.elaya.page.quickform.FormThemeItem {
 	public void getCssFiles(Set<String> p_files){ 
 		p_files.add("form.css");
 	}
+	
+	@Override
 	public void formHeader(Writer p_writer,String p_domId,String p_title,String p_url,String p_method,String p_width) throws IOException
 	{
 		p_writer.print("<form "+property("id",p_domId)+property("method",p_method)+propertyF("action",p_url)+"><table class=\"pages_formTable\">\n");
 		p_writer.print("<tr><td colspan='2' class='pages_formTitle' style='width:"+p_width+";\'>"+escape(p_title)+"</td></tr>");
 	}
 	
-	public void formFooter(Writer p_writer,String p_domId,String p_saveText,String p_submitJs) throws IOException
-	{
-		p_writer.print("<tr><td colspan='2'><input "+property("id",p_domId+"_submit")+property("onclick",p_submitJs)+"type='button' "+property("value",p_saveText)+"/></td></tr>");
-		p_writer.print("</table></form>");
+	@Override
+	public void formFooterBegin(Writer p_writer) throws IOException{
+		p_writer.print("<tr><td>");
 	}
 	
-	public void formElementBegin(Writer p_writer,String p_label) throws Exception
+	@Override
+	public void FormFooterOk(Writer p_writer,String p_domId,String p_saveText) throws IOException
 	{
-		p_writer.print("<tr><td "+property("class","pages_elementLabel")+">"+escape(p_label)+"</td><td class=\"pages_elementValue\">");
+		p_writer.print("<input "+property("id",p_domId+"_submit")+property("onclick","this.form._control.save()")+"type='button' "+property("value",p_saveText)+"/>");
+	}
+
+	@Override
+	public void FormFooterBetween(Writer p_writer) throws IOException
+	{
+		p_writer.print("</td><td>");
 	}
 	
-	public void formElementEnd(Writer p_writer) throws Exception
+	@Override
+	public void FormFooterCancel(Writer p_writer,String p_domId, String p_cancelText) throws IOException
 	{
-		p_writer.print("</td></tr>\n");
+		p_writer.print("<input "+property("id",p_domId+"_cancel")+property("onclick","this.form._control.cancel()")+"type='button' "+property("value",p_cancelText)+"/>");
 	}
 	
-	 
+	@Override
+	public void formFooter(Writer p_writer) throws IOException
+	{		
+		p_writer.print("</tr></table></form>");
+	}
+	
 	
 	public FormThemeItem(Theme p_theme) throws IOException {
 		super(p_theme);
 	}
+
+
+
+	
 
 }

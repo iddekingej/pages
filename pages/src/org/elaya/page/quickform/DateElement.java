@@ -48,11 +48,6 @@ public class DateElement extends BuildInFormElement {
 	}
 
 	@Override
-	public String getJsType() {
-		return null;
-	}
-
-	@Override
 	public String getJsClassName() {
 		return "TDateElement";
 	}

@@ -16,12 +16,6 @@ public class CheckboxElement extends BuildInFormElement {
 		themeItem.checkBoxElement(p_writer,getDomId(),getName(),l_value);
 
 	}
-
-	@Override
-	public String getJsType() {
-		return "checkbox";
-	}
-
 	@Override
 	public String getJsClassName() {
 		return "TCheckboxElement";

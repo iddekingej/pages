@@ -23,12 +23,7 @@ public class StaticElement extends BuildInFormElement {
 		Object l_value=getValueByName(p_data);
 		themeItem.StaticElement(p_writer,getDomId(),getName(),getIsHtml(),l_value);
 	}
-	@Override
-	public String getJsType() {
 
-		return "static";
-	}
-	
 	@Override
 	public String getJsClassName() {
 		return "TStaticElement";

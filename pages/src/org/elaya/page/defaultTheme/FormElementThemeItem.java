@@ -11,10 +11,15 @@ public class FormElementThemeItem extends org.elaya.page.quickform.FormElementTh
 		
 	public void textElement(Writer p_writer,String p_idDom,String p_name,Object p_value,int p_maxLength) throws IOException
 	{
-		p_writer.print("<input style='width:100%' "+property("id",p_idDom)+property("type","text")+property("name",p_name)+property("value",p_value)+propertyF("maxlength",(p_maxLength>0?String.valueOf(p_maxLength):""))+"/>");
+		p_writer.print("<input type='text' style='width:100%' "+property("id",p_idDom)+property("name",p_name)+property("value",p_value)+propertyF("maxlength",(p_maxLength>0?String.valueOf(p_maxLength):""))+"/>");
 	}
 	
-
+	public void passwordElement(Writer p_writer,String p_idDom,String p_name,Object p_value,int p_maxLength) throws IOException
+	{
+		p_writer.print("<input type='password' style='width:100%' "+property("id",p_idDom)+property("name",p_name)+property("value",p_value)+propertyF("maxlength",(p_maxLength>0?String.valueOf(p_maxLength):""))+"/>");
+	}
+	
+	
 	public void selectElementHeader(Writer p_writer,String p_idDom,String p_name) throws IOException
 	{
 		p_writer.print("<select  "+property("id",p_idDom)+property("name",p_name)+">");
@@ -92,9 +97,28 @@ public class FormElementThemeItem extends org.elaya.page.quickform.FormElementTh
 		p_writer.print("<textarea "+property("id",p_idDom)+property("name",p_name)+property("style",l_css)+">"+escape(p_value)+"</textarea>");
 	}
 	
+	@Override
 	public void dateElement(Writer p_writer,String p_domId,String p_name,Object p_value) throws IOException
 	{
 		p_writer.print("<input type='text' "+property("id",p_domId)+property("value",str(p_value))+"/>");
 	}
 
+	@Override
+	public void elementBegin(Writer p_writer,String p_label) throws Exception
+	{
+		p_writer.print("<tr><td "+property("class","pages_elementLabel")+">"+escape(p_label)+"</td><td class=\"pages_elementValue\">");
+	}
+
+	@Override
+	public void elementBeginTop(Writer p_writer,String p_label) throws Exception
+	{
+		p_writer.print("<tr><td "+property("class","pages_elementLabel")+">"+escape(p_label)+"</td colspan='2'></tr><tr><td class=\"pages_elementValue\" colspan='2'>");
+	}
+	
+	@Override
+	public void elementEnd(Writer p_writer) throws Exception
+	{
+		p_writer.print("</td></tr>\n");
+	}
+	
 }

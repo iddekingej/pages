@@ -26,11 +26,6 @@ public class RadioElement extends OptionsElement {
 	}
 
 	@Override
-	public String getJsType() {
-		return "radio";
-	}
-
-	@Override
 	public String getJsClassName() {
 		return "TRadioElement";
 	}

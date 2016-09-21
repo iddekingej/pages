@@ -24,11 +24,6 @@ public class SelectListElement extends OptionsElement {
 	}
 
 	@Override
-	public String getJsType() {
-		return "select";
-	}
-
-	@Override
 	public String getJsClassName() {
 		return "TSelectListElement";
 	}

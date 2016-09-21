@@ -1,5 +1,4 @@
-.pages_elementLabel{
-	border-bottom:solid 1px #888;
+.pages_elementLabel{	
 	background-color:#fff;
 	padding-right:8px;
 	vertical-align:top;
@@ -9,7 +8,6 @@
 	border-collapse:collapse;	
 }
 .pages_elementValue{
-	border:solid 1px #000;
 	background-color:#fff;
 	padding:2px;
 	
