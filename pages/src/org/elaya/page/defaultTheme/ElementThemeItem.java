@@ -50,5 +50,30 @@ public class ElementThemeItem extends org.elaya.page.element.ElementThemeItem {
 		p_writer.print("<div style='width:100%'>&#160;</div>");
 	}
 
-
+	@Override
+	public void MenubarHeader(Writer p_writer,String p_domId) throws IOException
+	{
+		p_writer.print("<ul "+property("id",p_domId)+">\n");
+	}
+	@Override
+	public void MenubarFooter(Writer p_writer) throws IOException{
+		p_writer.print("</ul>\n");
+	}
+	@Override
+	public void SubMenuHeader(Writer p_writer,String p_icon,String p_title)  throws IOException
+	{
+	    p_writer.print("<li> <a "+propertyF("data-icon",p_icon)+">"+escape(p_title)+"</a><ul>\n");
+	}
+	@Override
+	public void SubMenuFooter(Writer p_writer)  throws IOException
+	{
+		p_writer.print("</ul></li>\n");
+	}
+	
+	@Override
+	public void MenuItem(Writer p_writer,String p_icon,String p_title,String p_url)  throws IOException
+	{
+		  p_writer.print("<li> <a "+propertyF("data-icon",p_icon)+propertyF("href",p_url)+">"+escape(p_title)+"</a></li>\n");
+	}
+	
 }

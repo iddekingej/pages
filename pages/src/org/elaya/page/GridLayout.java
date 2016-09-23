@@ -30,7 +30,7 @@ public class GridLayout extends Layout {
 				l_hasEnd=false;
 			}
 			if(l_element.checkCondition(l_data)){
-				themeItem.gridItemHeader(p_writer,getClassPrefix(),l_element.getHorizontalAlign(),l_element.getVerticalAlign(),l_element.getLayoutWidth(),l_element.geLayoutHeight());
+				themeItem.gridItemHeader(p_writer,getClassPrefix(),l_element.getHorizontalAlign(),l_element.getVerticalAlign(),l_element.getLayoutWidth(),l_element.getLayoutHeight());
 				l_element.display(p_writer,l_data);
 				themeItem.gridItemFooter(p_writer);
 			}

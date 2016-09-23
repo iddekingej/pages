@@ -38,15 +38,10 @@ public class ListMenu extends PageElement<ListMenuThemeItem> {
 	
 	@Override
 	public void display(Writer p_writer,Data p_data) throws Exception {
-		Data l_data=getData(p_data);
-		Object l_object=null;
-
+		Data l_data=getData(p_data);		
+		Object l_selectedValue=null;
 		if(selectionVariable.length()>0){
-			String l_selectionVariable=replaceVariables(l_data,selectionVariable);
-			if(!l_data.containsKey(l_selectionVariable)){
-				throw new Errors.ValueNotFound(l_selectionVariable);
-			}
-			l_object=l_data.get(l_selectionVariable);
+			l_selectedValue=l_data.get(selectionVariable);
 		}
 		themeItem.header(p_writer,replaceVariables(l_data,title));
 		for(Element<?> l_element:getElements()){
@@ -54,7 +49,7 @@ public class ListMenu extends PageElement<ListMenuThemeItem> {
 			if(l_element instanceof ListMenuItem){
 				if(l_element.checkCondition(l_data)){
 					String l_value=((ListMenuItem<?>)l_element).getValue();
-					if( (l_value != null)? l_value.equals(l_object):false){
+					if( (l_value != null)? l_value.equals(l_selectedValue):false){
 						themeItem.preItemSelected(p_writer);
 					} else {
 						themeItem.preItem(p_writer);

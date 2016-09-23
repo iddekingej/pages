@@ -14,7 +14,7 @@ public class HorizontalLayout extends Layout{
 	@Override
 	public void preElement(Writer p_writer,Element<?> p_element) throws IOException
 	{
-			themeItem.HorizontalItemHeader(p_writer,p_element.getHorizontalAlign(),p_element.getVerticalAlign(),p_element.getLayoutWidth(),p_element.geLayoutHeight());
+			themeItem.HorizontalItemHeader(p_writer,p_element.getHorizontalAlign(),p_element.getVerticalAlign(),p_element.getLayoutWidth(),p_element.getLayoutHeight());
 	}
 	
 	@Override

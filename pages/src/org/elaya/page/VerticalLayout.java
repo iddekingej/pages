@@ -13,7 +13,7 @@ public class VerticalLayout extends Layout {
 	@Override
 	protected void preElement(Writer p_writer,Element<?> p_element) throws IOException
 	{
-			themeItem.verticalItemHeader(p_writer,p_element.getHorizontalAlign(),p_element.getVerticalAlign(),p_element.getLayoutWidth(),p_element.geLayoutHeight());		
+			themeItem.verticalItemHeader(p_writer,p_element.getHorizontalAlign(),p_element.getVerticalAlign(),p_element.getLayoutWidth(),p_element.getLayoutHeight());		
 	}
 	
 	@Override

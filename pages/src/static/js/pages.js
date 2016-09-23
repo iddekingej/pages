@@ -98,3 +98,17 @@ TElement.prototype.setup=function()
 {
 	this.config();
 }
+
+function TMenuBar(p_form,p_jsName,p_name,p_id)
+{
+	TElement.call(this,p_form,p_jsName,p_name,p_id);
+}
+
+TMenuBar.prototype=Object.create(TElement.prototype);
+
+
+TMenuBar.prototype.setup=function()
+{
+	this.config();
+	this.element.puimenubar();
+}

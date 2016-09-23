@@ -18,12 +18,10 @@ public class RecieverParser {
 	private Logger logger;
 	private LinkedList<String> errors=new LinkedList<String>();
 	private Application application;
-	private HashMap<String,String> aliasses;
 
-	public RecieverParser(Logger p_logger,Application p_application,HashMap<String,String> p_aliasses) {
+	public RecieverParser(Logger p_logger,Application p_application) {
 		logger=p_logger;
-		application=p_application;
-		aliasses=p_aliasses;
+		application=p_application;		
 	}
 	
 	public LinkedList<String> getErrors()
@@ -42,11 +40,11 @@ public class RecieverParser {
 	}
 	
 	
-	private String normelizeClassName(String p_className)
+	private String normelizeClassName(String p_className) throws Exception
 	{
 		
 		if(p_className.startsWith("@")){			
-			String l_className=aliasses.get(p_className.substring(1));
+			String l_className=application.getAliasses().get(p_className.substring(1));
 			if(l_className!=null){
 				return l_className;
 			}

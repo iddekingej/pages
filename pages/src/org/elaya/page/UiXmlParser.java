@@ -291,6 +291,7 @@ public class UiXmlParser {
 					}
 				}
 			}
+			if(l_element != null)l_element.setApplication(application);
 		} else {
 			errors.add("Invalid node "+getNodePath(p_node)+" inside 'Elements' definition");
 		}		

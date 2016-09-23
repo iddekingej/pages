@@ -32,25 +32,20 @@ public class ListMenuGroup extends BuildinListMenuItem {
 	@Override
 	public void display(Writer p_writer,Data p_data) throws Exception {
 		Data l_data=getData(p_data);
-		themeItem.groupHeader(p_writer,replaceVariables(l_data,title));
-		Object l_object=null;
-		String l_selectionVariable="";
+		themeItem.groupHeader(p_writer,replaceVariables(l_data,title));		
+		Object l_selectedValue=null;
 		if(getParent() instanceof ListMenu){
-			l_selectionVariable = ((ListMenu)getParent()).getSelectionVariable();
-			l_selectionVariable=replaceVariables(l_data,l_selectionVariable);
+			String l_selectionVariable = ((ListMenu)getParent()).getSelectionVariable();
+			l_selectedValue=l_data.get(l_selectionVariable);
+			
 		}
-		if(l_selectionVariable.length()>0){
-			if(!l_data.containsKey(l_selectionVariable)){
-				throw new Errors.ValueNotFound(l_selectionVariable);
-			}
-			l_object=l_data.get(l_selectionVariable);
-		}		
+
 		for(Element<?> l_element:getElements()){
 			
 			if(l_element instanceof ListMenuItem){
 				if(l_element.checkCondition(l_data)){
 					String l_value=((ListMenuItem<?>)l_element).getValue();
-					if( (l_value != null)? l_value.equals(l_object):false){
+					if( (l_value != null)? l_value.equals(l_selectedValue):false){
 						themeItem.preItemSelected(p_writer);
 					} else {
 						themeItem.preItem(p_writer);

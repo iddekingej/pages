@@ -26,13 +26,14 @@ public class Url {
 		url += p_add;
 	}
 	
-	public void addParameter(String p_name,String p_value) throws UnsupportedEncodingException{
+	public Url parameter(String p_name,String p_value) throws UnsupportedEncodingException{
 		if(query.length()>0){
 			query += "&";
 		} else {
 			query = "?";
 		}
 		query=query+URLEncoder.encode(p_name,"UTF-8")+"="+URLEncoder.encode(p_value,"UTF-8");
+		return this;
 	}	
 
 	public Url copy()
@@ -46,7 +47,7 @@ public class Url {
 	public Url copy(String p_name,String p_value) throws UnsupportedEncodingException
 	{
 		Url l_url=new Url(url,query);
-		l_url.addParameter(p_name, p_value);
+		l_url.parameter(p_name, p_value);
 		return l_url;
 	}
 	

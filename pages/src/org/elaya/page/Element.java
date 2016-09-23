@@ -16,9 +16,8 @@ public abstract class Element<themeType extends ThemeItemBase> extends DynamicMe
 	protected themeType themeItem;
 	protected Theme theme;
 	protected LinkedList<Element<?>> elements=new LinkedList<>();
-	protected LinkedList<JSPlug> jsPlugs=new LinkedList<>();
+	private LinkedList<JSPlug> jsPlugs=new LinkedList<>();
 	private   Element<?> parent=null;
-
 	private int id=-1;
 	private String name="";
 	private HorizontalAlign horizontalAlign=HorizontalAlign.left;
@@ -27,6 +26,17 @@ public abstract class Element<themeType extends ThemeItemBase> extends DynamicMe
 	private String layoutHeight;
 	private DataModel dataModel;
 	private String condition="";
+	private Application application;
+	
+	void setApplication(Application p_application)
+	{
+		application=p_application;
+	}
+	
+	public Application getApplication()
+	{
+		return application;
+	}
 	
 	public void setClassPrefix(String p_classPrefix)
 	{
@@ -158,7 +168,7 @@ public abstract class Element<themeType extends ThemeItemBase> extends DynamicMe
 		layoutHeight=p_height;
 	}
 	
-	public String geLayoutHeight()
+	public String getLayoutHeight()
 	{
 		return layoutHeight;
 	}

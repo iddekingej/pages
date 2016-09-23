@@ -47,7 +47,7 @@ public class LinkMenuItem extends BuildinListMenuItem{
 		if(linkType.equals(LinkType.LINK_ABSOLUTE)||linkType.equals(LinkType.LINK_RELATIVE)){
 			l_url=url;
 		} else if(linkType.equals(LinkType.LINK_APPLICATION)){
-			l_url=themeItem.getApplication().getBasePath()+l_url;
+			l_url=getApplication().getBasePath()+l_url;
 		}
 		themeItem.linkItem(p_writer,getDomId(),replaceVariables(l_data,text), replaceVariables(l_data,url));
 	}

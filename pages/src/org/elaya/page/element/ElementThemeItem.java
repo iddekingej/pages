@@ -18,5 +18,10 @@ public abstract class ElementThemeItem extends ThemeItemBase {
 	public abstract void  panelFooter(Writer p_writer) throws IOException;
 	public abstract void  link(Writer p_writer,String p_url,String p_text,String p_class,String p_css) throws IOException;
 	public abstract void  verticalSpacer(Writer p_writer) throws IOException;
+	public abstract void MenubarHeader(Writer p_writer,String p_domId) throws IOException;
+	public abstract void MenubarFooter(Writer p_writer) throws IOException;
+	public abstract void SubMenuHeader(Writer p_writer,String p_icon,String p_title)  throws IOException;
+	public abstract void SubMenuFooter(Writer p_writer)  throws IOException;
+	public abstract void MenuItem(Writer p_writer,String p_icon,String p_title, String p_url)  throws IOException;
 
 }

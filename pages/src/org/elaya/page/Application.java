@@ -109,6 +109,15 @@ public class Application implements  ServletContextAware {
 		return request.getContextPath();
 	}
 	
+	public String procesUrl(String p_url)
+	{
+		if(p_url.startsWith("+")){
+			return getBasePath()+"/"+p_url.substring(1);
+		} else {
+			return p_url;
+		}
+	}
+	
 	public String getJsPath(String p_file)
 	{
 		return getBasePath()+"/"+jsPath+p_file;
@@ -123,6 +132,8 @@ public class Application implements  ServletContextAware {
 	{
 		return getBasePath()+"/"+imgPath+p_file;
 	}
+	
+	
 	
 	public String getThemeBase(){
 		return themeBase;
