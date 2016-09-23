@@ -21,27 +21,42 @@ public abstract class JsonReciever<T extends Dynamic> extends Reciever<T> {
 		return new JSONObject(l_data.toString());
 	}
 	
+	public void failure(HttpServletResponse p_response, Exception l_e) throws IOException
+	{
+		if(getLogger()!=null){
+			getLogger().info(l_e.toString());
+		}
+		JSONResult l_result=new JSONResult();
+		l_result.addError("", "Internal error");
+		p_response.setContentType("application/json");
+		p_response.getOutputStream().print(l_result.toString());
+	}
 	@SuppressWarnings("unchecked")
 	@Override
 	public void handleRequest(HttpServletRequest p_request,HttpServletResponse p_response ) throws Exception
 	{
-		Dynamic l_object=getObject();
-		//TODO fail when mandatory and parameter is not given				
-				
-		JSONObject l_json=getJson(p_request);
-		JSONObject l_data=l_json.getJSONObject("data");
-		//TODO Handle exception and when parameter does not exists
-		for(Parameter l_parameter:getParameters()){
-			l_object.put(l_parameter.getName(),l_data.getString(l_parameter.getName()));
+		try{
+			Dynamic l_object=getObject();
+			//TODO fail when mandatory and parameter is not given				
+
+			JSONObject l_json=getJson(p_request);
+			JSONObject l_data=l_json.getJSONObject("data");
+			//TODO Handle exception and when parameter does not exists
+			for(Parameter l_parameter:getParameters()){
+				l_object.put(l_parameter.getName(),l_data.getString(l_parameter.getName()));
+			}
+
+			T l_information;
+
+			l_information=(T)l_object;
+			JSONResult l_result=new JSONResult();
+			handleJson(l_result,l_information);
+			p_response.setContentType("application/json");
+			p_response.getOutputStream().print(l_result.toString());
+		} catch(Exception l_e)
+		{
+			failure(p_response,l_e);
 		}
-		
-		T l_information;
-		
-		l_information=(T)l_object;
-		JSONResult l_result=new JSONResult();
-		handleJson(l_result,l_information);
-		p_response.setContentType("application/json");
-		p_response.getOutputStream().print(l_result.toString());
 	}
 	
 }

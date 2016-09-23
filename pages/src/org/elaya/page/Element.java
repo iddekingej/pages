@@ -9,11 +9,14 @@ import java.util.Set;
 import org.elaya.page.Errors;
 import org.elaya.page.Errors.ValueNotFound;
 import org.elaya.page.data.*;
+import org.elaya.page.jsplug.JSPlug;
+import org.elaya.page.jsplug.JSPlug.InvalidJsPlugType;
 
 public abstract class Element<themeType extends ThemeItemBase> extends DynamicMethod {
 	protected themeType themeItem;
 	protected Theme theme;
-	protected LinkedList<Element<?>> elements=new LinkedList<Element<?>>();
+	protected LinkedList<Element<?>> elements=new LinkedList<>();
+	protected LinkedList<JSPlug> jsPlugs=new LinkedList<>();
 	private   Element<?> parent=null;
 
 	private int id=-1;
@@ -320,9 +323,14 @@ public abstract class Element<themeType extends ThemeItemBase> extends DynamicMe
 	{
 	}
 	
+	final public void addJsPlug(JSPlug p_plug) throws InvalidJsPlugType{
+		Objects.requireNonNull(p_plug);
+		p_plug.setParent(this);
+		jsPlugs.add(p_plug);
+	}
 	final public void addElement(Element<?> p_element) throws Exception
 	{
-		Objects.requireNonNull(this);
+	
 		Objects.requireNonNull(p_element,"addElement(p_element)");
 		if(!checkElement(p_element)){
 			throw new Errors.InvalidElement(p_element,this);
@@ -348,9 +356,12 @@ public abstract class Element<themeType extends ThemeItemBase> extends DynamicMe
 	
 	protected void makeJsObject(Writer p_writer,Data p_data) throws Exception
 	{
-		p_writer.print("var l_element=new "+getJsClassName()+"("+getWidgetParent().getJsFullname()+","+themeItem.js_toString(getJsName())+","+themeItem.js_toString(getName())+","+themeItem.js_toString(getDomId())+");\n");
+		p_writer.print("var l_element=new "+getJsClassName()+"("+getWidgetParent().getJsFullname()+","+p_writer.js_toString(getJsName())+","+p_writer.js_toString(getName())+","+p_writer.js_toString(getDomId())+");\n");
 		p_writer.print("l_element.config=function(){");
 		makeSetupJs(p_writer,p_data);
+		for(JSPlug l_plug:jsPlugs){
+			l_plug.display(p_writer);
+		}		
 		p_writer.print("}\n l_element.setup();\n");
 	}
 	
@@ -376,6 +387,7 @@ public abstract class Element<themeType extends ThemeItemBase> extends DynamicMe
 			}
 		}
 		postSubJs(l_data);
+
 	}
 	
 	final public LinkedList<Element<?>> getElements()

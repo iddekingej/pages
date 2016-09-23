@@ -70,6 +70,10 @@ function TElement(p_parent,p_jsName,p_name,p_id)
 	}
 }
 
+TElement.prototype.on=function(p_event,p_js)
+{
+	this.element.on(p_event,p_js);
+}
 TElement.prototype.fillThisData=function(p_data)
 {
 	if("getValue" in this){

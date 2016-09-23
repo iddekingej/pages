@@ -12,6 +12,7 @@ import org.elaya.page.Errors.InvalidObjectType;
 import org.elaya.page.data.Dynamic;
 import org.elaya.page.data.DynamicMethod;
 import org.elaya.page.data.DynamicObject;
+import org.slf4j.Logger;
 
 
 abstract public class Reciever<T extends Dynamic> extends DynamicMethod {
@@ -21,6 +22,15 @@ abstract public class Reciever<T extends Dynamic> extends DynamicMethod {
 	private String dataClass;
 	private LinkedList<Parameter> parameters=new LinkedList<Parameter>();
 	private Application application;
+	private Logger logger;
+	
+	public void setLogger(Logger p_logger){
+		logger=p_logger;
+	}
+	
+	public Logger getLogger(){
+		return logger;
+	}
 	
 	void setApplication(Application p_application)
 	{

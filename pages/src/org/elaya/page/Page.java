@@ -68,8 +68,11 @@ public class Page extends PageElement<PageThemeItem> {
 		l_js.add("pages.js");
 		l_js.add("jquery.js");
 		l_js.add("jquery-ui.js");
+		l_js.add("primeui.js");
 		l_css.add("jquery-ui.css");
 		l_css.add("jquery-ui.theme.css");
+		l_css.add("theme.css");
+		l_css.add("primeui.min.css");
 		getAllCssFiles(l_css);
 		getAllJsFiles(l_js);
 		

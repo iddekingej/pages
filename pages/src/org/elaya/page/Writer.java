@@ -67,6 +67,15 @@ public class Writer {
 		stream.flush();
 	}
 	
+	
+	public String js_toString(Object p_value){
+		if(p_value==null) return "\"\"";
+		return "\""+str(p_value).replace("\"","\\\"")+"\"";
+	}
+	
+
+	
+	
 	public Writer(HttpServletResponse p_response) throws IOException {
 		response=p_response;
 		stream=response.getOutputStream();

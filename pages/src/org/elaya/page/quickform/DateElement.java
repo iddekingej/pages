@@ -64,7 +64,7 @@ public class DateElement extends BuildInFormElement {
 	{
 		p_writer.print("this.showOn='"+showMode.getValue()+"';\n");
 		if(buttonText != null && buttonText.length() >0){
-			p_writer.print("this.buttonText="+themeItem.js_toString(buttonText)+";");
+			p_writer.print("this.buttonText="+p_writer.js_toString(buttonText)+";");
 		}
 	}
 

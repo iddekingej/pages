@@ -68,14 +68,7 @@ public class ThemeItemBase {
 	{
 		return property("class",classPrefix+p_className);
 	}
-	
-	public String js_toString(Object p_value){
-		if(p_value==null) return "\"\"";
-		return "\""+str(p_value).replace("\"","\\\"")+"\"";
-	}
-	
 
-	
 
 	
 	public ThemeItemBase(Theme p_theme) throws IOException{

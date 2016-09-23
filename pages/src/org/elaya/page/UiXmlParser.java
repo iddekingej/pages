@@ -1,6 +1,5 @@
 package org.elaya.page;
 import java.io.File;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -10,6 +9,8 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.elaya.page.data.Context;
 import org.elaya.page.data.DataModel;
 import org.elaya.page.data.DynamicMethod;
+import org.elaya.page.data.DynamicObject;
+import org.elaya.page.jsplug.JSPlug;
 import org.elaya.page.quickform.OptionItem;
 import org.slf4j.Logger;
 import org.w3c.dom.DOMException;
@@ -55,6 +56,11 @@ public class UiXmlParser {
 		return errors;
 	}
 	 
+	private void addError(String p_error,Node p_node)
+	{
+		errors.add(getNodePath(p_node)+":"+p_error);
+	}
+	
 	private String getNodePath(Node p_node){
 		String l_path="";
 		Node l_node=p_node;
@@ -68,6 +74,11 @@ public class UiXmlParser {
 	private void setPropertyFromExpression(DynamicMethod p_object,String p_name,String p_expression) throws Exception
 	{
 		p_object.put(p_name,p_expression);
+	}
+	
+	private void setPropertyByNode(DynamicMethod p_object,Node p_node) throws DOMException, Exception
+	{
+		p_object.put(p_node.getNodeName(),p_node.getNodeValue());
 	}
 	
 	private String normelizeClassName(String p_className)
@@ -87,41 +98,21 @@ public class UiXmlParser {
 		return p_className;
 	}
 	
-	private Object createObjectFromNameP(String p_name,Class<?>[] p_types,Object[] p_params) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException{
-		Class<?> l_class;
-		String l_className="";
-		try{
-			l_className=normelizeClassName(p_name);
-			l_class=Class.forName(l_className);			
-		}catch(ClassNotFoundException l_e){
-			errors.add("Class "+l_className+" not found");
-			return null;
-		}
-	 
-		Constructor<?> l_constructor;
-		try{
-			l_constructor=l_class.getConstructor(p_types);
-		} catch(NoSuchMethodException l_e){
-			errors.add("Object doesn't have a constructor with the given parameters");
-			return null;
-		}
-		
-		Object l_object=l_constructor.newInstance(p_params);
-
-		return l_object;  
-
+	private Object createObjectFromNameP(String p_name,Class<?>[] p_types,Object[] p_params) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ClassNotFoundException{
+		String l_className=normelizeClassName(p_name);
+		return DynamicObject.createObjectFromName(l_className, p_types, p_params, errors);
 	}
 
-	private Object createElementFromName(String p_name) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException
+	private Object createObjectFromName(String p_name) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ClassNotFoundException
 	{		
 		return createObjectFromNameP(p_name, new Class<?>[]{},new Object[]{} );
 	}
 	
-	private Object createPageFromTypeName(String p_name) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException{
+	private Object createPageFromTypeName(String p_name) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ClassNotFoundException{
 		return createObjectFromNameP(p_name,new Class<?>[]{Application.class},new Object[]{application});
 	}
 	
-	private DataModel createDataModelFromTypeName(String p_name,Context context) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException
+	private DataModel createDataModelFromTypeName(String p_name,Context context) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ClassNotFoundException
 	{
 		Object l_object=createObjectFromNameP(p_name,new Class<?>[]{Context.class},new Object[]{context});
 		if(l_object != null){
@@ -195,7 +186,34 @@ public class UiXmlParser {
 			return l_list;
 	}
 	
-	public void processSubStructure(Element<?> p_element,String p_name,Node p_parent) throws Exception{
+	public void processJSPlug(Element<?> p_element, Node p_parent) throws Exception
+	{
+		Node l_classNode=p_parent.getAttributes().getNamedItem("class");
+		if(l_classNode != null){
+			Object l_object=createObjectFromName(l_classNode.getNodeValue());
+			if(l_object != null){
+				if(l_object instanceof JSPlug){
+					JSPlug l_plug=(JSPlug) l_object;
+					NamedNodeMap l_attributes=p_parent.getAttributes();
+					for(int l_cnt=0;l_cnt<l_attributes.getLength();l_cnt++){
+						Node l_node=l_attributes.item(l_cnt);
+						if(!l_node.getNodeName().equals("class") ){
+							setPropertyByNode(l_plug,l_node);
+						}
+					}
+					p_element.addJsPlug(l_plug);
+					Node l_node=p_parent.getFirstChild();
+					while(l_node != null){
+						processProperty(p_element,l_node);
+						l_node=l_node.getNextSibling();
+					}
+				} else {
+					addError("Invalid type not an instance of JSPlug",p_parent);
+				}
+			}
+		}
+	}
+	public void processSubStructure(DynamicMethod p_element,String p_name,Node p_parent) throws Exception{
 		Node l_child=p_parent.getFirstChild();
 		while(l_child != null){
 			if(l_child.getNodeType()==Node.ELEMENT_NODE){
@@ -208,7 +226,10 @@ public class UiXmlParser {
 			l_child=l_child.getNextSibling();
 		}
 	}
-	public void processProperty(Element<?> p_element,Node p_parent) throws DOMException, Exception{
+	
+
+	
+	public void processProperty(DynamicMethod p_element,Node p_parent) throws DOMException, Exception{
 		Node l_nameNode=p_parent.getAttributes().getNamedItem("name");
 		String l_name;
 		if(l_nameNode != null){
@@ -221,7 +242,7 @@ public class UiXmlParser {
 				processSubStructure(p_element,l_name,p_parent);
 			}
 		} else {
-			errors.add("Name attribute missing in property tag "+getNodePath(p_parent));
+			addError("Name attribute missing in property tag ",p_parent);
 		}
 	}
 	
@@ -234,7 +255,7 @@ public class UiXmlParser {
 		if(p_node.getNodeName().equals("element")){
 			l_type=getTypeValue(p_node);
 			if(l_type != null){
-				Object l_object=createElementFromName(l_type);
+				Object l_object=createObjectFromName(l_type);
 				if(l_object!=null){
 					if(l_object instanceof Element){						
 						if(!p_element.checkElement((Element <?>)l_object)){
@@ -282,7 +303,6 @@ public class UiXmlParser {
 		Node l_node;
 		String l_dataModelName;
 		
-		//TODO Process first datamodel and then condition?
 		l_dataModelName=getAttributeValue(p_parent,"datamodel");
 		
 		if(l_dataModelName != null){				
@@ -297,7 +317,7 @@ public class UiXmlParser {
 		for(int l_cnt=0;l_cnt<l_properties.getLength();l_cnt++){
 			l_node=l_properties.item(l_cnt);
 			if(!l_node.getNodeName().equals("type") && !l_node.getNodeName().equals("datamodel") && !l_node.getNodeName().equals("file") && !l_node.getNodeName().equals("ref") ){
-					setPropertyFromExpression(p_element,l_node.getNodeName(),l_node.getNodeValue());
+					setPropertyByNode(p_element,l_node);
 			}
 		}
 		
@@ -308,6 +328,8 @@ public class UiXmlParser {
 					processElement(p_element,l_currentDef);					
 				} else if (l_currentDef.getNodeName().equals("property")){
 					processProperty(p_element,l_currentDef);
+				} else if (l_currentDef.getNodeName().equals("jsplug")){
+					processJSPlug(p_element,l_currentDef);
 				} else{
 					errors.add("Invalid tag '"+l_currentDef.getNodeName()+"',expect 'property'  or 'element'");
 				}

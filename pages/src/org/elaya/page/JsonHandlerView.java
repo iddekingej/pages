@@ -30,6 +30,7 @@ public class JsonHandlerView extends AbstractView {
 			HttpServletResponse p_response) throws Exception {
 		RecieverParser l_parser=new RecieverParser(logger,application,null);
 		Reciever<?> l_rec=l_parser.parseXml(file);
+		l_rec.setLogger(logger);
 		LinkedList<String> l_errors=l_parser.getErrors();
 		if(l_errors.size()>0){
 			for(String l_error:l_errors){
