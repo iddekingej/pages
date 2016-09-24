@@ -27,6 +27,17 @@ public abstract class Element<themeType extends ThemeItemBase> extends DynamicMe
 	private DataModel dataModel;
 	private String condition="";
 	private Application application;
+	private String jsCondition="";
+	
+	public void setJSCondition(String p_condition)
+	{
+		jsCondition=p_condition;
+	}
+	
+	public String getJSCondition()
+	{
+		return jsCondition;
+	}
 	
 	void setApplication(Application p_application)
 	{
@@ -372,16 +383,20 @@ public abstract class Element<themeType extends ThemeItemBase> extends DynamicMe
 		for(JSPlug l_plug:jsPlugs){
 			l_plug.display(p_writer);
 		}		
-		p_writer.print("}\n l_element.setup();\n");
+		p_writer.print("}\n");
+		if(jsCondition.length()>0){
+				p_writer.print("l_element.jsCondition=function(){\n return "+this.jsCondition+";\n}\n");
+		}
+		p_writer.print("l_element.setup();\n");
 	}
 	
 	
-	protected void preSubJs(Data p_data) throws Exception
+	protected void preSubJs(Writer p_writer,Data p_data) throws Exception
 	{
 		
 	}
 	
-	protected void postSubJs(Data p_data) throws Exception
+	protected void postSubJs(Writer p_writer,Data p_data) throws Exception
 	{
 		
 	}
@@ -390,13 +405,13 @@ public abstract class Element<themeType extends ThemeItemBase> extends DynamicMe
 	{
 		Data l_data=getData(p_data);
 		makeJsObject(p_writer,l_data);
-		preSubJs(l_data);
+		preSubJs(p_writer,l_data);
 		for(Element<?> l_element:getElements()){
 			if(this.checkCondition(p_data)){
 				l_element.generateJs(p_writer,l_data);
 			}
 		}
-		postSubJs(l_data);
+		postSubJs(p_writer,l_data);
 
 	}
 	

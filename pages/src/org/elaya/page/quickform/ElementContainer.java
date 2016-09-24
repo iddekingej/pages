@@ -16,7 +16,11 @@ public class ElementContainer extends BuildInFormElement {
 		labelPosition=p_labelPosition;
 	}
 	
-	
+	public Element<?> getFirstWidget()
+	{
+		return this.getParent().getFirstWidget();
+	}
+		
 	public ElementContainer() {
 		super();
 	}
@@ -24,9 +28,9 @@ public class ElementContainer extends BuildInFormElement {
 	@Override
 	public void display(Writer p_writer, Data p_data) throws Exception {
 		if(labelPosition==LabelPosition.left){
-			themeItem.elementBegin(p_writer,label);
+			themeItem.elementBegin(getDomId(),p_writer,label);
 		} else {
-			themeItem.elementBeginTop(p_writer, label);
+			themeItem.elementBeginTop(getDomId(),p_writer, label);
 		}
 		displaySubElements(p_writer,p_data);
 		themeItem.elementEnd(p_writer);

@@ -2,38 +2,64 @@ package org.elaya.page;
 
 import java.util.HashMap;
 import java.util.LinkedList;
-
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
-
-import org.elaya.page.data.Context;
 import org.slf4j.Logger;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.web.context.ServletContextAware;
 
 public class Application implements  ServletContextAware {
-	private Context context=null;
 	private HttpServletRequest request;
 	private String jsPath="resources/pages/js/";
 	private String cssPath="resources/pages/css/";
 	private String imgPath="resources/pages/images/";
 	private String themeBase="org.elaya.page.defaultTheme";	
-	Logger logger;
+	private Logger logger;
 	private ServletContext servletContext;
 	private String aliasFiles;
 	private HashMap<String,Page> pageCache=new HashMap<>(); 
 	private HashMap<String,String> aliasses;
+	private ApplicationContext DBContext=null;
+	private HashMap<String,DriverManagerDataSource> dbConnections=new HashMap<>();
+	//--(db)------------------------------------------------------------------------
 	
+	private ApplicationContext getDBContext()
+	{
+		if(DBContext ==null){
+			DBContext=new ClassPathXmlApplicationContext("../database/database.xml");
+		}
+		return DBContext;
+	}
+	
+	public DriverManagerDataSource getDB(String p_name)
+	{
+		if(dbConnections.containsKey(p_name)){
+			return dbConnections.get(p_name);
+		}
+		DriverManagerDataSource l_db=(DriverManagerDataSource)getDBContext().getBean(p_name);
+		dbConnections.put(p_name, l_db);
+		return l_db;
+	}
+	
+	
+	//logger
 	public void setLogger(Logger p_logger)
 	{
 		logger=p_logger;
 	}
+	
+	public Logger getLogger()
+	{
+		return logger;
+	}
+	
 	public HashMap<String,String> getAliasses() throws Exception
 	{
 		if(aliasses==null){
 			loadAliasFiles();
 		}
-		logger.info("Bla:"+aliasses.size());
 		return aliasses;
 	}
 	 
@@ -64,7 +90,6 @@ public class Application implements  ServletContextAware {
 	private void addAliasses(String p_fileName) throws Exception
 	{
 		AliasParser l_parser=new AliasParser(logger);
-		logger.info("Parse alias file :"+p_fileName);
 		l_parser.parseAliases(servletContext.getResourceAsStream(p_fileName), aliasses);		
 		for(String l_error:l_parser.getErrors()){
 			logger.info(l_error);
@@ -80,23 +105,9 @@ public class Application implements  ServletContextAware {
 	{
 		aliasses=new HashMap<String,String>();
 		String[] l_fileNames=aliasFiles.split(",");
-		logger.info("alias "+aliasFiles);
 		for(String l_fileName:l_fileNames){
 			addAliasses(l_fileName);
 		}
-	}
-	
-	public DriverManagerDataSource getDB(String p_name)
-	{
-		return getContext().getDb(p_name);
-	}
-	
-	public Context getContext()
-	{
-		if(context==null){
-			context=new Context();
-		}
-		return context;
 	}
 	
 	public String getRealPath(String p_path) throws Exception

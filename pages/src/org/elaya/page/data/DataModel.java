@@ -3,20 +3,27 @@ package org.elaya.page.data;
 import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
 
+import org.elaya.page.Application;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
+
 abstract public class DataModel {
 
-	private Context context;
+	private Application application;
 	
-	public DataModel(Context p_context)
+	public DataModel(Application p_application)
 	{
-		context=p_context;
+		application=p_application;
 	}
 	
-	public Context getContext()
+	public Application getApplication()
 	{
-		return context;
+		return application;
 	}
 	
+	public DriverManagerDataSource getDB(String p_name)
+	{
+		return application.getDB(p_name);
+	}
 	
 	abstract protected void _processData(MapData p_data) throws SQLException, UnsupportedEncodingException, NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException;
 	

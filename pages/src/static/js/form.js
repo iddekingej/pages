@@ -40,6 +40,25 @@ TForm.prototype.success=function(p_data)
 	}
 }
 
+TForm.prototype.intChange=function()
+{
+	this.handleJSCondition();
+}
+
+
+TForm.prototype.afterSetup=function()
+{
+	var l_this=this;
+	for(var l_name in this.elements){
+		var l_element=this.elements[l_name];
+		if(l_element.isInputElement()){
+			l_element.on("change",function(){l_this.intChange();});
+		}
+	}
+	this.handleJSCondition();
+}
+
+
 TForm.prototype.sendData=function()
 {
 	
@@ -54,7 +73,7 @@ TForm.prototype.sendData=function()
 		}
 
 		var l_message={
-				cmd:this.cmd
+				    cmd:this.cmd
 				,	form:this.name
 				,	data:l_data
 		};
@@ -82,6 +101,11 @@ function TFormElement(p_parent,p_jsName,p_name,p_id)
 
 TFormElement.prototype=Object.create(TElement.prototype);
 
+TFormElement.prototype.isInputElement=function()
+{
+	return true;
+}
+
 TFormElement.prototype.getValue=function()
 {
 	return this.element.value;
@@ -93,6 +117,10 @@ function TCheckboxElement(p_form,p_jsName,p_name,p_id)
 }
 
 TCheckboxElement.prototype=Object.create(TFormElement.prototype);
+TCheckboxElement.prototype.checked=function()
+{
+	return this.element[0].checked;
+}
 
 function TRadioElement(p_form,p_jsName,p_name,p_id)
 {
@@ -140,9 +168,8 @@ function TTextEditElement(p_form,p_jsName,p_name,p_id)
 	TFormElement.call(this,p_form,p_jsName,p_name,p_id);
 }
 
-TTextEditElement.prototype=TFormElement.prototype;
+TTextEditElement.prototype=Object.create(TFormElement.prototype);
 TTextEditElement.prototype.getValue=function(){ return this.element.val();}
-TTextEditElement.prototype.dummy=function(){};
 
 function TTextAreaElement(p_form,p_jsName,p_name,p_id)
 {

@@ -1,7 +1,6 @@
 package org.elaya.page.listmenu;
 
 import org.elaya.page.Element;
-import org.elaya.page.Errors;
 import org.elaya.page.PageElement;
 import org.elaya.page.Writer;
 import org.elaya.page.data.Data;

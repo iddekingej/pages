@@ -6,7 +6,6 @@ import java.util.LinkedList;
 import java.util.Objects;
 import javax.xml.parsers.DocumentBuilder; 
 import javax.xml.parsers.DocumentBuilderFactory;
-import org.elaya.page.data.Context;
 import org.elaya.page.data.DataModel;
 import org.elaya.page.data.DynamicMethod;
 import org.elaya.page.data.DynamicObject;
@@ -112,9 +111,9 @@ public class UiXmlParser {
 		return createObjectFromNameP(p_name,new Class<?>[]{Application.class},new Object[]{application});
 	}
 	
-	private DataModel createDataModelFromTypeName(String p_name,Context context) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ClassNotFoundException
+	private DataModel createDataModelFromTypeName(String p_name,Application p_application) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ClassNotFoundException
 	{
-		Object l_object=createObjectFromNameP(p_name,new Class<?>[]{Context.class},new Object[]{context});
+		Object l_object=createObjectFromNameP(p_name,new Class<?>[]{Application.class},new Object[]{p_application});
 		if(l_object != null){
 			if(l_object instanceof DataModel){
 				return (DataModel)l_object;
@@ -307,7 +306,7 @@ public class UiXmlParser {
 		l_dataModelName=getAttributeValue(p_parent,"datamodel");
 		
 		if(l_dataModelName != null){				
-			DataModel l_dataModel=createDataModelFromTypeName(l_dataModelName,application.getContext());
+			DataModel l_dataModel=createDataModelFromTypeName(l_dataModelName,application);
 				if(l_dataModel==null){
 					errors.add("Adaptername return null "+l_dataModelName);
 				} else {

@@ -4,16 +4,16 @@ import org.elaya.page.PageElement;
 import org.elaya.page.Writer;
 import org.elaya.page.data.Data;
 
-public class VerticalSpacer extends PageElement<ElementThemeItem> {
+public class HorizontalSpacer extends PageElement<ElementThemeItem> {
 
-	public VerticalSpacer() {
+	public HorizontalSpacer() {
 		super();
 		setLayoutWidth("100%");
 	}
 
 	@Override
 	public void display(Writer p_writer,Data p_data) throws Exception {
-		themeItem.verticalSpacer(p_writer);
+		themeItem.horizontalSpacer(p_writer);
 	}
 
 	@Override

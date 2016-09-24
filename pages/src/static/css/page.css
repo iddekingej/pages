@@ -5,3 +5,8 @@ body,table,input,input,textare,td{
 
 .page_gridLayout{ width:100%}
 .page_error{color:#f00}
+
+.listmenu_item_selected{
+	background-color:#0d3;	
+}
+div[class="listmenu_item_selected"]>a{color:#fff}

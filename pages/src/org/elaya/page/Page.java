@@ -3,9 +3,6 @@ package org.elaya.page;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Set;
-
-import javax.servlet.http.HttpServletResponse;
-
 import org.elaya.page.Errors.duplicateElementOnPage;
 import org.elaya.page.data.Data;
 

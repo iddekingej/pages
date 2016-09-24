@@ -10,7 +10,7 @@ import org.json.JSONObject;
 
 public abstract class JsonReciever<T extends Dynamic> extends Reciever<T> {
 
-	abstract protected void handleJson(JSONResult p_result,T p_data) throws SQLException;
+	abstract protected void handleJson(JSONResult p_result,T p_data,String p_cmd) throws SQLException;
 	
 	private JSONObject getJson(HttpServletRequest p_request) throws IOException
 	{
@@ -40,6 +40,7 @@ public abstract class JsonReciever<T extends Dynamic> extends Reciever<T> {
 			//TODO fail when mandatory and parameter is not given				
 
 			JSONObject l_json=getJson(p_request);
+			String l_cmd=l_json.getString("cmd");
 			JSONObject l_data=l_json.getJSONObject("data");
 			//TODO Handle exception and when parameter does not exists
 			for(Parameter l_parameter:getParameters()){
@@ -50,7 +51,7 @@ public abstract class JsonReciever<T extends Dynamic> extends Reciever<T> {
 
 			l_information=(T)l_object;
 			JSONResult l_result=new JSONResult();
-			handleJson(l_result,l_information);
+			handleJson(l_result,l_information,l_cmd);
 			p_response.setContentType("application/json");
 			p_response.getOutputStream().print(l_result.toString());
 		} catch(Exception l_e)

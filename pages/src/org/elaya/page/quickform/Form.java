@@ -1,5 +1,6 @@
 package org.elaya.page.quickform;
 
+import java.io.IOException;
 import java.util.Set;
 import org.elaya.page.Element;
 import org.elaya.page.PageElement;
@@ -153,5 +154,11 @@ public class Form extends PageElement<FormThemeItem>{
 		p_writer.print("this.submitType="+p_writer.js_toString(submitType.getValue()));
 	}
 	
+	@Override
+	protected void postSubJs(Writer p_writer,Data p_data) throws IOException
+	{
+		p_writer.print(getJsFullname()+".afterSetup();");
+		
+	}
  
 }

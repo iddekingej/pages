@@ -26,6 +26,10 @@ public class Url {
 		url += p_add;
 	}
 	
+	public Url parameter(String p_name,Integer p_value) throws UnsupportedEncodingException 
+	{
+		return parameter(p_name,String.valueOf(p_value));
+	}
 	public Url parameter(String p_name,String p_value) throws UnsupportedEncodingException{
 		if(query.length()>0){
 			query += "&";

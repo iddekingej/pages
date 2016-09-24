@@ -65,8 +65,33 @@ function TElement(p_parent,p_jsName,p_name,p_id)
 	this.name=p_name;
 	this.parent.addElement(p_jsName,this);
 	this.element=$("#"+p_id);
+	this.jsCondition=false;
 	if(this.name!= ""){
 		pages.page.addByName(this.name,this);
+	}
+}
+
+TElement.prototype.isInputElement=function()
+{
+	return false;
+}
+
+TElement.prototype.display=function(p_flag)
+{
+	if(p_flag){
+		this.element.show();
+	} else {
+		this.element.hide();
+	}
+}
+
+TElement.prototype.handleJSCondition=function()
+{
+	if(this.jsCondition){
+		this.display(this.jsCondition());
+	}
+	for(var l_name in this.elements){
+		this.elements[l_name].handleJSCondition();		
 	}
 }
 

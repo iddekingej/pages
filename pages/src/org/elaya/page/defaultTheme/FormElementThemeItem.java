@@ -104,15 +104,16 @@ public class FormElementThemeItem extends org.elaya.page.quickform.FormElementTh
 	}
 
 	@Override
-	public void elementBegin(Writer p_writer,String p_label) throws Exception
+	public void elementBegin(String p_domId,Writer p_writer,String p_label) throws Exception
 	{
-		p_writer.print("<tr><td "+property("class","pages_elementLabel")+">"+escape(p_label)+"</td><td class=\"pages_elementValue\">");
+		p_writer.print("<tr "+property("id",p_domId)+"><td "+property("class","pages_elementLabel")+">"+escape(p_label)+"</td><td class=\"pages_elementValue\">");
+		
 	}
 
 	@Override
-	public void elementBeginTop(Writer p_writer,String p_label) throws Exception
+	public void elementBeginTop(String p_domId,Writer p_writer,String p_label) throws Exception
 	{
-		p_writer.print("<tr><td "+property("class","pages_elementLabel")+">"+escape(p_label)+"</td colspan='2'></tr><tr><td class=\"pages_elementValue\" colspan='2'>");
+		p_writer.print("<tr "+property("id",p_domId)+"><td "+property("class","pages_elementLabel")+">"+escape(p_label)+"</td colspan='2'></tr><tr><td class=\"pages_elementValue\" colspan='2'>");
 	}
 	
 	@Override
