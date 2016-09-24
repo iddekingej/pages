@@ -8,16 +8,17 @@ public class VerticalSpacer extends PageElement<ElementThemeItem> {
 
 	public VerticalSpacer() {
 		super();
-		setLayoutHeight("100%");
+		setLayoutWidth("100%");
 	}
 
 	@Override
-	public void display(Writer p_writer, Data p_data) throws Exception {
+	public void display(Writer p_writer,Data p_data) throws Exception {
 		themeItem.verticalSpacer(p_writer);
 	}
 
 	@Override
 	public String getThemeName() {
+		// TODO Auto-generated method stub
 		return "ElementThemeItem";
 	}
 
