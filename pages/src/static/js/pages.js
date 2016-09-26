@@ -1,9 +1,10 @@
 var pages={		
 		page:{
 			elements:{},
-			byName:{},
+			names:{},
 			parent:null,
 			addElement:function(p_name,p_object){
+				this.names[p_name]=p_object;
 				this.elements[p_name]=p_object;
 			},
 			getByName:function(p_name){
@@ -12,8 +13,8 @@ var pages={
 				}
 				return null;
 			},
-			addByName:function(p_name,p_object){
-				this.byName[p_name]=p_object;
+			addByName:function(p_object){
+				this.names[p_object.jsName]=p_object;
 			},
 			initToWindowSize:function(){
 				$(window).resize(function(){
@@ -61,14 +62,13 @@ function TElement(p_parent,p_jsName,p_name,p_id)
 {
 	this.parent=p_parent;
 	this.elements={};
+	this.names={};
 	this.id=p_id;
 	this.name=p_name;
-	this.parent.addElement(p_jsName,this);
+	this.jsName=p_jsName;
 	this.element=$("#"+p_id);
-	this.jsCondition=false;
-	if(this.name!= ""){
-		pages.page.addByName(this.name,this);
-	}
+	this.checkCondition=false;
+	this.namespaceParent=false;
 }
 
 TElement.prototype.isInputElement=function()
@@ -85,13 +85,13 @@ TElement.prototype.display=function(p_flag)
 	}
 }
 
-TElement.prototype.handleJSCondition=function()
+TElement.prototype.handleCheckCondition=function()
 {
-	if(this.jsCondition){
-		this.display(this.jsCondition());
+	if(this.checkCondition){
+		this.checkCondition();
 	}
 	for(var l_name in this.elements){
-		this.elements[l_name].handleJSCondition();		
+		this.elements[l_name].handleCheckCondition();		
 	}
 }
 
@@ -114,6 +114,11 @@ TElement.prototype.fillData=function(p_data)
 	}
 }
 
+TElement.prototype.addByName=function(p_element)
+{
+	this.names[p_element.jsName]=p_element;
+}
+
 TElement.prototype.addElement=function(p_jsName,p_element)
 {
 	this.elements[p_jsName]=p_element;
@@ -122,6 +127,10 @@ TElement.prototype.addElement=function(p_jsName,p_element)
 TElement.prototype.setup=function()
 {
 	this.config();
+	this.parent.addElement(this.jsName,this);
+	if(this.namespaceParent){
+		this.namespaceParent.addByName(this);
+	}	
 }
 
 function TMenuBar(p_form,p_jsName,p_name,p_id)
@@ -134,6 +143,6 @@ TMenuBar.prototype=Object.create(TElement.prototype);
 
 TMenuBar.prototype.setup=function()
 {
-	this.config();
+	TElement.prototype.setup.call(this);
 	this.element.puimenubar();
 }

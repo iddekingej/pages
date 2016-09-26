@@ -1,9 +1,7 @@
 package org.elaya.page;
 
-import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Set;
-import org.elaya.page.Errors.duplicateElementOnPage;
 import org.elaya.page.data.Data;
 
 public class Page extends PageElement<PageThemeItem> {
@@ -11,7 +9,6 @@ public class Page extends PageElement<PageThemeItem> {
 	private String url;
 	private int idCnt=0;
 	private boolean toWindowSize=false;
-	private HashMap<String,Element<?>> nameIndex=new HashMap<String,Element<?>>();
 	
 	public String getUrl(){ return url;}
 	
@@ -30,15 +27,7 @@ public class Page extends PageElement<PageThemeItem> {
 		idCnt++;
 		return idCnt;
 	}
-	
-	void addToNameIndex(Element<?> p_element) throws duplicateElementOnPage
-	{
-		if(nameIndex.containsKey(p_element.getName())){
-			throw new Errors.duplicateElementOnPage(p_element.getName());
-		}
-		nameIndex.put(p_element.getName(),p_element);
-	}
-	
+
 	public Page()
 	{
 		super();
@@ -107,7 +96,8 @@ public class Page extends PageElement<PageThemeItem> {
 	
 	public Page(Application p_application) throws Exception
 	{
-		setTheme(new Theme(p_application));
+		setTheme(new Theme(p_application));		
+		setIsNamespace(true);
 	}
 
 

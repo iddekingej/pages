@@ -3,7 +3,9 @@ package org.elaya.page;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
 import org.elaya.page.Errors;
@@ -28,6 +30,53 @@ public abstract class Element<themeType extends ThemeItemBase> extends DynamicMe
 	private String condition="";
 	private Application application;
 	private String jsCondition="";
+	private boolean isNamespace=false; 
+	private HashMap<String,Element<?>> byName=null;
+	private Element<?> namespaceParent=null;
+
+	void setId(int p_id)
+	{
+		id=p_id;
+	}
+	
+	public void setIsNamespace(boolean p_isNamespace)
+	{
+		isNamespace=p_isNamespace;
+	}
+	
+	public boolean getIsNamespace()
+	{
+		return isNamespace;
+	}
+	
+	void setNamespaceParent(Element<?> p_namespaceParent)
+	{
+		namespaceParent=p_namespaceParent;
+	}
+	
+	public Element<?> getNamespaceParent()
+	{
+		return namespaceParent;
+	}
+	
+	public void addByName(Element<?> p_element)
+	{
+		if(byName==null) byName=new HashMap<>();
+		p_element.setNamespaceParent(this);
+		byName.put(p_element.getJsName(), p_element);
+	}
+	
+	
+	public boolean hasByName(Element<?> p_element){
+		if(byName==null) return false;
+		return byName.containsKey(p_element.getJsName());
+	}
+	
+	public Element<?> getByName(String p_name)
+	{
+		if(byName==null) return null;
+		return byName.get(p_name);
+	}
 	
 	public void setJSCondition(String p_condition)
 	{
@@ -156,8 +205,7 @@ public abstract class Element<themeType extends ThemeItemBase> extends DynamicMe
 	}
 	
 	public void process()
-	{
-		id=getPage().newId();//TODO check is getPage =null
+	{		
 		for(Element<?> l_element:getElements()){
 			l_element.process();
 		}
@@ -234,8 +282,20 @@ public abstract class Element<themeType extends ThemeItemBase> extends DynamicMe
 		return name;
 	}
 
+	public String getNamespaceName()
+	{				
+		if(namespaceParent==null){
+			return getJsName();
+		}
+		String l_name=getNamespaceParent().getNamespaceName();
+		if(isNamespace){
+			l_name=l_name+".names."+getJsName();
+		}
+		return l_name;
+	}
 	public String getJsFullname() throws IOException
 	{
+		
 		if(parent==null) return getJsName();
 		String l_parent=getWidgetParent().getJsFullname();
 		if(l_parent.length()==0){
@@ -353,16 +413,23 @@ public abstract class Element<themeType extends ThemeItemBase> extends DynamicMe
 	{
 	
 		Objects.requireNonNull(p_element,"addElement(p_element)");
+		p_element.setId(getPage().newId());
 		if(!checkElement(p_element)){
 			throw new Errors.InvalidElement(p_element,this);
 		}
 		p_element.setTheme(theme);
 		p_element.setParent(this);
 		elements.add(p_element);
-		if(p_element.getName().length()>0){
-			getPage().addToNameIndex(p_element);
+		Element<?> l_namespace;
+		if(isNamespace){
+			l_namespace=this;			
+		} else {
+			l_namespace=namespaceParent;			
 		}
-
+		if(l_namespace.hasByName(p_element)){
+			throw new Errors.duplicateElementOnPage(p_element.getJsName());
+		}
+		l_namespace.addByName(p_element);
 	}
 	
 	protected String getJsClassName()
@@ -378,14 +445,33 @@ public abstract class Element<themeType extends ThemeItemBase> extends DynamicMe
 	protected void makeJsObject(Writer p_writer,Data p_data) throws Exception
 	{
 		p_writer.print("var l_element=new "+getJsClassName()+"("+getWidgetParent().getJsFullname()+","+p_writer.js_toString(getJsName())+","+p_writer.js_toString(getName())+","+p_writer.js_toString(getDomId())+");\n");
+		if(this.namespaceParent!=null){
+			p_writer.print("l_element.namespaceParent="+this.namespaceParent.getNamespaceName()+";\n");
+		}
+
 		p_writer.print("l_element.config=function(){");
-		makeSetupJs(p_writer,p_data);
+		makeSetupJs(p_writer,p_data); 
 		for(JSPlug l_plug:jsPlugs){
 			l_plug.display(p_writer);
 		}		
 		p_writer.print("}\n");
-		if(jsCondition.length()>0){
-				p_writer.print("l_element.jsCondition=function(){\n return "+this.jsCondition+";\n}\n");
+		if(byName != null){
+			StringBuilder l_condition=new StringBuilder("");
+			Element<?> l_element;
+			for(Entry<String, Element<?>> l_entry:byName.entrySet()){
+				l_element=l_entry.getValue();
+				if(l_element.getJSCondition().length()>0){
+					l_condition.append("this.names.")
+					.append(l_element.getJsName())
+					.append(".display(")
+					.append(l_element.getJSCondition())
+					.append(")\n");
+				}
+			}
+		
+			if(l_condition.length()>0){
+				p_writer.print("l_element.checkCondition=function(){\n "+l_condition.toString()+";\n}\n");
+			}
 		}
 		p_writer.print("l_element.setup();\n");
 	}

@@ -12,6 +12,7 @@ public class Form extends PageElement<FormThemeItem>{
 	
 	public Form() {
 		super();
+		setIsNamespace(true);
 	}
 
 	private String title;

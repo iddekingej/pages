@@ -28,6 +28,12 @@ public class Table extends PageElement<TableThemeItem> {
 		}
 	}
 	
+	public Table()
+	{
+		super();
+		setIsNamespace(true);
+	}
+	
 	private String fieldName;
 	
 	public void setFieldName(String p_fieldName){

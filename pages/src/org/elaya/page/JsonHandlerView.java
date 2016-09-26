@@ -28,6 +28,7 @@ public class JsonHandlerView extends AbstractView {
 	@Override
 	protected void renderMergedOutputModel(Map<String, Object> model, HttpServletRequest p_request,
 			HttpServletResponse p_response) throws Exception {
+		application.setLogger(logger);
 		RecieverParser l_parser=new RecieverParser(logger,application);
 		Reciever<?> l_rec=l_parser.parseXml(file);
 		LinkedList<String> l_errors=l_parser.getErrors();

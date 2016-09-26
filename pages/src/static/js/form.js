@@ -42,20 +42,20 @@ TForm.prototype.success=function(p_data)
 
 TForm.prototype.intChange=function()
 {
-	this.handleJSCondition();
+	this.handleCheckCondition();
 }
 
 
 TForm.prototype.afterSetup=function()
 {
 	var l_this=this;
-	for(var l_name in this.elements){
-		var l_element=this.elements[l_name];
+	for(var l_name in this.names){
+		var l_element=this.names[l_name];
 		if(l_element.isInputElement()){
 			l_element.on("change",function(){l_this.intChange();});
 		}
 	}
-	this.handleJSCondition();
+	this.handleCheckCondition();
 }
 
 
@@ -189,7 +189,7 @@ TDateElement.prototype=Object.create(TFormElement.prototype);
 
 TDateElement.prototype.setup=function()
 {
-	this.config();
+	TFormElement.prototype.setup.call(this);
 	var l_element=this.element.datepicker({
 		showOn:this.showOn,
 		buttonText:this.buttonText

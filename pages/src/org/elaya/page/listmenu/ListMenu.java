@@ -10,6 +10,12 @@ public class ListMenu extends PageElement<ListMenuThemeItem> {
 	private String selectionVariable="";
 	private String title="";
 	
+	public ListMenu()
+	{
+		super();
+		setIsNamespace(true);
+	}
+	
 	public void setTitle(String p_title)
 	{
 		title=p_title;
