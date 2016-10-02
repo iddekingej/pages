@@ -1,5 +1,6 @@
 package org.elaya.page;
 
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import org.elaya.page.data.Data;
@@ -46,23 +47,38 @@ public class Page extends PageElement<PageThemeItem> {
 	{
 	} 
  
+	public LinkedHashSet<String> processSetList(LinkedHashSet<String> p_in,String p_type) throws Exception
+	{
+		LinkedHashSet<String> l_return=new LinkedHashSet<String>();
+		for(String l_value:p_in){
+			if(l_value.charAt(0)=='@'){
+				l_value=getApplication().getAlias(l_value.substring(1),p_type,true);
+				String[] l_list=l_value.split(",");
+				for(String l_part:l_list){
+					l_return.add(l_part);
+				}
+			} else {
+				l_return.add(l_value);
+			}
+		}
+		return l_return;
+	}
+	
 	public void display(Writer p_writer,Data p_data) throws Exception
 	{
 		Data l_data=getData(p_data);
-		Set<String> l_js=new LinkedHashSet<String>();
-		Set<String> l_css=new LinkedHashSet<String>();
-		l_js.add("pages.js");
-		l_js.add("jquery.js");
-		l_js.add("jquery-ui.js");
-		l_js.add("primeui.js");
-		l_css.add("jquery-ui.css");
-		l_css.add("jquery-ui.theme.css");
-		l_css.add("theme.css");
-		l_css.add("primeui.min.css");
+		LinkedHashSet<String> l_js=new LinkedHashSet<String>();
+		LinkedHashSet<String> l_css=new LinkedHashSet<String>();
+		
+		l_js.add("@pagejs");
+		l_css.add("@pagecss");
 		getAllCssFiles(l_css);
 		getAllJsFiles(l_js);
 		
-		themeItem.pageHeader(p_writer,l_js,l_css);	
+		LinkedHashSet<String> l_procCss=processSetList(l_css,AliasData.alias_cssfile);
+		LinkedHashSet<String> l_procJs=processSetList(l_js,AliasData.alias_jsfile);
+		
+		themeItem.pageHeader(p_writer,l_procJs,l_procCss);	
 		displaySubElements(p_writer,l_data);
 		p_writer.jsBegin();
 		generateJs(p_writer,p_data);

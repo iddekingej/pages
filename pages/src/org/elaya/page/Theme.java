@@ -2,8 +2,6 @@ package org.elaya.page;
 
 import java.lang.reflect.InvocationTargetException;
 
-import javax.servlet.http.HttpServletResponse;
-
 public class Theme {
 	private String baseName;
 	private String defaultTheme;

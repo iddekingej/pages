@@ -6,13 +6,14 @@ import java.sql.SQLException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.elaya.page.data.Dynamic;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public abstract class JsonReciever<T extends Dynamic> extends Reciever<T> {
 
-	abstract protected void handleJson(JSONResult p_result,T p_data,String p_cmd) throws SQLException;
+	abstract protected void handleJson(JSONResult p_result,T p_data,String p_cmd) throws SQLException, JSONException;
 	
-	private JSONObject getJson(HttpServletRequest p_request) throws IOException
+	private JSONObject getJson(HttpServletRequest p_request) throws IOException, JSONException
 	{
 		StringBuffer l_data=new StringBuffer();
 		String l_part;
@@ -21,7 +22,7 @@ public abstract class JsonReciever<T extends Dynamic> extends Reciever<T> {
 		return new JSONObject(l_data.toString());
 	}
 	
-	public void failure(HttpServletResponse p_response, Exception l_e) throws IOException
+	public void failure(HttpServletResponse p_response, Exception l_e) throws IOException, JSONException
 	{
 		if(getLogger()!=null){
 			getLogger().info(l_e.toString());

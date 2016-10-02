@@ -4,6 +4,8 @@ import java.io.File;
 import java.util.LinkedList;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.elaya.page.AliasData;
 import org.elaya.page.Application;
 import org.elaya.page.data.DynamicMethod;
 import org.elaya.page.data.DynamicObject;
@@ -43,7 +45,7 @@ public class RecieverParser {
 	{
 		
 		if(p_className.startsWith("@")){			
-			String l_className=application.getAliasses().get(p_className.substring(1));
+			String l_className=application.getAlias(p_className.substring(1),AliasData.alias_reciever);
 			if(l_className!=null){
 				return l_className;
 			}

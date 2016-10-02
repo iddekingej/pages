@@ -23,7 +23,18 @@ public class Form extends PageElement<FormThemeItem>{
 	private String cancelText="cancel";
 	private String nextUrl="";
 	private String cancelUrl="";
+	private String[] hiddenElements=null;
 	private SubmitType submitType=SubmitType.json;
+	
+	public void setHiddenElements(String p_hiddenElements)
+	{
+		hiddenElements=p_hiddenElements.split(",");
+	}
+	
+	public String[] getHiddenElements()
+	{
+		return hiddenElements;
+	}
 	
 	public void setNextUrl(String p_nextUrl)
 	{
@@ -137,7 +148,12 @@ public class Form extends PageElement<FormThemeItem>{
 		} else if(submitType.equals(SubmitType.post)){
 			l_method="post";
 		}
-		themeItem.formHeader(p_writer,getDomId(),replaceVariables(l_data,title),theme.getApplication().getBasePath()+replaceVariables(l_data,url),l_method,getWidth());		
+		themeItem.formHeader(p_writer,getDomId(),replaceVariables(l_data,title),theme.getApplication().getBasePath()+replaceVariables(l_data,url),l_method,getWidth());
+		if(hiddenElements!=null){
+			for(String l_name:hiddenElements){
+				themeItem.formHiddenElement(p_writer, getDomId()+"_h_"+l_name, l_name, l_data.getString(l_name));
+			}
+		}
 		displaySubElements(p_writer,l_data);
 		themeItem.formFooterBegin(p_writer);
 		themeItem.FormFooterOk(p_writer, getDomId(), getSubmitText());
@@ -155,6 +171,23 @@ public class Form extends PageElement<FormThemeItem>{
 		p_writer.print("this.submitType="+p_writer.js_toString(submitType.getValue()));
 	}
 	
+	@Override
+	protected void preSubJs(Writer p_writer,Data p_data) throws IOException
+	{
+		if(this.hiddenElements!= null){
+			Element<?> l_namespaceParent=getNamespaceParent();
+			if(getIsNamespace()){
+				l_namespaceParent=this;
+			}
+			for(String l_name:this.hiddenElements){
+				p_writer.print("var l_element=new THiddenElement("+getJsFullname()+","+p_writer.js_toString(l_name)+","+p_writer.js_toString(l_name)+","+p_writer.js_toString(getDomId()+"_h_"+l_name)+");\n");
+				if(l_namespaceParent!=null){
+					p_writer.print("l_element.namespaceParent="+l_namespaceParent.getNamespaceName()+";\n");
+				}
+				p_writer.print("l_element.setup();");
+			}
+		}
+	}
 	@Override
 	protected void postSubJs(Writer p_writer,Data p_data) throws IOException
 	{

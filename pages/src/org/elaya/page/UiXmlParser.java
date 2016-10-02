@@ -6,6 +6,8 @@ import java.util.LinkedList;
 import java.util.Objects;
 import javax.xml.parsers.DocumentBuilder; 
 import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.elaya.page.Application.InvalidAliasType;
 import org.elaya.page.data.DataModel;
 import org.elaya.page.data.DynamicMethod;
 import org.elaya.page.data.DynamicObject;
@@ -24,9 +26,19 @@ public class UiXmlParser {
 	Application application;
 	LinkedList<String> errors=new LinkedList<String>();
 	int cnt=0;
-	Logger logger;
-	HashMap<String,String> aliasses;
+	Logger logger;	
 	HashMap<String,Element<?>> elementIndex=null;
+	
+	protected boolean isNameValid(String p_name)
+	{
+		char l_ch;
+		for(int l_cnt=0;l_cnt<p_name.length();l_cnt++)
+		{
+			l_ch=p_name.charAt(l_cnt);
+			if((l_ch<'a' || l_ch>'z') && (l_ch<'A'||l_ch>'Z') && (l_ch<'0'||l_ch>'9') && (l_ch !='_')) return false;
+		}
+		return true;
+	}
 	
 	public void addToElementIndex(Element<?> p_element){
 		if(p_element.getName().length()>0){
@@ -38,26 +50,27 @@ public class UiXmlParser {
 	{
 		elementIndex=p_index;
 	}
-	
+	//--(Errors)----
 	public void addError(String p_message){
-		errors.add(cnt+"-"+p_message);
-		cnt++;
+		errors.add(p_message);		
 	}
-	public UiXmlParser(Application p_application,HashMap<String,String> p_aliasses,Logger p_logger){
-		Objects.requireNonNull(p_application,"p_application");
-		application=p_application;
-		logger=p_logger;
-		aliasses=p_aliasses;
+	
+	private void addError(String p_error,Node p_node)
+	{
+		errors.add(getNodePath(p_node)+":"+p_error);
 	}
+	
 
 	public LinkedList<String> getErrors()
 	{
 		return errors;
 	}
-	 
-	private void addError(String p_error,Node p_node)
-	{
-		errors.add(getNodePath(p_node)+":"+p_error);
+	//-----
+	
+	public UiXmlParser(Application p_application,Logger p_logger){
+		Objects.requireNonNull(p_application,"p_application");
+		application=p_application;
+		logger=p_logger;
 	}
 	
 	private String getNodePath(Node p_node){
@@ -69,23 +82,17 @@ public class UiXmlParser {
 		}
 		return l_path;
 	}
-	//TODO: bij gebruik vervangen door p_object.put
-	private void setPropertyFromExpression(DynamicMethod p_object,String p_name,String p_expression) throws Exception
-	{
-		p_object.put(p_name,p_expression);
-	}
-	
+
 	private void setPropertyByNode(DynamicMethod p_object,Node p_node) throws DOMException, Exception
 	{
 		p_object.put(p_node.getNodeName(),p_node.getNodeValue());
 	}
 	
-	private String normelizeClassName(String p_className)
+	private String normelizeClassName(String p_className) throws Exception
 	{
 		
 		if(p_className.startsWith("@")){			
-			String l_className=aliasses.get(p_className.substring(1));
-			logger.info(p_className+">>"+l_className);
+			String l_className=application.getAlias(p_className.substring(1),AliasData.alias_element);
 			if(l_className!=null){
 				return l_className;				
 			}
@@ -97,21 +104,21 @@ public class UiXmlParser {
 		return p_className;
 	}
 	
-	private Object createObjectFromNameP(String p_name,Class<?>[] p_types,Object[] p_params) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ClassNotFoundException{
+	private Object createObjectFromNameP(String p_name,Class<?>[] p_types,Object[] p_params) throws Exception{
 		String l_className=normelizeClassName(p_name);
 		return DynamicObject.createObjectFromName(l_className, p_types, p_params, errors);
 	}
 
-	private Object createObjectFromName(String p_name) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ClassNotFoundException
+	private Object createObjectFromName(String p_name) throws Exception
 	{		
 		return createObjectFromNameP(p_name, new Class<?>[]{},new Object[]{} );
 	}
 	
-	private Object createPageFromTypeName(String p_name) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ClassNotFoundException{
+	private Object createPageFromTypeName(String p_name) throws Exception{
 		return createObjectFromNameP(p_name,new Class<?>[]{Application.class},new Object[]{application});
 	}
 	
-	private DataModel createDataModelFromTypeName(String p_name,Application p_application) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ClassNotFoundException
+	private DataModel createDataModelFromTypeName(String p_name,Application p_application) throws Exception
 	{
 		Object l_object=createObjectFromNameP(p_name,new Class<?>[]{Application.class},new Object[]{p_application});
 		if(l_object != null){
@@ -236,7 +243,7 @@ public class UiXmlParser {
 			if(p_parent.getChildNodes().getLength() ==0){
 				p_element.put(l_name,"");
 			} else if(p_parent.getChildNodes().getLength()==1 &&  p_parent.getFirstChild().getNodeType()!=Node.ELEMENT_NODE){
-				setPropertyFromExpression(p_element,l_name,p_parent.getFirstChild().getTextContent());
+				p_element.put(l_name, p_parent.getFirstChild().getTextContent());
 			} else {
 				processSubStructure(p_element,l_name,p_parent);
 			}
@@ -271,7 +278,7 @@ public class UiXmlParser {
 			} else {
 				l_file=getFileValue(p_node);
 				if(l_file != null){					
-					UiXmlParser l_parser=new UiXmlParser(application,aliasses,logger);
+					UiXmlParser l_parser=new UiXmlParser(application,logger);
 					l_parser.setElementIndex(elementIndex);
 					l_element=l_parser.parseElementXml(p_element, l_file);
 					if(l_element !=null)processNodeDef(l_element,p_node);			
@@ -322,6 +329,9 @@ public class UiXmlParser {
 		}
 		
 		addToElementIndex(p_element);
+		if(!isNameValid(p_element.getName())){
+			addError("Invlid name: '"+p_element.getName()+"'",p_parent);
+		}
 		while(l_currentDef!=null){
 			if(l_currentDef.getNodeType()==Node.ELEMENT_NODE){
 				if(l_currentDef.getNodeName().equals("element")){					
@@ -346,17 +356,19 @@ public class UiXmlParser {
 		String l_type=getTypeValue(p_rootNode);
 		if(l_type != null){
 			Object l_object;
-			l_object=createPageFromTypeName(l_type);			
-			if(l_object instanceof Page){
-				l_page=(Page)l_object;
-			} else {
-				errors.add("Class '"+l_type+"' doesn't discent from Page");
-				return null;
+			l_object=createPageFromTypeName(l_type);	
+			if(l_object != null){
+				if(l_object instanceof Page){
+					l_page=(Page)l_object;
+				} else {
+					errors.add("Class '"+l_type+"' doesn't descent from Page");
+					return null;
+				}
 			}
 		} else {
 			String l_file=getFileValue(p_rootNode);
 			if(l_file != null){
-				UiXmlParser  l_parser=new UiXmlParser(application,aliasses,logger);
+				UiXmlParser  l_parser=new UiXmlParser(application,logger);
 				l_parser.setElementIndex(elementIndex);
 				l_page=l_parser.parseUiXml(l_file);
 				errors.addAll(l_parser.getErrors());
@@ -385,6 +397,7 @@ public class UiXmlParser {
 			}
 		}
 		processNodeDef(l_page,p_rootNode);
+		l_page.setApplication(application);
 		l_page.process();
 		return l_page;
 	}

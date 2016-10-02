@@ -66,8 +66,8 @@ TForm.prototype.sendData=function()
 		pages.page.lock();
 		var l_element;
 		var l_data={};
-		for(var l_key in this.elements){
-			if("fillData" in this.elements[l_key]){				
+		for(var l_key in this.names){
+			if("fillData" in this.names[l_key]){				
 				this.elements[l_key].fillData(l_data);
 			}
 		}
@@ -108,7 +108,7 @@ TFormElement.prototype.isInputElement=function()
 
 TFormElement.prototype.getValue=function()
 {
-	return this.element.value;
+	return this.element.val();
 }
 
 function TCheckboxElement(p_form,p_jsName,p_name,p_id)
@@ -194,5 +194,11 @@ TDateElement.prototype.setup=function()
 		showOn:this.showOn,
 		buttonText:this.buttonText
 	});
-
 }
+
+function THiddenElement(p_form,p_jsName,p_name,p_id)
+{
+	TFormElement.call(this,p_form,p_jsName,p_name,p_id);	
+}
+
+THiddenElement.prototype=Object.create(TFormElement.prototype);

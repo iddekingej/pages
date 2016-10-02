@@ -20,9 +20,21 @@ public class Application implements  ServletContextAware {
 	private ServletContext servletContext;
 	private String aliasFiles;
 	private HashMap<String,Page> pageCache=new HashMap<>(); 
-	private HashMap<String,String> aliasses;
+	private HashMap<String,AliasData> aliasses;
 	private ApplicationContext DBContext=null;
 	private HashMap<String,DriverManagerDataSource> dbConnections=new HashMap<>();
+	
+	class InvalidAliasType extends Exception
+	{
+
+		private static final long serialVersionUID = -7739276897593055425L;
+
+		public InvalidAliasType(String p_typeReq,String p_typeGot)
+		{
+			super("Invalid alias type, '"+p_typeReq+"' expected but '"+p_typeGot+"' found");
+		}
+	}
+	
 	//--(db)------------------------------------------------------------------------
 	
 	private ApplicationContext getDBContext()
@@ -55,22 +67,18 @@ public class Application implements  ServletContextAware {
 		return logger;
 	}
 	
-	public HashMap<String,String> getAliasses() throws Exception
-	{
-		if(aliasses==null){
-			loadAliasFiles();
-		}
-		return aliasses;
-	}
-	 
+	
+	
 /* Page handling */
+	
+	
 	
 	public synchronized Page loadPage(String p_fileName) throws Exception
 	{
 		if(pageCache.containsKey(p_fileName)){
 			return pageCache.get(p_fileName);
 		}
-		UiXmlParser l_parser=new UiXmlParser(this,getAliasses(),logger);
+		UiXmlParser l_parser=new UiXmlParser(this,logger);
 		Page l_page=l_parser.parseUiXml(p_fileName);
 		LinkedList<String> l_errors=l_parser.getErrors();
 		if(l_errors.size()>0){
@@ -103,13 +111,42 @@ public class Application implements  ServletContextAware {
 	
 	private void loadAliasFiles() throws Exception
 	{
-		aliasses=new HashMap<String,String>();
+		aliasses=new HashMap<String,AliasData>();
 		String[] l_fileNames=aliasFiles.split(",");
 		for(String l_fileName:l_fileNames){
 			addAliasses(l_fileName);
 		}
 	}
 	
+	public HashMap<String,AliasData> getAliasses() throws Exception
+	{
+		if(aliasses==null){
+			loadAliasFiles();
+		}
+		return aliasses;
+	}
+	 
+	public String getAlias(String p_name,String p_type) throws Exception
+	{
+		AliasData l_data=getAliasses().get(p_name);
+		if(l_data != null){			
+			if(l_data.getType() != p_type){
+				throw new InvalidAliasType(p_type,l_data.getType());
+			}
+			return l_data.getValue();
+		}
+		return null;
+	}
+	
+	public String getAlias(String p_name,String p_type,boolean p_mandatory) throws Exception
+	{
+		String l_return=getAlias(p_name,p_type);
+		if((l_return==null) && p_mandatory){
+			throw new Errors.AliasNotFound(p_name);
+		}
+		return l_return;
+	}
+	//--
 	public String getRealPath(String p_path) throws Exception
 	{
 		if(servletContext==null) throw new Exception("Bla");

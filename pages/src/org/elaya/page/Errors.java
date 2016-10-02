@@ -55,4 +55,14 @@ public class Errors {
 			super("Loading page '"+p_fileName+" failed");
 		}
 	}
+	
+	static public class AliasNotFound extends Exception{
+
+		private static final long serialVersionUID = -8957504944800562183L;
+		
+		public AliasNotFound(String p_alias)
+		{
+			super("Alias not found:"+p_alias);
+		}
+	}
 }

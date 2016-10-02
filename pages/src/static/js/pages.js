@@ -28,12 +28,16 @@ var pages={
 					$(".page_error").remove();
 			},
 			addErrors:function(p_data){
+				var l_field;
 				this.removeErrors();
 				for(var l_cnt=0;l_cnt<p_data.length;l_cnt++){
-					var l_element=this.getByName(p_data[l_cnt].field);
-					if(l_element){
-						var l_node=$('<div>').attr('class','page_error').appendTo(l_element.element.parent());
-						l_node.append(document.createTextNode(p_data[l_cnt].msg));
+					l_field=p_data[l_cnt].field;
+					if(l_field.length>0){
+						var l_element=this.getByName(l_field);
+						if(l_element){
+							var l_node=$('<div>').attr('class','page_error').appendTo(l_element.element.parent());
+							l_node.append(document.createTextNode(p_data[l_cnt].msg));
+						}
 					}
 				}
 			}
@@ -126,7 +130,9 @@ TElement.prototype.addElement=function(p_jsName,p_element)
 
 TElement.prototype.setup=function()
 {
-	this.config();
+	if("config" in this){
+		this.config();
+	}
 	this.parent.addElement(this.jsName,this);
 	if(this.namespaceParent){
 		this.namespaceParent.addByName(this);
