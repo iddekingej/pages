@@ -38,7 +38,12 @@ public class JsonHandlerView extends AbstractView {
 			}
 		} else {
 			l_rec.setLogger(logger);
-			l_rec.handleRequest(p_request, p_response);
+			try{
+				l_rec.handleRequest(p_request, p_response);
+			}catch(Throwable l_e)
+			{
+				logger.info(l_e.getMessage());
+			}
 		}
 	}
 

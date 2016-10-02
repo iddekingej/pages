@@ -157,12 +157,16 @@ public class Application implements  ServletContextAware {
 		return request.getContextPath();
 	}
 	
-	public String procesUrl(String p_url)
+	public String procesUrl(String p_url) throws Exception
 	{
-		if(p_url.startsWith("+")){
-			return getBasePath()+"/"+p_url.substring(1);
+		String l_url=p_url;
+		if(l_url.startsWith("@")){
+			l_url=getAlias(l_url.substring(1),AliasData.alias_url,true);
+		}
+		if(l_url.startsWith("+")){
+			return getBasePath()+"/"+l_url.substring(1);
 		} else {
-			return p_url;
+			return l_url;
 		}
 	}
 	

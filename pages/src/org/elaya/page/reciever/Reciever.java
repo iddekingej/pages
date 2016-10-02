@@ -75,6 +75,6 @@ abstract public class Reciever<T extends Dynamic> extends DynamicMethod {
 	
 	
 
-	abstract public void handleRequest(HttpServletRequest p_request,HttpServletResponse p_response ) throws Exception;
+	abstract public void handleRequest(HttpServletRequest p_request,HttpServletResponse p_response ) throws Exception, Throwable;
 		
 }

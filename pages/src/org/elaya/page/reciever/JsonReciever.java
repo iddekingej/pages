@@ -34,9 +34,10 @@ public abstract class JsonReciever<T extends Dynamic> extends Reciever<T> {
 	}
 	@SuppressWarnings("unchecked")
 	@Override
-	public void handleRequest(HttpServletRequest p_request,HttpServletResponse p_response ) throws Exception
+	public void handleRequest(HttpServletRequest p_request,HttpServletResponse p_response ) throws Throwable
 	{
 		try{
+			Object l_value;
 			Dynamic l_object=getObject();
 			//TODO fail when mandatory and parameter is not given				
 
@@ -45,7 +46,11 @@ public abstract class JsonReciever<T extends Dynamic> extends Reciever<T> {
 			JSONObject l_data=l_json.getJSONObject("data");
 			//TODO Handle exception and when parameter does not exists
 			for(Parameter l_parameter:getParameters()){
-				l_object.put(l_parameter.getName(),l_data.getString(l_parameter.getName()));
+				l_value=l_data.get(l_parameter.getName());
+				if(l_parameter.getType()==ParameterType.integer && l_value.equals("")){
+					l_value=null;
+				}
+				l_object.put(l_parameter.getName(),l_value);
 			}
 
 			T l_information;

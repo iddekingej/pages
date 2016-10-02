@@ -9,7 +9,7 @@ abstract public class PostReciever<T extends Dynamic> extends Reciever<T> {
 	abstract public void handleRequest(T p_data);
 	
 	@SuppressWarnings("unchecked")
-	public void handleRequest(HttpServletRequest p_request,HttpServletResponse p_response ) throws Exception
+	public void handleRequest(HttpServletRequest p_request,HttpServletResponse p_response ) throws Throwable
 	{
 		Dynamic l_object=getObject();
 		//TODO fail when mandatory and parameter is not given				

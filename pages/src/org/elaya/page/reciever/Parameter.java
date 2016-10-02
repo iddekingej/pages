@@ -3,8 +3,8 @@ package org.elaya.page.reciever;
 import org.elaya.page.data.DynamicMethod;
 
 public class Parameter extends DynamicMethod {
-	String name;
-	ParameterType type;
+	private String name;
+	private ParameterType type;
 	
 	public void setName(String p_name)
 	{
@@ -16,7 +16,12 @@ public class Parameter extends DynamicMethod {
 		return name;
 	}
 
-	public ParameterType setType(ParameterType p_type)
+	public void setType(ParameterType p_type)
+	{
+		type=p_type;
+	}
+	
+	public ParameterType getType()
 	{
 		return type;
 	}
