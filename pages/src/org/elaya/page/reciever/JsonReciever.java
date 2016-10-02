@@ -10,7 +10,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public abstract class JsonReciever<T extends Dynamic> extends Reciever<T> {
-
+	protected void validateRequest(JSONResult p_result,T p_data,String p_cmd) throws JSONException
+	{
+		
+	}
 	abstract protected void handleJson(JSONResult p_result,T p_data,String p_cmd) throws SQLException, JSONException;
 	
 	private JSONObject getJson(HttpServletRequest p_request) throws IOException, JSONException
@@ -57,7 +60,10 @@ public abstract class JsonReciever<T extends Dynamic> extends Reciever<T> {
 
 			l_information=(T)l_object;
 			JSONResult l_result=new JSONResult();
-			handleJson(l_result,l_information,l_cmd);
+			validateRequest(l_result,l_information,l_cmd);
+			if(!l_result.hasErrors()){
+				handleJson(l_result,l_information,l_cmd);
+			}
 			p_response.setContentType("application/json");
 			p_response.getOutputStream().print(l_result.toString());
 		} catch(Exception l_e)

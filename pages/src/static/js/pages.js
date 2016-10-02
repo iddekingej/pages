@@ -23,25 +23,7 @@ var pages={
 						l_container.width($(window).width());
 				});
 			},
-			removeErrors()
-			{
-					$(".page_error").remove();
-			},
-			addErrors:function(p_data){
-				var l_field;
-				this.removeErrors();
-				for(var l_cnt=0;l_cnt<p_data.length;l_cnt++){
-					l_field=p_data[l_cnt].field;
-					if(l_field.length>0){
-						var l_element=this.getByName(l_field);
-						if(l_element){
-							var l_node=$('<div>').attr('class','page_error').appendTo(l_element.element.parent());
-							l_node.append(document.createTextNode(p_data[l_cnt].msg));
-						}
-					}
-				}
-			}
-			,
+
 			lock:function()
 			{
 				$("<div>&#160;</div>").attr("id","locker").css({
@@ -75,6 +57,11 @@ function TElement(p_parent,p_jsName,p_name,p_id)
 	this.namespaceParent=false;
 }
 
+
+TElement.prototype.getElementParent=function()
+{
+	return this.element.parent();
+}
 TElement.prototype.isInputElement=function()
 {
 	return false;
@@ -121,6 +108,14 @@ TElement.prototype.fillData=function(p_data)
 TElement.prototype.addByName=function(p_element)
 {
 	this.names[p_element.jsName]=p_element;
+}
+
+TElement.prototype.getByName=function(p_element)
+{
+	if(p_element in this.names){
+		return this.names[p_element];
+	}
+	return null;
 }
 
 TElement.prototype.addElement=function(p_jsName,p_element)

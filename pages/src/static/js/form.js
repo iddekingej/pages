@@ -24,12 +24,33 @@ TForm.prototype.save=function()
 	}
 }
 
+TForm.prototype.removeErrors=function()
+{
+		$(".page_error").remove();
+}
+
+
+TForm.prototype.addErrors=function(p_data){
+	var l_field;
+	this.removeErrors();
+	for(var l_cnt=0;l_cnt<p_data.length;l_cnt++){
+		l_field=p_data[l_cnt].field;
+		if(l_field.length>0){
+			var l_element=this.getByName(l_field);
+			if(l_element){
+				var l_node=$('<div>').attr('class','page_error').appendTo(l_element.getElementParent());
+				l_node.append(document.createTextNode(p_data[l_cnt].msg));
+			}
+		}
+	}
+}
+
 TForm.prototype.success=function(p_data)
 {
 	pages.page.unlock();
 	if("errors" in p_data){
 		
-		pages.page.addErrors(p_data.errors);
+		this.addErrors(p_data.errors);
 		var l_errors="";
 		for(var l_cnt in p_data.errors){
 			if(p_data.errors[l_cnt].field=="") l_errors += p_data.errors[l_cnt].msg+"\n";
@@ -120,6 +141,11 @@ TCheckboxElement.prototype=Object.create(TFormElement.prototype);
 TCheckboxElement.prototype.checked=function()
 {
 	return this.element[0].checked;
+}
+
+TCheckboxElement.prototype.getValue=function()
+{
+	return (this.checked())?1:0;
 }
 
 function TRadioElement(p_form,p_jsName,p_name,p_id)

@@ -8,6 +8,10 @@ public class JSONResult {
 	private JSONObject data;
 	private JSONArray errors=null;
 	
+	public boolean hasErrors()
+	{
+		return errors != null;
+	}
 	public void put(String p_field,String p_value) throws JSONException
 	{
 		data.put(p_field, p_value);

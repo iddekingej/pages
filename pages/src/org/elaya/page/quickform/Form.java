@@ -165,8 +165,9 @@ public class Form extends PageElement<FormThemeItem>{
 	
 	protected void makeSetupJs(Writer p_writer,Data p_data) throws Exception
 	{
+		String l_next=getApplication().procesUrl(replaceVariables(p_data,nextUrl));
 		p_writer.print("this.cmd="+p_writer.js_toString(replaceVariables(p_data,cmd))+";\n");
-		p_writer.print("this.nextUrl="+p_writer.js_toString(replaceVariables(p_data,nextUrl))+";\n");
+		p_writer.print("this.nextUrl="+p_writer.js_toString(l_next)+";\n");
 		if(this.cancelUrl.length()>0)p_writer.print("this.cancelUrl="+p_writer.js_toString(replaceVariables(p_data,cancelUrl))+";\n");
 		p_writer.print("this.submitType="+p_writer.js_toString(submitType.getValue()));
 	}
