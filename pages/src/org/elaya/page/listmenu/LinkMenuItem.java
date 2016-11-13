@@ -1,5 +1,4 @@
 package org.elaya.page.listmenu;
-import org.elaya.page.LinkType;
 import org.elaya.page.Writer;
 import org.elaya.page.data.Data;
 public class LinkMenuItem extends BuildinListMenuItem{

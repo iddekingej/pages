@@ -1,22 +1,21 @@
-.pages_elementLabel{	
-	background-color:#fff;
-	padding-right:8px;
-	vertical-align:top;
+.pages_elementLabel {
+	background-color: #fff;
+	padding-right: 8px;
+	vertical-align: top;
 }
 
-.pages_formTable{
-	border-collapse:collapse;	
-}
-.pages_elementValue{
-	background-color:#fff;
-	padding:2px;
-	
+.pages_formTable {
+	border-collapse: collapse;
 }
 
-.pages_formTitle{
-	text-align:center;
-	font-size:15px;
-	background-color:#eee;
-	border-bottom:solid 1px #888;
+.pages_elementValue {
+	background-color: #fff;
+	padding: 2px;
 }
 
+.pages_formTitle {
+	text-align: center;
+	font-size: 15px;
+	background-color: #eee;
+	border-bottom: solid 1px #888;
+}

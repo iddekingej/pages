@@ -2,14 +2,12 @@ package org.elaya.page;
 
 import java.io.IOException;
 import java.util.Set;
-import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.web.util.HtmlUtils;
 
 public class ThemeItemBase {
 	private Theme theme;
 	private String classPrefix="";
-	protected HttpServletResponse response;
 
 	public void setClassPrefix(String p_classPrefix)
 	{

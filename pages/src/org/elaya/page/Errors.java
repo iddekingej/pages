@@ -65,4 +65,17 @@ public class Errors {
 			super("Alias not found:"+p_alias);
 		}
 	}
+	
+	static public class XmlLoadError extends Exception{
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 5100803934833922124L;
+		
+		public XmlLoadError(String p_error){
+			super(p_error);
+		}
+		
+	}
 }

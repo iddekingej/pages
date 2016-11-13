@@ -1,8 +1,6 @@
 package org.elaya.page;
 
-import java.util.HashSet;
 import java.util.LinkedHashSet;
-import java.util.Set;
 import org.elaya.page.data.Data;
 
 public class Page extends PageElement<PageThemeItem> {
@@ -12,6 +10,11 @@ public class Page extends PageElement<PageThemeItem> {
 	private boolean toWindowSize=false;
 	
 	public String getUrl(){ return url;}
+	
+	void setUrl(String p_url)
+	{		
+		url=p_url;
+	}
 	
 	public void setToWindowSize(Boolean p_flag)
 	{
@@ -29,15 +32,7 @@ public class Page extends PageElement<PageThemeItem> {
 		return idCnt;
 	}
 
-	public Page()
-	{
-		super();
-	}
 	
-	void setUrl(String p_url)
-	{		
-		url=p_url;
-	}
 	
 	public String getJsName()
 	{
@@ -47,7 +42,7 @@ public class Page extends PageElement<PageThemeItem> {
 	{
 	} 
  
-	public LinkedHashSet<String> processSetList(LinkedHashSet<String> p_in,String p_type) throws Exception
+	private LinkedHashSet<String> processSetList(LinkedHashSet<String> p_in,String p_type) throws Exception
 	{
 		LinkedHashSet<String> l_return=new LinkedHashSet<String>();
 		for(String l_value:p_in){
@@ -109,10 +104,14 @@ public class Page extends PageElement<PageThemeItem> {
 	public boolean checkElement(Element<?> p_element){
 		return p_element instanceof PageElement;
 	}
-	
-	public Page(Application p_application) throws Exception
+
+	public void initTheme() throws Exception
 	{
-		setTheme(new Theme(p_application));		
+		setTheme(new Theme(getApplication()));
+	}
+	
+	public Page()
+	{		
 		setIsNamespace(true);
 	}
 

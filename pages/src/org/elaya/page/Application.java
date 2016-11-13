@@ -69,38 +69,67 @@ public class Application implements  ServletContextAware {
 	
 	
 	
-/* Page handling */
+/**
+ * Parse UI definition file in p_fileName and returns the Page Object
+ * The XML ui definition must describe a page.
+ * When p_cache=true the page object is cached. When this function is called
+ * again with the same filename and p_cache=true than a cached copy is returned.
+ * 
+ * @param p_fileName  XML describing the page
+ * @param p_cache     Cache Page object 
+ * @return            Page object representing page
+ * @throws Exception  
+ */
 	
 	
 	
-	public synchronized Page loadPage(String p_fileName) throws Exception
+	public synchronized Page loadPage(String p_fileName,boolean p_cache) throws Exception
 	{
-		if(pageCache.containsKey(p_fileName)){
-			return pageCache.get(p_fileName);
+		if(p_cache){
+			if(pageCache.containsKey(p_fileName)){
+				return pageCache.get(p_fileName);
+			}
 		}
-		UiXmlParser l_parser=new UiXmlParser(this,logger);
-		Page l_page=l_parser.parseUiXml(p_fileName);
+		UiXmlParser l_parser=new UiXmlParser(this,getClass().getClassLoader());
+		Object l_object=l_parser.parse(p_fileName);
+
+		
 		LinkedList<String> l_errors=l_parser.getErrors();
 		if(l_errors.size()>0){
+			String l_text="";
 			for(String l_error:l_errors){
-				logger.info(p_fileName+":"+l_error);
+				l_text =l_text +(p_fileName+":"+l_error)+"\n";
 			}
-			throw new Errors.LoadingPageFailed(p_fileName);
+			throw new Errors.LoadingPageFailed(l_text);
 		}
-
-		if(l_page != null){
-			pageCache.put(p_fileName, l_page);
+		Page l_page;
+		if(l_object instanceof Page){
+			l_page=(Page)l_object;	
+		}   else {
+			throw new Errors.LoadingPageFailed("File "+p_fileName+" contains not a Page but a '"+l_object.getClass().getName()+"'");
+		}
+		if(p_cache){
+			if(l_page != null){
+				pageCache.put(p_fileName, l_page);
+			}
 		}
 		return l_page;
 	}
 	
 /* Alias handling */
+//TODO error handling
 	private void addAliasses(String p_fileName) throws Exception
 	{
 		AliasParser l_parser=new AliasParser(logger);
-		l_parser.parseAliases(servletContext.getResourceAsStream(p_fileName), aliasses);		
-		for(String l_error:l_parser.getErrors()){
-			logger.info(l_error);
+
+		l_parser.parseAliases(getClass().getClassLoader().getResourceAsStream("../pages/"+p_fileName), aliasses);
+		
+		if(!l_parser.getErrors().isEmpty()){
+			String l_text="";
+			for(String l_error:l_parser.getErrors()){
+				l_text=l_text+"\n"+l_error;
+			}
+			throw new Errors.LoadingPageFailed("Error:"+l_text);
 		}
 	}
 	

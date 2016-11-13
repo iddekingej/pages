@@ -133,7 +133,7 @@ public abstract class Element<themeType extends ThemeItemBase> extends DynamicMe
 		if(dataModel != null){
 			l_data=dataModel.processData(p_data);
 		}
-		for(Element<?>l_element:getElements()){
+		for(Element<?>l_element:elements){
 			if(l_element.checkCondition(l_data)){
 				l_element.calculateData(l_data);
 			}
@@ -193,10 +193,10 @@ public abstract class Element<themeType extends ThemeItemBase> extends DynamicMe
 	
 	public Object getValueByName(Data p_data) throws ValueNotFound, NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException
 	{
-		if(p_data.containsKey(getName())){
-			return p_data.get(getName());
+		if(p_data.containsKey(name)){
+			return p_data.get(name);
 		} else {
-			throw new Errors.ValueNotFound(getName());
+			throw new Errors.ValueNotFound(name);
 		}
 	}
 	
@@ -206,7 +206,7 @@ public abstract class Element<themeType extends ThemeItemBase> extends DynamicMe
 	
 	public void process()
 	{		
-		for(Element<?> l_element:getElements()){
+		for(Element<?> l_element:elements){
 			l_element.process();
 		}
 	}
@@ -287,7 +287,7 @@ public abstract class Element<themeType extends ThemeItemBase> extends DynamicMe
 		if(namespaceParent==null){
 			return getJsName();
 		}
-		String l_name=getNamespaceParent().getNamespaceName();
+		String l_name=namespaceParent.getNamespaceName();
 		if(isNamespace){
 			l_name=l_name+".names."+getJsName();
 		}
@@ -319,22 +319,24 @@ public abstract class Element<themeType extends ThemeItemBase> extends DynamicMe
 			l_element.getAllJsFiles(p_files);
 		}		
 	}
-	
+	//TODO rename to addJsFiles
 	public void addJsFile(Set<String> p_set)
 	{ 
 		
 	}
-	
+	//TODO rename to add cssFiles
 	public void addCssFile(Set<String> p_files)
 	{
 			themeItem.getCssFiles(p_files);
 	}
 	
+	//TODO used?
 	public String getObjectName()
 	{
 		return "object_"+Integer.toString(id);
 	}
-	public String getVarname()
+	//TODO used?
+	public String getVarName()
 	{
 		return "var_"+Integer.toString(id);
 	}
@@ -352,7 +354,10 @@ public abstract class Element<themeType extends ThemeItemBase> extends DynamicMe
 	
 	public Element<?> getWidgetParent()
 	{
-		return getParent().getFirstWidget();
+		if(parent != null){
+			return parent.getFirstWidget();
+		}
+		return null;
 	}
 	
 	public Page getPage()
@@ -378,7 +383,7 @@ public abstract class Element<themeType extends ThemeItemBase> extends DynamicMe
 	
 	public void displaySubElements(Writer p_writer,Data p_data) throws Exception
 	{
-		for(Element<?> l_element:getElements())
+		for(Element<?> l_element:elements)
 		{
 			if(l_element.checkCondition(p_data)){
 				preElement(p_writer,l_element);
@@ -395,9 +400,9 @@ public abstract class Element<themeType extends ThemeItemBase> extends DynamicMe
 	final public void setTheme(Theme p_theme) throws Exception
 	{
 		theme=p_theme;
-		ThemeItemBase l_theme=p_theme.getTheme(getThemeName());
-		Objects.requireNonNull(l_theme,"themeItem=>setTheme");
-		themeItem=(themeType)p_theme.getTheme(getThemeName());
+		ThemeItemBase l_themeItem=p_theme.getTheme(getThemeName()); //TODO: getTheme=>getThemeItem
+		Objects.requireNonNull(l_themeItem,"themeItem=>setTheme");
+		themeItem=(themeType) l_themeItem;
 	}
 	
 	protected void checkSubElement(Element<ThemeItemBase> p_element)
@@ -413,10 +418,11 @@ public abstract class Element<themeType extends ThemeItemBase> extends DynamicMe
 	{
 	
 		Objects.requireNonNull(p_element,"addElement(p_element)");
-		p_element.setId(getPage().newId());
 		if(!checkElement(p_element)){
 			throw new Errors.InvalidElement(p_element,this);
 		}
+		p_element.setId(getPage().newId());
+
 		p_element.setTheme(theme);
 		p_element.setParent(this);
 		elements.add(p_element);
@@ -427,7 +433,7 @@ public abstract class Element<themeType extends ThemeItemBase> extends DynamicMe
 			l_namespace=namespaceParent;			
 		}
 		if(l_namespace.hasByName(p_element)){
-			throw new Errors.duplicateElementOnPage(p_element.getJsName());
+			throw new Errors.duplicateElementOnPage(p_element.getJsName());//TODO: Duplicate In namespace
 		}
 		l_namespace.addByName(p_element);
 	}
@@ -444,7 +450,7 @@ public abstract class Element<themeType extends ThemeItemBase> extends DynamicMe
 	
 	protected void makeJsObject(Writer p_writer,Data p_data) throws Exception
 	{
-		p_writer.print("var l_element=new "+getJsClassName()+"("+getWidgetParent().getJsFullname()+","+p_writer.js_toString(getJsName())+","+p_writer.js_toString(getName())+","+p_writer.js_toString(getDomId())+");\n");
+		p_writer.print("var l_element=new "+getJsClassName()+"("+getWidgetParent().getJsFullname()+","+p_writer.js_toString(getJsName())+","+p_writer.js_toString(name)+","+p_writer.js_toString(getDomId())+");\n");
 		if(this.namespaceParent!=null){
 			p_writer.print("l_element.namespaceParent="+this.namespaceParent.getNamespaceName()+";\n");
 		}
@@ -492,7 +498,7 @@ public abstract class Element<themeType extends ThemeItemBase> extends DynamicMe
 		Data l_data=getData(p_data);
 		makeJsObject(p_writer,l_data);
 		preSubJs(p_writer,l_data);
-		for(Element<?> l_element:getElements()){
+		for(Element<?> l_element:elements){
 			if(this.checkCondition(p_data)){
 				l_element.generateJs(p_writer,l_data);
 			}

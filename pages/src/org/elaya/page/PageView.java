@@ -44,7 +44,7 @@ public class PageView extends AbstractView {
 			l_fileName=path;
 		}
 
-		Page l_page=application.loadPage(l_fileName);
+		Page l_page=application.loadPage(l_fileName,true);
 
 		Writer l_writer=new Writer(p_response);
 		if(l_page != null){

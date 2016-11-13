@@ -1,12 +1,20 @@
-body,table,input,input,textare,td{
-	font-size:13px;
-	font-family:arial;
+body, table, input, input, textare, td {
+	font-size: 13px;
+	font-family: arial;
 }
 
-.page_gridLayout{ width:100%}
-.page_error{color:#f00}
-
-.listmenu_item_selected{
-	background-color:#0d3;	
+.page_gridLayout {
+	width: 100%
 }
-div[class="listmenu_item_selected"]>a{color:#fff}
+
+.page_error {
+	color: #f00
+}
+
+.listmenu_item_selected {
+	background-color: #0d3;
+}
+
+div[class="listmenu_item_selected"]>a {
+	color: #fff
+}

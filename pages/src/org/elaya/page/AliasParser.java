@@ -52,7 +52,7 @@ public class AliasParser {
 					l_class=l_currentDef.getAttributes().getNamedItem("value");
 					if(l_alias==null)errors.add("'alias'  attribute not found");
 					if(l_class==null){
-							errors.add("'class' attribute not found");
+							errors.add("'value' attribute not found");
 					} else {
 						if(l_alias != null){
 							l_aliasValue=l_alias.getNodeValue();
