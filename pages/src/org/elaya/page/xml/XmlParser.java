@@ -10,7 +10,6 @@ import java.util.Objects;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.elaya.page.Application;
 import org.elaya.page.Errors;
 import org.elaya.page.Errors.XmlLoadError;
 import org.elaya.page.data.DynamicObject;
@@ -24,22 +23,17 @@ abstract public class XmlParser {
 	private HashMap<String,XmlConfig> configs=new HashMap<>();
 	private LinkedList<String> errors=new LinkedList<>();
 	private HashMap<String,Object> nameIndex;
-	private Application application;
-	
-	public XmlParser(Application p_application)
+		
+	public XmlParser()
 	{
 		nameIndex=new HashMap<String,Object>();
-		application=p_application;
 	}
 	
-	public XmlParser(Application p_application,HashMap<String,Object> p_nameIndex) {
+	public XmlParser(HashMap<String,Object> p_nameIndex) {
 		nameIndex=p_nameIndex;
-		application=p_application;
 	}
 	
 	public HashMap<String,Object> getNameIndex(){ return nameIndex;}
-	public Application getApplication(){ return application;}
-	
 	
 	private String getAttributeValue(Node p_node,String p_name)
 	{
@@ -158,10 +152,11 @@ abstract public class XmlParser {
 		String l_name=getAttributeValue(p_node,"name");
 		if(l_name != null){
 			DynamicObject.put(p_object,"name",l_name);
-			if(nameIndex.containsKey(l_name)){
-				addError("An object with name "+l_name+" allready exists",p_node);
+			String l_refName=getName(p_object);
+			if(nameIndex.containsKey(l_refName)){
+				addError("An object with name "+l_refName+" allready exists",p_node);
 			} else {
-				nameIndex.put(l_name,p_object);
+				nameIndex.put(l_refName,p_object);
 			}
 		}
 	}
@@ -269,4 +264,5 @@ abstract public class XmlParser {
 	abstract protected XmlParser createParser();
 	abstract protected void addConfig();
 	abstract protected String normalizeClassName(String p_name) throws Exception;
+	abstract protected String getName(Object p_object);
 }

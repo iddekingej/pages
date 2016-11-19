@@ -12,7 +12,18 @@ public class XmlConfig {
 	public boolean  getCustom(){ return custom;}
 	public String   getDefaultSetMethod(){ return defaultSetMethod;}
 	public boolean  getNeedParent(){ return needParent;}
-
+	
+	/**
+	 * Creates a xml parser config node. This information determens how to parse
+	 * a xml expression to an object
+	 * 
+	 * @param p_baseClass            Specified class in tag must descent from this class
+	 * @param p_defaultClass         If no class is given use this as class to create an object
+	 * @param p_custom               Parsing of node and sub nodes is using a custom procedure
+	 * @param p_defaultSetMethod     Use this method to add object to its parent object
+	 * @param p_needParent           true: If object can needs a parent node
+	 */
+	
 	public XmlConfig(Class<?> p_baseClass,Class<?> p_defaultClass,boolean p_custom,String p_defaultSetMethod,boolean p_needParent) 
 	{
 		baseClass        = p_baseClass;

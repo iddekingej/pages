@@ -13,14 +13,22 @@ import org.w3c.dom.Node;
 
 public class UiXmlParser extends XmlParser {
 	private ClassLoader classLoader;
+	private Application application;
+	
+	public Application getApplication()
+	{
+		return application;
+	}
 	
 	public UiXmlParser(Application p_application,ClassLoader p_classLoader) {
-		super(p_application);
+		super();
+		application=p_application;
 		classLoader=p_classLoader;
 	}
 
 	public UiXmlParser(Application p_application,ClassLoader p_classLoader,HashMap<String, Object> p_nameIndex) {
-		super(p_application,p_nameIndex);
+		super(p_nameIndex);
+		application=p_application;
 		classLoader=p_classLoader;
 	}
 
@@ -96,6 +104,14 @@ public class UiXmlParser extends XmlParser {
 		if(p_object instanceof Page){
 			((Page)p_object).initTheme();
 		}
+	}
+
+	@Override
+	protected String getName(Object p_object) {
+		if(p_object instanceof Element<?>){
+			return ((Element<?>)p_object).getNamespaceName();
+		}
+		return "";
 	}
 
 }

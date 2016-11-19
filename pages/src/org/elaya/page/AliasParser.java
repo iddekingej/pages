@@ -16,7 +16,7 @@ import org.w3c.dom.NodeList;
 
 public class AliasParser {
 
-	private Logger      logger;
+	private Logger logger;
 	private LinkedList<String> errors=new LinkedList<String>();
 	private Set<String> elements=new HashSet<String>();
 /**
