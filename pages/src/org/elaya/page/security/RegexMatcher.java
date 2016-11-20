@@ -25,7 +25,7 @@ public class RegexMatcher extends RequestMatcher {
 	}
 
 	@Override
-	boolean matchOwnRequest(ServletRequest p_request,SessionData p_sessionData) {
+	boolean matchOwnRequest(ServletRequest p_request) {
 		if(p_request instanceof HttpServletRequest){
 			HttpServletRequest l_request=(HttpServletRequest)p_request;			
 			if(urlRegex==null || urlRegex=="") return true;

@@ -12,13 +12,24 @@ public abstract class RequestMatcher {
 	public RequestMatcher() {
 		// TODO Auto-generated constructor stub
 	}
-
 	
-	final public RequestMatcher matchRequest(ServletRequest p_request,SessionData p_sessionData){
-		if(matchOwnRequest(p_request,p_sessionData)){
+	protected SessionData getSessionFromRequest(ServletRequest p_request)
+	{
+		Object l_object=p_request.getAttribute("org.elaya.page.security.SessionData");
+		if(l_object != null){
+			if(l_object instanceof SessionData){
+				return (SessionData)l_object;
+			}
+		}
+		return null;
+	}
+	
+	
+	final public RequestMatcher matchRequest(ServletRequest p_request){
+		if(matchOwnRequest(p_request)){
 			RequestMatcher l_found;
 			for(RequestMatcher l_sub:subMatcher){
-				l_found=l_sub.matchRequest(p_request,p_sessionData);
+				l_found=l_sub.matchRequest(p_request);
 				if(l_found != null) return l_found;
 			}
 			return this;
@@ -26,13 +37,13 @@ public abstract class RequestMatcher {
 			return null;
 		}
 	}
-	abstract boolean matchOwnRequest(ServletRequest p_request,SessionData p_sessionData);
+	abstract boolean matchOwnRequest(ServletRequest p_request);
 	
-	public MatchActionResult execute(ServletRequest p_request,ServletResponse p_response){
+	public MatchActionResult execute(ServletRequest p_request,ServletResponse p_response,Authenticator p_authenticator) throws Exception{
 		ActionResult l_result;
 		boolean l_nextFilter=true;
 		for(Action l_action:actions){
-			l_result=l_action.execute(p_request, p_response);
+			l_result=l_action.execute(p_request, p_response,p_authenticator);
 			if(l_result==ActionResult.SecurityFailed) return MatchActionResult.SecurityFailed;
 			if(l_result==ActionResult.StopActions) break;
 			if(l_result==ActionResult.NoNextFilter) l_nextFilter=false;

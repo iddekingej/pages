@@ -5,17 +5,17 @@ import java.util.Map;
 abstract public class SessionData {
 
 	
-	public SessionData(Integer p_id){
+	public SessionData(Object p_id){
 		initSessionData(p_id);
 	}
 	
-	public SessionData(Map<String,Object> p_map)
-	{
-		initSessionData(p_map);
+	public SessionData(Map<String,Object> p_data){
+		initSessionData(p_data);
 	}
 	
-	abstract protected void initSessionData(int p_id);
+	abstract protected void initSessionData(Object p_id);
 	abstract protected void initSessionData(Map<String,Object> p_data);
-	abstract public int getId();
+	abstract public Object getId();
 	abstract public String getAfterLoginPath();
+	abstract public boolean isAuthenticated();
 }

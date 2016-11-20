@@ -8,8 +8,6 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
-
 import javax.servlet.ServletRequest;
 
 

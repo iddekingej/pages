@@ -9,7 +9,7 @@ public class AlwaysMatcher extends RequestMatcher {
 	}
 
 	@Override
-	boolean matchOwnRequest(ServletRequest p_request,SessionData p_sessionData) {
+	boolean matchOwnRequest(ServletRequest p_request) {
 		return true;
 	}
 
