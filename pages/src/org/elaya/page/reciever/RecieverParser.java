@@ -78,7 +78,7 @@ public class RecieverParser {
 		if(l_class==null){
 			errors.add("Missing 'class' property");
 		} else {
-			Object l_object=DynamicObject.createObjectFromName(normelizeClassName(l_class),errors);
+			Object l_object=DynamicObject.createObjectFromName(normelizeClassName(l_class));
 			if(l_object != null){
 				if(p_class.isAssignableFrom(l_object.getClass())){
 					l_return=(T) l_object;

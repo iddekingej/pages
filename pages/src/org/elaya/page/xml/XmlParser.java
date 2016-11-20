@@ -20,6 +20,13 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 abstract public class XmlParser {
+	
+	class ParseError extends Exception{
+
+		private static final long serialVersionUID = 5079459731617602718L;
+		public  ParseError(String p_message){ super(p_message);}
+	}
+	
 	private HashMap<String,XmlConfig> configs=new HashMap<>();
 	private LinkedList<String> errors=new LinkedList<>();
 	private HashMap<String,Object> nameIndex;
@@ -62,7 +69,7 @@ abstract public class XmlParser {
 	{
 		Node l_first=p_node.getFirstChild();
 		if(l_first.getNextSibling() != null){
-			addError("Parameter should contain definition of one object",p_node);
+			addError("Parameter should contain definition of one",p_node);
 			return null;
 		} else if(l_first.getNodeType() != Node.ELEMENT_NODE){
 			return l_first.getTextContent();
@@ -76,7 +83,7 @@ abstract public class XmlParser {
 		while(l_child!=null){
 			if(l_child.getNodeType()==Node.ELEMENT_NODE){
 				if(!l_child.getNodeName().equals("parameter")){
-					addError("'parameter' node expected",l_child);
+					addError("'parameter' node expected, but "+l_child.getNodeName()+" found",l_child);
 				} else {
 					String l_name=getAttributeValue(l_child,"name");
 					if(l_name==null){
@@ -87,7 +94,7 @@ abstract public class XmlParser {
 					if(l_child.getChildNodes().getLength()==0){
 						l_value="";
 					} else {
-						l_value=parseParameterValueNode(p_parent,p_node);
+						l_value=parseParameterValueNode(p_parent,l_child);
 					}
 					DynamicObject.put(p_parent, l_name, l_value);
 				}
@@ -101,7 +108,7 @@ abstract public class XmlParser {
 		String l_debug="";
 		while(l_child!=null){
 			if(l_child.getNodeName().equals("parameters")){
-				parseParameters(p_parent,p_node);
+				parseParameters(p_parent,l_child);
 			} else {
 				l_debug = l_debug+String.valueOf(l_child.getNodeType());
 				if(l_child.getNodeType()==Node.ELEMENT_NODE){
@@ -128,7 +135,7 @@ abstract public class XmlParser {
 			l_child=l_child.getNextSibling();
 		}
 	}
-	private void parseAttributes(Object p_object,Node p_node) throws DOMException, Exception
+	private void parseAttributes(Object p_object,Node p_node) throws ParseError, XmlLoadError 
 	{
 		Objects.requireNonNull(p_object);
 		NamedNodeMap l_map=p_node.getAttributes();
@@ -141,7 +148,11 @@ abstract public class XmlParser {
 				if(!DynamicObject.containsKey(p_object,l_attribute.getNodeName())){
 					addError("Object of type "+p_object.getClass().getName()+" doesn't contain attribute "+l_attributeName,p_node);
 				} else {
-					DynamicObject.put(p_object,l_attribute.getNodeName(),l_attribute.getNodeValue());
+					try{
+						DynamicObject.put(p_object,l_attribute.getNodeName(),l_attribute.getNodeValue());
+					} catch(Exception e){
+						throw new ParseError("Error setting attribute:'"+l_attribute+"' at object "+p_object.getClass().getName()+" error:"+e.getMessage());
+					}
 				}
 			}
 		}	
@@ -214,7 +225,7 @@ abstract public class XmlParser {
 						addError("Alias "+l_className+" not found",p_node);
 						return null;
 					}
-					l_object=DynamicObject.createObjectFromName(l_normalizedClass,errors);
+					l_object=DynamicObject.createObjectFromName(l_normalizedClass);
 					if(l_object==null){
 						return null;
 					}
@@ -247,6 +258,7 @@ abstract public class XmlParser {
 		Document l_doc=l_builder.parse( l_stream);
 		NodeList l_nl=l_doc.getChildNodes();
 		Node l_rootNode=l_nl.item(0);
+		l_rootNode.normalize();
 		Object l_object=parseNode(null,l_rootNode);
 		parseChildNodes(l_object,l_rootNode);
 		return l_object;

@@ -14,11 +14,11 @@ public abstract class RequestMatcher {
 	}
 
 	
-	final public RequestMatcher matchRequest(ServletRequest p_request){
-		if(matchOwnRequest(p_request)){
+	final public RequestMatcher matchRequest(ServletRequest p_request,SessionData p_sessionData){
+		if(matchOwnRequest(p_request,p_sessionData)){
 			RequestMatcher l_found;
 			for(RequestMatcher l_sub:subMatcher){
-				l_found=l_sub.matchRequest(p_request);
+				l_found=l_sub.matchRequest(p_request,p_sessionData);
 				if(l_found != null) return l_found;
 			}
 			return this;
@@ -26,7 +26,7 @@ public abstract class RequestMatcher {
 			return null;
 		}
 	}
-	abstract boolean matchOwnRequest(ServletRequest p_request);
+	abstract boolean matchOwnRequest(ServletRequest p_request,SessionData p_sessionData);
 	
 	public MatchActionResult execute(ServletRequest p_request,ServletResponse p_response){
 		ActionResult l_result;

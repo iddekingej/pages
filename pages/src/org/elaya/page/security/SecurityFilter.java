@@ -2,7 +2,6 @@ package org.elaya.page.security;
 
 import java.io.IOException;
 import java.util.LinkedList;
-
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -26,9 +25,14 @@ public class SecurityFilter implements Filter {
 	public void doFilter(ServletRequest p_request, ServletResponse p_response, FilterChain p_chain)
 			throws IOException, ServletException {
 		if(securityManager != null){
-			if(securityManager.execute(p_request, p_response)){
-				p_chain.doFilter(p_request, p_response);
-			}
+			try {
+				if(securityManager.execute(p_request, p_response)){
+					p_chain.doFilter(p_request, p_response);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw new ServletException(e.getMessage() +" in "+e.getStackTrace());
+			} 
 		}
 	}
 
@@ -52,7 +56,8 @@ public class SecurityFilter implements Filter {
 				throw new ServletException("Security xml config '"+l_fileName+"' didn't define a security manager");
 			}
 		} catch (Exception e) {
-			throw new ServletException(e.getMessage());
+			e.printStackTrace();
+			throw new ServletException(e.getMessage()+" in "+e.getStackTrace().toString());
 		}
 		
 		

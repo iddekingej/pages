@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 
 import org.elaya.page.Errors.XmlLoadError;
+import org.elaya.page.data.DataModel;
 import org.elaya.page.jsplug.JSPlug;
 import org.elaya.page.quickform.OptionItem;
 import org.elaya.page.xml.XmlConfig;
@@ -86,6 +87,7 @@ public class UiXmlParser extends XmlParser {
 		addConfig("element",new XmlConfig(Element.class,null, false, "addElement",true));
 		addConfig("options",new XmlConfig(null,null,true,"",true));
 		addConfig("jsplug",new XmlConfig(JSPlug.class,null,false,"addJsPlug",true));
+		addConfig("datamodel",new XmlConfig(DataModel.class,null,false,"setDataModel",true));
 	}
 
 	@Override
@@ -98,7 +100,9 @@ public class UiXmlParser extends XmlParser {
 	
 	protected void AfterCreate(Object p_object) throws Exception
 	{
-		if(p_object instanceof Element){
+		if(p_object instanceof DataModel){
+			((DataModel)p_object).setApplication(application);
+		}else if(p_object instanceof Element){
 			((Element<?>)p_object).setApplication(getApplication());
 		}
 		if(p_object instanceof Page){

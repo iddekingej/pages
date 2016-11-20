@@ -10,11 +10,14 @@ abstract public class DataModel {
 
 	private Application application;
 	
-	public DataModel(Application p_application)
+	public DataModel()
 	{
-		application=p_application;
+	
 	}
 	
+	public void setApplication(Application p_application){
+		application=p_application;
+	}
 	public Application getApplication()
 	{
 		return application;
@@ -34,4 +37,5 @@ abstract public class DataModel {
 		return l_data;
 	}
 	
+
 }

@@ -2,8 +2,6 @@ package org.elaya.page.security;
 
 import java.io.InputStream;
 import java.util.HashMap;
-
-import org.elaya.page.Application;
 import org.elaya.page.xml.XmlConfig;
 import org.elaya.page.xml.XmlParser;
 
@@ -33,6 +31,7 @@ public class XmlSecurityParser extends XmlParser {
 		addConfig("security",new XmlConfig(SecurityManager.class,SecurityManager.class,false,"",false));
 		addConfig("match",new XmlConfig(RequestMatcher.class,null,false,"addRequestMatcher",false));
 		addConfig("action",new XmlConfig(Action.class,null,false,"addAction",false));
+		addConfig("authenticator",new XmlConfig(Authenticator.class,null,false,"setAuthenticator",false));
 	}
 
 	@Override

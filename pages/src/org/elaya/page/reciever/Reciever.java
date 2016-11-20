@@ -43,7 +43,7 @@ abstract public class Reciever<T extends Dynamic> extends DynamicMethod {
 	}
 	protected Dynamic getObject() throws NoSuchMethodException, ClassNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, InvalidObjectType
 	{ 
-		dataConstructor=DynamicObject.getConstructorByName(dataClass,new Class<?>[]{},null);
+		dataConstructor=DynamicObject.getConstructorByName(dataClass,new Class<?>[]{});
 		Object l_object=dataConstructor.newInstance();
 		if(l_object instanceof Dynamic){
 			return (Dynamic)l_object;

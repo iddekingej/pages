@@ -19,41 +19,23 @@ public class DynamicObject {
 			}
 			
 		}
-		public static Object createObjectFromName(String p_name,LinkedList<String> p_errors) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ClassNotFoundException
+		public static Object createObjectFromName(String p_name) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ClassNotFoundException
 		{
 			Objects.requireNonNull(p_name);
-			return createObjectFromName(p_name,new Class<?>[]{},new Object[]{}, p_errors);
+			return createObjectFromName(p_name,new Class<?>[]{},new Object[]{});
 		}
 		
-		public static Constructor<?> getConstructorByName(String p_name,Class<?>[] p_types,LinkedList<String> p_errors) throws NoSuchMethodException, ClassNotFoundException
+		public static Constructor<?> getConstructorByName(String p_name,Class<?>[] p_types) throws NoSuchMethodException, ClassNotFoundException
 		{
 			Class<?> l_class;		
-			try{
-				
-				l_class=Class.forName(p_name);			
-			}catch(ClassNotFoundException l_e){				
-				if(p_errors !=null){
-					p_errors.add("Class "+p_name+" not found");
-					return null;
-				}
-				throw l_e;
-			}
-		 
+			l_class=Class.forName(p_name);			
 			Constructor<?> l_constructor;
-			try{
-				l_constructor=l_class.getConstructor(p_types);
-			} catch(NoSuchMethodException l_e){
-				if(p_errors != null){
-					p_errors.add("Object doesn't have a constructor with the given parameters");
-					return null;
-				}
-				throw l_e;
-			}
+			l_constructor=l_class.getConstructor(p_types);
 			return l_constructor;
 		}
-		public static Object createObjectFromName(String p_name,Class<?>[] p_types,Object[] p_params,LinkedList<String> p_errors) throws NoSuchMethodException, ClassNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+		public static Object createObjectFromName(String p_name,Class<?>[] p_types,Object[] p_params) throws NoSuchMethodException, ClassNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		
-			Constructor<?>l_constructor=getConstructorByName(p_name,p_types,p_errors);
+			Constructor<?>l_constructor=getConstructorByName(p_name,p_types);
 			if(l_constructor != null){
 				Object l_object=l_constructor.newInstance(p_params);
 				return l_object;

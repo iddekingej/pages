@@ -25,14 +25,14 @@ public class RegexMatcher extends RequestMatcher {
 	}
 
 	@Override
-	boolean matchOwnRequest(ServletRequest p_request) {
+	boolean matchOwnRequest(ServletRequest p_request,SessionData p_sessionData) {
 		if(p_request instanceof HttpServletRequest){
 			HttpServletRequest l_request=(HttpServletRequest)p_request;			
 			if(urlRegex==null || urlRegex=="") return true;
 			if(urlPattern==null){
 				urlPattern=Pattern.compile(urlRegex);
-			}
-			String l_url=l_request.getRequestURL().toString();
+			}			
+			String l_url=l_request.getPathInfo().toString();			
 			Matcher l_matcher=urlPattern.matcher(l_url);
 			return l_matcher.matches();
 		}
