@@ -2,19 +2,15 @@ package org.elaya.page.security;
 
 import java.util.Map;
 
-abstract public class SessionData {
+abstract public class AuthorisationData {
 
 	
-	public SessionData(Object p_id){
-		initSessionData(p_id);
+	public AuthorisationData(){
 	}
 	
-	public SessionData(Map<String,Object> p_data){
-		initSessionData(p_data);
-	}
-	
-	abstract protected void initSessionData(Object p_id);
-	abstract protected void initSessionData(Map<String,Object> p_data);
+
+	abstract public void initSessionData(Object p_id);
+	abstract public void initSessionData(Map<String,Object> p_data);
 	abstract public Object getId();
 	abstract public String getAfterLoginPath();
 	abstract public boolean isAuthenticated();

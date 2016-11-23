@@ -18,12 +18,12 @@ public abstract class Action {
 		p_response.sendRedirect(p_request.getContextPath()+p_url);
 	}
 	
-	protected SessionData getSessionFromRequest(ServletRequest p_request)
+	protected AuthorisationData getSessionFromRequest(ServletRequest p_request)
 	{
 		Object l_object=p_request.getAttribute("org.elaya.page.security.SessionData");
 		if(l_object != null){
-			if(l_object instanceof SessionData){
-				return (SessionData)l_object;
+			if(l_object instanceof AuthorisationData){
+				return (AuthorisationData)l_object;
 			}
 		}
 		return null;

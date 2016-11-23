@@ -12,7 +12,7 @@ public class DisallowedAction extends Action {
 	@Override
 	public ActionResult execute(ServletRequest p_request, ServletResponse p_response, Authenticator p_authenticator)
 			throws Exception {
-		return ActionResult.SecurityFailed;
+		return ActionResult.NotAuthorised;
 	}
 
 }

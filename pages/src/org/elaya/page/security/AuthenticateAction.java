@@ -23,6 +23,7 @@ public class AuthenticateAction extends Action {
 	}
 	
 	private String sessionDataClass;
+	private String failedLoginUrl;
 	
 	public void setSessionDataClass(String p_sessionDataClass)
 	{
@@ -34,23 +35,46 @@ public class AuthenticateAction extends Action {
 		return sessionDataClass;
 	}
 	
+	public void setFailedLoginUrl(String p_failedLoginUrl)
+	{
+		failedLoginUrl=p_failedLoginUrl;
+	}
+	
+	public String getFailedLoginUrl()
+	{
+		return failedLoginUrl;
+	}
+	
+	
+	
 	public AuthenticateAction() {
 		super();
 	}
 
-	private SessionData createSessionDataGen(ServletRequest p_request,Class<?> p_type,Object p_data) throws InvalidSessionData, NoSuchMethodException, ClassNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
-		Object l_object=DynamicObject.createObjectFromName(sessionDataClass,new Class<?>[]{p_type},new Object[]{p_data});
-		if(l_object instanceof SessionData){
-			p_request.setAttribute("org.elaya.page.security.SessionData", l_object);			
-			return (SessionData)l_object;
+	
+	protected void afterCreateSession(AuthorisationData p_authorisationData)
+	{
+		
+	}
+	
+	private AuthorisationData createSessionDataGen(ServletRequest p_request,Class<?> p_type,Object p_data) throws InvalidSessionData, NoSuchMethodException, ClassNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
+		Object l_object=DynamicObject.createObjectFromName(sessionDataClass);
+		if(l_object instanceof AuthorisationData){
+			AuthorisationData l_authorisationData=(AuthorisationData)l_object;
+			p_request.setAttribute("org.elaya.page.security.SessionData", l_object);
+			afterCreateSession(l_authorisationData);
+			l_authorisationData.initSessionData(p_data);
+			
+			return (AuthorisationData)l_object;
 		} else {
 			throw new InvalidSessionData("Sessiondata object (type="+l_object.getClass().getName()+") doesn't descent from SessionData");
 		}	
 	}
 	
+	
 
 	
-	protected SessionData createSessionData(ServletRequest p_request,Map<String,Object> p_data) throws NoSuchMethodException, ClassNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, InvalidSessionData{
+	protected AuthorisationData createSessionData(ServletRequest p_request,Map<String,Object> p_data) throws NoSuchMethodException, ClassNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, InvalidSessionData{
 		return createSessionDataGen(p_request,Map.class,p_data);
 	}
 	
@@ -60,7 +84,7 @@ public class AuthenticateAction extends Action {
 	{
 		if(p_request instanceof HttpServletRequest ){
 			HttpServletRequest l_request=(HttpServletRequest)p_request;
-			SessionData l_sessionData;
+			AuthorisationData l_sessionData;
 			if(p_authenticator != null){
 				Map<String,Object> l_auth=p_authenticator.getAuthenicate(p_request);
 				if(l_auth==null){
@@ -74,9 +98,14 @@ public class AuthenticateAction extends Action {
 					return ActionResult.NoNextFilter;
 				}
 			} else {
-				return ActionResult.SecurityFailed;//TODO: Raise exception?
+				if(failedLoginUrl.length()>0){
+					redirect(l_request,(HttpServletResponse)p_response,failedLoginUrl);
+				} else {
+					return ActionResult.SecurityFailed;
+				}
 			}
 		} 
+		
 		return ActionResult.SecurityFailed;//TODO: Raise exception?
 	}
 

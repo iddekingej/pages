@@ -77,6 +77,11 @@ public class SecurityManager {
 		}
 	}
 	
+	protected void afterCreateSession(AuthorisationData p_authorisationData)
+	{
+		
+	}
+	
 	private void createStoredSession(ServletRequest p_request) throws NoSuchMethodException, ClassNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, InvalidSessionData
 	{
 		if(p_request instanceof HttpServletRequest){
@@ -86,9 +91,12 @@ public class SecurityManager {
 				Object l_typeObject=l_session.getAttribute("type");
 				Object l_id=l_session.getAttribute("id");
 				if(l_id != null && l_typeObject != null){
-					Object l_object=DynamicObject.createObjectFromName(l_typeObject.toString(),new Class<?>[]{Object.class},new Object[]{l_id});
-					if(l_object instanceof SessionData){
+					Object l_object=DynamicObject.createObjectFromName(l_typeObject.toString());
+					if(l_object instanceof AuthorisationData){
+						AuthorisationData l_authorisationData=(AuthorisationData)l_object;
 						p_request.setAttribute("org.elaya.page.security.SessionData", l_object);
+						afterCreateSession(l_authorisationData);
+						l_authorisationData.initSessionData(l_id);;
 					} else {
 						throw new InvalidSessionData("Sessiondata object (type="+l_object.getClass().getName()+") doesn't descent from SessionData");
 					}			
@@ -111,6 +119,7 @@ public class SecurityManager {
 		switch(l_result){
 			case NextFilter: return true;
 			case NoNextFilter: return false;
+			case NotAuthorised:				
 			case SecurityFailed:
 				redirectToPage(loginPageUrl,p_request,p_response);
 				return false;

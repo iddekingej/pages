@@ -13,12 +13,12 @@ public abstract class RequestMatcher {
 		// TODO Auto-generated constructor stub
 	}
 	
-	protected SessionData getSessionFromRequest(ServletRequest p_request)
+	protected AuthorisationData getSessionFromRequest(ServletRequest p_request)
 	{
 		Object l_object=p_request.getAttribute("org.elaya.page.security.SessionData");
 		if(l_object != null){
-			if(l_object instanceof SessionData){
-				return (SessionData)l_object;
+			if(l_object instanceof AuthorisationData){
+				return (AuthorisationData)l_object;
 			}
 		}
 		return null;
@@ -45,6 +45,7 @@ public abstract class RequestMatcher {
 		for(Action l_action:actions){
 			l_result=l_action.execute(p_request, p_response,p_authenticator);
 			if(l_result==ActionResult.SecurityFailed) return MatchActionResult.SecurityFailed;
+			if(l_result==ActionResult.NotAuthorised) return MatchActionResult.NotAuthorised;
 			if(l_result==ActionResult.StopActions) break;
 			if(l_result==ActionResult.NoNextFilter) l_nextFilter=false;
 		}

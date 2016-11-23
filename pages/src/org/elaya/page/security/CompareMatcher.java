@@ -8,7 +8,7 @@ public class CompareMatcher extends RequestMatcher {
 
 	
 	private CompareMatchType matchType;
-	private String matchUrl;
+	private String matchUrl="";
 	
 	public void setType(CompareMatchType p_matchType){
 		matchType=p_matchType;
