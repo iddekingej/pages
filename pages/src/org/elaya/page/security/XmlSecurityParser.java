@@ -2,18 +2,24 @@ package org.elaya.page.security;
 
 import java.io.InputStream;
 import java.util.HashMap;
+
+import org.elaya.page.AliasData;
+import org.elaya.page.Application;
 import org.elaya.page.xml.XmlConfig;
 import org.elaya.page.xml.XmlParser;
 
 public class XmlSecurityParser extends XmlParser {
 
-	public XmlSecurityParser() {
+	Application application;
+	
+	public XmlSecurityParser(Application p_application) {
 		super();
- 
+		application=p_application;
 	}
 
-	public XmlSecurityParser(HashMap<String, Object> p_nameIndex) {
-		super( p_nameIndex);
+	public XmlSecurityParser(Application p_application,HashMap<String, Object> p_nameIndex) {
+		super(p_nameIndex);
+		application=p_application;
 	}
 
 	@Override
@@ -23,7 +29,7 @@ public class XmlSecurityParser extends XmlParser {
 
 	@Override
 	protected XmlParser createParser() {
-		return new XmlSecurityParser(getNameIndex());
+		return new XmlSecurityParser(application,getNameIndex());
 	}
 
 	@Override
@@ -36,6 +42,9 @@ public class XmlSecurityParser extends XmlParser {
 
 	@Override
 	protected String normalizeClassName(String p_name) throws Exception {
+		if(p_name.charAt(0)=='@'){
+			return application.getAlias(p_name.substring(1), AliasData.alias_security);
+		} 
 		return p_name;
 	}
 

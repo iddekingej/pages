@@ -21,7 +21,7 @@ public class SpringSecurityFilterBackend extends SecurityFilterBackend {
 	}
 	protected XmlSecurityParser newParser()
 	{
-		SpringXmlSecurityParser l_parser=new SpringXmlSecurityParser();
+		SpringXmlSecurityParser l_parser=new SpringXmlSecurityParser(getApplication());
 		l_parser.setApplicationContext(applicationContext);
 		return l_parser;
 	}	

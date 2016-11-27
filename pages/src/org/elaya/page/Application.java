@@ -120,7 +120,7 @@ public class Application implements  ServletContextAware {
 //TODO error handling
 	private void addAliasses(String p_fileName) throws Exception
 	{
-		AliasParser l_parser=new AliasParser(logger);
+		AliasParser l_parser=new AliasParser();
 
 		l_parser.parseAliases(getClass().getClassLoader().getResourceAsStream("../pages/"+p_fileName), aliasses);
 		

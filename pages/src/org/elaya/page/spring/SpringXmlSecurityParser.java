@@ -2,6 +2,7 @@ package org.elaya.page.spring;
 
 import java.util.HashMap;
 
+import org.elaya.page.Application;
 import org.elaya.page.security.XmlSecurityParser;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
@@ -16,11 +17,12 @@ public class SpringXmlSecurityParser extends XmlSecurityParser implements Applic
 	}
 	
 	
-	public SpringXmlSecurityParser() {
+	public SpringXmlSecurityParser(Application p_application) {
+		super(p_application);
 	}
 
-	public SpringXmlSecurityParser(HashMap<String, Object> p_nameIndex) {
-		super(p_nameIndex);
+	public SpringXmlSecurityParser(Application p_application,HashMap<String, Object> p_nameIndex) {
+		super(p_application,p_nameIndex);
 
 	}
 

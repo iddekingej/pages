@@ -35,7 +35,7 @@ public class SpringSecurityFilter implements Filter,ApplicationContextAware{
 	@Override
 	public void init(FilterConfig p_config) throws ServletException{
 		backend.setApplicationContext(applicationContext);
-		backend.init(p_config.getInitParameter("securityConfigFile"));
+		backend.init(p_config,p_config.getInitParameter("securityConfigFile"));
 	}
 
 	@Override

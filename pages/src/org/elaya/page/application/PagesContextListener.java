@@ -1,0 +1,37 @@
+package org.elaya.page.application;
+
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
+import javax.servlet.annotation.WebListener;
+
+import org.elaya.page.Application;
+@WebListener
+public class PagesContextListener implements ServletContextListener {
+
+	public PagesContextListener() {
+		// TODO Auto-generated constructor stub
+	}
+
+	@Override
+	public void contextDestroyed(ServletContextEvent p_event) {
+
+	}
+
+	@Override
+	public void contextInitialized(ServletContextEvent p_event) {
+		ApplicationXmlParser l_parser=new ApplicationXmlParser();
+		Object l_object;
+		try {
+			l_object=l_parser.parse("application.xml");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return;
+		}
+		if(l_object instanceof Application){
+			p_event.getServletContext().setAttribute("application", l_object);
+		} else {
+			System.out.println("Setting application context failed");
+		}
+	}
+
+}

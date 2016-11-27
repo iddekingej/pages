@@ -4,13 +4,21 @@ import java.io.IOException;
 import java.util.LinkedList;
 
 import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
+import org.elaya.page.Application;
+
 public class SecurityFilterBackend {
 	private SecurityManager securityManager;
-
+	private Application application;
+	
+	public Application getApplication(){
+		return application;
+	}
+	
 	public SecurityFilterBackend() {
 		// TODO Auto-generated constructor stub
 	}
@@ -31,10 +39,17 @@ public class SecurityFilterBackend {
 	
 	protected XmlSecurityParser newParser()
 	{
-		return new XmlSecurityParser();
+		return new XmlSecurityParser(application);
 	}	
 
-	public void init(String p_filterFileName) throws ServletException {
+	public void init(FilterConfig p_config,String p_filterFileName) throws ServletException {
+		application=null;
+		Object l_AppObject=p_config.getServletContext().getAttribute("application");		
+		if(l_AppObject instanceof Application){
+			application=(Application)l_AppObject;
+		} else {
+			//TODO error when no application
+		}
 		XmlSecurityParser l_parser=newParser();
 		try {
 			Object l_object=l_parser.parse(p_filterFileName);

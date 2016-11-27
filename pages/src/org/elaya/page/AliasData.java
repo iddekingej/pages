@@ -6,6 +6,7 @@ public class AliasData {
 	public static final String alias_cssfile="cssfile";
 	public static final String alias_url="url";
 	public static final String alias_reciever="reciever";
+	public static final String alias_security="security";
 	
 	private String value;
 	private String type;

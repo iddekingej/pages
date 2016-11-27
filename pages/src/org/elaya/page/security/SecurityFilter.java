@@ -24,7 +24,7 @@ public class SecurityFilter implements Filter {
 
 	@Override
 	public void init(FilterConfig p_config) throws ServletException {
-		backend.init(p_config.getInitParameter("securityConfigFile"));
+		backend.init(p_config,p_config.getInitParameter("securityConfigFile"));
 	}
 
 	@Override

@@ -16,7 +16,6 @@ import org.w3c.dom.NodeList;
 
 public class AliasParser {
 
-	private Logger logger;
 	private LinkedList<String> errors=new LinkedList<String>();
 	private Set<String> elements=new HashSet<String>();
 /**
@@ -33,10 +32,8 @@ public class AliasParser {
  * Constructor of  AliasParser
  * @param p_logger Logger used for logging
  */
-	public AliasParser(Logger p_logger)
+	public AliasParser()
 	{
-		Objects.requireNonNull(p_logger);
-		logger=p_logger;
 	}
 	
 	protected void parseAlias(Node p_parent,Map<String,AliasData> p_map)
@@ -85,11 +82,12 @@ public class AliasParser {
 		NodeList l_nl=l_doc.getChildNodes();
 		Node l_rootNode=l_nl.item(0);
 		l_rootNode.normalize();
-		elements.add("element");
-		elements.add("jsfile");
-		elements.add("cssfile");
-		elements.add("url");
-		elements.add("reciever");
+		elements.add(AliasData.alias_element);
+		elements.add(AliasData.alias_jsfile);
+		elements.add(AliasData.alias_cssfile);
+		elements.add(AliasData.alias_url);
+		elements.add(AliasData.alias_reciever);
+		elements.add(AliasData.alias_security);
 		if(l_rootNode.getNodeName().equals("aliasses")){
 			parseAlias(l_rootNode,p_map);
 		} else {
