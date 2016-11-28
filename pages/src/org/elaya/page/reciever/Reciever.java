@@ -6,9 +6,9 @@ import java.util.LinkedList;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.elaya.page.Application;
 import org.elaya.page.Errors;
 import org.elaya.page.Errors.InvalidObjectType;
+import org.elaya.page.application.Application;
 import org.elaya.page.data.Dynamic;
 import org.elaya.page.data.DynamicMethod;
 import org.elaya.page.data.DynamicObject;

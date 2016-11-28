@@ -147,3 +147,18 @@ TMenuBar.prototype.setup=function()
 	TElement.prototype.setup.call(this);
 	this.element.puimenubar();
 }
+
+
+function TMenu(p_parent,p_jsName,p_name,p_id)
+{
+	TElement.call(this,p_parent,p_jsName,p_name,p_id);
+}
+
+TMenu.prototype=Object.create(TElement.prototype); 
+
+TMenu.prototype.setup=function()
+{
+	var l_this=this;
+	this.menu=document.getElementById(this.id+"_menu");
+	this.element.on("click",function(){ l_this.menu.style.display="";});
+}

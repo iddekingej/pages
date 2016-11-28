@@ -2,9 +2,6 @@ package org.elaya.page.application;
 
 import java.io.InputStream;
 import java.util.HashMap;
-
-import org.elaya.page.Application;
-import org.elaya.page.security.SecurityManager;
 import org.elaya.page.xml.XmlConfig;
 import org.elaya.page.xml.XmlParser;
 

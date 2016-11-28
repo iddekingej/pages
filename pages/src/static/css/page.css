@@ -18,3 +18,11 @@ body, table, input, input, textare, td {
 div[class="listmenu_item_selected"]>a {
 	color: #fff
 }
+
+.menubar{
+	background-color:#000;
+	color:#FFF;
+	width:100%;
+	padding:2px
+}
+.menubar_item{}

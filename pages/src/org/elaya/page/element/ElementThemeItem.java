@@ -24,5 +24,10 @@ public abstract class ElementThemeItem extends ThemeItemBase {
 	public abstract void SubMenuHeader(Writer p_writer,String p_icon,String p_title)  throws IOException;
 	public abstract void SubMenuFooter(Writer p_writer)  throws IOException;
 	public abstract void MenuItem(Writer p_writer,String p_icon,String p_title, String p_url)  throws IOException;
-
+	public abstract void menuBarHeader(Writer p_writer) throws IOException;
+	public abstract void menuBarItemHeader(Writer p_writer)throws IOException;
+	public abstract void menuBarItemFooter(Writer p_writer)throws IOException;
+	public abstract void menuBarFooter(Writer p_writer) throws IOException;
+	public abstract void menu(Writer p_writer,String p_id,String p_title) throws IOException;
+	
 }

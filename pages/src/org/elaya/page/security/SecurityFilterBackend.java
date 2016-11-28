@@ -9,7 +9,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
-import org.elaya.page.Application;
+import org.elaya.page.application.Application;
 
 public class SecurityFilterBackend {
 	private SecurityManager securityManager;

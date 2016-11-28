@@ -1,16 +1,22 @@
-package org.elaya.page;
+package org.elaya.page.application;
 
 import java.util.HashMap;
 import java.util.LinkedList;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+
+import org.elaya.page.AliasData;
+import org.elaya.page.AliasParser;
+import org.elaya.page.Errors;
+import org.elaya.page.Page;
+import org.elaya.page.UiXmlParser;
 import org.slf4j.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.web.context.ServletContextAware;
 
-public class Application implements  ServletContextAware {
+public class Application{
 	private HttpServletRequest request;
 	private String jsPath="resources/pages/js/";
 	private String cssPath="resources/pages/css/";
@@ -238,8 +244,7 @@ public class Application implements  ServletContextAware {
 	public  Application() {		
 	}
 
-	@Override
-	public void setServletContext(ServletContext p_servletContext) {
+	void setServletContext(ServletContext p_servletContext) {
 		servletContext=p_servletContext;
 	}
 

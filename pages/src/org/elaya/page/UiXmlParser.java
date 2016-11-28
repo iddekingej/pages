@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 
 import org.elaya.page.Errors.XmlLoadError;
+import org.elaya.page.application.Application;
 import org.elaya.page.data.DataModel;
 import org.elaya.page.jsplug.JSPlug;
 import org.elaya.page.quickform.OptionItem;

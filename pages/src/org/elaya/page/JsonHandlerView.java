@@ -5,6 +5,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.elaya.page.application.Application;
 import org.elaya.page.reciever.Reciever;
 import org.elaya.page.reciever.RecieverParser;
 import org.slf4j.Logger;
@@ -29,7 +31,7 @@ public class JsonHandlerView extends AbstractView {
 	protected void renderMergedOutputModel(Map<String, Object> model, HttpServletRequest p_request,
 			HttpServletResponse p_response) throws Exception {
 		application.setLogger(logger);
-		RecieverParser l_parser=new RecieverParser(logger,application);
+		RecieverParser l_parser=new RecieverParser(application);
 		Reciever<?> l_rec=l_parser.parseXml(file);
 		LinkedList<String> l_errors=l_parser.getErrors();
 		if(l_errors.size()>0){

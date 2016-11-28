@@ -2,7 +2,7 @@ package org.elaya.page.spring;
 
 import java.util.HashMap;
 
-import org.elaya.page.Application;
+import org.elaya.page.application.Application;
 import org.elaya.page.security.XmlSecurityParser;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;

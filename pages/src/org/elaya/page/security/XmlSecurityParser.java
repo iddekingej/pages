@@ -4,7 +4,7 @@ import java.io.InputStream;
 import java.util.HashMap;
 
 import org.elaya.page.AliasData;
-import org.elaya.page.Application;
+import org.elaya.page.application.Application;
 import org.elaya.page.xml.XmlConfig;
 import org.elaya.page.xml.XmlParser;
 

@@ -210,7 +210,7 @@ function TDateElement(p_form,p_jsName,p_name,p_id)
 	this.showOn="";
 	this.buttonText="";
 }
-
+ 
 TDateElement.prototype=Object.create(TFormElement.prototype);
 
 TDateElement.prototype.setup=function()

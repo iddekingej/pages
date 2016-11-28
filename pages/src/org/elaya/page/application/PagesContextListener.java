@@ -3,8 +3,6 @@ package org.elaya.page.application;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
-
-import org.elaya.page.Application;
 @WebListener
 public class PagesContextListener implements ServletContextListener {
 
@@ -23,6 +21,7 @@ public class PagesContextListener implements ServletContextListener {
 		Object l_object;
 		try {
 			l_object=l_parser.parse("application.xml");
+			((Application)l_object).setServletContext(p_event.getServletContext());
 		} catch (Exception e) {
 			e.printStackTrace();
 			return;
@@ -30,7 +29,8 @@ public class PagesContextListener implements ServletContextListener {
 		if(l_object instanceof Application){
 			p_event.getServletContext().setAttribute("application", l_object);
 		} else {
-			System.out.println("Setting application context failed");
+			//TODO handeling when setting up application failes
+			System.out.println("Setting application failed");
 		}
 	}
 

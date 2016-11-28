@@ -4,12 +4,10 @@ import java.io.InputStream;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import org.slf4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -75,7 +73,7 @@ public class AliasParser {
 	 * @param p_map Found aliases are added to this map
 	 * @throws Exception
 	 */
-	void parseAliases(InputStream p_input,Map<String,AliasData> p_map) throws Exception{		
+	public void parseAliases(InputStream p_input,Map<String,AliasData> p_map) throws Exception{		
 		DocumentBuilderFactory l_factory=DocumentBuilderFactory.newInstance();
 		DocumentBuilder l_builder=l_factory.newDocumentBuilder();
 		Document l_doc=l_builder.parse(p_input);

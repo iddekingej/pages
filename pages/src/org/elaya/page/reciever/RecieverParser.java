@@ -6,22 +6,19 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.elaya.page.AliasData;
-import org.elaya.page.Application;
+import org.elaya.page.application.Application;
 import org.elaya.page.data.DynamicMethod;
 import org.elaya.page.data.DynamicObject;
-import org.slf4j.Logger;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
 public class RecieverParser {
-	private Logger logger;
 	private LinkedList<String> errors=new LinkedList<String>();
 	private Application application;
 
-	public RecieverParser(Logger p_logger,Application p_application) {
-		logger=p_logger;
+	public RecieverParser(Application p_application) {		
 		application=p_application;		
 	}
 	

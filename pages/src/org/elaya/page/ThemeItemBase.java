@@ -3,6 +3,7 @@ package org.elaya.page;
 import java.io.IOException;
 import java.util.Set;
 
+import org.elaya.page.application.Application;
 import org.springframework.web.util.HtmlUtils;
 
 public class ThemeItemBase {

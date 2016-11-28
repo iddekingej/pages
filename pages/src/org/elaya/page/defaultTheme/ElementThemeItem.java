@@ -13,13 +13,13 @@ public class ElementThemeItem extends org.elaya.page.element.ElementThemeItem {
 
 	@Override
 	public void staticElement(Writer p_writer,String p_text, boolean p_isHtml, String p_class, String p_css) throws IOException {
-		p_writer.print("<div "+propertyF("class",p_class)+propertyF("style",p_css)+">");
+		p_writer.print("<span "+propertyF("class",p_class)+propertyF("style",p_css)+">");
 		if(p_isHtml){
 			p_writer.print(p_text);
 		} else {
 			p_writer.print(escape(p_text));
 		}
-		p_writer.print("</div>");
+		p_writer.print("</span>");
 
 	}
 
@@ -80,5 +80,36 @@ public class ElementThemeItem extends org.elaya.page.element.ElementThemeItem {
 	{
 		  p_writer.print("<li> <a "+propertyF("data-icon",p_icon)+propertyF("href",p_url)+">"+escape(p_title)+"</a></li>\n");
 	}
+
+	@Override
+	public void menuBarHeader(Writer p_writer) throws IOException {
+		p_writer.print("<table class='menubar'><tr>");
+		
+	}
+
+	@Override
+	public void menuBarItemHeader(Writer p_writer) throws IOException {
+		p_writer.print("<td class='menubar_item'>");
+	}
+
+	@Override
+	public void menuBarItemFooter(Writer p_writer) throws IOException {
+		p_writer.print("</td>");
+		
+	}
+
+	@Override
+	public void menuBarFooter(Writer p_writer) throws IOException {
+		p_writer.print("<td style='width:100%'>&nbsp;</td></tr></table>");
+	}
+	
+
+
+	@Override
+	public void menu(Writer p_writer, String p_id, String p_title) throws IOException {
+		// TODO Auto-generated method stub
+		p_writer.print("<div "+property("id",p_id)+" >"+escape(p_title)+"<div "+property("id",p_id+"_menu")+"style='height:100px;width:500px;color:#000;display:none'></div>"+"</div>");
+	}
+
 	
 }
