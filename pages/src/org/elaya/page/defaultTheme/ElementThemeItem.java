@@ -108,7 +108,7 @@ public class ElementThemeItem extends org.elaya.page.element.ElementThemeItem {
 	@Override
 	public void menu(Writer p_writer, String p_id, String p_title) throws IOException {
 		// TODO Auto-generated method stub
-		p_writer.print("<div "+property("id",p_id)+" >"+escape(p_title)+"<div "+property("id",p_id+"_menu")+"style='height:100px;width:500px;color:#000;display:none'></div>"+"</div>");
+		p_writer.print("<div "+property("id",p_id)+" >"+escape(p_title)+"<div "+property("id",p_id+"_menu")+"style='position:absolute;left:0px;top:0px;height:100px;width:500px;color:#F00;display:none'></div>"+"</div>");
 	}
 
 	

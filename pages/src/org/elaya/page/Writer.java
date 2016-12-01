@@ -73,7 +73,10 @@ public class Writer {
 		return "\""+str(p_value).replace("\"","\\\"")+"\"";
 	}
 	
-
+	public void objVar(String p_var,String p_value) throws IOException
+	{
+		print("this."+p_var+"="+js_toString(p_value)+";");
+	}
 	
 	
 	public Writer(HttpServletResponse p_response) throws IOException {

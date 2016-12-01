@@ -1,6 +1,6 @@
 function TForm(p_parent,p_jsName,p_name,p_id){
 	TElement.call(this,p_parent,p_jsName,p_name,p_id);
-	this.element[0]._control=this;
+	this.element._control=this;
 	this.cmd="";
 	this.url="";	
 	this.submitType="";
@@ -47,13 +47,14 @@ TForm.prototype.addErrors=function(p_data){
 
 TForm.prototype.success=function(p_data)
 {
+	var l_data=JSON.parse(p_data);
 	pages.page.unlock();
-	if("errors" in p_data){
+	if("errors" in l_data){
 		
-		this.addErrors(p_data.errors);
+		this.addErrors(l_data.errors);
 		var l_errors="";
-		for(var l_cnt in p_data.errors){
-			if(p_data.errors[l_cnt].field=="") l_errors += p_data.errors[l_cnt].msg+"\n";
+		for(var l_cnt in l_data.errors){
+			if(l_data.errors[l_cnt].field=="") l_errors += l_data.errors[l_cnt].msg+"\n";
 		}
 		if(l_errors != "")alert(l_errors);
 	} else {
@@ -73,7 +74,7 @@ TForm.prototype.afterSetup=function()
 	for(var l_name in this.names){
 		var l_element=this.names[l_name];
 		if(l_element.isInputElement()){
-			l_element.on("change",function(){l_this.intChange();});
+			core.ev(l_element.element,"change",function(){l_this.intChange();});
 		}
 	}
 	this.handleCheckCondition();
@@ -100,14 +101,12 @@ TForm.prototype.sendData=function()
 		};
 		l_this=this;
 	try{
-		$.ajax({
-			url:this.url
-			,	type:'POST'
-			,	contentType:'application/json'
-			,	async:false
-			,	data:JSON.stringify(l_message)			
-			,   success:function(p_data){ l_this.success(p_data);}
-			,	complete:function(p_xhr,p_status){ pages.page.unlock();}
+		core.ajax("post",this.url,JSON.stringify(l_message),
+			{
+				contentType:'application/json'
+			,	async:false						
+			,   success:function(p_req){ l_this.success(p_req.responseText);}
+			,	complete:function(p_req){ pages.page.unlock();}
 		});
 	} catch(e){
 		pages.page.unlock();
@@ -129,7 +128,7 @@ TFormElement.prototype.isInputElement=function()
 
 TFormElement.prototype.getValue=function()
 {
-	return this.element.val();
+	return this.element.value;
 }
 
 function TCheckboxElement(p_form,p_jsName,p_name,p_id)
@@ -140,7 +139,7 @@ function TCheckboxElement(p_form,p_jsName,p_name,p_id)
 TCheckboxElement.prototype=Object.create(TFormElement.prototype);
 TCheckboxElement.prototype.checked=function()
 {
-	return this.element[0].checked;
+	return this.element.checked;
 }
 
 TCheckboxElement.prototype.getValue=function()
@@ -195,7 +194,7 @@ function TTextEditElement(p_form,p_jsName,p_name,p_id)
 }
 
 TTextEditElement.prototype=Object.create(TFormElement.prototype);
-TTextEditElement.prototype.getValue=function(){ return this.element.val();}
+TTextEditElement.prototype.getValue=function(){ return this.element.value;}
 
 function TTextAreaElement(p_form,p_jsName,p_name,p_id)
 {

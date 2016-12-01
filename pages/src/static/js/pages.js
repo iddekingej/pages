@@ -17,29 +17,33 @@ var pages={
 				this.names[p_object.jsName]=p_object;
 			},
 			initToWindowSize:function(){
-				$(window).resize(function(){
-						var l_container=$("pageContainer");
-						l_container.height($(window).height());
-						l_container.width($(window).width());
+				core.ev(window,"resize",	function(){
+						var l_container=$$("pageContainer");
+						core.toWindowSize(l_container);
 				});
 			},
 
 			lock:function()
 			{
-				$("<div>&#160;</div>").attr("id","locker").css({
-					"position":"absolute"
-				,	"top":0
-				,   "left":0
-				,   "opacity":0.5
-				,	"z-index":99999
-				,   "width":"100%"
-				,	"height":"100%"
-				,	"background-color":"#303030"
-				}).appendTo('body');
+				core.create("div",{
+					"id":"locker"
+				,	"style":{
+						"position":"absolute"
+					,	"top":"0px"
+					,	"left":"0px"
+					,	"opacity":"0.5"
+					,	"z-index":999999
+					,	"width":"100%"
+					,	"height":"100%"
+					,	"background-color":"#333"
+					}
+				}
+				,document.body
+				)	
 			},
 			unlock:function(){
-				var l_element=$("#locker");
-				if(l_element)l_element.remove();				
+				var l_element=$$("locker");
+				if(l_element)core.remove(l_element);				
 			}
 		}
 };
@@ -52,7 +56,7 @@ function TElement(p_parent,p_jsName,p_name,p_id)
 	this.id=p_id;
 	this.name=p_name;
 	this.jsName=p_jsName;
-	this.element=$("#"+p_id);
+	this.element=$$(p_id);
 	this.checkCondition=false;
 	this.namespaceParent=false;
 }
@@ -69,11 +73,7 @@ TElement.prototype.isInputElement=function()
 
 TElement.prototype.display=function(p_flag)
 {
-	if(p_flag){
-		this.element.show();
-	} else {
-		this.element.hide();
-	}
+	core.display(this.element,p_flag);
 }
 
 TElement.prototype.handleCheckCondition=function()
@@ -88,7 +88,7 @@ TElement.prototype.handleCheckCondition=function()
 
 TElement.prototype.on=function(p_event,p_js)
 {
-	this.element.on(p_event,p_js);
+	core.ev(this.element,p_event,p_js);	
 }
 TElement.prototype.fillThisData=function(p_data)
 {
@@ -158,7 +158,24 @@ TMenu.prototype=Object.create(TElement.prototype);
 
 TMenu.prototype.setup=function()
 {
+	TElement.prototype.setup.call(this);
 	var l_this=this;
-	this.menu=document.getElementById(this.id+"_menu");
-	this.element.on("click",function(){ l_this.menu.style.display="";});
+	this.menu=core.create("div",{"className":"menuitem","display":"none"},document.body);
+}
+
+function TLinkMenuItem(p_parent,p_jsName,p_name,p_id)
+{
+	TElement.call(this,p_parent,p_jsName,p_name,p_id);
+	this.url="";
+	this.text="";
+}
+TLinkMenuItem.prototype=Object.create(TElement.prototype);
+
+TLinkMenuItem.prototype.setup=function()
+{
+	TElement.prototype.setup.call(this);
+	var l_element=core.create("div",{"className":"linkmenuitem"});
+	core.text(this.text,l_element);
+	var l_this=this;
+	l_element.onclick=function(){window.location=this.url; }
 }

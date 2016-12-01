@@ -128,7 +128,8 @@ public class RecieverParser {
 	{
 		DocumentBuilderFactory l_factory=DocumentBuilderFactory.newInstance();
 		DocumentBuilder l_builder=l_factory.newDocumentBuilder();
-		Document l_doc=l_builder.parse(new File(application.getRealPath(p_fileName)));
+		
+		Document l_doc=l_builder.parse(getClass().getClassLoader().getResourceAsStream("../pages/"+p_fileName));
 
 
 		Node l_node=l_doc.getFirstChild();
