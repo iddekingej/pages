@@ -30,15 +30,5 @@ public class SpringXmlSecurityParser extends XmlSecurityParser implements Applic
 	public void setApplicationContext(ApplicationContext p_applicationContext) throws BeansException {
 		applicationContext=p_applicationContext;
 	}
-	
-
-	
-	protected void AfterCreate(Object p_parent) throws Exception
-	{	
-			if(p_parent instanceof ApplicationContextAware){
-				 ((ApplicationContextAware)p_parent).setApplicationContext(applicationContext);
-			}
-			super.AfterCreate(p_parent);
-	}
 
 }

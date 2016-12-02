@@ -29,5 +29,5 @@ public abstract class ElementThemeItem extends ThemeItemBase {
 	public abstract void menuBarItemFooter(Writer p_writer)throws IOException;
 	public abstract void menuBarFooter(Writer p_writer) throws IOException;
 	public abstract void menu(Writer p_writer,String p_id,String p_title) throws IOException;
-	
+	public abstract void menuSeperator(Writer p_writer) throws IOException;
 }

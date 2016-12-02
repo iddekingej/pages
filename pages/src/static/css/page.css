@@ -25,4 +25,23 @@ div[class="listmenu_item_selected"]>a {
 	width:100%;
 	padding:2px
 }
-.menubar_item{}
+.menubar_item{
+	color:#fff;
+}
+.menu_popup{
+	position:absolute;
+	border-radius:3px;
+	background-color:#ddd;
+	box-shadow:2px 2px 3px #cccccc;
+	padding:3px;
+	cursor:pointer;
+	min-width:100px;
+}
+.menu{
+	cursor:pointer;
+	padding-left:20px;
+}
+
+.menu_seperator{
+	border-top:solid 1px #eee;
+}

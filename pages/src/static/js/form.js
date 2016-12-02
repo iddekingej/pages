@@ -26,7 +26,7 @@ TForm.prototype.save=function()
 
 TForm.prototype.removeErrors=function()
 {
-		$(".page_error").remove();
+	//TODO remove errors
 }
 
 
@@ -38,7 +38,8 @@ TForm.prototype.addErrors=function(p_data){
 		if(l_field.length>0){
 			var l_element=this.getByName(l_field);
 			if(l_element){
-				var l_node=$('<div>').attr('class','page_error').appendTo(l_element.getElementParent());
+				
+				var l_node=core.create("div",{"className":"page_error"}, l_element.getElementParent());
 				l_node.append(document.createTextNode(p_data[l_cnt].msg));
 			}
 		}

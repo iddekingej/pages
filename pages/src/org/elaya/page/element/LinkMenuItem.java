@@ -28,17 +28,17 @@ public class LinkMenuItem extends BaseMenuItem<ElementThemeItem> {
 	
 	protected void makeSetupJs(Writer p_writer,Data p_data) throws Exception
 	{
-		p_writer.objVar("text", text);
-		p_writer.objVar("url", url);
+		Data l_data=getData(p_data);
+		p_writer.objVar("text", replaceVariables(l_data,text));
+		p_writer.objVar("url", getApplication().procesUrl(replaceVariables(l_data,url)));
 	}
 	
 	public LinkMenuItem() {
-		// TODO Auto-generated constructor stub
+		super();
 	}
 
 	@Override
 	public void display(Writer p_stream, Data p_data) throws Exception {
-		// TODO Auto-generated method stub
 
 	}
 

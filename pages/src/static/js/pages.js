@@ -1,3 +1,4 @@
+"use strict"
 var pages={		
 		page:{
 			elements:{},
@@ -152,15 +153,52 @@ TMenuBar.prototype.setup=function()
 function TMenu(p_parent,p_jsName,p_name,p_id)
 {
 	TElement.call(this,p_parent,p_jsName,p_name,p_id);
+	this.menuTimeout=false;
 }
 
 TMenu.prototype=Object.create(TElement.prototype); 
+
+TMenu.prototype.hideMenu=function()
+{
+	var l_this=this;
+	this.menuTimeout=setTimeout(function(){
+		core.display(l_this.menu,false);	
+	},1000);
+	
+}
+
+TMenu.prototype.clearTimeout=function()
+{
+	if(this.menuTimeout){
+		clearTimeout(this.menuTimeout);
+	}
+}
+
+TMenu.prototype.openMenu=function()
+{
+	if(this.menu.style.display != "none"){
+		core.display(this.menu,false);
+	} else {
+		core.display(this.menu,true);
+		var l_position=core.getPosition(this.element);
+		l_position.y += this.element.offsetHeight;
+		core.setPosition(this.menu,l_position);
+	}
+}
+
 
 TMenu.prototype.setup=function()
 {
 	TElement.prototype.setup.call(this);
 	var l_this=this;
-	this.menu=core.create("div",{"className":"menuitem","display":"none"},document.body);
+	this.menu=core.create("div",{"className":"menu_popup","style":{"display":"none"}},document.body);
+	var l_this=this;
+	core.ev(this.element,"click",function(){this.openMenu();},this);
+	core.ev(this.element,"mouseout",function(){ this.hideMenu();},this);
+	core.ev(this.element,"mousein",function(){ this.clearTimeout();},this);
+	core.ev(this.menu,"mouseout",function(){ this.hideMenu();},this);
+	core.ev(this.menu,"mouseover",function(){ this.clearTimeout();},this);
+	
 }
 
 function TLinkMenuItem(p_parent,p_jsName,p_name,p_id)
@@ -174,8 +212,7 @@ TLinkMenuItem.prototype=Object.create(TElement.prototype);
 TLinkMenuItem.prototype.setup=function()
 {
 	TElement.prototype.setup.call(this);
-	var l_element=core.create("div",{"className":"linkmenuitem"});
-	core.text(this.text,l_element);
-	var l_this=this;
-	l_element.onclick=function(){window.location=this.url; }
+	this.element=core.create("div",{"className":"linkmenuitem"},this.parent.menu);
+	core.text(this.text,this.element);
+	core.ev(this.element,"click",function(){window.location=this.url;},this)
 }

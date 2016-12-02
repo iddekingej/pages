@@ -36,8 +36,27 @@ var core={
 			p_element.style.display=p_flag?"":"none";
 		},
 		
-		ev:function(p_element,p_event,p_function){
-			p_element.addEventListener(p_event,p_function);
+		getPosition:function(p_element){
+			var l_x=0;
+			var l_y=0;
+			var l_element=p_element;
+			while(l_element && l_element.offsetParent){
+				l_x += l_element.offsetLeft;
+				l_y += l_element.offsetTop;
+				l_element=l_element.offsetParent;
+			}
+			return {"x":l_x,"y":l_y};
+		},
+		setPosition:function(p_element,p_position){
+			p_element.style.left=p_position.x+"px";
+			p_element.style.top=p_position.y+"px";
+		},
+		ev:function(p_element,p_event,p_function,p_object){
+			if(p_object){
+				p_element.addEventListener(p_event,function(){p_function.apply(p_object);});
+			} else {
+				p_element.addEventListener(p_event,p_function);
+			}
 		},
 		remove:function(p_element){
 			p_element.parentNode.removeChild(p_element);

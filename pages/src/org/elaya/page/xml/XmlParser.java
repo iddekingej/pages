@@ -12,6 +12,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.elaya.page.Errors;
 import org.elaya.page.Errors.XmlLoadError;
+import org.elaya.page.application.Application;
 import org.elaya.page.data.DynamicObject;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
@@ -242,6 +243,7 @@ abstract public class XmlParser {
 				}	
 			}
 		}
+		Application.initilizeObject(l_object);
 		AfterCreate(l_object);
 		parseAttributes(l_object,p_node);
 		return l_object;

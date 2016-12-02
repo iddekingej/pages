@@ -11,7 +11,8 @@ public class Menu extends PageElement<ElementThemeItem> {
 	public void setTitle(String p_title){ title=p_title;}
 	@Override
 	public void display(Writer p_stream, Data p_data) throws Exception {
-		themeItem.menu(p_stream, getDomId(), title);
+		Data l_data=getData(p_data);
+		themeItem.menu(p_stream, getDomId(), replaceVariables(l_data,title));
 		
 	}
 
