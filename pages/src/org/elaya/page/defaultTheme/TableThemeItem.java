@@ -8,11 +8,6 @@ import org.elaya.page.Writer;
 
 public class TableThemeItem extends org.elaya.page.table.TableThemeItem {
 
-	public TableThemeItem(Theme p_theme) throws IOException {
-		super(p_theme);
-	}
-
-	
 	public void getCssFiles(Set<String> p_files)
 	{
 		p_files.add("table.css");

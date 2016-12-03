@@ -82,12 +82,6 @@ public class FormElementThemeItem extends org.elaya.page.quickform.FormElementTh
 		
 	}
 
-	
-	public FormElementThemeItem(Theme p_theme) throws IOException {
-		super(p_theme);
-	}
-
-
 	@Override
 	public void textArea(Writer p_writer,String p_idDom, String p_name, String p_height, String p_width, Object p_value)
 			throws IOException {

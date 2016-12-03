@@ -18,11 +18,7 @@ public class LayoutThemeItem extends org.elaya.page.LayoutThemeItem {
 		if(l_layoutHeight.length()>0) l_style += "height:"+l_layoutHeight+";";
 		p_writer.print("<td "+ property("class",p_classPrefix+"page_layout")+property("align",p_horizontalAlign.gettagValue())+property("valign",p_verticalAlign)+propertyF("style",l_style)+">");
 	}
-	
-	public LayoutThemeItem(Theme p_theme) throws IOException {
-		super(p_theme);
-	}
-	
+
 	public void getCssFiles(Set<String> p_files){ 
 		p_files.add("page.css");
 	}

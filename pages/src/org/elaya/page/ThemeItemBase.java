@@ -3,11 +3,9 @@ package org.elaya.page;
 import java.io.IOException;
 import java.util.Set;
 
-import org.elaya.page.application.Application;
 import org.springframework.web.util.HtmlUtils;
 
 public class ThemeItemBase {
-	private Theme theme;
 	private String classPrefix="";
 
 	public void setClassPrefix(String p_classPrefix)
@@ -63,7 +61,6 @@ public class ThemeItemBase {
 
 
 	
-	public ThemeItemBase(Theme p_theme) throws IOException{
-		theme=p_theme;		
+	public ThemeItemBase() {
 	}
 }

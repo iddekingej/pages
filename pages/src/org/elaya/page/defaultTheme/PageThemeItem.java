@@ -9,10 +9,6 @@ import org.elaya.page.Writer;
 
 public class PageThemeItem extends org.elaya.page.PageThemeItem {
 
-	public PageThemeItem(Theme p_theme) throws IOException {
-		super(p_theme);
-	}
-	
 	@Override
 	public void pageHeader(Writer p_writer,Set<String> p_js,Set<String> p_css) throws IOException{
 		Iterator<String> l_iter=p_js.iterator();

@@ -7,11 +7,6 @@ import org.elaya.page.ThemeItemBase;
 import org.elaya.page.Writer;
 
 abstract public class TableThemeItem extends ThemeItemBase {
-
-	public TableThemeItem(Theme p_theme) throws IOException {
-		super(p_theme);
-	}
-	
 	abstract public void tableHeader(Writer p_writer,String p_domId) throws IOException;
 	abstract public void tableFooter(Writer p_writer) throws IOException;
 	abstract public void titleHeader(Writer p_writer) throws IOException;

@@ -1,16 +1,10 @@
 package org.elaya.page.element;
 
 import java.io.IOException;
-
-import org.elaya.page.Theme;
 import org.elaya.page.ThemeItemBase;
 import org.elaya.page.Writer;
 
 public abstract class ElementThemeItem extends ThemeItemBase {
-
-	public ElementThemeItem(Theme p_theme) throws IOException {
-		super(p_theme);
-	}
 
 	public abstract void staticElement(Writer p_writer,String p_text,boolean p_isHtml,String p_class,String p_css) throws IOException;
 	public abstract void image(Writer p_writer,String p_url,String p_class,String p_css) throws IOException;

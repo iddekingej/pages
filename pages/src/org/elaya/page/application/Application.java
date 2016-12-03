@@ -2,9 +2,6 @@ package org.elaya.page.application;
 
 import java.util.HashMap;
 import java.util.LinkedList;
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-
 import org.elaya.page.AliasData;
 import org.elaya.page.AliasParser;
 import org.elaya.page.Errors;

@@ -4,8 +4,8 @@ import java.io.IOException;
 
 public abstract  class LayoutThemeItem extends ThemeItemBase {
 
-	public LayoutThemeItem(Theme p_theme) throws IOException {
-		super(p_theme);
+	public LayoutThemeItem(){
+		super();
 	}
 
 	public abstract void HorizontalHeader(Writer p_writer) throws IOException;

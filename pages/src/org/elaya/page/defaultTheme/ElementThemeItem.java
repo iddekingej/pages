@@ -7,10 +7,6 @@ import org.elaya.page.Writer;
 
 public class ElementThemeItem extends org.elaya.page.element.ElementThemeItem {
 
-	public ElementThemeItem(Theme p_theme) throws IOException {
-		super(p_theme);
-	}
-
 	@Override
 	public void staticElement(Writer p_writer,String p_text, boolean p_isHtml, String p_class, String p_css) throws IOException {
 		p_writer.print("<span "+propertyF("class",p_class)+propertyF("style",p_css)+">");

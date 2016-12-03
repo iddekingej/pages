@@ -1,10 +1,8 @@
 package org.elaya.page.reciever;
 
-import java.io.File;
 import java.util.LinkedList;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-
 import org.elaya.page.AliasData;
 import org.elaya.page.application.Application;
 import org.elaya.page.data.DynamicMethod;

@@ -14,9 +14,5 @@ public abstract class FormThemeItem extends ThemeItemBase {
 	public abstract void formHeader(Writer p_writer,String p_domId,String p_title,String p_url,String p_method,String p_width) throws Exception;
 	public abstract void formFooter(Writer p_writer) throws Exception;
 	public abstract void formHiddenElement(Writer p_writer,String p_domId,String p_name,String p_value) throws IOException;
-	public FormThemeItem(Theme p_theme) throws IOException {
-		super(p_theme);		
-	}
-	
-	
+
 }

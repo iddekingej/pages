@@ -8,10 +8,6 @@ import org.elaya.page.Writer;
 
 abstract public class ListMenuThemeItem extends ThemeItemBase {
 
-	public ListMenuThemeItem(Theme p_theme) throws IOException {
-		super(p_theme);
-	}
-
 	abstract public void header(Writer p_writer,String p_title) throws IOException;
 	abstract public void preItem(Writer p_writer) throws IOException;
 	abstract public void preItemSelected(Writer p_writer) throws IOException;

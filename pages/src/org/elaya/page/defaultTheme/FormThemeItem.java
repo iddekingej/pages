@@ -52,14 +52,4 @@ public class FormThemeItem extends org.elaya.page.quickform.FormThemeItem {
 	{		
 		p_writer.print("</tr></table></form>");
 	}
-	
-	
-	public FormThemeItem(Theme p_theme) throws IOException {
-		super(p_theme);
-	}
-
-
-
-	
-
 }

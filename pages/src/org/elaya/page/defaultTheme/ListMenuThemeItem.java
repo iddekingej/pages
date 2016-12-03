@@ -8,11 +8,6 @@ import org.elaya.page.Writer;
 
 public class ListMenuThemeItem extends org.elaya.page.listmenu.ListMenuThemeItem {
 
-	public ListMenuThemeItem(Theme p_theme) throws IOException {
-		super(p_theme);
-		// TODO Auto-generated constructor stub
-	}
-
 	@Override
 	public void header(Writer p_writer,String p_title) throws IOException {
 		p_writer.print("<div class='listmenu_title'>"+escape(p_title)+"</div><div class='listmenu_header'>");
