@@ -20,7 +20,6 @@ public class Application{
 
 	private String themeBase="org.elaya.page.defaultTheme";	
 	private Logger logger;
-	private ServletContext servletContext;
 	private String aliasFiles;
 	private HashMap<String,Page> pageCache=new HashMap<>(); 
 	private HashMap<String,AliasData> aliasses;
@@ -196,18 +195,7 @@ public class Application{
 		}
 		return l_return;
 	}
-	//--
-	public String getRealPath(String p_path) throws Exception
-	{
-		if(servletContext==null) throw new Exception("Bla");
-		return servletContext.getRealPath(p_path);
-	}
-	
 
-	
-	
-	
-	
 	public String getThemeBase(){
 		return themeBase;
 	}
@@ -219,10 +207,6 @@ public class Application{
 	
 		
 	public  Application() {		
-	}
-
-	void setServletContext(ServletContext p_servletContext) {
-		servletContext=p_servletContext;
 	}
 
 }

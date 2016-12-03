@@ -21,7 +21,6 @@ public class PagesContextListener implements ServletContextListener {
 		Object l_object;
 		try {
 			l_object=l_parser.parse("application.xml");
-			((Application)l_object).setServletContext(p_event.getServletContext());
 		} catch (Exception e) {
 			e.printStackTrace();
 			return;
