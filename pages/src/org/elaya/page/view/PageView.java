@@ -1,9 +1,12 @@
-package org.elaya.page;
+package org.elaya.page.view;
 
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.elaya.page.Page;
+import org.elaya.page.PageMode;
+import org.elaya.page.Writer;
 import org.elaya.page.application.Application;
 import org.elaya.page.data.MapData;
 import org.slf4j.Logger;
