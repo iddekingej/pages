@@ -17,10 +17,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 public class Application{
-	private HttpServletRequest request;
-	private String jsPath="resources/pages/js/";
-	private String cssPath="resources/pages/css/";
-	private String imgPath="resources/pages/images/";
+
 	private String themeBase="org.elaya.page.defaultTheme";	
 	private Logger logger;
 	private ServletContext servletContext;
@@ -206,37 +203,8 @@ public class Application{
 		return servletContext.getRealPath(p_path);
 	}
 	
-	public String getBasePath(){
-		return request.getContextPath();
-	}
+
 	
-	public String procesUrl(String p_url) throws Exception
-	{
-		String l_url=p_url;
-		if(l_url.startsWith("@")){
-			l_url=getAlias(l_url.substring(1),AliasData.alias_url,true);
-		}
-		if(l_url.startsWith("+")){
-			return getBasePath()+"/"+l_url.substring(1);
-		} else {
-			return l_url;
-		}
-	}
-	
-	public String getJsPath(String p_file)
-	{
-		return getBasePath()+"/"+jsPath+p_file;
-	}
-	
-	public String getCssPath(String p_file)
-	{
-		return getBasePath()+"/"+cssPath+p_file;
-	}
-	
-	public String getImgPath(String p_file)
-	{
-		return getBasePath()+"/"+imgPath+p_file;
-	}
 	
 	
 	
@@ -249,15 +217,6 @@ public class Application{
 		themeBase=p_base;
 	}
 	
-	public void setRequest(HttpServletRequest p_request)
-	{
-		request=p_request;
-	}
-	
-	public HttpServletRequest  getRequest()
-	{
-		return request;
-	}
 		
 	public  Application() {		
 	}

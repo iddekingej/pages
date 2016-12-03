@@ -1,6 +1,8 @@
 package org.elaya.page;
 
 import java.util.LinkedHashSet;
+
+import org.elaya.page.application.Application;
 import org.elaya.page.data.Data;
 
 public class Page extends PageElement<PageThemeItem> {
@@ -8,6 +10,12 @@ public class Page extends PageElement<PageThemeItem> {
 	private String url;
 	private int idCnt=0;
 	private boolean toWindowSize=false;
+	Application application;
+	
+	public void setApplication(Application p_application)
+	{
+		application=p_application;
+	}
 	
 	public String getUrl(){ return url;}
 	
@@ -47,7 +55,7 @@ public class Page extends PageElement<PageThemeItem> {
 		LinkedHashSet<String> l_return=new LinkedHashSet<String>();
 		for(String l_value:p_in){
 			if(l_value.charAt(0)=='@'){
-				l_value=getApplication().getAlias(l_value.substring(1),p_type,true);
+				l_value=application.getAlias(l_value.substring(1),p_type,true);
 				String[] l_list=l_value.split(",");
 				for(String l_part:l_list){
 					l_return.add(l_part);
@@ -107,7 +115,7 @@ public class Page extends PageElement<PageThemeItem> {
 
 	public void initTheme() throws Exception
 	{
-		setTheme(new Theme(getApplication()));
+		setTheme(new Theme(application.getThemeBase()));
 	}
 	
 	public Page()

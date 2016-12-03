@@ -31,7 +31,7 @@ public class DynamicLinkMenuItem extends BuildinListMenuItem {
 						themeItem.preItem(p_writer);
 					}
 					
-					themeItem.linkItem(p_writer,getDomId(),l_menuData.getText(),getApplication().procesUrl(l_menuData.getUrlText()));
+					themeItem.linkItem(p_writer,getDomId(),l_menuData.getText(),p_writer.procesUrl(l_menuData.getUrlText()));
 					themeItem.postItem(p_writer);
 				}
 					

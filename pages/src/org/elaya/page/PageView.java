@@ -34,7 +34,6 @@ public class PageView extends AbstractView {
 	protected void renderMergedOutputModel(Map<String, Object> p_map, HttpServletRequest p_request, HttpServletResponse p_response)
 			throws Exception {
 		// TODO Auto-generated method stub
-		application.setRequest(p_request);
 		application.setLogger(logger);
 		MapData l_md=new MapData("___TOP",null);
 		l_md.setByMap(p_map);
@@ -48,7 +47,7 @@ public class PageView extends AbstractView {
 
 		Page l_page=application.loadPage(l_fileName,true);
 
-		Writer l_writer=new Writer(p_response);
+		Writer l_writer=new Writer(application,p_request,p_response);
 		if(l_page != null){
 			l_page.calculateData(l_md);
 			l_page.setUrl(p_request.getRequestURI());

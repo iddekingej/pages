@@ -29,7 +29,6 @@ public abstract class Element<themeType extends ThemeItemBase> extends DynamicMe
 	private String layoutHeight;
 	private DataModel dataModel;
 	private String condition="";
-	private Application application;
 	private String jsCondition="";
 	private boolean isNamespace=false; 
 	private HashMap<String,Element<?>> byName=null;
@@ -87,16 +86,6 @@ public abstract class Element<themeType extends ThemeItemBase> extends DynamicMe
 	public String getJSCondition()
 	{
 		return jsCondition;
-	}
-	
-	void setApplication(Application p_application)
-	{
-		application=p_application;
-	}
-	
-	public Application getApplication()
-	{
-		return application;
 	}
 	
 	public void setClassPrefix(String p_classPrefix)

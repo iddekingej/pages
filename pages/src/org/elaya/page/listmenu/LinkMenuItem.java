@@ -33,7 +33,7 @@ public class LinkMenuItem extends BuildinListMenuItem{
 	@Override
 	public void display(Writer p_writer,Data p_data) throws Exception {
 		Data l_data=getData(p_data);
-		String 	l_url=getApplication().procesUrl(replaceVariables(l_data,url));
+		String 	l_url=p_writer.procesUrl(replaceVariables(l_data,url));
 		themeItem.linkItem(p_writer,getDomId(),replaceVariables(l_data,text),l_url  );
 	}
 

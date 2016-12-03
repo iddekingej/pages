@@ -2,12 +2,21 @@ package org.elaya.page;
 
 import java.io.IOException;
 import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.elaya.page.application.Application;
 import org.springframework.web.util.HtmlUtils;
 
 public class Writer {
+	HttpServletRequest  request;
 	HttpServletResponse response;
 	ServletOutputStream stream;
+	Application         application;
+//TODO make in config.	
+	private String jsPath="resources/pages/js/";
+	private String cssPath="resources/pages/css/";
+	private String imgPath="resources/pages/images/";	
 	
 	public void print(String p_str) throws IOException
 	{
@@ -77,10 +86,44 @@ public class Writer {
 	{
 		print("this."+p_var+"="+js_toString(p_value)+";");
 	}
+
+	public String getBasePath(){
+		return request.getContextPath();
+	}
 	
+	public String procesUrl(String p_url) throws Exception
+	{
+		String l_url=p_url;
+		if(l_url.startsWith("@")){
+			l_url=application.getAlias(l_url.substring(1),AliasData.alias_url,true);
+		}
+		if(l_url.startsWith("+")){
+			return getBasePath()+"/"+l_url.substring(1);
+		} else {
+			return l_url;
+		}
+	}
 	
-	public Writer(HttpServletResponse p_response) throws IOException {
+	public String getJsPath(String p_file)
+	{
+		return getBasePath()+"/"+jsPath+p_file;
+	}
+	
+	public String getCssPath(String p_file)
+	{
+		return getBasePath()+"/"+cssPath+p_file;
+	}
+	
+	public String getImgPath(String p_file)
+	{
+		return getBasePath()+"/"+imgPath+p_file;
+	}
+		
+	
+	public Writer(Application p_application,HttpServletRequest p_request,HttpServletResponse p_response) throws IOException {
+		application=p_application;
 		response=p_response;
+		request=p_request;
 		stream=response.getOutputStream();
 	}
 

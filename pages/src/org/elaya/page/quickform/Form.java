@@ -148,7 +148,7 @@ public class Form extends PageElement<FormThemeItem>{
 		} else if(submitType.equals(SubmitType.post)){
 			l_method="post";
 		}
-		themeItem.formHeader(p_writer,getDomId(),replaceVariables(l_data,title),theme.getApplication().getBasePath()+replaceVariables(l_data,url),l_method,getWidth());
+		themeItem.formHeader(p_writer,getDomId(),replaceVariables(l_data,title),p_writer.getBasePath()+replaceVariables(l_data,url),l_method,getWidth());
 		if(hiddenElements!=null){
 			for(String l_name:hiddenElements){
 				themeItem.formHiddenElement(p_writer, getDomId()+"_h_"+l_name, l_name, l_data.getString(l_name));
@@ -165,7 +165,7 @@ public class Form extends PageElement<FormThemeItem>{
 	
 	protected void makeSetupJs(Writer p_writer,Data p_data) throws Exception
 	{
-		String l_next=getApplication().procesUrl(replaceVariables(p_data,nextUrl));
+		String l_next=p_writer.procesUrl(replaceVariables(p_data,nextUrl));
 		p_writer.print("this.cmd="+p_writer.js_toString(replaceVariables(p_data,cmd))+";\n");
 		p_writer.print("this.nextUrl="+p_writer.js_toString(l_next)+";\n");
 		if(this.cancelUrl.length()>0)p_writer.print("this.cancelUrl="+p_writer.js_toString(replaceVariables(p_data,cancelUrl))+";\n");

@@ -20,11 +20,6 @@ public class ThemeItemBase {
 		return classPrefix;
 	}
 	
-	public Application getApplication()
-	{
-		return theme.getApplication();
-	}
-	
 	public void getCssFiles(Set<String> p_files)
 	{
 		

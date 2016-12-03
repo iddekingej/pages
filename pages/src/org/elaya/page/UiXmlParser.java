@@ -103,10 +103,9 @@ public class UiXmlParser extends XmlParser {
 	{
 		if(p_object instanceof DataModel){
 			((DataModel)p_object).setApplication(application);
-		}else if(p_object instanceof Element){
-			((Element<?>)p_object).setApplication(getApplication());
 		}
 		if(p_object instanceof Page){
+			((Page)p_object).setApplication(application);
 			((Page)p_object).initTheme();
 		}
 	}

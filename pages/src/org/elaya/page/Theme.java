@@ -7,12 +7,7 @@ import org.elaya.page.application.Application;
 public class Theme {
 	private String baseName;
 	private String defaultTheme;
-	private Application application;
-	
-	public Application getApplication()
-	{
-		return application;
-	}
+
 	
 	public ThemeItemBase getTheme(String p_name) throws ClassNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException
 	{
@@ -29,10 +24,9 @@ public class Theme {
 	}
 	
 	
-	public Theme(Application p_application)
+	public Theme(String p_baseName)
 	{
-		application=p_application;
-		baseName=p_application.getThemeBase();
+		baseName=p_baseName;
 		defaultTheme="org.elaya.page.defaultTheme";
 	}
 }

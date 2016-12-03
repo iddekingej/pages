@@ -55,7 +55,7 @@ public class LinkElement extends PageElement<ElementThemeItem> {
 		String l_url=replaceVariables(l_data,url);
 		
 		if(linkType==LinkType.LINK_APPLICATION){
-			l_url=themeItem.getApplication().getBasePath()+l_url;
+			l_url=p_writer.getBasePath()+l_url;
 		}
 		themeItem.link(p_writer,l_url, replaceVariables(l_data,text), replaceVariables(l_data,className), replaceVariables(l_data,css)); 
 		

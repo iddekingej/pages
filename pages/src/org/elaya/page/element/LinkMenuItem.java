@@ -30,7 +30,7 @@ public class LinkMenuItem extends BaseMenuItem<ElementThemeItem> {
 	{
 		Data l_data=getData(p_data);
 		p_writer.objVar("text", replaceVariables(l_data,text));
-		p_writer.objVar("url", getApplication().procesUrl(replaceVariables(l_data,url)));
+		p_writer.objVar("url", p_writer.procesUrl(replaceVariables(l_data,url)));
 	}
 	
 	public LinkMenuItem() {
