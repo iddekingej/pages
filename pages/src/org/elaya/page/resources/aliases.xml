@@ -1,0 +1,39 @@
+<aliasses>
+	<element alias="page" value="org.elaya.page.Page" />
+	<element alias='quickform' value="org.elaya.page.quickform.Form" />
+	<element alias="quick_static" value="org.elaya.page.quickform.StaticElement" />
+	<element alias="quick_text" value="org.elaya.page.quickform.TextEditElement" />
+	<element alias="quick_radio" value="org.elaya.page.quickform.RadioElement" />
+	<element alias="quick_textarea" value="org.elaya.page.quickform.TextAreaElement" />
+	<element alias="quick_date" value="org.elaya.page.quickform.DateElement" />
+	<element alias="quick_checkbox" value="org.elaya.page.quickform.CheckboxElement" />
+	<element alias="layout_grid" value="org.elaya.page.GridLayout" />
+	<element alias="layout_vertical" value="org.elaya.page.VerticalLayout" />
+	<element alias="layout_horizontal" value="org.elaya.page.HorizontalLayout" />
+	<element alias='spacer_vertical' value="org.elaya.page.element.VerticalSpacer" />
+	<element alias='spacer_horizontal' value="org.elaya.page.element.HorizontalSpacer" />
+	<element alias="link" value="org.elaya.page.element.LinkElement" />
+	<element alias='static' value="org.elaya.page.element.StaticElement" />
+	<element alias="panel" value="org.elaya.page.element.PanelElement" />
+<!--  Menu  -->	
+	<element alias="menubar" value="org.elaya.page.element.MenuBar" />
+	<element alias="menu" value="org.elaya.page.element.Menu" />
+	<element alias="basemenuitem" value="org.elaya.page.element.BaseMenuItem" />
+	<element alias="linkmenuitem" value="org.elaya.page.element.LinkMenuItem" />
+	<element alias="seperatormenuitem" value="org.elaya.page.element.SeperatorMenuItem"/>
+<!--  Listmenu -->
+	<element alias="listmenu" value="org.elaya.page.listmenu.ListMenu" />
+	<element alias="listmenu_link" value="org.elaya.page.listmenu.LinkMenuItem" />
+	<element alias="listmenu_group" value="org.elaya.page.listmenu.ListMenuGroup" />
+	<element alias="lm_dynamic" value="org.elaya.page.listmenu.DynamicLinkMenuItem" />
+	<element alias="elementcontainer" value="org.elaya.page.quickform.ElementContainer" />
+	<!-- Reciever -->
+	<reciever alias="rec_parameter" value="org.elaya.page.reciever.Parameter" />
+	<!-- Js -->
+	<jsfile alias="pagejs" value="core.js,pages.js" />
+	<cssfile alias="pagecss"
+		value="page.css" />
+	<!-- Security  -->
+	<security alias="sec_compare_matcher" value="org.elaya.page.security.CompareMatcher" />
+	<security alias="sec_spring_authenticate" value="org.elaya.page.spring.SpringAuthenticateAction"/>
+</aliasses>
