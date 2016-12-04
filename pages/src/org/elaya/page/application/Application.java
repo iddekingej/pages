@@ -34,7 +34,6 @@ public class Application{
 	}
 	
 	//--(db)------------------------------------------------------------------------
-	
 	private ApplicationContext getDBContext()
 	{
 		if(DBContext ==null){
@@ -53,7 +52,6 @@ public class Application{
 		return l_db;
 	}
 	
-	
 	//logger
 	public void setLogger(Logger p_logger)
 	{
@@ -65,7 +63,15 @@ public class Application{
 		return logger;
 	}
 	
-	
+/**
+ * Called after parser is created. This routine can be used to set for example initializers
+ * 
+ * @param p_parser
+ */
+	protected void initUiParser(UiXmlParser p_parser)
+	{
+		
+	}
 	
 /**
  * Parse UI definition file in p_fileName and returns the Page Object
@@ -89,6 +95,7 @@ public class Application{
 			}
 		}
 		UiXmlParser l_parser=new UiXmlParser(this,getClass().getClassLoader());
+		initUiParser(l_parser);
 		Object l_object=l_parser.parse(p_fileName);
 
 		

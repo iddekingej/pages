@@ -23,11 +23,6 @@ abstract public class DataModel {
 		return application;
 	}
 	
-	public DriverManagerDataSource getDB(String p_name)
-	{
-		return application.getDB(p_name);
-	}
-	
 	abstract protected void _processData(MapData p_data) throws SQLException, UnsupportedEncodingException, NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException;
 	
 	public MapData	processData(MapData p_data) throws UnsupportedEncodingException, SQLException, NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException
