@@ -1,5 +1,7 @@
 package org.elaya.page.application;
 
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.LinkedList;
 import org.elaya.page.AliasData;
@@ -21,6 +23,7 @@ public class Application{
 	private HashMap<String,AliasData> aliasses;
 	private ApplicationContext DBContext=null;
 	private HashMap<String,DriverManagerDataSource> dbConnections=new HashMap<>();
+	private String xmlPath="../pages/"; 
 	
 	class InvalidAliasType extends Exception
 	{
@@ -31,6 +34,16 @@ public class Application{
 		{
 			super("Invalid alias type, '"+p_typeReq+"' expected but '"+p_typeGot+"' found");
 		}
+	}
+	
+	public void setXmlPath(String p_path)
+	{
+		xmlPath=p_path;
+	}
+	
+	public String getXmlPath()
+	{
+		return xmlPath;
 	}
 	
 	//--(db)------------------------------------------------------------------------
@@ -121,13 +134,32 @@ public class Application{
 		return l_page;
 	}
 	
+	public String getRealConfigPath(String p_fileName)
+	{
+		String l_fileName=p_fileName;
+		if(l_fileName.charAt(0)!='/'){
+			l_fileName=xmlPath+l_fileName;
+		} 
+		return l_fileName;
+	}
+	
+	public InputStream getConfigStream(String p_fileName) throws FileNotFoundException
+	{
+		String l_fileName=getRealConfigPath(p_fileName);
+		InputStream l_stream=getClass().getResourceAsStream(l_fileName);
+		if(l_stream==null){
+			throw new FileNotFoundException(p_fileName+"("+l_fileName+")");
+		}
+		return l_stream;
+	}
+	
 /* Alias handling */
 //TODO error handling
 	private void addAliasses(String p_fileName) throws Exception
 	{
 		AliasParser l_parser=new AliasParser();
-
-		l_parser.parseAliases(getClass().getClassLoader().getResourceAsStream("../pages/"+p_fileName), aliasses);
+		InputStream l_input=getConfigStream(p_fileName);
+		l_parser.parseAliases(l_input, aliasses);
 		
 		if(!l_parser.getErrors().isEmpty()){
 			String l_text="";

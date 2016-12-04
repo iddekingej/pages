@@ -1,5 +1,6 @@
 package org.elaya.page.reciever;
 
+import java.io.InputStream;
 import java.util.LinkedList;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -127,7 +128,9 @@ public class RecieverParser {
 		DocumentBuilderFactory l_factory=DocumentBuilderFactory.newInstance();
 		DocumentBuilder l_builder=l_factory.newDocumentBuilder();
 		
-		Document l_doc=l_builder.parse(getClass().getClassLoader().getResourceAsStream("../pages/"+p_fileName));
+		InputStream l_input= application.getConfigStream(p_fileName);
+		
+		Document l_doc=l_builder.parse(l_input);
 
 
 		Node l_node=l_doc.getFirstChild();

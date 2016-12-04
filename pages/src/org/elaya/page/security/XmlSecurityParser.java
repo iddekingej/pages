@@ -1,5 +1,6 @@
 package org.elaya.page.security;
 
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.HashMap;
 
@@ -23,8 +24,8 @@ public class XmlSecurityParser extends XmlParser {
 	}
 
 	@Override
-	protected InputStream openFile(String p_fileName) {
-		return getClass().getClassLoader().getResourceAsStream("../pages/"+p_fileName);
+	protected InputStream openFile(String p_fileName) throws FileNotFoundException {
+		return application.getConfigStream(p_fileName);
 	}
 
 	@Override

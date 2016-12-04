@@ -35,7 +35,8 @@ public class CompareMatcher extends RequestMatcher {
 	boolean matchOwnRequest(ServletRequest p_request) {
 		if(p_request instanceof HttpServletRequest){
 			String l_query=((HttpServletRequest)p_request).getPathInfo();
-			if(matchType==CompareMatchType.exact){
+			if(l_query==null)l_query="";
+ 			if(matchType==CompareMatchType.exact){
 				return l_query.equals(matchUrl);
 			} else if(matchType==CompareMatchType.startsWith){
 				return l_query.startsWith(matchUrl);

@@ -1,6 +1,7 @@
 package org.elaya.page.security;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.LinkedList;
 
 import javax.servlet.Filter;
@@ -47,10 +48,11 @@ public class SecurityFilter implements Filter {
 		if(l_AppObject instanceof Application){
 			application=(Application)l_AppObject;
 		} else {
-			//TODO error when no application
+			throw new ServletException("Application not set");
 		}
 		XmlSecurityParser l_parser=new XmlSecurityParser(application);;
 		initParser(l_parser);
+		
 		try {
 			Object l_object=l_parser.parse(l_filterFileName);
 			LinkedList<String> l_errors=l_parser.getErrors();

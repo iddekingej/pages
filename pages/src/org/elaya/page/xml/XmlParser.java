@@ -280,7 +280,7 @@ abstract public class XmlParser {
 	{
 		return null;
 	}
-	abstract protected InputStream openFile(String p_fileName);
+	abstract protected InputStream openFile(String p_fileName) throws FileNotFoundException;
 	abstract protected XmlParser createParser();
 	abstract protected void addConfig();
 	abstract protected String normalizeClassName(String p_name) throws Exception;

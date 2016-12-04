@@ -32,7 +32,8 @@ public class RegexMatcher extends RequestMatcher {
 			if(urlPattern==null){
 				urlPattern=Pattern.compile(urlRegex);
 			}			
-			String l_url=l_request.getPathInfo().toString();			
+			String l_url=l_request.getPathInfo();
+			if(l_url==null) l_url="";
 			Matcher l_matcher=urlPattern.matcher(l_url);
 			return l_matcher.matches();
 		}

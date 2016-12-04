@@ -1,5 +1,6 @@
 package org.elaya.page;
 
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -35,8 +36,8 @@ public class UiXmlParser extends XmlParser {
 	}
 
 	@Override
-	protected InputStream openFile(String p_fileName) {
-		InputStream l_stream=classLoader.getResourceAsStream("../pages/"+p_fileName);
+	protected InputStream openFile(String p_fileName) throws FileNotFoundException {
+		InputStream l_stream=application.getConfigStream(p_fileName);
 
 		return l_stream;
 	}
