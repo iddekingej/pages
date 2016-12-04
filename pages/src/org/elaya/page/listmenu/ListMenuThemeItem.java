@@ -1,8 +1,6 @@
 package org.elaya.page.listmenu;
 
 import java.io.IOException;
-
-import org.elaya.page.Theme;
 import org.elaya.page.ThemeItemBase;
 import org.elaya.page.Writer;
 

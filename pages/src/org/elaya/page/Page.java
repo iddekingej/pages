@@ -11,6 +11,17 @@ public class Page extends PageElement<PageThemeItem> {
 	private int idCnt=0;
 	private boolean toWindowSize=false;
 	Application application;
+	DocumentType documentType=DocumentType.DT_XHTML;
+	
+	public void setDocumentType(DocumentType p_type)
+	{
+		documentType=p_type;
+	}
+	
+	public DocumentType getDocumentType()
+	{
+		return documentType;
+	}
 	
 	public void setApplication(Application p_application)
 	{
@@ -19,7 +30,7 @@ public class Page extends PageElement<PageThemeItem> {
 	
 	public String getUrl(){ return url;}
 	
-	void setUrl(String p_url)
+	public void setUrl(String p_url)
 	{		
 		url=p_url;
 	}
@@ -81,7 +92,7 @@ public class Page extends PageElement<PageThemeItem> {
 		LinkedHashSet<String> l_procCss=processSetList(l_css,AliasData.alias_cssfile);
 		LinkedHashSet<String> l_procJs=processSetList(l_js,AliasData.alias_jsfile);
 		
-		themeItem.pageHeader(p_writer,l_procJs,l_procCss);	
+		themeItem.pageHeader(p_writer,documentType,l_procJs,l_procCss);	
 		displaySubElements(p_writer,l_data);
 		p_writer.jsBegin();
 		generateJs(p_writer,p_data);

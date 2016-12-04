@@ -1,11 +1,10 @@
 package org.elaya.page.defaultTheme;
 
 import java.io.IOException;
-
-import org.elaya.page.Theme;
 import org.elaya.page.Writer;
 
 public class ElementThemeItem extends org.elaya.page.element.ElementThemeItem {
+
 
 	@Override
 	public void staticElement(Writer p_writer,String p_text, boolean p_isHtml, String p_class, String p_css) throws IOException {

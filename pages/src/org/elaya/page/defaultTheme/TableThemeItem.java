@@ -2,8 +2,6 @@ package org.elaya.page.defaultTheme;
 
 import java.io.IOException;
 import java.util.Set;
-
-import org.elaya.page.Theme;
 import org.elaya.page.Writer;
 
 public class TableThemeItem extends org.elaya.page.table.TableThemeItem {

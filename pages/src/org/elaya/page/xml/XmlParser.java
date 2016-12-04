@@ -12,7 +12,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.elaya.page.Errors;
 import org.elaya.page.Errors.XmlLoadError;
-import org.elaya.page.application.Application;
 import org.elaya.page.data.DynamicObject;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
@@ -31,10 +30,15 @@ abstract public class XmlParser {
 	private HashMap<String,XmlConfig> configs=new HashMap<>();
 	private LinkedList<String> errors=new LinkedList<>();
 	private HashMap<String,Object> nameIndex;
+	private LinkedList<Initializer> initializers=new LinkedList<>();
 		
 	public XmlParser()
 	{
 		nameIndex=new HashMap<String,Object>();
+	}
+	
+	public void addInitializer(Initializer p_initializer){
+		initializers.add(p_initializer);
 	}
 	
 	public XmlParser(HashMap<String,Object> p_nameIndex) {
@@ -243,7 +247,9 @@ abstract public class XmlParser {
 				}	
 			}
 		}
-		Application.initilizeObject(l_object);
+		for(Initializer l_initializer:initializers){
+			l_initializer.processObject(l_object);
+		}
 		AfterCreate(l_object);
 		parseAttributes(l_object,p_node);
 		return l_object;

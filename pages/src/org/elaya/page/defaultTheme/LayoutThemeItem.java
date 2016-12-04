@@ -3,7 +3,6 @@ package org.elaya.page.defaultTheme;
 import java.io.IOException;
 import java.util.Set;
 import org.elaya.page.HorizontalAlign;
-import org.elaya.page.Theme;
 import org.elaya.page.VerticalAlign;
 import org.elaya.page.Writer;
 

@@ -37,11 +37,11 @@ public class SecurityFilterBackend {
 		}
 	}	
 	
-	protected XmlSecurityParser newParser()
+	protected void initParser(XmlSecurityParser p_parser)
 	{
-		return new XmlSecurityParser(application);
-	}	
-
+		
+	}
+	
 	public void init(FilterConfig p_config,String p_filterFileName) throws ServletException {
 		application=null;
 		Object l_AppObject=p_config.getServletContext().getAttribute("application");		
@@ -50,7 +50,8 @@ public class SecurityFilterBackend {
 		} else {
 			//TODO error when no application
 		}
-		XmlSecurityParser l_parser=newParser();
+		XmlSecurityParser l_parser=new XmlSecurityParser(application);;
+		initParser(l_parser);
 		try {
 			Object l_object=l_parser.parse(p_filterFileName);
 			LinkedList<String> l_errors=l_parser.getErrors();

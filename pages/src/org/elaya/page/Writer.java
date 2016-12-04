@@ -4,7 +4,6 @@ import java.io.IOException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.elaya.page.application.Application;
 import org.springframework.web.util.HtmlUtils;
 
@@ -13,10 +12,15 @@ public class Writer {
 	HttpServletResponse response;
 	ServletOutputStream stream;
 	Application         application;
-//TODO make in config.	
+//TODO make in configuration.	
 	private String jsPath="resources/pages/js/";
 	private String cssPath="resources/pages/css/";
 	private String imgPath="resources/pages/images/";	
+	
+	public void setContentType(String p_str)
+	{
+		response.setContentType(p_str);
+	}
 	
 	public void print(String p_str) throws IOException
 	{

@@ -5,7 +5,6 @@ import java.util.LinkedList;
 import org.elaya.page.AliasData;
 import org.elaya.page.AliasParser;
 import org.elaya.page.Errors;
-import org.elaya.page.Initializer;
 import org.elaya.page.Page;
 import org.elaya.page.UiXmlParser;
 import org.slf4j.Logger;
@@ -22,7 +21,6 @@ public class Application{
 	private HashMap<String,AliasData> aliasses;
 	private ApplicationContext DBContext=null;
 	private HashMap<String,DriverManagerDataSource> dbConnections=new HashMap<>();
-	static private LinkedList<Initializer> initializers=new LinkedList<>();
 	
 	class InvalidAliasType extends Exception
 	{
@@ -33,23 +31,6 @@ public class Application{
 		{
 			super("Invalid alias type, '"+p_typeReq+"' expected but '"+p_typeGot+"' found");
 		}
-	}
-	//--(initializers )-----------------------------------------
-	
-	static public void initilizeObject(Object p_object)
-	{
-		for(Initializer l_item:initializers){
-			l_item.process(p_object);
-		}
-	}
-	public void addInitializer(Initializer p_initializer)
-	{
-		initializers.add(p_initializer);
-	}
-	
-	static 	public void addInitializerStatic(Initializer p_initializer)
-	{
-		initializers.add(p_initializer);
 	}
 	
 	//--(db)------------------------------------------------------------------------

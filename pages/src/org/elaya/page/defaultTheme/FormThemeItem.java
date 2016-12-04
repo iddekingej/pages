@@ -14,7 +14,7 @@ public class FormThemeItem extends org.elaya.page.quickform.FormThemeItem {
 	@Override
 	public void formHiddenElement(Writer p_writer,String p_domId,String p_name,String p_value) throws IOException
 	{
-		p_writer.print("<input type='hidden' "+property("id",p_domId)+property("name",p_name)+property("value",p_value)+">");
+		p_writer.print("<input type='hidden' "+property("id",p_domId)+property("name",p_name)+property("value",p_value)+"/>");
 	}
 	
 	@Override
@@ -50,6 +50,6 @@ public class FormThemeItem extends org.elaya.page.quickform.FormThemeItem {
 	@Override
 	public void formFooter(Writer p_writer) throws IOException
 	{		
-		p_writer.print("</tr></table></form>");
+		p_writer.print("</td></tr></table></form>");
 	}
 }

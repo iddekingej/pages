@@ -1,6 +1,5 @@
 package org.elaya.page;
 
-import java.io.IOException;
 import java.util.Set;
 
 import org.springframework.web.util.HtmlUtils;

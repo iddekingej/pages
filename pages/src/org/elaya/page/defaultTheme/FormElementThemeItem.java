@@ -67,7 +67,7 @@ public class FormElementThemeItem extends org.elaya.page.quickform.FormElementTh
 	
 	public void checkBoxElement(Writer p_writer,String p_idDom,String p_name,Object p_value) throws IOException
 	{
-		p_writer.print("<input "+property("id",p_idDom)+property("name",p_name)+property("type","checkbox")+((p_value.toString().length()>0)?"checked='1'":"")+">");
+		p_writer.print("<input "+property("id",p_idDom)+property("name",p_name)+property("type","checkbox")+((p_value.toString().length()>0)?"checked='1'":"")+"/>");
 	}
 	
 	public void StaticElement(Writer p_writer,String p_idDom,String p_name,boolean p_isHtml,Object p_value) throws IOException
