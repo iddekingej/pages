@@ -63,7 +63,7 @@ var core={
 		},
 		toWindowSize:function(p_element){
 			p_element.style.width=window.innerWidth+'px';
-			p_element.style.height=window.innerheight+'px';			
+			p_element.style.height=window.innerHeight+'px';			
 		},
 		ajax:function(p_method,p_url,p_data,p_config){
 			var l_req;

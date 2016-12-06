@@ -17,11 +17,15 @@ var pages={
 			addByName:function(p_object){
 				this.names[p_object.jsName]=p_object;
 			},
+			_initToWindowSize:function(){
+				var l_container=$$("pageContainer");
+				core.toWindowSize(l_container);
+			},
 			initToWindowSize:function(){
 				core.ev(window,"resize",	function(){
-						var l_container=$$("pageContainer");
-						core.toWindowSize(l_container);
-				});
+						this._initToWindowSize();
+				},this);
+				this._initToWindowSize();
 			},
 
 			lock:function()
