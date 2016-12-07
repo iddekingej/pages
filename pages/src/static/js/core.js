@@ -124,7 +124,7 @@ var core={
 						p_config.failed(l_req);
 					}					
 				}
-				if("compleet" in p_config) p_config.compleet(l_req);
+				if("complete" in p_config) p_config.complete(l_req);
 				return l_req;
 			} else {
 				return false;

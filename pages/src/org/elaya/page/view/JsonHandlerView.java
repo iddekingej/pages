@@ -16,36 +16,32 @@ import org.springframework.web.servlet.view.AbstractView;
 public class JsonHandlerView extends AbstractView {
 	PageMode mode;
 	String file;
-	Logger logger;
 	Application application;
 		
-	public JsonHandlerView(PageMode p_mode,String p_file,Logger p_logger,Application p_application) 
+	public JsonHandlerView(PageMode p_mode,String p_file,Application p_application) 
 	{
 		super(); 
 		mode=p_mode;
-		file=p_file;
-		logger=p_logger;
+		file=p_file;	
 		application=p_application;
 	}
  
 	@Override
 	protected void renderMergedOutputModel(Map<String, Object> model, HttpServletRequest p_request,
-			HttpServletResponse p_response) throws Exception {
-		application.setLogger(logger);
+			HttpServletResponse p_response) throws Exception {		
 		RecieverParser l_parser=new RecieverParser(application);
 		Reciever<?> l_rec=l_parser.parseXml(file);
 		LinkedList<String> l_errors=l_parser.getErrors();
 		if(l_errors.size()>0){
 			for(String l_error:l_errors){
-				logger.info(l_error);
+				System.out.print(l_error);
 			}
-		} else {
-			l_rec.setLogger(logger);
+		} else {			
 			try{
 				l_rec.handleRequest(p_request, p_response);
 			}catch(Throwable l_e)
 			{
-				logger.info(l_e.getMessage());
+				System.out.print(l_e.getMessage());
 			}
 		}
 	}

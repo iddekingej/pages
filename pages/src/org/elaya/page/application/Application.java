@@ -9,7 +9,6 @@ import org.elaya.page.AliasParser;
 import org.elaya.page.Errors;
 import org.elaya.page.Page;
 import org.elaya.page.UiXmlParser;
-import org.slf4j.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -17,7 +16,6 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 public class Application{
 
 	private String themeBase="org.elaya.page.defaultTheme";	
-	private Logger logger;
 	private String aliasFiles;
 	private HashMap<String,Page> pageCache=new HashMap<>(); 
 	private HashMap<String,AliasData> aliasses;
@@ -65,16 +63,7 @@ public class Application{
 		return l_db;
 	}
 	
-	//logger
-	public void setLogger(Logger p_logger)
-	{
-		logger=p_logger;
-	}
-	
-	public Logger getLogger()
-	{
-		return logger;
-	}
+
 	
 /**
  * Called after parser is created. This routine can be used to set for example initializers

@@ -81,7 +81,10 @@ TForm.prototype.afterSetup=function()
 	this.handleCheckCondition();
 }
 
-
+TForm.prototype.failed=function(p_data)
+{
+	alert("Sending data failed");
+}
 TForm.prototype.sendData=function()
 {
 	
@@ -107,6 +110,7 @@ TForm.prototype.sendData=function()
 				contentType:'application/json'
 			,	async:false						
 			,   success:function(p_req){ l_this.success(p_req.responseText);}
+			,	failed:function(p_req){ l_this.failed(p_req);}
 			,	complete:function(p_req){ pages.page.unlock();}
 		});
 	} catch(e){

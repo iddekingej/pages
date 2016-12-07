@@ -1,7 +1,6 @@
 package org.elaya.page.security;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.LinkedList;
 
 import javax.servlet.Filter;

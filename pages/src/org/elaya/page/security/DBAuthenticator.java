@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 import javax.servlet.ServletRequest;
@@ -24,8 +25,6 @@ public class DBAuthenticator extends Authenticator {
 	private String sql; 
 	private String parameterOrder;
 	private String[] parameterOrderSplit;
-	private Connection connection;
-	private PreparedStatement statement=null;
 
 	public void setParameterOrder(String p_order)
 	{
@@ -80,27 +79,17 @@ public class DBAuthenticator extends Authenticator {
 		return sql;
 	}
 	
-	public void finalize() throws SQLException
-	{
-		if(statement != null) statement.close();
-	}
-	private void openConnection() throws SQLException, ClassNotFoundException
-	{
-		Class.forName(driverClass);
-		connection=DriverManager.getConnection(url,username,password);
-		statement=connection.prepareStatement(sql);
-
-	}
-	
 	@Override
 	public Map<String, Object> getAuthenicate(ServletRequest p_request) throws SQLException, ClassNotFoundException {
-		if(connection==null)openConnection();
+		Class.forName(driverClass);
+		Connection l_connection=DriverManager.getConnection(url,username,password);
+		PreparedStatement l_statement=l_connection.prepareStatement(sql);		
 		String l_parameter;
 		for(int l_cnt=0;l_cnt<parameterOrderSplit.length;l_cnt++){
 			l_parameter=parameterOrderSplit[l_cnt];
-			statement.setString(l_cnt+1, p_request.getParameter(l_parameter));	
+			l_statement.setString(l_cnt+1, p_request.getParameter(l_parameter));	
 		}
-		ResultSet l_set=statement.executeQuery();
+		ResultSet l_set=l_statement.executeQuery();
 		if(l_set.next()){
 			HashMap<String,Object> l_return=new HashMap<>();
 			ResultSetMetaData l_meta=l_set.getMetaData();

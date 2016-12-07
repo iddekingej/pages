@@ -16,19 +16,17 @@ public class PageView extends AbstractView {
 
 	
 	private String path;	
-	PageMode mode;
-	Logger logger ;
+	PageMode mode;	
 	Application application;
 	
 	public PageView()
 	{
 		
 	}
-	public PageView(PageMode p_mode,String p_file,Logger p_logger,Application p_application) {
+	public PageView(PageMode p_mode,String p_file,Application p_application) {
 		super(); 
 		mode=p_mode;
 		path=p_file;
-		logger=p_logger;
 		application=p_application;
 	}
 
@@ -37,10 +35,10 @@ public class PageView extends AbstractView {
 	protected void renderMergedOutputModel(Map<String, Object> p_map, HttpServletRequest p_request, HttpServletResponse p_response)
 			throws Exception {
 		// TODO Auto-generated method stub
-		application.setLogger(logger);
 		MapData l_md=new MapData("___TOP",null);
 		l_md.setByMap(p_map);
 		String l_fileName="";
+		
 		
 		if(mode.equals(PageMode.path)){
 			l_fileName=path+p_request.getRequestURI().substring(p_request.getContextPath().length())+".xml";
