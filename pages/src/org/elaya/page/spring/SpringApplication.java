@@ -7,6 +7,7 @@ import org.elaya.page.application.Application;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.web.context.ServletContextAware;
 
 public class SpringApplication extends Application implements ServletContextAware,ApplicationContextAware {
@@ -32,6 +33,12 @@ public class SpringApplication extends Application implements ServletContextAwar
 	@Override
 	public void setApplicationContext(ApplicationContext p_applicationContext) throws BeansException {
 		applicationContext=p_applicationContext;
+	}
+
+	@Override
+	public DriverManagerDataSource getDB(String p_name) {
+		// TODO Auto-generated method stub
+		return applicationContext.getBean(p_name,DriverManagerDataSource.class);
 	}
 
 }

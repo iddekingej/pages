@@ -29,9 +29,12 @@ public abstract class JsonReciever<T extends Dynamic> extends Reciever<T> {
 	{
 		if(getLogger()!=null){
 			getLogger().info(l_e.toString());
-		}
+		} else{
+		}			
+		System.out.print("***"+l_e.toString());
+
 		JSONResult l_result=new JSONResult();
-		l_result.addError("", "Internal error");
+		l_result.addError("", "Internal error:"+l_e.toString());
 		p_response.setContentType("application/json");
 		p_response.getOutputStream().print(l_result.toString());
 	}

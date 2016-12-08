@@ -13,7 +13,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
-public class Application{
+abstract public class Application{
 
 	private String themeBase="org.elaya.page.defaultTheme";	
 	private String aliasFiles;
@@ -45,23 +45,8 @@ public class Application{
 	}
 	
 	//--(db)------------------------------------------------------------------------
-	private ApplicationContext getDBContext()
-	{
-		if(DBContext ==null){
-			DBContext=new ClassPathXmlApplicationContext("../database/database.xml");
-		}
-		return DBContext;
-	}
 	
-	public DriverManagerDataSource getDB(String p_name)
-	{
-		if(dbConnections.containsKey(p_name)){
-			return dbConnections.get(p_name);
-		}
-		DriverManagerDataSource l_db=getDBContext().getBean(p_name,DriverManagerDataSource.class);
-		dbConnections.put(p_name, l_db);
-		return l_db;
-	}
+	public abstract DriverManagerDataSource getDB(String p_name);
 	
 
 	
