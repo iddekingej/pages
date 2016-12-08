@@ -9,7 +9,6 @@ import org.elaya.page.PageMode;
 import org.elaya.page.Writer;
 import org.elaya.page.application.Application;
 import org.elaya.page.data.MapData;
-import org.slf4j.Logger;
 import org.springframework.web.servlet.view.AbstractView;
 
 public class PageView extends AbstractView {

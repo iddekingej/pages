@@ -9,8 +9,6 @@ import org.elaya.page.AliasParser;
 import org.elaya.page.Errors;
 import org.elaya.page.Page;
 import org.elaya.page.UiXmlParser;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 abstract public class Application{
@@ -19,8 +17,6 @@ abstract public class Application{
 	private String aliasFiles;
 	private HashMap<String,Page> pageCache=new HashMap<>(); 
 	private HashMap<String,AliasData> aliasses;
-	private ApplicationContext DBContext=null;
-	private HashMap<String,DriverManagerDataSource> dbConnections=new HashMap<>();
 	private String xmlPath="../pages/"; 
 	
 	class InvalidAliasType extends Exception

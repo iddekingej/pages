@@ -4,7 +4,6 @@ import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
 
 import org.elaya.page.application.Application;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 abstract public class DataModel {
 

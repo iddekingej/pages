@@ -10,7 +10,6 @@ import org.elaya.page.PageMode;
 import org.elaya.page.application.Application;
 import org.elaya.page.reciever.Reciever;
 import org.elaya.page.reciever.RecieverParser;
-import org.slf4j.Logger;
 import org.springframework.web.servlet.view.AbstractView;
 
 public class JsonHandlerView extends AbstractView {
