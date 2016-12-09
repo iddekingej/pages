@@ -17,7 +17,6 @@ import org.w3c.dom.Node;
 public class UiXmlParser extends XmlParser {
 	private ClassLoader classLoader;
 	private Application application;
-	
 	public Application getApplication()
 	{
 		return application;
@@ -36,10 +35,8 @@ public class UiXmlParser extends XmlParser {
 	}
 
 	@Override
-	protected InputStream openFile(String p_fileName) throws FileNotFoundException {
-		InputStream l_stream=application.getConfigStream(p_fileName);
-
-		return l_stream;
+	protected InputStream openFile(String p_fileName) throws FileNotFoundException {		
+		return application.getConfigStream(p_fileName);		
 	}
  
 	@Override

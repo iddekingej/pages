@@ -9,6 +9,7 @@ import org.elaya.page.AliasParser;
 import org.elaya.page.Errors;
 import org.elaya.page.Page;
 import org.elaya.page.UiXmlParser;
+import org.elaya.page.data.Url;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 abstract public class Application{
@@ -18,6 +19,17 @@ abstract public class Application{
 	private HashMap<String,Page> pageCache=new HashMap<>(); 
 	private HashMap<String,AliasData> aliasses;
 	private String xmlPath="../pages/"; 
+	private String defaultDBConnection;
+	
+	
+	public class DefaultDBConnectionNotSet extends Exception
+	{
+		private static final long serialVersionUID = 7128805697742441199L;
+		public DefaultDBConnectionNotSet()
+		{
+			super("Default DB connection(defaultDBConnection) not set application");
+		}
+	}
 	
 	class InvalidAliasType extends Exception
 	{
@@ -28,6 +40,16 @@ abstract public class Application{
 		{
 			super("Invalid alias type, '"+p_typeReq+"' expected but '"+p_typeGot+"' found");
 		}
+	}
+	
+	public void setDefaultDBConnection(String p_defaultDBConnection)
+	{
+		defaultDBConnection=p_defaultDBConnection;
+	}
+	
+	public String getDefaultDBConnection()
+	{
+		return defaultDBConnection;
 	}
 	
 	public void setXmlPath(String p_path)
@@ -44,7 +66,13 @@ abstract public class Application{
 	
 	public abstract DriverManagerDataSource getDB(String p_name);
 	
-
+	public DriverManagerDataSource getDefaultDB() throws Exception
+	{
+		if(defaultDBConnection == null ||defaultDBConnection==""){
+			throw new DefaultDBConnectionNotSet();
+		}
+		return getDB(defaultDBConnection);
+	}
 	
 /**
  * Called after parser is created. This routine can be used to set for example initializers
@@ -183,6 +211,11 @@ abstract public class Application{
 		return l_return;
 	}
 
+	public Url getUrlByAlias(String p_name) throws Exception
+	{
+		return new Url(getAlias(p_name,AliasData.alias_url,true));
+	}
+	
 	public String getThemeBase(){
 		return themeBase;
 	}

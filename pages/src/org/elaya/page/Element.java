@@ -117,7 +117,7 @@ public abstract class Element<themeType extends ThemeItemBase> extends DynamicMe
 		return l_value.equals(true);
 	}
 	
-	public void calculateData(MapData p_data) throws UnsupportedEncodingException, NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException, SQLException, ValueNotFound{
+	public void calculateData(MapData p_data) throws Exception{
 		MapData l_data=p_data;
 		if(dataModel != null){
 			l_data=dataModel.processData(p_data);

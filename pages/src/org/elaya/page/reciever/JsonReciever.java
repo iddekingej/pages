@@ -14,7 +14,7 @@ public abstract class JsonReciever<T extends Dynamic> extends Reciever<T> {
 	{
 		
 	}
-	abstract protected void handleJson(JSONResult p_result,T p_data,String p_cmd) throws SQLException, JSONException;
+	abstract protected void handleJson(JSONResult p_result,T p_data,String p_cmd) throws Exception;
 	
 	private JSONObject getJson(HttpServletRequest p_request) throws IOException, JSONException
 	{

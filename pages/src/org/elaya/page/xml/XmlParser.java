@@ -26,7 +26,7 @@ abstract public class XmlParser {
 		private static final long serialVersionUID = 5079459731617602718L;
 		public  ParseError(String p_message){ super(p_message);}
 	}
-	
+	private String fileName;
 	private HashMap<String,XmlConfig> configs=new HashMap<>();
 	private LinkedList<String> errors=new LinkedList<>();
 	private HashMap<String,Object> nameIndex;
@@ -47,6 +47,9 @@ abstract public class XmlParser {
 	
 	public HashMap<String,Object> getNameIndex(){ return nameIndex;}
 	
+	protected String getFileName(){
+		return fileName;
+	}
 	private String getAttributeValue(Node p_node,String p_name)
 	{
 		Node l_valueNode=p_node.getAttributes().getNamedItem(p_name);
@@ -256,6 +259,7 @@ abstract public class XmlParser {
 	}
 	
 	public Object parse(String p_fileName) throws Exception{
+		fileName=p_fileName;
 		addConfig();
 		DocumentBuilderFactory l_factory=DocumentBuilderFactory.newInstance();
 		DocumentBuilder l_builder=l_factory.newDocumentBuilder();
