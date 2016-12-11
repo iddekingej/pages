@@ -2,35 +2,32 @@ package org.elaya.page.security;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.util.HashMap;
-
+import java.util.Map;
 import org.elaya.page.AliasData;
 import org.elaya.page.application.Application;
+import org.elaya.page.xml.XmlAppParser;
 import org.elaya.page.xml.XmlConfig;
 import org.elaya.page.xml.XmlParser;
 
-public class XmlSecurityParser extends XmlParser {
+public class XmlSecurityParser extends XmlAppParser {
 
-	Application application;
 	
 	public XmlSecurityParser(Application p_application) {
-		super();
-		application=p_application;
+		super(p_application);
 	}
 
-	public XmlSecurityParser(Application p_application,HashMap<String, Object> p_nameIndex) {
-		super(p_nameIndex);
-		application=p_application;
+	public XmlSecurityParser(Application p_application,Map<String, Object> p_nameIndex) {
+		super(p_application,p_nameIndex);
 	}
 
 	@Override
 	protected InputStream openFile(String p_fileName) throws FileNotFoundException {
-		return application.getConfigStream(p_fileName);
+		return getApplication().getConfigStream(p_fileName);
 	}
 
 	@Override
 	protected XmlParser createParser() {
-		return new XmlSecurityParser(application,getNameIndex());
+		return new XmlSecurityParser(getApplication(),getNameIndex());
 	}
 
 	@Override
@@ -42,16 +39,14 @@ public class XmlSecurityParser extends XmlParser {
 	}
 
 	@Override
-	protected String normalizeClassName(String p_name) throws Exception {
-		if(p_name.charAt(0)=='@'){
-			return application.getAlias(p_name.substring(1), AliasData.alias_security);
-		} 
-		return p_name;
+	protected String getName(Object p_object) {
+		return "";
+		
 	}
 
 	@Override
-	protected String getName(Object p_object) {
-		return "";
+	public String getAliasNamespace() {
+		return AliasData.alias_security;
 	}
 
 }

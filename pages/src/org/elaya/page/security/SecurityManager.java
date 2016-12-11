@@ -1,6 +1,8 @@
 package org.elaya.page.security;
 
 import java.io.IOException;
+import java.io.NotSerializableException;
+import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedList;
 import javax.servlet.ServletException;
@@ -25,7 +27,6 @@ public class SecurityManager {
 	private String loginPageUrl="";
 	private LinkedList<RequestMatcher> requestMatchers=new LinkedList<>();
 	private Authenticator authenticator;
-
 	
 	public void setAuthenticator(Authenticator p_authenticator)
 	{
@@ -36,11 +37,7 @@ public class SecurityManager {
 	{
 		return authenticator;
 	}
-	
-	public SecurityManager()
-	{
-		
-	}
+
 	
 
 	public void setLoginCheckUrl(String p_url){
@@ -82,21 +79,27 @@ public class SecurityManager {
 		
 	}
 	
-	private void createStoredSession(ServletRequest p_request) throws NoSuchMethodException, ClassNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, InvalidSessionData
+	private void createStoredSession(ServletRequest p_request) throws NoSuchMethodException, ClassNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, InvalidSessionData, NotSerializableException
 	{
 		if(p_request instanceof HttpServletRequest){
 			HttpServletRequest l_request=(HttpServletRequest)p_request;
 			HttpSession l_session=l_request.getSession(false);
 			if(l_session != null){
 				Object l_typeObject=l_session.getAttribute("type");
-				Object l_id=l_session.getAttribute("id");
-				if(l_id != null && l_typeObject != null){
+				Object l_objectId=l_session.getAttribute("id");
+				if(l_objectId != null && l_typeObject != null){
+					Serializable l_id;
+					if(l_objectId instanceof Serializable ){
+						l_id=(Serializable)l_objectId;
+					} else {
+						throw new NotSerializableException("ID attribute of session is not Serializable (type="+l_objectId.getClass().getName()+")");
+					}
 					Object l_object=DynamicObject.createObjectFromName(l_typeObject.toString());
 					if(l_object instanceof AuthorisationData){
 						AuthorisationData l_authorisationData=(AuthorisationData)l_object;
 						p_request.setAttribute("org.elaya.page.security.SessionData", l_object);
 						afterCreateSession(l_authorisationData);
-						l_authorisationData.initSessionData(l_id);;
+						l_authorisationData.initSessionData(l_id);
 					} else {
 						throw new InvalidSessionData("Sessiondata object (type="+l_object.getClass().getName()+") doesn't descent from SessionData");
 					}			

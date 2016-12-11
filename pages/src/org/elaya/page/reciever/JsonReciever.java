@@ -2,7 +2,6 @@ package org.elaya.page.reciever;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.sql.SQLException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.elaya.page.data.Dynamic;
@@ -14,24 +13,22 @@ public abstract class JsonReciever<T extends Dynamic> extends Reciever<T> {
 	{
 		
 	}
-	abstract protected void handleJson(JSONResult p_result,T p_data,String p_cmd) throws Exception;
+	protected abstract  void handleJson(JSONResult p_result,T p_data,String p_cmd) throws Exception;
 	
 	private JSONObject getJson(HttpServletRequest p_request) throws IOException, JSONException
 	{
 		StringBuffer l_data=new StringBuffer();
 		String l_part;
 		BufferedReader l_reader=p_request.getReader(); 
-		while((l_part=l_reader.readLine())!= null) l_data.append(l_part);
+		while((l_part=l_reader.readLine())!= null){
+			l_data.append(l_part);
+		}
 		return new JSONObject(l_data.toString());
 	}
 	
-	public void failure(HttpServletResponse p_response, Exception l_e) throws IOException, JSONException
+	public void failure(HttpServletResponse p_response, Exception l_e) throws IOException, JSONException 
 	{
-		if(getLogger()!=null){
-			getLogger().info(l_e.toString());
-		} else{
-		}			
-		System.out.print("***"+l_e.toString());
+		System.out.print(l_e.toString());
 
 		JSONResult l_result=new JSONResult();
 		l_result.addError("", "Internal error:"+l_e.toString());
@@ -53,7 +50,7 @@ public abstract class JsonReciever<T extends Dynamic> extends Reciever<T> {
 			//TODO Handle exception and when parameter does not exists
 			for(Parameter l_parameter:getParameters()){
 				l_value=l_data.get(l_parameter.getName());
-				if(l_parameter.getType()==ParameterType.integer && l_value.equals("")){
+				if(l_parameter.getType()==ParameterType.integer && "".equals(l_value)){
 					l_value=null;
 				}
 				l_object.put(l_parameter.getName(),l_value);
@@ -69,8 +66,7 @@ public abstract class JsonReciever<T extends Dynamic> extends Reciever<T> {
 			}
 			p_response.setContentType("application/json");
 			p_response.getOutputStream().print(l_result.toString());
-		} catch(Exception l_e)
-		{
+		} catch(Exception l_e){
 			failure(p_response,l_e);
 		}
 	}

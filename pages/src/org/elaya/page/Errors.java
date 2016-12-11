@@ -1,7 +1,10 @@
 package org.elaya.page;
 
 public class Errors {
-
+	private Errors()
+	{
+		
+	}
 	public static class PropertyNotSet extends Exception{
 
 		private static final long serialVersionUID = -378654124608489073L;
@@ -31,15 +34,15 @@ public class Errors {
 		
 	}
 	
-	static public class InvalidElement extends Exception{
+	public static class InvalidElement extends Exception{
 
 		private static final long serialVersionUID = -4997959418112427282L;
 		public InvalidElement(Element<?> p_element,Element<?> p_where){
-			super("Wrong type of element("+p_element.getClass().getName()+"), a subelement of "+p_element.getClass().getName());
+			super("Wrong type of element("+p_element.getClass().getName()+"), a subelement of "+p_element.getClass().getName()+" "+p_where);
 		}
 	}
 	
-	static public class InvalidObjectType extends Exception{
+	public static class InvalidObjectType extends Exception{
 		
 		private static final long serialVersionUID = -2061874935260687214L;
 
@@ -48,7 +51,7 @@ public class Errors {
 		}
 	}
 	
-	static public class LoadingPageFailed extends Exception{
+	public static class LoadingPageFailed extends Exception{
 
 		private static final long serialVersionUID = -5787713033565235846L;
 		public LoadingPageFailed(String p_fileName){
@@ -56,7 +59,7 @@ public class Errors {
 		}
 	}
 	
-	static public class AliasNotFound extends Exception{
+	public static  class AliasNotFound extends Exception{
 
 		private static final long serialVersionUID = -8957504944800562183L;
 		
@@ -66,7 +69,7 @@ public class Errors {
 		}
 	}
 	
-	static public class XmlLoadError extends Exception{
+	public static class XmlLoadError extends Exception{
 
 		/**
 		 * 

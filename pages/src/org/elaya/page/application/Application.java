@@ -3,7 +3,8 @@ package org.elaya.page.application;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.List;
+
 import org.elaya.page.AliasData;
 import org.elaya.page.AliasParser;
 import org.elaya.page.Errors;
@@ -20,7 +21,8 @@ abstract public class Application{
 	private HashMap<String,AliasData> aliasses;
 	private String xmlPath="../pages/"; 
 	private String defaultDBConnection;
-	
+	private String classBase="";
+	 
 	
 	public class DefaultDBConnectionNotSet extends Exception
 	{
@@ -41,7 +43,21 @@ abstract public class Application{
 			super("Invalid alias type, '"+p_typeReq+"' expected but '"+p_typeGot+"' found");
 		}
 	}
+	/**
+	 * When loading a xml file, "classBase" is added to the classname when classname is relative
+	 * ("start with a ".")
+	 *  
+	 * @param p_classBase
+	 */
+	public void setClassBase(String p_classBase)
+	{
+		classBase=p_classBase;
+	}
 	
+	public String getClassBase()
+	{
+		return classBase;
+	}
 	public void setDefaultDBConnection(String p_defaultDBConnection)
 	{
 		defaultDBConnection=p_defaultDBConnection;
@@ -60,6 +76,17 @@ abstract public class Application{
 	public String getXmlPath()
 	{
 		return xmlPath;
+	}
+	//--(xml parsing -------------------
+	
+	public String normalizeClassName(String p_name,String p_type) throws Exception
+	{
+		if(p_name.charAt(0)=='.'){
+			return classBase+p_name;
+		} else if(p_name.charAt(0)=='@'){
+			return getAlias(p_name.substring(1), p_type);
+		} 
+		return p_name;
 	}
 	
 	//--(db)------------------------------------------------------------------------
@@ -100,17 +127,15 @@ abstract public class Application{
 	
 	public synchronized Page loadPage(String p_fileName,boolean p_cache) throws Exception
 	{
-		if(p_cache){
-			if(pageCache.containsKey(p_fileName)){
-				return pageCache.get(p_fileName);
-			}
+		if(p_cache && pageCache.containsKey(p_fileName)){
+			return pageCache.get(p_fileName);
 		}
 		UiXmlParser l_parser=new UiXmlParser(this,getClass().getClassLoader());
 		initUiParser(l_parser);
 		Object l_object=l_parser.parse(p_fileName);
 
 		
-		LinkedList<String> l_errors=l_parser.getErrors();
+		List<String> l_errors=l_parser.getErrors();
 		if(l_errors.size()>0){
 			String l_text="";
 			for(String l_error:l_errors){
@@ -125,9 +150,7 @@ abstract public class Application{
 			throw new Errors.LoadingPageFailed("File "+p_fileName+" contains not a Page but a '"+l_object.getClass().getName()+"'");
 		}
 		if(p_cache){
-			if(l_page != null){
-				pageCache.put(p_fileName, l_page);
-			}
+			pageCache.put(p_fileName, l_page);
 		}
 		return l_page;
 	}

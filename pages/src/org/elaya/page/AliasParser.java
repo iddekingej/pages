@@ -3,6 +3,7 @@ package org.elaya.page;
 import java.io.InputStream;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -12,28 +13,22 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-
+ 
 public class AliasParser {
 
-	private LinkedList<String> errors=new LinkedList<String>();
-	private Set<String> elements=new HashSet<String>();
+	private LinkedList<String> errors=new LinkedList<>();
+	private Set<String> elements=new HashSet<>();
 /**
  * Returns list of errors during parsing of the Alias file
  * @return LinkedList<String> of error strings
  */
 	
-	public LinkedList<String> getErrors()
+	public List<String> getErrors()
 	{
 		return errors;
 	}
 	
-/** 
- * Constructor of  AliasParser
- * @param p_logger Logger used for logging
- */
-	public AliasParser()
-	{
-	}
+
 	
 	protected void parseAlias(Node p_parent,Map<String,AliasData> p_map)
 	{
@@ -46,7 +41,9 @@ public class AliasParser {
 				if(elements.contains(l_currentDef.getNodeName())){
 					l_alias=l_currentDef.getAttributes().getNamedItem("alias");
 					l_class=l_currentDef.getAttributes().getNamedItem("value");
-					if(l_alias==null)errors.add("'alias'  attribute not found");
+					if(l_alias==null){
+						errors.add("'alias'  attribute not found");
+					}
 					if(l_class==null){
 							errors.add("'value' attribute not found");
 					} else {
@@ -88,11 +85,11 @@ public class AliasParser {
 		elements.add(AliasData.alias_url);
 		elements.add(AliasData.alias_reciever);
 		elements.add(AliasData.alias_security);
-		if(l_rootNode.getNodeName().equals("aliasses")){
+		if("aliasses".equals(l_rootNode.getNodeName())){
 			parseAlias(l_rootNode,p_map);
 		} else {
 			errors.add("<aliasses> expected as outer tag");
 		}
-
+		p_input.close();
 	}
 }

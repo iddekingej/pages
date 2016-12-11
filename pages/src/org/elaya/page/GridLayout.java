@@ -6,6 +6,10 @@ public class GridLayout extends Layout {
 
 	private Integer columns;
 	
+	public GridLayout() {
+		super();
+	}
+
 	public int getColumns(){
 		return columns;
 	}
@@ -14,9 +18,6 @@ public class GridLayout extends Layout {
 		columns=p_columns;
 	}
 	
-	public GridLayout() {
-		super();
-	}
 
 	@Override
 	public void display(Writer p_writer,Data p_data) throws Exception {
@@ -35,7 +36,9 @@ public class GridLayout extends Layout {
 				themeItem.gridItemFooter(p_writer);
 			}
 			l_col++;
-			if(l_col>=columns) l_col=0;
+			if(l_col>=columns){
+				l_col=0;
+			}
 			if(l_col==0){
 				themeItem.gridRowFooter(p_writer);
 				l_hasEnd=true;

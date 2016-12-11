@@ -5,11 +5,17 @@ import java.lang.reflect.InvocationTargetException;
 public class Theme {
 	private String baseName;
 	private String defaultTheme;
-
-	public ThemeItemBase getTheme(String p_name) throws ClassNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException
+	
+	public Theme(String p_baseName)
+	{
+		baseName=p_baseName;
+		defaultTheme="org.elaya.page.defaultTheme";
+	}
+	
+	public ThemeItemBase getThemeItem(String p_name) throws ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException
 	{
 		Class<?> l_class;
-		try{
+		try{			
 			l_class=Class.forName(baseName+"."+p_name);
 		}catch(ClassNotFoundException l_e){
 			l_class=Class.forName(defaultTheme+"."+p_name);
@@ -19,11 +25,5 @@ public class Theme {
 		
 		return (ThemeItemBase)(l_class.getConstructor(l_types).newInstance(l_params));
 	}
-	
-	
-	public Theme(String p_baseName)
-	{
-		baseName=p_baseName;
-		defaultTheme="org.elaya.page.defaultTheme";
-	}
+
 }

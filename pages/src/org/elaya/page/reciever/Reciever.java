@@ -3,35 +3,22 @@ package org.elaya.page.reciever;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedList;
+import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.elaya.page.Errors;
 import org.elaya.page.Errors.InvalidObjectType;
 import org.elaya.page.application.Application;
 import org.elaya.page.data.Dynamic;
 import org.elaya.page.data.DynamicMethod;
 import org.elaya.page.data.DynamicObject;
-import org.slf4j.Logger;
 
 
-abstract public class Reciever<T extends Dynamic> extends DynamicMethod {
-
-	
-	private Constructor<?> dataConstructor;
+public abstract  class Reciever<T extends Dynamic> extends DynamicMethod {
 	private String dataClass;
-	private LinkedList<Parameter> parameters=new LinkedList<Parameter>();
+	private List<Parameter> parameters=new LinkedList<>();
 	private Application application;
-	private Logger logger;
-	
-	public void setLogger(Logger p_logger){
-		logger=p_logger;
-	}
-	
-	public Logger getLogger(){
-		return logger;
-	}
-	
+
 	void setApplication(Application p_application)
 	{
 		application=p_application;
@@ -41,10 +28,10 @@ abstract public class Reciever<T extends Dynamic> extends DynamicMethod {
 	{
 			return application;
 	}
-	protected Dynamic getObject() throws NoSuchMethodException, ClassNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, InvalidObjectType
+	protected Dynamic getObject() throws NoSuchMethodException, ClassNotFoundException, InstantiationException, IllegalAccessException,  InvocationTargetException, InvalidObjectType
 	{ 
-		dataConstructor=DynamicObject.getConstructorByName(dataClass,new Class<?>[]{});
-		Object l_object=dataConstructor.newInstance();
+		Constructor<?> l_dataConstructor=DynamicObject.getConstructorByName(dataClass,new Class<?>[]{});
+		Object l_object=l_dataConstructor.newInstance();
 		if(l_object instanceof Dynamic){
 			return (Dynamic)l_object;
 		}
@@ -57,7 +44,7 @@ abstract public class Reciever<T extends Dynamic> extends DynamicMethod {
 		parameters.add(p_parameter);
 	}
 	
-	public LinkedList<Parameter> getParameters()
+	public List<Parameter> getParameters()
 	{
 		return parameters;
 	}
@@ -73,8 +60,6 @@ abstract public class Reciever<T extends Dynamic> extends DynamicMethod {
 		return dataClass;
 	}
 	
-	
-	
-	abstract public void handleRequest(HttpServletRequest p_request,HttpServletResponse p_response ) throws Exception, Throwable;
+	 public abstract void handleRequest(HttpServletRequest p_request,HttpServletResponse p_response ) throws  Throwable;
 		
 }

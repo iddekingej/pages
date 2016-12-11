@@ -36,15 +36,12 @@ public abstract class AbstractDBAuthenticator extends Authenticator {
 		return parameterOrder;
 	}
 	
-	public AbstractDBAuthenticator() {
-		// TODO Auto-generated constructor stub
-	}
-
 	
-	abstract protected Connection getConnection() throws ClassNotFoundException, SQLException;
+	protected  abstract Connection getConnection() throws ClassNotFoundException, SQLException;
 
 	@Override
 	public Map<String, Object> getAuthenicate(ServletRequest p_request) throws SQLException, ClassNotFoundException {
+		Map<String,Object> l_return=null;
 		Connection l_connection=getConnection();
 		PreparedStatement l_statement=l_connection.prepareStatement(sql);		
 		String l_parameter;
@@ -54,7 +51,7 @@ public abstract class AbstractDBAuthenticator extends Authenticator {
 		}
 		ResultSet l_set=l_statement.executeQuery();
 		if(l_set.next()){
-			HashMap<String,Object> l_return=new HashMap<>();
+			l_return=new HashMap<>();
 			ResultSetMetaData l_meta=l_set.getMetaData();
 			String l_colName;
 			int l_num=l_meta.getColumnCount();
@@ -62,10 +59,9 @@ public abstract class AbstractDBAuthenticator extends Authenticator {
 				l_colName=l_meta.getColumnName(l_colCnt+1);
 				l_return.put(l_colName, l_set.getObject(l_colCnt+1));
 			}
-			return l_return;
 		}
-		
-		return null;
+		l_statement.close();
+		return l_return;
 	}
 
 }

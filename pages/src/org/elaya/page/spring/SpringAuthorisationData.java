@@ -4,10 +4,15 @@ import org.elaya.page.security.AuthorisationData;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
-abstract public class SpringAuthorisationData extends AuthorisationData implements ApplicationContextAware
+public abstract class SpringAuthorisationData implements AuthorisationData ,ApplicationContextAware
 {
 	private ApplicationContext applicationContext;
 	
+	public SpringAuthorisationData() {
+		super();
+	}
+	
+	@Override
 	public void setApplicationContext(ApplicationContext p_applicationContext){
 		applicationContext=p_applicationContext;
 	}
@@ -16,8 +21,6 @@ abstract public class SpringAuthorisationData extends AuthorisationData implemen
 		return applicationContext;
 	}
 	
-	public SpringAuthorisationData() {
-		super();
-	}
+
 
 }

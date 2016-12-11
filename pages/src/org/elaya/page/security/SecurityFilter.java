@@ -1,7 +1,7 @@
 package org.elaya.page.security;
-
+ 
 import java.io.IOException;
-import java.util.LinkedList;
+import java.util.List;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -14,8 +14,7 @@ import org.elaya.page.application.Application;
 
 public class SecurityFilter implements Filter {
 	private SecurityManager securityManager;
-	private Application application;
-	
+
 	public SecurityFilter() {
 		// TODO Auto-generated constructor stub
 		super();
@@ -41,20 +40,20 @@ public class SecurityFilter implements Filter {
 	}
 	@Override
 	public void init(FilterConfig p_config) throws ServletException {
-		application=null;
+		Application l_application;
 		String l_filterFileName=p_config.getInitParameter("securityConfigFile");
 		Object l_AppObject=p_config.getServletContext().getAttribute("application");		
 		if(l_AppObject instanceof Application){
-			application=(Application)l_AppObject;
+			l_application=(Application)l_AppObject;
 		} else {
 			throw new ServletException("Application not set");
 		}
-		XmlSecurityParser l_parser=new XmlSecurityParser(application);;
+		XmlSecurityParser l_parser=new XmlSecurityParser(l_application);
 		initParser(l_parser);
 		
 		try {
 			Object l_object=l_parser.parse(l_filterFileName);
-			LinkedList<String> l_errors=l_parser.getErrors();
+			List<String> l_errors=l_parser.getErrors();
 			if(!l_errors.isEmpty()){
 				String l_errorStr="";
 				for(String l_error:l_errors){
@@ -68,7 +67,7 @@ public class SecurityFilter implements Filter {
 				throw new ServletException("Security xml config '"+l_filterFileName+"' didn't define a security manager");
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.printStackTrace(); 
 			throw new ServletException(e.getMessage()+" in "+e.getStackTrace().toString());
 		}		
 	}

@@ -1,7 +1,8 @@
 package org.elaya.page.application;
 
 import java.io.InputStream;
-import java.util.HashMap;
+import java.util.Map;
+
 import org.elaya.page.xml.XmlConfig;
 import org.elaya.page.xml.XmlParser;
 
@@ -11,7 +12,7 @@ public class ApplicationXmlParser extends XmlParser {
 		super();
 	}
 
-	public ApplicationXmlParser(HashMap<String, Object> p_nameIndex) {
+	public ApplicationXmlParser(Map<String, Object> p_nameIndex) {
 		super(p_nameIndex);	
 	}
 

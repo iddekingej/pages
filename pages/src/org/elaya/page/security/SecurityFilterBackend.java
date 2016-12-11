@@ -1,8 +1,7 @@
 package org.elaya.page.security;
 
 import java.io.IOException;
-import java.util.LinkedList;
-
+import java.util.List;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
@@ -54,7 +53,7 @@ public class SecurityFilterBackend {
 		initParser(l_parser);
 		try {
 			Object l_object=l_parser.parse(p_filterFileName);
-			LinkedList<String> l_errors=l_parser.getErrors();
+			List<String> l_errors=l_parser.getErrors();
 			if(!l_errors.isEmpty()){
 				String l_errorStr="";
 				for(String l_error:l_errors){

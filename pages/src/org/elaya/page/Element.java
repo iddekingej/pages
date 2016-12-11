@@ -1,10 +1,9 @@
 package org.elaya.page;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
@@ -14,8 +13,8 @@ import org.elaya.page.data.*;
 import org.elaya.page.jsplug.JSPlug;
 import org.elaya.page.jsplug.JSPlug.InvalidJsPlugType;
 
-public abstract class Element<themeType extends ThemeItemBase> extends DynamicMethod {
-	protected themeType themeItem;
+public abstract class Element<ThemeType extends ThemeItemBase> extends DynamicMethod {
+	protected ThemeType themeItem;
 	protected Theme theme;
 	protected LinkedList<Element<?>> elements=new LinkedList<>();
 	private LinkedList<JSPlug> jsPlugs=new LinkedList<>();
@@ -33,6 +32,10 @@ public abstract class Element<themeType extends ThemeItemBase> extends DynamicMe
 	private HashMap<String,Element<?>> byName=null;
 	private Element<?> namespaceParent=null;
 
+	public Element()
+	{
+	}
+	
 	void setId(int p_id)
 	{
 		id=p_id;
@@ -107,7 +110,7 @@ public abstract class Element<themeType extends ThemeItemBase> extends DynamicMe
 		return condition;
 	}
 	
-	public boolean checkCondition(Data p_data) throws ValueNotFound, NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException
+	public boolean checkCondition(Data p_data) throws ValueNotFound, NoSuchFieldException, IllegalAccessException
 	{ 
 		if(condition.length()==0) return true;
 		if(!p_data.containsKey(condition)){
@@ -136,7 +139,7 @@ public abstract class Element<themeType extends ThemeItemBase> extends DynamicMe
 		StringBuilder l_return=new StringBuilder();
 		String l_varName;
 		Object l_value;
-		String l_string=(p_string==null?"":p_string);		
+		String l_string=p_string==null?"":p_string;		
 		while(true){
 			l_newPos=l_string.indexOf("${",l_pos);
 			if(l_newPos==-1){
@@ -144,7 +147,7 @@ public abstract class Element<themeType extends ThemeItemBase> extends DynamicMe
 				break;
 			}
 			l_return.append(l_string.substring(l_pos,l_newPos));
-			l_pos=l_string.indexOf("}",l_newPos);
+			l_pos=l_string.indexOf('}',l_newPos);
 			if(l_pos==-1){
 				throw new Exception("Missing end }"); //TODO: Error Location				
 			}
@@ -180,17 +183,13 @@ public abstract class Element<themeType extends ThemeItemBase> extends DynamicMe
 		return p_data;
 	}
 	
-	public Object getValueByName(Data p_data) throws ValueNotFound, NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException
+	public Object getValueByName(Data p_data) throws ValueNotFound, NoSuchFieldException,  IllegalAccessException
 	{
 		if(p_data.containsKey(name)){
 			return p_data.get(name);
 		} else {
 			throw new Errors.ValueNotFound(name);
 		}
-	}
-	
-	public Element()
-	{
 	}
 	
 	public void process()
@@ -308,12 +307,10 @@ public abstract class Element<themeType extends ThemeItemBase> extends DynamicMe
 			l_element.getAllJsFiles(p_files);
 		}		
 	}
-	//TODO rename to addJsFiles
 	public void addJsFile(Set<String> p_set)
 	{ 
 		
 	}
-	//TODO rename to add cssFiles
 	public void addCssFile(Set<String> p_files)
 	{
 			themeItem.getCssFiles(p_files);
@@ -324,7 +321,7 @@ public abstract class Element<themeType extends ThemeItemBase> extends DynamicMe
 	{
 		return "object_"+Integer.toString(id);
 	}
-	//TODO used?
+	//TODO used? 
 	public String getVarName()
 	{
 		return "var_"+Integer.toString(id);
@@ -362,11 +359,11 @@ public abstract class Element<themeType extends ThemeItemBase> extends DynamicMe
 	}
 	
 	
-	protected void preElement(Writer p_writer,Element<?> p_element) throws IOException, Exception
+	protected void preElement(Writer p_writer,Element<?> p_element) throws Exception
 	{
 		
 	}
-	protected void postElement(Writer p_writer,Element<?> p_element) throws IOException, Exception
+	protected void postElement(Writer p_writer,Element<?> p_element) throws Exception
 	{		
 	}
 	
@@ -386,24 +383,24 @@ public abstract class Element<themeType extends ThemeItemBase> extends DynamicMe
 	public abstract String getThemeName();
 	
 	@SuppressWarnings("unchecked")
-	final public void setTheme(Theme p_theme) throws Exception
+	public final void setTheme(Theme p_theme) throws Exception
 	{
 		theme=p_theme;
-		ThemeItemBase l_themeItem=p_theme.getTheme(getThemeName()); //TODO: getTheme=>getThemeItem
+		ThemeItemBase l_themeItem=p_theme.getThemeItem(getThemeName());
 		Objects.requireNonNull(l_themeItem,"themeItem=>setTheme");
-		themeItem=(themeType) l_themeItem;
+		themeItem=(ThemeType) l_themeItem;
 	}
 	
 	protected void checkSubElement(Element<ThemeItemBase> p_element)
 	{
 	}
 	
-	final public void addJsPlug(JSPlug p_plug) throws InvalidJsPlugType{
+	public final  void addJsPlug(JSPlug p_plug) throws InvalidJsPlugType{
 		Objects.requireNonNull(p_plug);
 		p_plug.setParent(this);
 		jsPlugs.add(p_plug);
 	}
-	final public void addElement(Element<?> p_element) throws Exception
+	public final void addElement(Element<?> p_element) throws Exception
 	{
 	
 		Objects.requireNonNull(p_element,"addElement(p_element)");
@@ -482,7 +479,7 @@ public abstract class Element<themeType extends ThemeItemBase> extends DynamicMe
 		
 	}
 	
-	final protected void generateJs(Writer p_writer,Data p_data) throws IOException, Exception
+	protected final void generateJs(Writer p_writer,Data p_data) throws Exception
 	{
 		Data l_data=getData(p_data);
 		makeJsObject(p_writer,l_data);
@@ -496,7 +493,7 @@ public abstract class Element<themeType extends ThemeItemBase> extends DynamicMe
 
 	}
 	
-	final public LinkedList<Element<?>> getElements()
+	public final  List<Element<?>> getElements()
 	{
 		return elements;
 	} 

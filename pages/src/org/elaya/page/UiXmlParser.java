@@ -2,41 +2,35 @@ package org.elaya.page;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 
 import org.elaya.page.Errors.XmlLoadError;
 import org.elaya.page.application.Application;
 import org.elaya.page.data.DataModel;
 import org.elaya.page.jsplug.JSPlug;
 import org.elaya.page.quickform.OptionItem;
+import org.elaya.page.xml.XmlAppParser;
 import org.elaya.page.xml.XmlConfig;
 import org.elaya.page.xml.XmlParser;
 import org.w3c.dom.Node;
 
-public class UiXmlParser extends XmlParser {
+public class UiXmlParser extends XmlAppParser {
 	private ClassLoader classLoader;
-	private Application application;
-	public Application getApplication()
-	{
-		return application;
+
+	public UiXmlParser(Application p_application,ClassLoader p_classLoader) {
+		super(p_application);		
+		classLoader=p_classLoader;
+	}
+
+	public UiXmlParser(Application p_application,ClassLoader p_classLoader,Map<String, Object> p_nameIndex) {
+		super(p_application,p_nameIndex);		
+		classLoader=p_classLoader;
 	}
 	
-	public UiXmlParser(Application p_application,ClassLoader p_classLoader) {
-		super();
-		application=p_application;
-		classLoader=p_classLoader;
-	}
-
-	public UiXmlParser(Application p_application,ClassLoader p_classLoader,HashMap<String, Object> p_nameIndex) {
-		super(p_nameIndex);
-		application=p_application;
-		classLoader=p_classLoader;
-	}
-
 	@Override
 	protected InputStream openFile(String p_fileName) throws FileNotFoundException {		
-		return application.getConfigStream(p_fileName);		
+		return getApplication().getConfigStream(p_fileName);		
 	}
  
 	@Override
@@ -45,7 +39,7 @@ public class UiXmlParser extends XmlParser {
 	}
 	
 	private LinkedList<OptionItem> parseOptions(Node p_parent) throws XmlLoadError{
-		LinkedList<OptionItem> l_list=new LinkedList<OptionItem>();
+		LinkedList<OptionItem> l_list=new LinkedList<>();
 		Node l_child=p_parent.getFirstChild();
 		Node l_valueNode;
 		Node l_textNode;
@@ -71,7 +65,7 @@ public class UiXmlParser extends XmlParser {
 		}
 		return l_list;
 }
-
+	@Override
 	protected Object parseCustom(Object p_parent,Node p_node) throws XmlLoadError
 	{
 		if(p_node.getNodeName()=="options"){
@@ -90,20 +84,13 @@ public class UiXmlParser extends XmlParser {
 	}
 
 	@Override
-	protected String normalizeClassName(String p_name) throws Exception {
-		if(p_name.charAt(0)=='@'){
-			return getApplication().getAlias(p_name.substring(1), AliasData.alias_element);
-		} 
-		return p_name;
-	}
-	
-	protected void AfterCreate(Object p_object) throws Exception
+	protected void afterCreate(Object p_object) throws Exception
 	{
 		if(p_object instanceof DataModel){
-			((DataModel)p_object).setApplication(application);
+			((DataModel)p_object).setApplication(getApplication());
 		}
 		if(p_object instanceof Page){
-			((Page)p_object).setApplication(application);
+			((Page)p_object).setApplication(getApplication());
 			((Page)p_object).initTheme();
 		}
 	}
@@ -114,6 +101,11 @@ public class UiXmlParser extends XmlParser {
 			return ((Element<?>)p_object).getNamespaceName();
 		}
 		return "";
+	}
+
+	@Override
+	public String getAliasNamespace() {
+		return AliasData.alias_element;
 	}
 
 }

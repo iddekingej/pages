@@ -1,12 +1,11 @@
 package org.elaya.page.data;
 
-import java.io.UnsupportedEncodingException;
-import java.sql.SQLException;
+
 
 import org.elaya.page.application.Application;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
-abstract public class DataModel {
+public abstract  class DataModel {
 
 	private Application application;
 	
@@ -23,7 +22,7 @@ abstract public class DataModel {
 		return application;
 	}
 	
-	abstract protected void _processData(MapData p_data) throws Exception;
+	protected abstract  void _processData(MapData p_data) throws Exception;
 	
 	public MapData	processData(MapData p_data) throws Exception
 	{

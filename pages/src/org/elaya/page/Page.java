@@ -6,13 +6,18 @@ import org.elaya.page.application.Application;
 import org.elaya.page.data.Data;
 
 public class Page extends PageElement<PageThemeItem> {
-
+ 
 	private String url;
 	private int idCnt=0;
 	private boolean toWindowSize=false;
 	Application application;
 	DocumentType documentType=DocumentType.DT_XHTML;
 	
+	public Page()
+	{		
+		setIsNamespace(true);
+	}
+
 	public void setDocumentType(DocumentType p_type)
 	{
 		documentType=p_type;
@@ -51,16 +56,12 @@ public class Page extends PageElement<PageThemeItem> {
 		return idCnt;
 	}
 
-	
-	
+	@Override
 	public String getJsName()
 	{
 		return "pages.page";
 	}
-	void dummy()
-	{
-	} 
- 
+
 	private LinkedHashSet<String> processSetList(LinkedHashSet<String> p_in,String p_type) throws Exception
 	{
 		LinkedHashSet<String> l_return=new LinkedHashSet<String>();
@@ -78,6 +79,7 @@ public class Page extends PageElement<PageThemeItem> {
 		return l_return;
 	}
 	
+	@Override
 	public void display(Writer p_writer,Data p_data) throws Exception
 	{
 		Data l_data=getData(p_data);
@@ -105,21 +107,23 @@ public class Page extends PageElement<PageThemeItem> {
 	@Override
 	protected void makeJsObject(Writer p_writer,Data p_data)
 	{
-		
+		/* Page doesn't need to create a js object here, already done in page.js */
 	}
 
+	@Override
 	public void preSubJs(Writer p_writer,Data p_data) throws Exception
 	{
 		if(toWindowSize){
 			p_writer.print("pages.page.initToWindowSize();");
 		}
 	}
-	
+	@Override
 	public String getThemeName()
 	{
 			return "PageThemeItem";
 	}
 	
+	@Override
 	public boolean checkElement(Element<?> p_element){
 		return p_element instanceof PageElement;
 	}
@@ -129,11 +133,6 @@ public class Page extends PageElement<PageThemeItem> {
 		setTheme(new Theme(application.getThemeBase()));
 	}
 	
-	public Page()
-	{		
-		setIsNamespace(true);
-	}
-
 
 }
 
