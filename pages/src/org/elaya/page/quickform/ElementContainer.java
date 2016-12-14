@@ -10,10 +10,10 @@ public class ElementContainer extends BuildInFormElement {
 	private LabelPosition labelPosition=LabelPosition.left;
 	
 	public String getLabel(){ return label;}
-	public void setLabel(String p_label){ label=p_label;}
+	public void setLabel(String plabel){ label=plabel;}
 	public LabelPosition getLabelPoisition(){ return labelPosition;}
-	public void setLabelPosition(LabelPosition p_labelPosition){
-		labelPosition=p_labelPosition;
+	public void setLabelPosition(LabelPosition plabelPosition){
+		labelPosition=plabelPosition;
 	}
 	
 	public Element<?> getFirstWidget()
@@ -26,17 +26,17 @@ public class ElementContainer extends BuildInFormElement {
 	}
 
 	@Override
-	public void display(Writer p_writer, Data p_data) throws Exception {
+	public void display(Writer pwriter, Data pdata) throws Exception {
 		if(labelPosition==LabelPosition.left){
-			themeItem.elementBegin(getDomId(),p_writer,label);
+			themeItem.elementBegin(getDomId(),pwriter,label);
 		} else {
-			themeItem.elementBeginTop(getDomId(),p_writer, label);
+			themeItem.elementBeginTop(getDomId(),pwriter, label);
 		}
-		displaySubElements(p_writer,p_data);
-		themeItem.elementEnd(p_writer);
+		displaySubElements(pwriter,pdata);
+		themeItem.elementEnd(pwriter);
 	}
 	
-	public boolean checkElement(Element<?> p_element){
+	public boolean checkElement(Element<?> pelement){
 		return true;
 	}
 

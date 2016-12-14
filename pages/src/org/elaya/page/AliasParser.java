@@ -1,5 +1,6 @@
 package org.elaya.page;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -10,9 +11,12 @@ import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
  
 public class AliasParser {
 
@@ -28,68 +32,74 @@ public class AliasParser {
 		return errors;
 	}
 	
-
-	
-	protected void parseAlias(Node p_parent,Map<String,AliasData> p_map)
+	private void parseAliasNode(Node node,Map<String,AliasData> map)
 	{
-		Node l_currentDef=p_parent.getFirstChild();
-		Node l_alias;
-		String l_aliasValue; 
-		Node l_class;
-		while(l_currentDef!=null){
-			if(l_currentDef.getNodeType()==Node.ELEMENT_NODE){
-				if(elements.contains(l_currentDef.getNodeName())){
-					l_alias=l_currentDef.getAttributes().getNamedItem("alias");
-					l_class=l_currentDef.getAttributes().getNamedItem("value");
-					if(l_alias==null){
-						errors.add("'alias'  attribute not found");
-					}
-					if(l_class==null){
-							errors.add("'value' attribute not found");
-					} else {
-						if(l_alias != null){
-							l_aliasValue=l_alias.getNodeValue();
-							if(p_map.containsKey(l_aliasValue)){
-								errors.add("Alias '"+l_aliasValue+"' allready defined");
-							} else {		
-								p_map.put(l_aliasValue,new AliasData(l_currentDef.getNodeName(),l_class.getNodeValue()));
-							}
-						}
-					}
-					
-				} else {
-					errors.add("'alias' tag expected but '"+l_currentDef.getNodeName()+"' found");
+		Node alias;
+		String aliasValue; 
+		Node className;
+		if(elements.contains(node.getNodeName())){
+			alias=node.getAttributes().getNamedItem("alias");
+			className=node.getAttributes().getNamedItem("value");
+			if(alias==null){
+				errors.add("'alias'  attribute not found");
+			}
+			if(className==null){
+					errors.add("'value' attribute not found");
+			} else if(alias != null){
+				aliasValue=alias.getNodeValue();
+				if(map.containsKey(aliasValue)){
+					errors.add("Alias '"+aliasValue+"' allready defined");
+				} else {		
+					map.put(aliasValue,new AliasData(node.getNodeName(),className.getNodeValue()));
 				}
 			}
-			l_currentDef=l_currentDef.getNextSibling();
+		
+			
+		} else {
+			errors.add("'alias' tag expected but '"+node.getNodeName()+"' found");
+		}
+	}
+	
+	protected void parseAlias(Node pparent,Map<String,AliasData> map)
+	{
+		Node currentDef=pparent.getFirstChild();
+
+		while(currentDef!=null){
+			if(currentDef.getNodeType()==Node.ELEMENT_NODE){
+				parseAliasNode(currentDef,map);
+			}
+			currentDef=currentDef.getNextSibling();
 		}
 	}
 	
 	/**
 	 * Parse Alias file
-	 * @param p_input Input stream
-	 * @param p_map Found aliases are added to this map
+	 * @param pinput Input stream
+	 * @param pmap Found aliases are added to this map
+	 * @throws ParserConfigurationException 
+	 * @throws IOException 
+	 * @throws SAXException 
 	 * @throws Exception
 	 */
-	public void parseAliases(InputStream p_input,Map<String,AliasData> p_map) throws Exception{
-		Objects.requireNonNull(p_input, "Input stream of alias parser is null");
-		DocumentBuilderFactory l_factory=DocumentBuilderFactory.newInstance();
-		DocumentBuilder l_builder=l_factory.newDocumentBuilder();
-		Document l_doc=l_builder.parse(p_input);
-		NodeList l_nl=l_doc.getChildNodes();
-		Node l_rootNode=l_nl.item(0);
-		l_rootNode.normalize();
-		elements.add(AliasData.alias_element);
-		elements.add(AliasData.alias_jsfile);
-		elements.add(AliasData.alias_cssfile);
-		elements.add(AliasData.alias_url);
-		elements.add(AliasData.alias_reciever);
-		elements.add(AliasData.alias_security);
-		if("aliasses".equals(l_rootNode.getNodeName())){
-			parseAlias(l_rootNode,p_map);
+	public void parseAliases(InputStream input,Map<String,AliasData> pmap) throws ParserConfigurationException, SAXException, IOException{
+		Objects.requireNonNull(input, "Input stream of alias parser is null");
+		DocumentBuilderFactory factory=DocumentBuilderFactory.newInstance();
+		DocumentBuilder builder=factory.newDocumentBuilder();
+		Document doc=builder.parse(input);
+		NodeList nl=doc.getChildNodes();
+		Node rootNode=nl.item(0);
+		rootNode.normalize();
+		elements.add(AliasData.ALIAS_ELEMENT);
+		elements.add(AliasData.ALIAS_JSFILE);
+		elements.add(AliasData.ALIAS_CSSFILE);
+		elements.add(AliasData.ALIAS_URL);
+		elements.add(AliasData.ALIAS_RECIEVER);
+		elements.add(AliasData.ALIAS_SECURITY);
+		if("aliasses".equals(rootNode.getNodeName())){
+			parseAlias(rootNode,pmap);
 		} else {
 			errors.add("<aliasses> expected as outer tag");
 		}
-		p_input.close();
+		input.close();
 	}
 }

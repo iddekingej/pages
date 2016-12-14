@@ -7,8 +7,8 @@ public class DynamicMethod implements Dynamic{
 	public static class methodNotFound extends Exception{
 		private static final long serialVersionUID = 3175898698076086965L;
 		
-		public methodNotFound(Object p_object,String p_name){
-			super("Method not found :"+p_object.getClass().getName()+"."+p_name);
+		public methodNotFound(Object pobject,String pname){
+			super("Method not found :"+pobject.getClass().getName()+"."+pname);
 		}
 	}
 	
@@ -17,24 +17,24 @@ public class DynamicMethod implements Dynamic{
 	}
 	
 	@Override
-	public Object get(String p_name) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, methodNotFound
+	public Object get(String pname) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, methodNotFound
 	{			
-		return DynamicObject.get(this, p_name);		
+		return DynamicObject.get(this, pname);		
 	}
 
 	@Override
-	public void put(String p_name, Object p_value) throws Exception
+	public void put(String pname, Object pvalue) throws Exception
 	{
-		DynamicObject.put(this,p_name,p_value);
+		DynamicObject.put(this,pname,pvalue);
 	}
 
 	@Override
-	public boolean containsKey(String p_name) {
+	public boolean containsKey(String pname) {
 		try{
 			@SuppressWarnings("unused")
-			Method l_method=DynamicObject.getMethod(this,"set"+p_name) ;
+			Method method=DynamicObject.getMethod(this,"set"+pname) ;
 			return true;
-		}catch(methodNotFound l_e){
+		}catch(methodNotFound e){
 			return false;
 		}
 	}

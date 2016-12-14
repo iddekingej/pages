@@ -1,30 +1,31 @@
 package org.elaya.page.quickform;
 
 import java.util.LinkedList;
+import java.util.List;
 
 import org.elaya.page.Errors;
 import org.elaya.page.Errors.InvalidObjectType;
 import org.elaya.page.Errors.ValueNotFound;
 import org.elaya.page.data.Data;
 
-abstract public class OptionsElement extends BuildInFormElement {
+public abstract class OptionsElement extends BuildInFormElement {
 	private String optionVar;
-	private LinkedList<OptionItem> items=new LinkedList<OptionItem>();
+	private LinkedList<OptionItem> items=new LinkedList<>();
 	
-	public void addOption(String p_value,String p_text){
-		items.add(new OptionItem(p_value,p_text));
+	public void addOption(String pvalue,String ptext){
+		items.add(new OptionItem(pvalue,ptext));
 	}
 
-	public void setOptions(LinkedList<OptionItem> p_options){
+	public void setOptions(List<OptionItem> poptions){
 		items.clear();
-		items.addAll(p_options);
+		items.addAll(poptions);
 	}
 	
-	public LinkedList<OptionItem> getItems(){ return items;}
+	public List<OptionItem> getItems(){ return items;}
 
 	
-	public void setOptionVar(String p_listVar){
-		optionVar=p_listVar;
+	public void setOptionVar(String plistVar){
+		optionVar=plistVar;
 	}
 
 	public String getListVar(){
@@ -33,28 +34,30 @@ abstract public class OptionsElement extends BuildInFormElement {
 	
 	
 	
-	public LinkedList<OptionItem> getOptions(Data p_data) throws ValueNotFound, NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException, InvalidObjectType{
-		LinkedList<OptionItem> l_items=items;
+	public List<OptionItem> getOptions(Data pdata) throws ValueNotFound, NoSuchFieldException, IllegalAccessException, InvalidObjectType{
+		LinkedList<OptionItem> newItems;
 		if(optionVar.length()>0){			
-			l_items=new LinkedList<OptionItem>();
-			if(!p_data.containsKey(optionVar)) throw new Errors.ValueNotFound(optionVar);
-			Object l_object=p_data.get(optionVar);
-			if(l_object instanceof  Iterable){				
-				for(Object l_item:(Iterable<?>)l_object){ 
-					if((l_item instanceof OptionItem)){
-						l_items.add((OptionItem)l_item);
+			newItems=new LinkedList<>();
+			if(!pdata.containsKey(optionVar)){
+				throw new Errors.ValueNotFound(optionVar);
+			}
+			Object object=pdata.get(optionVar);
+			if(object instanceof  Iterable){				
+				for(Object item:(Iterable<?>)object){ 
+					if(item instanceof OptionItem){
+						newItems.add((OptionItem)item);
 					} else {
-						throw new Errors.InvalidObjectType(l_item,"OptionItem");
+						throw new Errors.InvalidObjectType(item,"OptionItem");
 					}
 				}
-				l_items.addAll(items);
+				newItems.addAll(items);
 			} else {
-				new Errors.InvalidObjectType(l_object,"Iterable");
+				new Errors.InvalidObjectType(object,"Iterable");
 			}
 		} else {
-			l_items=items;
+			newItems=items;
 		}
-		return l_items;
+		return newItems;
 	}
 
 }

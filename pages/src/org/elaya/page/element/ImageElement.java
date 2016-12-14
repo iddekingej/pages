@@ -9,16 +9,16 @@ public class ImageElement extends PageElement<ElementThemeItem> {
 	private String className;
 	private String css;
 	
-	public void setUrl(String p_url){
-		url=p_url;
+	public void setUrl(String purl){
+		url=purl;
 	}
 	
-	public void setClassName(String p_className){
-		className=p_className;
+	public void setClassName(String pclassName){
+		className=pclassName;
 	}
 	
-	public void setCss(String p_css){
-		css=p_css;
+	public void setCss(String pcss){
+		css=pcss;
 	}
 	
 	public String getUrl()
@@ -37,9 +37,9 @@ public class ImageElement extends PageElement<ElementThemeItem> {
 	}
 	
 	@Override
-	public void display(Writer p_writer,Data p_data) throws Exception {
-		Data l_data=getData(p_data);
-		themeItem.image(p_writer,replaceVariables(l_data,url),replaceVariables(l_data,className),replaceVariables(l_data,css));
+	public void display(Writer pwriter,Data pdata) throws Exception {
+		Data data=getData(pdata);
+		themeItem.image(pwriter,replaceVariables(data,url),replaceVariables(data,className),replaceVariables(data,css));
 	}
 
 	@Override

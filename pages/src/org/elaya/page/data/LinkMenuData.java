@@ -8,9 +8,9 @@ public class LinkMenuData extends LinkData {
 		return id;
 	}
 	
-	public LinkMenuData(Url p_url, String p_text,Object p_id) {
-		super(p_url, p_text);
-		id=p_id;
+	public LinkMenuData(Url purl, String ptext,Object pid) {
+		super(purl, ptext);
+		id=pid;
 	}
 
 }

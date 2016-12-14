@@ -7,36 +7,36 @@ public class Url {
 	private String url;
 	private String query;
 	
-	public Url(String p_url)
+	public Url(String purl)
 	{
-		url=p_url;
+		url=purl;
 		query="";
 	}
 	
-	public Url(String p_url,String p_query)
+	public Url(String purl,String pquery)
 	{
-		url=p_url;
-		query=p_query;
+		url=purl;
+		query=pquery;
 	}
 	
-	void addPath(String p_add){
+	void addPath(String padd){
 		if(!url.endsWith("/")){
 			url +="/";
 		}
-		url += p_add;
+		url += padd;
 	}
 	
-	public Url parameter(String p_name,Integer p_value) throws UnsupportedEncodingException 
+	public Url parameter(String pname,Integer pvalue) throws UnsupportedEncodingException 
 	{
-		return parameter(p_name,String.valueOf(p_value));
+		return parameter(pname,String.valueOf(pvalue));
 	}
-	public Url parameter(String p_name,String p_value) throws UnsupportedEncodingException{
+	public Url parameter(String pname,String pvalue) throws UnsupportedEncodingException{
 		if(query.length()>0){
 			query += "&";
 		} else {
 			query = "?";
 		}
-		query=query+URLEncoder.encode(p_name,"UTF-8")+"="+URLEncoder.encode(p_value,"UTF-8");
+		query=query+URLEncoder.encode(pname,"UTF-8")+"="+URLEncoder.encode(pvalue,"UTF-8");
 		return this;
 	}	
 
@@ -45,14 +45,14 @@ public class Url {
 		return new Url(url,query);
 	}
 	   
-	public Url copy(String p_name,Integer p_value) throws UnsupportedEncodingException{
-		return copy(p_name,p_value.toString());
+	public Url copy(String pname,Integer pvalue) throws UnsupportedEncodingException{
+		return copy(pname,pvalue.toString());
 	}
-	public Url copy(String p_name,String p_value) throws UnsupportedEncodingException
+	public Url copy(String pname,String pvalue) throws UnsupportedEncodingException
 	{
-		Url l_url=new Url(url,query);
-		l_url.parameter(p_name, p_value);
-		return l_url;
+		Url newUrl=new Url(url,query);
+		newUrl.parameter(pname, pvalue);
+		return newUrl;
 	}
 	
 	String getUrlText()

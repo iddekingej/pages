@@ -8,19 +8,19 @@ public abstract  class LayoutThemeItem extends ThemeItemBase {
 		super();
 	}
 
-	public abstract void HorizontalHeader(Writer p_writer) throws IOException;
-	public abstract void HorizontalItemHeader(Writer p_writer,HorizontalAlign p_horizontalAlign,VerticalAlign p_verticalAlign,String p_layoutWidth,String p_layoutHeight) throws IOException;
-	public abstract void HorizontalItemFooter(Writer p_writer) throws IOException;
-	public abstract void HorizontalFooter(Writer p_writer) throws IOException;
-	public abstract void verticalHeader(Writer p_writer) throws IOException;
-	public abstract void verticalItemHeader(Writer p_writer,HorizontalAlign p_horizontalAlign,VerticalAlign p_verticalAlign,String p_layoutWidth,String p_layoutHeight)throws IOException;
-	public abstract void verticalItemFooter(Writer p_writer) throws IOException;
-	public abstract void verticalFooter(Writer p_writer) throws IOException;
-	public abstract void gridHeader(Writer p_writer) throws IOException;
-	public abstract void gridRowHeader(Writer p_writer) throws IOException;
-	public abstract void gridItemHeader(Writer p_writer,String p_classPrefix,HorizontalAlign p_horizontalAlign,VerticalAlign p_verticalAlign,String p_layoutWidth,String p_layoutHeight) throws IOException;
-	public abstract void gridItemFooter(Writer p_writer) throws IOException;
-	public abstract void gridRowFooter(Writer p_writer) throws IOException;
-	public abstract void gridFooter(Writer p_writer) throws IOException;
+	public abstract void horizontalHeader(Writer pwriter) throws IOException;
+	public abstract void horizontalItemHeader(Writer pwriter,HorizontalAlign phorizontalAlign,VerticalAlign pverticalAlign,String playoutWidth,String playoutHeight) throws IOException;
+	public abstract void horizontalItemFooter(Writer pwriter) throws IOException;
+	public abstract void horizontalFooter(Writer pwriter) throws IOException;
+	public abstract void verticalHeader(Writer pwriter) throws IOException;
+	public abstract void verticalItemHeader(Writer pwriter,HorizontalAlign phorizontalAlign,VerticalAlign pverticalAlign,String playoutWidth,String playoutHeight)throws IOException;
+	public abstract void verticalItemFooter(Writer pwriter) throws IOException;
+	public abstract void verticalFooter(Writer pwriter) throws IOException;
+	public abstract void gridHeader(Writer pwriter) throws IOException;
+	public abstract void gridRowHeader(Writer pwriter) throws IOException;
+	public abstract void gridItemHeader(Writer pwriter,String pclassPrefix,HorizontalAlign phorizontalAlign,VerticalAlign pverticalAlign,String playoutWidth,String playoutHeight) throws IOException;
+	public abstract void gridItemFooter(Writer pwriter) throws IOException;
+	public abstract void gridRowFooter(Writer pwriter) throws IOException;
+	public abstract void gridFooter(Writer pwriter) throws IOException;
 
 }

@@ -10,34 +10,33 @@ public class RegexMatcher extends RequestMatcher {
 	private String urlRegex="";
 	private Pattern  urlPattern=null;
 	
-	public void setUrlRegex(String p_urlRegex)
+	public void setUrlRegex(String purlRegex)
 	{
-		urlRegex=p_urlRegex;
+		urlRegex=purlRegex;
 		urlPattern=null;
 	}
 	
 	public String getUrlRegex(){
 		return urlRegex;
 	}
-	
-	public RegexMatcher() {
-		// TODO Auto-generated constructor stub
-	}
-
 	@Override
-	boolean matchOwnRequest(ServletRequest p_request) {
-		if(p_request instanceof HttpServletRequest){
-			HttpServletRequest l_request=(HttpServletRequest)p_request;			
-			if(urlRegex==null || urlRegex=="") return true;
+	boolean matchOwnRequest(ServletRequest prequest) {
+		if(prequest instanceof HttpServletRequest){
+			HttpServletRequest request=(HttpServletRequest)prequest;			
+			if(urlRegex==null || urlRegex==""){
+				return true;
+			}
 			if(urlPattern==null){
 				urlPattern=Pattern.compile(urlRegex);
 			}			
 		
-			String l_url=l_request.getPathInfo();
-			if(l_url==null) l_url="";
+			String url=request.getPathInfo();
+			if(url==null){
+				url="";
+			}
 			
-			Matcher l_matcher=urlPattern.matcher(l_url);
-			return l_matcher.matches();			
+			Matcher matcher=urlPattern.matcher(url);
+			return matcher.matches();			
 		}
 		return false;
 	}

@@ -6,67 +6,68 @@ import org.elaya.page.Writer;
 
 public class TableThemeItem extends org.elaya.page.table.TableThemeItem {
 
-	public void getCssFiles(Set<String> p_files)
+	@Override
+	public void getCssFiles(Set<String> pfiles)
 	{
-		p_files.add("table.css");
+		pfiles.add("table.css");
 	}
 	
 	@Override
-	public void tableHeader(Writer p_writer,String p_domId) throws IOException {
-		p_writer.print("<table "+classProperty("table_header")+property("id",p_domId)+">");
+	public void tableHeader(Writer pwriter,String pdomId) throws IOException {
+		pwriter.print("<table "+classProperty("table_header")+property("id",pdomId)+">");
 	}
 
 	@Override
-	public void tableFooter(Writer p_writer) throws IOException {
-		p_writer.print("</table>");
+	public void tableFooter(Writer pwriter) throws IOException {
+		pwriter.print("</table>");
 	}
 
 	@Override
-	public void titleHeader(Writer p_writer) throws IOException {
-		p_writer.print("<tr>");
+	public void titleHeader(Writer pwriter) throws IOException {
+		pwriter.print("<tr>");
 	}
 
 	@Override
-	public void title(Writer p_writer,String p_title) throws IOException {
-		p_writer.print("<td "+classProperty("table_header_cell")+">"+escape(p_title)+"</td>");
+	public void title(Writer pwriter,String ptitle) throws IOException {
+		pwriter.print("<td "+classProperty("table_header_cell")+">"+escape(ptitle)+"</td>");
 
 	}
 
 	@Override
-	public void titleFooter(Writer p_writer) throws IOException {
-		p_writer.print("</tr>");
+	public void titleFooter(Writer pwriter) throws IOException {
+		pwriter.print("</tr>");
 	}
  
 	@Override
-	public void rowHeader(Writer p_writer) throws IOException {
-		p_writer.print("<tr>");
+	public void rowHeader(Writer pwriter) throws IOException {
+		pwriter.print("<tr>");
 	}
 
 	@Override
-	public void staticItem(Writer p_writer,String p_domId,Object p_text) throws IOException {
-		p_writer.print(escape(p_text));
+	public void staticItem(Writer pwriter,String pdomId,Object ptext) throws IOException {
+		pwriter.print(escape(ptext));
 	}
 
 	@Override
-	public void linkItem(Writer p_writer,String p_url,String p_text) throws IOException {
-		p_writer.print("<a "+property("href",p_url)+">"+escape(p_text)+"</a>");
+	public void linkItem(Writer pwriter,String purl,String ptext) throws IOException {
+		pwriter.print("<a "+property("href",purl)+">"+escape(ptext)+"</a>");
 	}
 
 	@Override
-	public void rowFooter(Writer p_writer) throws IOException {
-		p_writer.print("</tr>");
+	public void rowFooter(Writer pwriter) throws IOException {
+		pwriter.print("</tr>");
 		
 	}
 
 	@Override
-	public void itemHeader(Writer p_writer) throws IOException {
-		p_writer.print("<td "+classProperty("table_cell")+">");
+	public void itemHeader(Writer pwriter) throws IOException {
+		pwriter.print("<td "+classProperty("table_cell")+">");
 		
 	}
 
 	@Override
-	public void itemFooter(Writer p_writer) throws IOException {
-		p_writer.print("</td>");
+	public void itemFooter(Writer pwriter) throws IOException {
+		pwriter.print("</td>");
 		
 	}
 

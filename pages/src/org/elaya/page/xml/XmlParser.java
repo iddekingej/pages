@@ -25,7 +25,7 @@ public abstract class XmlParser {
 	class ParseError extends Exception{
 
 		private static final long serialVersionUID = 5079459731617602718L;
-		public  ParseError(String p_message){ super(p_message);}
+		public  ParseError(String pmessage){ super(pmessage);}
 	}
 	
 	private String fileName;
@@ -34,8 +34,8 @@ public abstract class XmlParser {
 	private Map<String,Object> nameIndex;
 	private LinkedList<Initializer> initializers=new LinkedList<>();
 		
-	public XmlParser(Map<String,Object> p_nameIndex) {
-		nameIndex=p_nameIndex;
+	public XmlParser(Map<String,Object> pnameIndex) {
+		nameIndex=pnameIndex;
 	}
 		
 	public XmlParser()
@@ -43,8 +43,8 @@ public abstract class XmlParser {
 		this(new HashMap<String,Object>());
 	}
 
-	public void addInitializer(Initializer p_initializer){
-		initializers.add(p_initializer);
+	public void addInitializer(Initializer pinitializer){
+		initializers.add(pinitializer);
 	}
 	
 
@@ -54,11 +54,11 @@ public abstract class XmlParser {
 	protected String getFileName(){
 		return fileName;
 	}
-	private String getAttributeValue(Node p_node,String p_name)
+	private String getAttributeValue(Node pnode,String pname)
 	{
-		Node l_valueNode=p_node.getAttributes().getNamedItem(p_name);
-		if(l_valueNode !=null){
-			return l_valueNode.getNodeValue();
+		Node valueNode=pnode.getAttributes().getNamedItem(pname);
+		if(valueNode !=null){
+			return valueNode.getNodeValue();
 		} else {
 			return null;
 		}		
@@ -66,240 +66,240 @@ public abstract class XmlParser {
 		
 	public List<String> getErrors(){ return errors;}
 	
-	protected void addError(String p_error,Node p_node) throws XmlLoadError
+	protected void addError(String perror,Node pnode) throws XmlLoadError
 	{
 		
-		throw new Errors.XmlLoadError(p_error);
+		throw new Errors.XmlLoadError(perror);
 	}
 
-	protected void addConfig(String p_name,XmlConfig p_config)
+	protected void addConfig(String pname,XmlConfig pconfig)
 	{
-		configs.put(p_name,p_config);
+		configs.put(pname,pconfig);
 	}
 
-	private Object parseParameterValueNode(Object p_parent,Node p_node) throws Exception
+	private Object parseParameterValueNode(Object pparent,Node pnode) throws Exception
 	{
-		Node l_first=p_node.getFirstChild();
-		if(l_first.getNextSibling() != null){
-			addError("Parameter should contain definition of one",p_node);
+		Node first=pnode.getFirstChild();
+		if(first.getNextSibling() != null){
+			addError("Parameter should contain definition of one",pnode);
 			return null;
-		} else if(l_first.getNodeType() != Node.ELEMENT_NODE){
-			return l_first.getTextContent();
+		} else if(first.getNodeType() != Node.ELEMENT_NODE){
+			return first.getTextContent();
 		} else {
-			return parseNode(p_parent,p_node);
+			return parseNode(pparent,pnode);
 		}
 	}
 	
-	private void parseParameters(Object p_parent,Node p_node) throws  Exception{
-		Node l_child=p_node.getFirstChild();
-		while(l_child!=null){
-			if(l_child.getNodeType()==Node.ELEMENT_NODE){
-				if(!"parameter".equals(l_child.getNodeName())){
-					addError("'parameter' node expected, but "+l_child.getNodeName()+" found",l_child);
+	private void parseParameters(Object pparent,Node pnode) throws  Exception{
+		Node child=pnode.getFirstChild();
+		while(child!=null){
+			if(child.getNodeType()==Node.ELEMENT_NODE){
+				if(!"parameter".equals(child.getNodeName())){
+					addError("'parameter' node expected, but "+child.getNodeName()+" found",child);
 				} else {
-					String l_name=getAttributeValue(l_child,"name");
-					if(l_name==null){
-						addError("Name attribute not found",l_child);
+					String name=getAttributeValue(child,"name");
+					if(name==null){
+						addError("Name attribute not found",child);
 						continue;
 					}
-					Object l_value;
-					if(l_child.getChildNodes().getLength()==0){
-						l_value="";
+					Object value;
+					if(child.getChildNodes().getLength()==0){
+						value="";
 					} else {
-						l_value=parseParameterValueNode(p_parent,l_child);
+						value=parseParameterValueNode(pparent,child);
 					}
-					DynamicObject.put(p_parent, l_name, l_value);
+					DynamicObject.put(pparent, name, value);
 				}
 			}
-			l_child=l_child.getNextSibling();
+			child=child.getNextSibling();
 		}
 	}
-	private void parseChildNodes(Object p_parent,Node p_node) throws  Exception
+	private void parseChildNodes(Object pparent,Node pnode) throws  Exception
 	{
-		Node l_child=p_node.getFirstChild();
-		String l_debug="";
-		while(l_child!=null){
-			if("parameters".equals(l_child.getNodeName())){
-				parseParameters(p_parent,l_child);
+		Node child=pnode.getFirstChild();
+		String debug="";
+		while(child!=null){
+			if("parameters".equals(child.getNodeName())){
+				parseParameters(pparent,child);
 			} else {
-				l_debug = l_debug+String.valueOf(l_child.getNodeType());
-				if(l_child.getNodeType()==Node.ELEMENT_NODE){
+				debug = debug+String.valueOf(child.getNodeType());
+				if(child.getNodeType()==Node.ELEMENT_NODE){
 
-					Object l_object=parseNode(p_parent,l_child);
-					if(l_object != null){
-						if(! configs.containsKey(p_node.getNodeName())){
-							addError("Unkown node type :'"+p_node.getNodeName()+"'",p_node);
+					Object object=parseNode(pparent,child);
+					if(object != null){
+						if(! configs.containsKey(pnode.getNodeName())){
+							addError("Unkown node type :'"+pnode.getNodeName()+"'",pnode);
 							return;
 						}
 						
-						XmlConfig l_info=configs.get(l_child.getNodeName());
-						String l_methodName=l_info.getDefaultSetMethod();
+						XmlConfig info=configs.get(child.getNodeName());
+						String methodName=info.getDefaultSetMethod();
 						try{							
-							Method l_method=p_parent.getClass().getMethod(l_methodName, new Class<?>[]{l_info.getBaseClass()});
-							l_method.invoke(p_parent,l_object);
-						} catch(NoSuchMethodException l_e){
-							addError("Method "+l_methodName + " in object "+p_parent.getClass().getName()+" doesn't exists",p_node);
+							Method method=pparent.getClass().getMethod(methodName, new Class<?>[]{info.getBaseClass()});
+							method.invoke(pparent,object);
+						} catch(NoSuchMethodException e){
+							addError("Method "+methodName + " in object "+pparent.getClass().getName()+" doesn't exists",pnode);
 						}
-						parseChildNodes(l_object,l_child);
+						parseChildNodes(object,child);
 					}
 				}
 			}
-			l_child=l_child.getNextSibling();
+			child=child.getNextSibling();
 		}
 	}
-	private void parseAttributes(Object p_object,Node p_node) throws ParseError, XmlLoadError 
+	private void parseAttributes(Object pobject,Node pnode) throws ParseError, XmlLoadError 
 	{
-		Objects.requireNonNull(p_object);
-		NamedNodeMap l_map=p_node.getAttributes();
-		Node l_attribute;
-		String l_attributeName;
-		for(int l_cnt=0;l_cnt<l_map.getLength();l_cnt++){
-			l_attribute=l_map.item(l_cnt);
-			l_attributeName=l_attribute.getNodeName();
-			if(!"name".equals(l_attributeName) && !"ref".equals(l_attributeName) && !"class".equals(l_attributeName) && !"file".equals(l_attributeName)){
-				if(!DynamicObject.containsKey(p_object,l_attribute.getNodeName())){
-					addError("Object of type "+p_object.getClass().getName()+" doesn't contain attribute "+l_attributeName,p_node);
+		Objects.requireNonNull(pobject);
+		NamedNodeMap map=pnode.getAttributes();
+		Node attribute;
+		String attributeName;
+		for(int cnt=0;cnt<map.getLength();cnt++){
+			attribute=map.item(cnt);
+			attributeName=attribute.getNodeName();
+			if(!"name".equals(attributeName) && !"ref".equals(attributeName) && !"class".equals(attributeName) && !"file".equals(attributeName)){
+				if(!DynamicObject.containsKey(pobject,attribute.getNodeName())){
+					addError("Object of type "+pobject.getClass().getName()+" doesn't contain attribute "+attributeName,pnode);
 				} else {
 					try{
-						DynamicObject.put(p_object,l_attribute.getNodeName(),l_attribute.getNodeValue());
+						DynamicObject.put(pobject,attribute.getNodeName(),attribute.getNodeValue());
 					} catch(Exception e){
-						throw new ParseError("Error setting attribute:'"+l_attribute+"' at object "+p_object.getClass().getName()+" error:"+e.getMessage());
+						throw new ParseError("Error setting attribute:'"+attribute+"' at object "+pobject.getClass().getName()+" error:"+e.getMessage());
 					}
 				}
 			}
 		}	
 	}
 	
-	void parseNamedObject(Object p_object,Node p_node) throws Exception
+	void parseNamedObject(Object pobject,Node pnode) throws Exception
 	{
-		String l_name=getAttributeValue(p_node,"name");
-		if(l_name != null){
-			DynamicObject.put(p_object,"name",l_name);
-			String l_refName=getName(p_object);
-			if(nameIndex.containsKey(l_refName)){
-				addError("An object with name "+l_refName+" allready exists",p_node);
+		String name=getAttributeValue(pnode,"name");
+		if(name != null){
+			DynamicObject.put(pobject,"name",name);
+			String refName=getName(pobject);
+			if(nameIndex.containsKey(refName)){
+				addError("An object with name "+refName+" allready exists",pnode);
 			} else {
-				nameIndex.put(l_refName,p_object);
+				nameIndex.put(refName,pobject);
 			}
 		}
 	}
 	
-	private Object createByClass(Node p_node,Class<?> p_default) throws Exception
+	private Object createByClass(Node pnode,Class<?> pdefault) throws Exception
 	{
-		String l_className=getAttributeValue(p_node,"class");
-		Object l_object;
-		if(l_className == null){
-			if(p_default ==null){
-				addError("Node requires 'class' property "+p_node.getNodeName(),p_node);
+		String className=getAttributeValue(pnode,"class");
+		Object object;
+		if(className == null){
+			if(pdefault ==null){
+				addError("Node requires 'class' property "+pnode.getNodeName(),pnode);
 				return null;
 			} else {
-				l_object=p_default.newInstance();
-				parseNamedObject(l_object,p_node);
+				object=pdefault.newInstance();
+				parseNamedObject(object,pnode);
 			}
 		} else {
-			String l_normalizedClass=normalizeClassName(l_className);
-			if(l_normalizedClass==null){
-				addError("Alias "+l_className+" not found",p_node);
+			String normalizedClass=normalizeClassName(className);
+			if(normalizedClass==null){
+				addError("Alias "+className+" not found",pnode);
 				return null;
 			}
-			l_object=DynamicObject.createObjectFromName(l_normalizedClass);
-			if(l_object==null){
+			object=DynamicObject.createObjectFromName(normalizedClass);
+			if(object==null){
 				return null;
 			}
-			parseNamedObject(l_object,p_node);
+			parseNamedObject(object,pnode);
 
 		}
-		return l_object;
+		return object;
 	}
 	
-	Object parseNode(Object p_parent,Node p_node) throws  Exception
+	Object parseNode(Object pparent,Node pnode) throws  Exception
 	{
-		if(! configs.containsKey(p_node.getNodeName())){
-			addError("Unkown node type :'"+p_node.getNodeName()+"'",p_node);
+		if(! configs.containsKey(pnode.getNodeName())){
+			addError("Unkown node type :'"+pnode.getNodeName()+"'",pnode);
 			return null;
 		}
-		XmlConfig l_info=configs.get(p_node.getNodeName());
-		Class<?> l_base=l_info.getBaseClass();
-		Class<?> l_default=l_info.getDefaultClass();
-		Object l_object;
-		String l_fileName=getAttributeValue(p_node,"file");
-		if(p_parent==null && l_info.getNeedParent()){
-			addError("Element "+p_node.getNodeName()+" needs a parent but=null",p_node);
+		XmlConfig info=configs.get(pnode.getNodeName());
+		Class<?> base=info.getBaseClass();
+		Class<?> defaultValue=info.getDefaultClass();
+		Object object;
+		String fileNameAttr=getAttributeValue(pnode,"file");
+		if(pparent==null && info.getNeedParent()){
+			addError("Element "+pnode.getNodeName()+" needs a parent but=null",pnode);
 		}
-		if(l_info.getCustom()){
-			return parseCustom(p_parent,p_node);
+		if(info.getCustom()){
+			return parseCustom(pparent,pnode);
 		}
-		if(l_fileName != null){
-			XmlParser l_parser=createParser();
-			l_object=l_parser.parse(l_fileName);
-			if(l_object==null){
+		if(fileNameAttr != null){
+			XmlParser parser=createParser();
+			object=parser.parse(fileNameAttr);
+			if(object==null){
 				return null;
 			}
 		} else {
-			String l_ref=getAttributeValue(p_node,"ref");
-			if(l_ref != null){
-				if(nameIndex.containsKey(l_ref)){
-					l_object=nameIndex.get(l_ref);
-					parseAttributes(l_object,p_node);
-					parseChildNodes(l_object,p_node);
+			String ref=getAttributeValue(pnode,"ref");
+			if(ref != null){
+				if(nameIndex.containsKey(ref)){
+					object=nameIndex.get(ref);
+					parseAttributes(object,pnode);
+					parseChildNodes(object,pnode);
 					return null;
 
 				} else {
-					addError("Reference to item "+l_ref+" does not exists",p_node);
+					addError("Reference to item "+ref+" does not exists",pnode);
 					return null;
 				}
-			} else if(l_base != null){
-				l_object=createByClass(p_node,l_default);
-				if(l_object==null){
+			} else if(base != null){
+				object=createByClass(pnode,defaultValue);
+				if(object==null){
 					return null;
 				}
 			} else {
-				if(l_default ==null){
-					addError("Internal error. Not a dynamic object, but defaultClass not set in config. Node name="+p_node.getNodeName(),p_node);
+				if(defaultValue ==null){
+					addError("Internal error. Not a dynamic object, but defaultClass not set in config. Node name="+pnode.getNodeName(),pnode);
 					return null;
 				} else {
-					l_object=l_default.newInstance();
-					parseNamedObject(l_object,p_node);
+					object=defaultValue.newInstance();
+					parseNamedObject(object,pnode);
 				}	
 			}
 		}
-		for(Initializer l_initializer:initializers){
-			l_initializer.processObject(l_object);
+		for(Initializer initializer:initializers){
+			initializer.processObject(object);
 		}
-		afterCreate(l_object);
-		parseAttributes(l_object,p_node);
-		return l_object;
+		afterCreate(object);
+		parseAttributes(object,pnode);
+		return object;
 	}
 	
-	public Object parse(String p_fileName) throws Exception{
-		fileName=p_fileName;
+	public Object parse(String pfileName) throws Exception{
+		fileName=pfileName;
 		addConfig();
-		DocumentBuilderFactory l_factory=DocumentBuilderFactory.newInstance();
-		DocumentBuilder l_builder=l_factory.newDocumentBuilder();
-		InputStream l_stream=openFile(p_fileName);
-		if(l_stream ==null){
-			throw new FileNotFoundException("pages/"+p_fileName);
+		DocumentBuilderFactory factory=DocumentBuilderFactory.newInstance();
+		DocumentBuilder builder=factory.newDocumentBuilder();
+		InputStream stream=openFile(pfileName);
+		if(stream ==null){
+			throw new FileNotFoundException("pages/"+pfileName);
 		}
-		Document l_doc=l_builder.parse( l_stream);
-		NodeList l_nl=l_doc.getChildNodes();
-		Node l_rootNode=l_nl.item(0);
-		l_rootNode.normalize();
-		Object l_object=parseNode(null,l_rootNode);
-		parseChildNodes(l_object,l_rootNode);
-		return l_object;
+		Document doc=builder.parse( stream);
+		NodeList nl=doc.getChildNodes();
+		Node rootNode=nl.item(0);
+		rootNode.normalize();
+		Object object=parseNode(null,rootNode);
+		parseChildNodes(object,rootNode);
+		return object;
 	}
 
-	protected void afterCreate(Object p_parent) throws Exception
+	protected void afterCreate(Object pparent) throws Exception
 	{
 		
 	}
-	protected Object parseCustom(Object p_parent,Node p_node) throws XmlLoadError
+	protected Object parseCustom(Object pparent,Node pnode) throws XmlLoadError
 	{
 		return null;
 	}
-	protected abstract InputStream openFile(String p_fileName) throws FileNotFoundException;
+	protected abstract InputStream openFile(String pfileName) throws FileNotFoundException;
 	protected abstract XmlParser createParser();
 	protected abstract void addConfig();
-	protected abstract String normalizeClassName(String p_name) throws Exception;
-	protected abstract String getName(Object p_object);
+	protected abstract String normalizeClassName(String pname) throws Exception;
+	protected abstract String getName(Object pobject);
 }

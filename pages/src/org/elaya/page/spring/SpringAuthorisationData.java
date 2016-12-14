@@ -8,13 +8,9 @@ public abstract class SpringAuthorisationData implements AuthorisationData ,Appl
 {
 	private ApplicationContext applicationContext;
 	
-	public SpringAuthorisationData() {
-		super();
-	}
-	
 	@Override
-	public void setApplicationContext(ApplicationContext p_applicationContext){
-		applicationContext=p_applicationContext;
+	public void setApplicationContext(ApplicationContext papplicationContext){
+		applicationContext=papplicationContext;
 	}
 	
 	public ApplicationContext getApplicationContext(){

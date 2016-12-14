@@ -12,13 +12,13 @@ public class ApplicationXmlParser extends XmlParser {
 		super();
 	}
 
-	public ApplicationXmlParser(Map<String, Object> p_nameIndex) {
-		super(p_nameIndex);	
+	public ApplicationXmlParser(Map<String, Object> pnameIndex) {
+		super(pnameIndex);	
 	}
 
 	@Override
-	protected InputStream openFile(String p_fileName) {
-		return getClass().getClassLoader().getResourceAsStream("../pages/"+p_fileName);
+	protected InputStream openFile(String pfileName) {
+		return getClass().getClassLoader().getResourceAsStream("../pages/"+pfileName);
 	}
 
 	@Override
@@ -33,12 +33,12 @@ public class ApplicationXmlParser extends XmlParser {
 	}
 
 	@Override
-	protected String normalizeClassName(String p_name) throws Exception {
-		return p_name;
+	protected String normalizeClassName(String pname) throws Exception {
+		return pname;
 	}
 
 	@Override
-	protected String getName(Object p_object) {
+	protected String getName(Object pobject) {
 		return "";
 	}
 

@@ -9,34 +9,29 @@ public class LogoutAction extends Action {
 
 	private String redirectUrl;
 	
-	public void setRedirectUrl(String p_redirectUrl)
+	public void setRedirectUrl(String predirectUrl)
 	{		
-		redirectUrl=p_redirectUrl;
+		redirectUrl=predirectUrl;
 	}
 	
 	public String getRedirectUrl()
 	{
 		return redirectUrl;
 	}
-	
-	public LogoutAction() {
-		super();
-	}
-
 	@Override
-	public ActionResult execute(ServletRequest p_request, ServletResponse p_response, Authenticator p_authenticator)
+	public ActionResult execute(ServletRequest prequest, ServletResponse presponse, Authenticator pauthenticator)
 			throws Exception {
-		if(p_request instanceof HttpServletRequest){
-			HttpServletRequest l_request=(HttpServletRequest)p_request;
-			l_request.setAttribute("org.elaya.page.security.SessionData", null);
-			l_request.getSession().invalidate();
-			HttpServletResponse l_httpResponse=(HttpServletResponse) p_response;		
+		if(prequest instanceof HttpServletRequest){
+			HttpServletRequest request=(HttpServletRequest)prequest;
+			request.setAttribute("org.elaya.page.security.SessionData", null);
+			request.getSession().invalidate();
+			HttpServletResponse httpResponse=(HttpServletResponse) presponse;		
 			if(redirectUrl != null){
-				l_httpResponse.sendRedirect(((HttpServletRequest)p_request).getContextPath()+redirectUrl);
+				httpResponse.sendRedirect(((HttpServletRequest)prequest).getContextPath()+redirectUrl);
 			}
-			return ActionResult.NoNextFilter;
+			return ActionResult.NONEXTFILTER;
 		}
-		return ActionResult.NextFilter;
+		return ActionResult.NEXTFILTER;
 	}
 
 }

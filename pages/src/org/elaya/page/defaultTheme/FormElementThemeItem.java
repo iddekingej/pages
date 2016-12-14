@@ -3,117 +3,149 @@ package org.elaya.page.defaultTheme;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
+
 import org.elaya.page.*;
 import org.elaya.page.quickform.OptionItem;
 
 public class FormElementThemeItem extends org.elaya.page.quickform.FormElementThemeItem {
 
-		
-	public void textElement(Writer p_writer,String p_idDom,String p_name,Object p_value,int p_maxLength) throws IOException
+	@Override
+	public void textElement(Writer pwriter,String pidDom,String pname,Object pvalue,int pmaxLength) throws IOException
 	{
-		p_writer.print("<input type='text' style='width:100%' "+property("id",p_idDom)+property("name",p_name)+property("value",p_value)+propertyF("maxlength",(p_maxLength>0?String.valueOf(p_maxLength):""))+"/>");
+		pwriter.print("<input type='text' style='width:100%' "+property("id",pidDom)+property("name",pname)+property("value",pvalue)+propertyF("maxlength",(pmaxLength>0?String.valueOf(pmaxLength):""))+"/>");
+	}
+	@Override
+	public void passwordElement(Writer pwriter,String pidDom,String pname,Object pvalue,int pmaxLength) throws IOException
+	{
+		pwriter.print("<input type='password' style='width:100%' "+property("id",pidDom)+property("name",pname)+property("value",pvalue)+propertyF("maxlength",(pmaxLength>0?String.valueOf(pmaxLength):""))+"/>");
 	}
 	
-	public void passwordElement(Writer p_writer,String p_idDom,String p_name,Object p_value,int p_maxLength) throws IOException
+	
+	public void selectElementHeader(Writer pwriter,String pidDom,String pname) throws IOException
 	{
-		p_writer.print("<input type='password' style='width:100%' "+property("id",p_idDom)+property("name",p_name)+property("value",p_value)+propertyF("maxlength",(p_maxLength>0?String.valueOf(p_maxLength):""))+"/>");
+		pwriter.print("<select  "+property("id",pidDom)+property("name",pname)+">");
 	}
 	
-	
-	public void selectElementHeader(Writer p_writer,String p_idDom,String p_name) throws IOException
+	public void selectElementOption(Writer pwriter,Object pvalue,String ptext,boolean pselected) throws IOException
 	{
-		p_writer.print("<select  "+property("id",p_idDom)+property("name",p_name)+">");
+		pwriter.print("<option "+property("value",pvalue)+(pselected?"selected='1'":"")+">"+escape(ptext)+"</option>");
 	}
 	
-	public void selectElementOption(Writer p_writer,Object p_value,String p_text,boolean p_selected) throws IOException
+	public void selectElementFooter(Writer pwriter) throws IOException
 	{
-		p_writer.print("<option "+property("value",p_value)+(p_selected?"selected='1'":"")+">"+escape(p_text)+"</option>");
+		pwriter.print("</select>");
 	}
-	
-	public void selectElementFooter(Writer p_writer) throws IOException
-	{
-		p_writer.print("</select>");
-	}
-	public void selectElement(Writer p_writer,String p_idDom,String p_name,LinkedList<OptionItem> p_items,Object p_value) throws IOException
+	public void selectElement(Writer pwriter,String pidDom,String pname,LinkedList<OptionItem> pitems,Object pvalue) throws IOException
 	{		
-		selectElementHeader(p_writer,p_idDom,p_name);
-		for(OptionItem l_item:p_items){
-			selectElementOption(p_writer,l_item.getValue(),l_item.getText(),l_item.getValue().equals(p_value));
+		selectElementHeader(pwriter,pidDom,pname);
+		for(OptionItem item:pitems){
+			selectElementOption(pwriter,item.getValue(),item.getText(),item.getValue().equals(pvalue));
 		}
-		selectElementFooter(p_writer);
+		selectElementFooter(pwriter);
 	}
 
 	
-	public void radioOption(Writer p_writer,String p_idDom,String p_name,Object p_value,String p_text,boolean p_selected) throws IOException{
-		p_writer.print("<input "+property("id",p_idDom)+property("type","radio")+property("name",p_name)+property("value",p_value)+(p_selected?"checked='1'":"")+"/>");
-		p_writer.print("<label "+property("for",p_idDom)+">"+escape(p_text)+"</label>");
+	public void radioOption(Writer pwriter,String pidDom,String pname,Object pvalue,String ptext,boolean pselected) throws IOException{
+		pwriter.print("<input "+property("id",pidDom)+property("type","radio")+property("name",pname)+property("value",pvalue)+(pselected?"checked='1'":"")+"/>");
+		pwriter.print("<label "+property("for",pidDom)+">"+escape(ptext)+"</label>");
 	}
 	
 	
-	public void radioElement(Writer p_writer,String p_idDom,String p_name,LinkedList<OptionItem> p_items,boolean p_isHorizontal,Object p_value) throws IOException
+	public void radioElement(Writer pwriter,String pidDom,String pname,LinkedList<OptionItem> pitems,boolean pisHorizontal,Object pvalue) throws IOException
 	{
-		Iterator<OptionItem> l_iter=p_items.iterator();
-		OptionItem l_item;
-		int l_cnt=0;
-		while(l_iter.hasNext()){
-			l_item=l_iter.next();
-			radioOption(p_writer,p_idDom+"_"+l_cnt,p_name,l_item.getValue(),l_item.getText(),l_item.getValue().equals(p_value));
-			if(!p_isHorizontal){
-				p_writer.print("<br/>");
+		Iterator<OptionItem> iter=pitems.iterator();
+		OptionItem item;
+		int cnt=0;
+		while(iter.hasNext()){
+			item=iter.next();
+			radioOption(pwriter,pidDom+"_"+cnt,pname,item.getValue(),item.getText(),item.getValue().equals(pvalue));
+			if(!pisHorizontal){
+				pwriter.print("<br/>");
 			}
-			l_cnt++;
+			cnt++;
 		}		
 	}
-	
-	public void checkBoxElement(Writer p_writer,String p_idDom,String p_name,Object p_value) throws IOException
-	{
-		p_writer.print("<input "+property("id",p_idDom)+property("name",p_name)+property("type","checkbox")+((p_value.toString().length()>0)?"checked='1'":"")+"/>");
-	}
-	
-	public void StaticElement(Writer p_writer,String p_idDom,String p_name,boolean p_isHtml,Object p_value) throws IOException
-	{
-		p_writer.print("<div "+property("id",p_idDom)+">");
-		if(p_isHtml){
-			p_writer.print(p_value.toString());
-		} else {
-			p_writer.print(escape(p_value.toString()));
-		}
-		p_writer.print("</div>");
-		
-	}
-
 	@Override
-	public void textArea(Writer p_writer,String p_idDom, String p_name, String p_height, String p_width, Object p_value)
+
+	public void checkBoxElement(Writer pwriter,String pidDom,String pname,Object pvalue) throws IOException
+	{
+		pwriter.print("<input "+property("id",pidDom)+property("name",pname)+property("type","checkbox")+((pvalue.toString().length()>0)?"checked='1'":"")+"/>");
+	}
+	
+	
+	@Override
+	public void textArea(Writer pwriter,String pidDom, String pname, String pheight, String pwidth, Object pvalue)
 			throws IOException {
-		String l_css="";
-		if(p_width.length()>0) l_css += "width:"+p_width+";";
-		if(p_height.length()>0) l_css += "height:"+p_height+";";
-		p_writer.print("<textarea "+property("id",p_idDom)+property("name",p_name)+property("style",l_css)+">"+escape(p_value)+"</textarea>");
+		String css="";
+		if(pwidth.length()>0){
+			css += "width:"+pwidth+";";
+		}
+		if(pheight.length()>0){
+			css += "height:"+pheight+";";
+		}
+		pwriter.print("<textarea "+property("id",pidDom)+property("name",pname)+property("style",css)+">"+escape(pvalue)+"</textarea>");
 	}
 	
 	@Override
-	public void dateElement(Writer p_writer,String p_domId,String p_name,Object p_value) throws IOException
+	public void dateElement(Writer pwriter,String pdomId,String pname,Object pvalue) throws IOException
 	{
-		p_writer.print("<input type='text' "+property("id",p_domId)+property("value",str(p_value))+"/>");
+		pwriter.print("<input type='text' "+property("id",pdomId)+property("value",str(pvalue))+"/>");
 	}
 
 	@Override
-	public void elementBegin(String p_domId,Writer p_writer,String p_label) throws Exception
+	public void elementBegin(String pdomId,Writer pwriter,String plabel) throws Exception
 	{
-		p_writer.print("<tr "+property("id",p_domId)+"><td "+property("class","pages_elementLabel")+">"+escape(p_label)+"</td><td class=\"pages_elementValue\">");
+		pwriter.print("<tr "+property("id",pdomId)+"><td "+property("class","pages_elementLabel")+">"+escape(plabel)+"</td><td class=\"pages_elementValue\">");
 		
 	}
 
 	@Override
-	public void elementBeginTop(String p_domId,Writer p_writer,String p_label) throws Exception
+	public void elementBeginTop(String pdomId,Writer pwriter,String plabel) throws Exception
 	{
-		p_writer.print("<tr "+property("id",p_domId)+"><td "+property("class","pages_elementLabel")+">"+escape(p_label)+"</td colspan='2'></tr><tr><td class=\"pages_elementValue\" colspan='2'>");
+		pwriter.print("<tr "+property("id",pdomId)+"><td "+property("class","pages_elementLabel")+">"+escape(plabel)+"</td colspan='2'></tr><tr><td class=\"pages_elementValue\" colspan='2'>");
 	}
 	
 	@Override
-	public void elementEnd(Writer p_writer) throws Exception
+	public void elementEnd(Writer pwriter) throws Exception
 	{
-		p_writer.print("</td></tr>\n");
+		pwriter.print("</td></tr>\n");
 	}
+	@Override
+	public void radioElement(Writer pwriter, String pidDom, String pname, List<OptionItem> pitems,
+			boolean pisHorizontal, Object pvalue) throws IOException {
+		Iterator<OptionItem> iter=pitems.iterator();
+		OptionItem item;
+		int cnt=0;
+		while(iter.hasNext()){
+			item=iter.next();
+			radioOption(pwriter,pidDom+"_"+cnt,pname,item.getValue(),item.getText(),item.getValue().equals(pvalue));
+			if(!pisHorizontal){
+				pwriter.print("<br/>");
+			}
+			cnt++;
+} 		
+	}
+	@Override
+	public void staticElement(Writer pwriter, String pidDom, String pname, boolean pisHtml, Object pvalue)
+			throws IOException {
+		pwriter.print("<div "+property("id",pidDom)+">");
+		if(pisHtml){
+			pwriter.print(pvalue.toString());
+		} else {
+			pwriter.print(escape(pvalue.toString()));
+		}
+		pwriter.print("</div>");		
+	}
+	@Override
+	public void selectElement(Writer writer, String idDom, String name, List<OptionItem> items, Object value)
+			throws IOException {
+		selectElementHeader(writer,idDom,name);
+		for(OptionItem l_item:items){
+			selectElementOption(writer,l_item.getValue(),l_item.getText(),l_item.getValue().equals(value));
+		}
+		selectElementFooter(writer);		
+	}
+
 	
 }

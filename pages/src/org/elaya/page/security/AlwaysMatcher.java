@@ -4,12 +4,8 @@ import javax.servlet.ServletRequest;
 
 public class AlwaysMatcher extends RequestMatcher {
 
-	public AlwaysMatcher() {
-		super();
-	}
-
 	@Override
-	boolean matchOwnRequest(ServletRequest p_request) {
+	boolean matchOwnRequest(ServletRequest prequest) {
 		return true;
 	}
 

@@ -14,45 +14,45 @@ public class GridLayout extends Layout {
 		return columns;
 	}
 	
-	public void setColumns(Integer p_columns){
-		columns=p_columns;
+	public void setColumns(Integer pcolumns){
+		columns=pcolumns;
 	}
 	
 
 	@Override
-	public void display(Writer p_writer,Data p_data) throws Exception {
-		Data l_data=getData(p_data);
-		themeItem.gridHeader(p_writer);
-		int l_col=0;
-		boolean l_hasEnd=true;
-		for(Element<?> l_element:getElements()){
-			if(l_col==0){
-				themeItem.gridRowHeader(p_writer);
-				l_hasEnd=false;
+	public void display(Writer pwriter,Data pdata) throws Exception {
+		Data data=getData(pdata);
+		themeItem.gridHeader(pwriter);
+		int col=0;
+		boolean hasEnd=true;
+		for(Element<?> element:getElements()){
+			if(col==0){
+				themeItem.gridRowHeader(pwriter);
+				hasEnd=false;
 			}
-			if(l_element.checkCondition(l_data)){
-				themeItem.gridItemHeader(p_writer,getClassPrefix(),l_element.getHorizontalAlign(),l_element.getVerticalAlign(),l_element.getLayoutWidth(),l_element.getLayoutHeight());
-				l_element.display(p_writer,l_data);
-				themeItem.gridItemFooter(p_writer);
+			if(element.checkCondition(data)){
+				themeItem.gridItemHeader(pwriter,getClassPrefix(),element.getHorizontalAlign(),element.getVerticalAlign(),element.getLayoutWidth(),element.getLayoutHeight());
+				element.display(pwriter,data);
+				themeItem.gridItemFooter(pwriter);
 			}
-			l_col++;
-			if(l_col>=columns){
-				l_col=0;
+			col++;
+			if(col>=columns){
+				col=0;
 			}
-			if(l_col==0){
-				themeItem.gridRowFooter(p_writer);
-				l_hasEnd=true;
+			if(col==0){
+				themeItem.gridRowFooter(pwriter);
+				hasEnd=true;
 			}
 		}
-		if(!l_hasEnd){
-			while(l_col<columns){
-				themeItem.gridItemHeader(p_writer,getClassPrefix(),HorizontalAlign.left,VerticalAlign.top,"","");
-				themeItem.gridItemFooter(p_writer);
-				l_col++;
+		if(!hasEnd){
+			while(col<columns){
+				themeItem.gridItemHeader(pwriter,getClassPrefix(),HorizontalAlign.LEFT,VerticalAlign.TOP,"","");
+				themeItem.gridItemFooter(pwriter);
+				col++;
 			}
-			themeItem.gridRowFooter(p_writer);
+			themeItem.gridRowFooter(pwriter);
 		}		
-		themeItem.gridFooter(p_writer);
+		themeItem.gridFooter(pwriter);
 	}
 
 }

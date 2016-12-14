@@ -9,21 +9,18 @@ import org.springframework.context.ApplicationContextAware;
 public class SpringAuthenticateAction extends AuthenticateAction implements ApplicationContextAware {
 
 	private ApplicationContext applicationContext;
-	
-	public SpringAuthenticateAction() {
-		super();
-	}
 
-	protected void afterCreateSession(AuthorisationData p_authorisationData)
+	@Override
+	protected void afterCreateSession(AuthorisationData pauthorisationData)
 	{
-		if(p_authorisationData instanceof ApplicationContextAware){
-			((ApplicationContextAware)p_authorisationData).setApplicationContext(applicationContext);
+		if(pauthorisationData instanceof ApplicationContextAware){
+			((ApplicationContextAware)pauthorisationData).setApplicationContext(applicationContext);
 		}
 	}
 
 	@Override
-	public void setApplicationContext(ApplicationContext p_applicationContext) throws BeansException {
-		applicationContext=p_applicationContext; 		
+	public void setApplicationContext(ApplicationContext papplicationContext) throws BeansException {
+		applicationContext=papplicationContext; 		
 	}	
 	
 }

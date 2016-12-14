@@ -7,55 +7,50 @@ import java.sql.SQLException;
 
 public class DBAuthenticator extends AbstractDBAuthenticator {
 
-	public DBAuthenticator() {
-		// TODO Auto-generated constructor stub
-	}
-
 	private String driverClass;
 	private String url;
 	private String password; 
 	private String username;
 
 	
-	public void setDriverClass(String p_driverClass){
-		driverClass=p_driverClass;
+	public void setDriverClass(String pdriverClass){
+		driverClass=pdriverClass;
 	}
 	
 	public String getDriverClass(){
 		return driverClass;
 	}
 	
-	public void setUrl(String p_url){
-		url=p_url;
+	public void setUrl(String purl){
+		url=purl;
 	}
 	
 	public String getUrl(){
 		return url;
 	}
 	
-	public void setPassword(String p_password){
-		password=p_password;
+	public void setPassword(String ppassword){
+		password=ppassword;
 	}
 	
 	public String getPassword(){
 		return password;
 	}
 	
-	public void setUsername(String p_username)
+	public void setUsername(String pusername)
 	{
-		username=p_username;
+		username=pusername;
 	}
 	public String getUsername(){
 		return username;
 	}
 	
-
-	
+	@Override	
 	protected Connection getConnection() throws ClassNotFoundException, SQLException
 	{
 		Class.forName(driverClass);
-		Connection l_connection=DriverManager.getConnection(url,username,password);
-		return l_connection;
+		Connection connection=DriverManager.getConnection(url,username,password);
+		return connection;
 	}
 	
 	

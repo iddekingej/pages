@@ -1,11 +1,11 @@
 package org.elaya.page;
 
 public enum SubmitType {
-	get("get"),post("post"),json("json");
+	GET("get"),POST("post"),JSON("json");
 	private String value;
 	
-	SubmitType(String p_value){
-		value=p_value;
+	SubmitType(String pvalue){
+		value=pvalue;
 	}
 	
 	public String getValue()

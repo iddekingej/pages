@@ -1,6 +1,6 @@
 package org.elaya.page.quickform;
 
-import java.util.LinkedList;
+import java.util.List;
 
 import org.elaya.page.Writer;
 import org.elaya.page.data.Data;
@@ -15,14 +15,14 @@ public class RadioElement extends OptionsElement {
 	
 	
 	public boolean getIsHorizontal(){ return isHorizontal;}
-	public void setIsHorizontal(Boolean p_horizontal){ isHorizontal=p_horizontal;}
+	public void setIsHorizontal(Boolean phorizontal){ isHorizontal=phorizontal;}
 
 	@Override
-	public void display(Writer p_writer,Data p_data) throws Exception {
-		Data l_data=getData(p_data);
-		Object l_value=getValueByName(l_data);
-		LinkedList<OptionItem> l_items=getOptions(l_data);
-		themeItem.radioElement(p_writer,getDomId(),getName(), l_items, isHorizontal,l_value);
+	public void display(Writer pwriter,Data pdata) throws Exception {
+		Data data=getData(pdata);
+		Object value=getValueByName(data);
+		List<OptionItem> items=getOptions(data);
+		themeItem.radioElement(pwriter,getDomId(),getName(), items, isHorizontal,value);
 	}
 
 	@Override

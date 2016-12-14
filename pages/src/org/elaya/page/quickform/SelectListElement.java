@@ -1,6 +1,6 @@
 package org.elaya.page.quickform;
 
-import java.util.LinkedList;
+import java.util.List;
 
 import org.elaya.page.Writer;
 import org.elaya.page.data.Data;
@@ -15,12 +15,12 @@ public class SelectListElement extends OptionsElement {
 	}
 	
 	@Override
-	public void display(Writer p_writer,Data p_data) throws Exception {
-		Data l_data=getData(p_data);
-		Object l_value=getValueByName(l_data);
-		LinkedList<OptionItem> l_items=getOptions(p_data);
+	public void display(Writer pwriter,Data pdata) throws Exception {
+		Data data=getData(pdata);
+		Object value=getValueByName(data);
+		List<OptionItem> items=getOptions(pdata);
 
-		themeItem.selectElement(p_writer,getDomId(),getName(), l_items,l_value);
+		themeItem.selectElement(pwriter,getDomId(),getName(), items,value);
 	}
 
 	@Override

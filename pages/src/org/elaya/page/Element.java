@@ -13,16 +13,16 @@ import org.elaya.page.data.*;
 import org.elaya.page.jsplug.JSPlug;
 import org.elaya.page.jsplug.JSPlug.InvalidJsPlugType;
 
-public abstract class Element<ThemeType extends ThemeItemBase> extends DynamicMethod {
-	protected ThemeType themeItem;
+public abstract class Element<T extends ThemeItemBase> extends DynamicMethod {
+	protected T themeItem;
 	protected Theme theme;
 	protected LinkedList<Element<?>> elements=new LinkedList<>();
 	private LinkedList<JSPlug> jsPlugs=new LinkedList<>();
 	private   Element<?> parent=null;
 	private int id=-1;
 	private String name="";
-	private HorizontalAlign horizontalAlign=HorizontalAlign.left;
-	private VerticalAlign  verticalAlign=VerticalAlign.top;
+	private HorizontalAlign horizontalAlign=HorizontalAlign.LEFT;
+	private VerticalAlign  verticalAlign=VerticalAlign.TOP;
 	private String layoutWidth;
 	private String layoutHeight;
 	private DataModel dataModel;
@@ -36,14 +36,14 @@ public abstract class Element<ThemeType extends ThemeItemBase> extends DynamicMe
 	{
 	}
 	
-	void setId(int p_id)
+	void setId(int pid)
 	{
-		id=p_id;
+		id=pid;
 	}
 	
-	public void setIsNamespace(boolean p_isNamespace)
+	public void setIsNamespace(boolean pisNamespace)
 	{
-		isNamespace=p_isNamespace;
+		isNamespace=pisNamespace;
 	}
 	
 	public boolean getIsNamespace()
@@ -51,9 +51,9 @@ public abstract class Element<ThemeType extends ThemeItemBase> extends DynamicMe
 		return isNamespace;
 	}
 	
-	void setNamespaceParent(Element<?> p_namespaceParent)
+	void setNamespaceParent(Element<?> pnamespaceParent)
 	{
-		namespaceParent=p_namespaceParent;
+		namespaceParent=pnamespaceParent;
 	}
 	
 	public Element<?> getNamespaceParent()
@@ -61,28 +61,34 @@ public abstract class Element<ThemeType extends ThemeItemBase> extends DynamicMe
 		return namespaceParent;
 	}
 	
-	public void addByName(Element<?> p_element)
+	public void addByName(Element<?> pelement)
 	{
-		if(byName==null) byName=new HashMap<>();
-		p_element.setNamespaceParent(this);
-		byName.put(p_element.getJsName(), p_element);
+		if(byName==null){
+			byName=new HashMap<>();
+		}
+		pelement.setNamespaceParent(this);
+		byName.put(pelement.getJsName(), pelement);
 	}
 	
 	
-	public boolean hasByName(Element<?> p_element){
-		if(byName==null) return false;
-		return byName.containsKey(p_element.getJsName());
+	public boolean hasByName(Element<?> pelement){
+		if(byName==null){
+			return false;
+		}
+		return byName.containsKey(pelement.getJsName());
 	}
 	
-	public Element<?> getByName(String p_name)
+	public Element<?> getByName(String pname)
 	{
-		if(byName==null) return null;
-		return byName.get(p_name);
+		if(byName==null){
+			return null;
+		}
+		return byName.get(pname);
 	}
 	
-	public void setJSCondition(String p_condition)
+	public void setJSCondition(String pcondition)
 	{
-		jsCondition=p_condition;
+		jsCondition=pcondition;
 	}
 	
 	public String getJSCondition()
@@ -90,9 +96,9 @@ public abstract class Element<ThemeType extends ThemeItemBase> extends DynamicMe
 		return jsCondition;
 	}
 	
-	public void setClassPrefix(String p_classPrefix)
+	public void setClassPrefix(String pclassPrefix)
 	{
-		themeItem.setClassPrefix(p_classPrefix);		
+		themeItem.setClassPrefix(pclassPrefix);		
 	}
 	
 	public String getClassPrefix()
@@ -100,9 +106,9 @@ public abstract class Element<ThemeType extends ThemeItemBase> extends DynamicMe
 		return themeItem.getClassPrefix();
 	}
 	
-	public void setCondition(String p_condition)
+	public void setCondition(String pcondition)
 	{
-		condition=p_condition;
+		condition=pcondition;
 	}
 	
 	public String getConidition()
@@ -110,62 +116,66 @@ public abstract class Element<ThemeType extends ThemeItemBase> extends DynamicMe
 		return condition;
 	}
 	
-	public boolean checkCondition(Data p_data) throws ValueNotFound, NoSuchFieldException, IllegalAccessException
+	public boolean checkCondition(Data pdata) throws ValueNotFound, NoSuchFieldException, IllegalAccessException
 	{ 
-		if(condition.length()==0) return true;
-		if(!p_data.containsKey(condition)){
+		if(condition.length()==0){
+			return true;
+		}
+		if(!pdata.containsKey(condition)){
 			throw new Errors.ValueNotFound(condition);
 		}
-		Object l_value=p_data.get(condition);
-		return l_value.equals(true);
+		Object value=pdata.get(condition);
+		return value.equals(true);
 	}
 	
-	public void calculateData(MapData p_data) throws Exception{
-		MapData l_data=p_data;
+	public void calculateData(MapData pdata) throws Exception{
+		MapData data=pdata;
 		if(dataModel != null){
-			l_data=dataModel.processData(p_data);
+			data=dataModel.processData(pdata);
 		}
-		for(Element<?>l_element:elements){
-			if(l_element.checkCondition(l_data)){
-				l_element.calculateData(l_data);
+		for(Element<?>element:elements){
+			if(element.checkCondition(data)){
+				element.calculateData(data);
 			}
 		}
 	}
 	
-	protected String replaceVariables(Data p_data,String p_string) throws Exception
+	protected String replaceVariables(Data pdata,String pstring) throws Exception
 	{
-		int l_pos=0;
-		int l_newPos;
-		StringBuilder l_return=new StringBuilder();
-		String l_varName;
-		Object l_value;
-		String l_string=p_string==null?"":p_string;		
+		int pos=0;
+		int newPos;
+		StringBuilder returnValue=new StringBuilder();
+		String varName;
+		Object value;
+		String string=pstring==null?"":pstring;		
 		while(true){
-			l_newPos=l_string.indexOf("${",l_pos);
-			if(l_newPos==-1){
-				l_return.append(l_string.substring(l_pos));
+			newPos=string.indexOf("${",pos);
+			if(newPos==-1){
+				returnValue.append(string.substring(pos));
 				break;
 			}
-			l_return.append(l_string.substring(l_pos,l_newPos));
-			l_pos=l_string.indexOf('}',l_newPos);
-			if(l_pos==-1){
+			returnValue.append(string.substring(pos,newPos));
+			pos=string.indexOf('}',newPos);
+			if(pos==-1){
 				throw new Exception("Missing end }"); //TODO: Error Location				
 			}
-			l_varName=l_string.substring(l_newPos+2,l_pos);	
-			if(!p_data.containsKey(l_varName)){
-				throw new Exception("Variable '"+l_varName+"' not found in data:"+p_data.getClass().getName());
+			varName=string.substring(newPos+2,pos);	
+			if(!pdata.containsKey(varName)){
+				throw new Exception("Variable '"+varName+"' not found in data:"+pdata.getClass().getName());
 			} else {
-				l_value=p_data.get(l_varName);				
-				if(l_value != null)	l_return.append(l_value.toString());
+				value=pdata.get(varName);				
+				if(value != null){
+					returnValue.append(value.toString());
+				}
 			}
-			l_pos++;
+			pos++;
 		}
-		return l_return.toString();
+		return returnValue.toString();
 	}
 	
-	public void setDataModel(DataModel p_dataModel)
+	public void setDataModel(DataModel pdataModel)
 	{
-		dataModel=p_dataModel;
+		dataModel=pdataModel;
 	}
 	
 	public DataModel getDataModel()
@@ -173,20 +183,22 @@ public abstract class Element<ThemeType extends ThemeItemBase> extends DynamicMe
 		return dataModel;
 	}
 	
-	public Data getData(Data p_data)
+	public Data getData(Data pdata)
 	{
-		Data l_data=null;
+		Data data=null;
 		if(dataModel != null){
-			l_data=p_data.getChild(dataModel);			
+			data=pdata.getChild(dataModel);			
 		}
-		if(l_data != null) return l_data;
-		return p_data;
+		if(data != null){
+			return data;
+		}
+		return pdata;
 	}
 	
-	public Object getValueByName(Data p_data) throws ValueNotFound, NoSuchFieldException,  IllegalAccessException
+	public Object getValueByName(Data pdata) throws ValueNotFound, NoSuchFieldException,  IllegalAccessException
 	{
-		if(p_data.containsKey(name)){
-			return p_data.get(name);
+		if(pdata.containsKey(name)){
+			return pdata.get(name);
 		} else {
 			throw new Errors.ValueNotFound(name);
 		}
@@ -194,14 +206,14 @@ public abstract class Element<ThemeType extends ThemeItemBase> extends DynamicMe
 	
 	public void process()
 	{		
-		for(Element<?> l_element:elements){
-			l_element.process();
+		for(Element<?> element:elements){
+			element.process();
 		}
 	}
 	
-	public void setLayoutWidth(String p_width)
+	public void setLayoutWidth(String pwidth)
 	{
-		layoutWidth=p_width;
+		layoutWidth=pwidth;
 	}
 	
 	public String getLayoutWidth()
@@ -210,9 +222,9 @@ public abstract class Element<ThemeType extends ThemeItemBase> extends DynamicMe
 	}
 	
 	
-	public void setLayoutHeight(String p_height)
+	public void setLayoutHeight(String pheight)
 	{
-		layoutHeight=p_height;
+		layoutHeight=pheight;
 	}
 	
 	public String getLayoutHeight()
@@ -230,14 +242,14 @@ public abstract class Element<ThemeType extends ThemeItemBase> extends DynamicMe
 		return verticalAlign;
 	}
 	
-	public void setHorizontalAlign(HorizontalAlign p_align)
+	public void setHorizontalAlign(HorizontalAlign palign)
 	{
-		horizontalAlign=p_align;
+		horizontalAlign=palign;
 	}
 	
-	public void setVerticalalign(VerticalAlign p_align)
+	public void setVerticalalign(VerticalAlign palign)
 	{
-		verticalAlign=p_align;
+		verticalAlign=palign;
 	}
 	
 	public int getId()
@@ -252,9 +264,9 @@ public abstract class Element<ThemeType extends ThemeItemBase> extends DynamicMe
 	
 
 	
-	public void setName(String p_name)
+	public void setName(String pname)
 	{
-		name=p_name;
+		name=pname;
 	}
 	
 	public String getName()
@@ -275,45 +287,47 @@ public abstract class Element<ThemeType extends ThemeItemBase> extends DynamicMe
 		if(namespaceParent==null){
 			return getJsName();
 		}
-		String l_name=namespaceParent.getNamespaceName();
+		String jsName=namespaceParent.getNamespaceName();
 		if(isNamespace){
-			l_name=l_name+".names."+getJsName();
+			jsName=jsName+".names."+getJsName();
 		}
-		return l_name;
+		return jsName;
 	}
 	public String getJsFullname() throws IOException
 	{
 		
-		if(parent==null) return getJsName();
-		String l_parent=getWidgetParent().getJsFullname();
-		if(l_parent.length()==0){
+		if(parent==null){
 			return getJsName();
 		}
-		return l_parent+".elements."+getJsName();
+		String widgetParent=getWidgetParent().getJsFullname();
+		if(widgetParent.length()==0){
+			return getJsName();
+		}
+		return widgetParent+".elements."+getJsName();
 	}
 	
-	public void getAllCssFiles(Set<String> p_files)
+	public void getAllCssFiles(Set<String> pfiles)
 	{
-		addCssFile(p_files);
-		for(Element<?> l_element:elements){
-			l_element.getAllCssFiles(p_files);
+		addCssFile(pfiles);
+		for(Element<?> element:elements){
+			element.getAllCssFiles(pfiles);
 		}
 	}
 	
-	public void getAllJsFiles(Set<String> p_files)
+	public void getAllJsFiles(Set<String> pfiles)
 	{
-		addJsFile(p_files);
-		for(Element<?> l_element:elements){
-			l_element.getAllJsFiles(p_files);
+		addJsFile(pfiles);
+		for(Element<?> element:elements){
+			element.getAllJsFiles(pfiles);
 		}		
 	}
-	public void addJsFile(Set<String> p_set)
+	public void addJsFile(Set<String> pset)
 	{ 
 		
 	}
-	public void addCssFile(Set<String> p_files)
+	public void addCssFile(Set<String> pfiles)
 	{
-			themeItem.getCssFiles(p_files);
+			themeItem.getCssFiles(pfiles);
 	}
 	
 	//TODO used?
@@ -329,9 +343,9 @@ public abstract class Element<ThemeType extends ThemeItemBase> extends DynamicMe
 	
 	public Element<?> getParent(){ return parent;}
 	
-	void setParent(Element<?> p_parent) throws IOException{
-		Objects.requireNonNull(p_parent);
-		parent=p_parent;
+	void setParent(Element<?> pparent) throws IOException{
+		Objects.requireNonNull(pparent);
+		parent=pparent;
 	}
 	public Element<?> getFirstWidget()
 	{
@@ -348,148 +362,148 @@ public abstract class Element<ThemeType extends ThemeItemBase> extends DynamicMe
 	
 	public Page getPage()
 	{
-		Element<?> l_current=this;
-		while(l_current != null){
-			if(l_current instanceof Page){
-				return (Page)l_current;
+		Element<?> current=this;
+		while(current != null){
+			if(current instanceof Page){
+				return (Page)current;
 			}
-			l_current=l_current.getParent();
+			current=current.getParent();
 		}
 		return null;
 	}
 	
 	
-	protected void preElement(Writer p_writer,Element<?> p_element) throws Exception
+	protected void preElement(Writer pwriter,Element<?> pelement) throws Exception
 	{
 		
 	}
-	protected void postElement(Writer p_writer,Element<?> p_element) throws Exception
+	protected void postElement(Writer pwriter,Element<?> pelement) throws Exception
 	{		
 	}
 	
-	public void displaySubElements(Writer p_writer,Data p_data) throws Exception
+	public void displaySubElements(Writer pwriter,Data pdata) throws Exception
 	{
-		for(Element<?> l_element:elements)
+		for(Element<?> element:elements)
 		{
-			if(l_element.checkCondition(p_data)){
-				preElement(p_writer,l_element);
-				l_element.display(p_writer,p_data);
-				postElement(p_writer,l_element);
+			if(element.checkCondition(pdata)){
+				preElement(pwriter,element);
+				element.display(pwriter,pdata);
+				postElement(pwriter,element);
 			}
 		}
 	}
 	
-	public abstract void display(Writer p_stream,Data p_data) throws Exception;
+	public abstract void display(Writer pstream,Data pdata) throws Exception;
 	public abstract String getThemeName();
 	
 	@SuppressWarnings("unchecked")
-	public final void setTheme(Theme p_theme) throws Exception
+	public final void setTheme(Theme ptheme) throws Exception
 	{
-		theme=p_theme;
-		ThemeItemBase l_themeItem=p_theme.getThemeItem(getThemeName());
-		Objects.requireNonNull(l_themeItem,"themeItem=>setTheme");
-		themeItem=(ThemeType) l_themeItem;
+		theme=ptheme;
+		ThemeItemBase newThemeItem=ptheme.getThemeItem(getThemeName());
+		Objects.requireNonNull(newThemeItem,"themeItem=>setTheme");
+		themeItem=(T) newThemeItem;
 	}
 	
-	protected void checkSubElement(Element<ThemeItemBase> p_element)
+	protected void checkSubElement(Element<ThemeItemBase> pelement)
 	{
 	}
 	
-	public final  void addJsPlug(JSPlug p_plug) throws InvalidJsPlugType{
-		Objects.requireNonNull(p_plug);
-		p_plug.setParent(this);
-		jsPlugs.add(p_plug);
+	public final  void addJsPlug(JSPlug pplug) throws InvalidJsPlugType{
+		Objects.requireNonNull(pplug);
+		pplug.setParent(this);
+		jsPlugs.add(pplug);
 	}
-	public final void addElement(Element<?> p_element) throws Exception
+	public final void addElement(Element<?> pelement) throws Exception
 	{
 	
-		Objects.requireNonNull(p_element,"addElement(p_element)");
-		if(!checkElement(p_element)){
-			throw new Errors.InvalidElement(p_element,this);
+		Objects.requireNonNull(pelement,"addElement(pelement)");
+		if(!checkElement(pelement)){
+			throw new Errors.InvalidElement(pelement,this);
 		}
-		p_element.setId(getPage().newId());
+		pelement.setId(getPage().newId());
 
-		p_element.setTheme(theme);
-		p_element.setParent(this);
-		elements.add(p_element);
-		Element<?> l_namespace;
+		pelement.setTheme(theme);
+		pelement.setParent(this);
+		elements.add(pelement);
+		Element<?> namespace;
 		if(isNamespace){
-			l_namespace=this;			
+			namespace=this;			
 		} else {
-			l_namespace=namespaceParent;			
+			namespace=namespaceParent;			
 		}
-		if(l_namespace.hasByName(p_element)){
-			throw new Errors.duplicateElementOnPage(p_element.getJsName());//TODO: Duplicate In namespace
+		if(namespace.hasByName(pelement)){
+			throw new Errors.duplicateElementOnPage(pelement.getJsName());//TODO: Duplicate In namespace
 		}
-		l_namespace.addByName(p_element);
-	}
+		namespace.addByName(pelement);
+	} 
 	
 	protected String getJsClassName()
 	{
 		return "TElement";
 	}
 	
-	protected void makeSetupJs(Writer p_writer,Data p_data) throws Exception
+	protected void makeSetupJs(Writer pwriter,Data pdata) throws Exception
 	{
 		
 	}
 	
-	protected void makeJsObject(Writer p_writer,Data p_data) throws Exception
+	protected void makeJsObject(Writer pwriter,Data pdata) throws Exception
 	{
-		p_writer.print("var l_element=new "+getJsClassName()+"("+getWidgetParent().getJsFullname()+","+p_writer.js_toString(getJsName())+","+p_writer.js_toString(name)+","+p_writer.js_toString(getDomId())+");\n");
+		pwriter.print("var element=new "+getJsClassName()+"("+getWidgetParent().getJsFullname()+","+pwriter.js_toString(getJsName())+","+pwriter.js_toString(name)+","+pwriter.js_toString(getDomId())+");\n");
 		if(this.namespaceParent!=null){
-			p_writer.print("l_element.namespaceParent="+this.namespaceParent.getNamespaceName()+";\n");
+			pwriter.print("element.namespaceParent="+this.namespaceParent.getNamespaceName()+";\n");
 		}
 
-		p_writer.print("l_element.config=function(){");
-		makeSetupJs(p_writer,p_data); 
-		for(JSPlug l_plug:jsPlugs){
-			l_plug.display(p_writer);
+		pwriter.print("element.config=function(){");
+		makeSetupJs(pwriter,pdata); 
+		for(JSPlug plug:jsPlugs){
+			plug.display(pwriter);
 		}		
-		p_writer.print("}\n");
+		pwriter.print("}\n");
 		if(byName != null){
-			StringBuilder l_condition=new StringBuilder("");
-			Element<?> l_element;
-			for(Entry<String, Element<?>> l_entry:byName.entrySet()){
-				l_element=l_entry.getValue();
-				if(l_element.getJSCondition().length()>0){
-					l_condition.append("this.names.")
-					.append(l_element.getJsName())
+			StringBuilder conditionJs=new StringBuilder("");
+			Element<?> element;
+			for(Entry<String, Element<?>> entry:byName.entrySet()){
+				element=entry.getValue();
+				if(element.getJSCondition().length()>0){
+					conditionJs.append("this.names.")
+					.append(element.getJsName())
 					.append(".display(")
-					.append(l_element.getJSCondition())
+					.append(element.getJSCondition())
 					.append(")\n");
 				}
 			}
 		
-			if(l_condition.length()>0){
-				p_writer.print("l_element.checkCondition=function(){\n "+l_condition.toString()+";\n}\n");
+			if(conditionJs.length()>0){
+				pwriter.print("element.checkCondition=function(){\n "+conditionJs.toString()+";\n}\n");
 			}
 		}
-		p_writer.print("l_element.setup();\n");
+		pwriter.print("element.setup();\n");
 	}
 	
 	
-	protected void preSubJs(Writer p_writer,Data p_data) throws Exception
+	protected void preSubJs(Writer pwriter,Data pdata) throws Exception
 	{
 		
 	}
 	
-	protected void postSubJs(Writer p_writer,Data p_data) throws Exception
+	protected void postSubJs(Writer pwriter,Data pdata) throws Exception
 	{
 		
 	}
 	
-	protected final void generateJs(Writer p_writer,Data p_data) throws Exception
+	protected final void generateJs(Writer pwriter,Data pdata) throws Exception
 	{
-		Data l_data=getData(p_data);
-		makeJsObject(p_writer,l_data);
-		preSubJs(p_writer,l_data);
-		for(Element<?> l_element:elements){
-			if(this.checkCondition(p_data)){
-				l_element.generateJs(p_writer,l_data);
+		Data data=getData(pdata);
+		makeJsObject(pwriter,data);
+		preSubJs(pwriter,data);
+		for(Element<?> element:elements){
+			if(this.checkCondition(pdata)){
+				element.generateJs(pwriter,data);
 			}
 		}
-		postSubJs(p_writer,l_data);
+		postSubJs(pwriter,data);
 
 	}
 	
@@ -498,7 +512,7 @@ public abstract class Element<ThemeType extends ThemeItemBase> extends DynamicMe
 		return elements;
 	} 
 	
-	public boolean checkElement(Element<?> p_element){
+	public boolean checkElement(Element<?> element){
 		return false;
 	}
 }

@@ -9,26 +9,21 @@ import javax.servlet.http.HttpServletResponse;
 
 public abstract class Action {
 
-	
-	public Action() {
-		// TODO Auto-generated constructor stub
-	}
-
-	protected void redirect(HttpServletRequest p_request,HttpServletResponse p_response,String p_url) throws IOException{
-		p_response.sendRedirect(p_request.getContextPath()+p_url);
+	protected void redirect(HttpServletRequest prequest,HttpServletResponse presponse,String purl) throws IOException{
+		presponse.sendRedirect(prequest.getContextPath()+purl);
 	}
 	
-	protected AuthorisationData getSessionFromRequest(ServletRequest p_request)
+	protected AuthorisationData getSessionFromRequest(ServletRequest prequest)
 	{
-		Object l_object=p_request.getAttribute("org.elaya.page.security.SessionData");
-		if(l_object != null){
-			if(l_object instanceof AuthorisationData){
-				return (AuthorisationData)l_object;
-			}
+		Object object=prequest.getAttribute("org.elaya.page.security.SessionData");
+		
+		if((object != null) && (object instanceof AuthorisationData)){
+			return (AuthorisationData)object;
 		}
+
 		return null;
 	}
 	
-	abstract public ActionResult execute(ServletRequest p_request,ServletResponse p_response,Authenticator p_authenticator) throws Exception;
+	public abstract ActionResult execute(ServletRequest prequest,ServletResponse presponse,Authenticator pauthenticator) throws Exception;
 	
 }

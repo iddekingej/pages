@@ -5,12 +5,10 @@ import javax.servlet.ServletResponse;
 
 public class AllowedAction extends Action {
 
-	public AllowedAction() {
-	}
-
-	public ActionResult execute(ServletRequest p_request, ServletResponse p_response,Authenticator p_authenticator) 
+	@Override
+	public ActionResult execute(ServletRequest prequest, ServletResponse presponse,Authenticator pauthenticator) 
 	{
-		return ActionResult.NextFilter;
+		return ActionResult.NEXTFILTER;
 	}
 
 }

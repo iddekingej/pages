@@ -5,13 +5,13 @@ import org.elaya.page.data.Data;
 
 public class DateElement extends BuildInFormElement {
 	public enum ShowMode{
-		focus("focus"),button("button"),both("both");
+		FOCUS("focus"),BUTTON("button"),BOTH("both");
 		
 		private String value;
 			
 		
-		ShowMode(String p_value){
-			value=p_value;
+		ShowMode(String pvalue){
+			value=pvalue;
 		}
 		
 		public String getValue()
@@ -20,12 +20,12 @@ public class DateElement extends BuildInFormElement {
 		}
 	}
 	
-	private ShowMode showMode=ShowMode.focus;
+	private ShowMode showMode=ShowMode.FOCUS;
 	private String buttonText;
 	
-	public void setButtonText(String p_buttonText)
+	public void setButtonText(String pbuttonText)
 	{
-		buttonText=p_buttonText;
+		buttonText=pbuttonText;
 	}
 	
 	public String getButtonText()
@@ -33,18 +33,14 @@ public class DateElement extends BuildInFormElement {
 		return buttonText;
 	}
 	
-	public void setShowMode(ShowMode p_showMode)
+	public void setShowMode(ShowMode pshowMode)
 	{
-		showMode=p_showMode;
+		showMode=pshowMode;
 	}
 	
 	public ShowMode getShowMode()
 	{
 		return showMode;
-	}
-	
-	public DateElement() {
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -53,18 +49,18 @@ public class DateElement extends BuildInFormElement {
 	}
 
 	@Override
-	public void display(Writer p_writer,Data p_data) throws Exception {
-		Data l_data=getData(p_data);
-		Object l_value=getValueByName(l_data);
-		themeItem.dateElement(p_writer,getDomId(),getName(),l_value);
+	public void display(Writer pwriter,Data pdata) throws Exception {
+		Data data=getData(pdata);
+		Object value=getValueByName(data);
+		themeItem.dateElement(pwriter,getDomId(),getName(),value);
 	}
 
 	@Override
-	protected void makeSetupJs(Writer p_writer,Data p_data) throws Exception
+	protected void makeSetupJs(Writer pwriter,Data pdata) throws Exception
 	{
-		p_writer.print("this.showOn='"+showMode.getValue()+"';\n");
+		pwriter.print("this.showOn='"+showMode.getValue()+"';\n");
 		if(buttonText != null && buttonText.length() >0){
-			p_writer.print("this.buttonText="+p_writer.js_toString(buttonText)+";");
+			pwriter.print("this.buttonText="+pwriter.js_toString(buttonText)+";");
 		}
 	}
 

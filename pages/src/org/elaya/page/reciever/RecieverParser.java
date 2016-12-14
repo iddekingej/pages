@@ -2,140 +2,141 @@ package org.elaya.page.reciever;
 
 import java.io.InputStream;
 import java.util.LinkedList;
+import java.util.List;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.elaya.page.AliasData;
 import org.elaya.page.application.Application;
 import org.elaya.page.data.DynamicMethod;
 import org.elaya.page.data.DynamicObject;
-import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
 public class RecieverParser {
-	private LinkedList<String> errors=new LinkedList<String>();
+	private LinkedList<String> errors=new LinkedList<>();
 	private Application application;
 
-	public RecieverParser(Application p_application) {		
-		application=p_application;		
+	public RecieverParser(Application papplication) {		
+		application=papplication;		
 	}
 	
-	public LinkedList<String> getErrors()
+	public List<String> getErrors()
 	{
 		return errors;
 	}
 	
-	private String getAttributeValue(Node p_node,String p_name)
+	private String getAttributeValue(Node pnode,String pname)
 	{
-		Node l_valueNode=p_node.getAttributes().getNamedItem(p_name);
-		if(l_valueNode !=null){
-			return l_valueNode.getNodeValue();
+		Node valueNode=pnode.getAttributes().getNamedItem(pname);
+		if(valueNode !=null){
+			return valueNode.getNodeValue();
 		} else {
 			return null;
 		}
 	}
 	
 	
-	private String normelizeClassName(String p_className) throws Exception
+	private String normelizeClassName(String pclassName) throws Exception
 	{
 		
-		if(p_className.startsWith("@")){			
-			String l_className=application.getAlias(p_className.substring(1),AliasData.alias_reciever);
-			if(l_className!=null){
-				return l_className;
+		if(pclassName.startsWith("@")){			
+			String className=application.getAlias(pclassName.substring(1),AliasData.ALIAS_RECIEVER);
+			if(className!=null){
+				return className;
 			}
 			
 		}
-		return p_className;
+		return pclassName;
 	}
 	
 	
 
 
-	private void setProperties(DynamicMethod p_object,Node p_node) throws DOMException, Exception
+	private void setProperties(DynamicMethod pobject,Node pnode) throws  Exception
 	{
-		NamedNodeMap l_attributes=p_node.getAttributes();
-		Node l_node;
-		for(int l_cnt=0;l_cnt<l_attributes.getLength();l_cnt++){
-			l_node=l_attributes.item(l_cnt);
-			if(!l_node.getNodeName().equals("class") ){
-				p_object.put(l_node.getNodeName(),l_node.getNodeValue());
+		NamedNodeMap attributes=pnode.getAttributes();
+		Node node;
+		for(int cnt=0;cnt<attributes.getLength();cnt++){
+			node=attributes.item(cnt);
+			if(!"class".equals(node.getNodeName())){
+				pobject.put(node.getNodeName(),node.getNodeValue());
 			}
 		}
 		
 	}
 	
 	@SuppressWarnings("unchecked")
-	private <T> T makeObject(Node p_node,Class<T> p_class) throws DOMException, Exception
+	private <T> T makeObject(Node pnode,Class<T> pclass) throws  Exception
 	{
-		String l_class=getAttributeValue(p_node,"class");
-		T l_return=null;
-		if(l_class==null){
+		String className=getAttributeValue(pnode,"class");
+		T returnValue=null;
+		if(className==null){
 			errors.add("Missing 'class' property");
 		} else {
-			Object l_object=DynamicObject.createObjectFromName(normelizeClassName(l_class));
-			if(l_object != null){
-				if(p_class.isAssignableFrom(l_object.getClass())){
-					l_return=(T) l_object;
+			Object object=DynamicObject.createObjectFromName(normelizeClassName(className));
+			if(object != null){
+				if(pclass.isAssignableFrom(object.getClass())){
+					returnValue=(T) object;
 				} else {
-					errors.add("Wrong class name class "+l_class+" is not descended of "+p_class.getName());
+					errors.add("Wrong class name class "+className+" is not descended of "+pclass.getName());
 				}
 			}
 		}
-		if(l_return != null && l_return instanceof DynamicMethod){
-			if(l_return != null)setProperties((DynamicMethod)l_return,p_node);
+		if(returnValue != null && returnValue instanceof DynamicMethod){
+			setProperties((DynamicMethod)returnValue,pnode);
 		} else {
-			l_return =null;
+			returnValue =null;
 		}
-		return l_return;
+		return returnValue;
 	}
 	
-	private void handleParameterNode(Reciever<?> p_reciever,Node p_node) throws DOMException, Exception
+	private void handleParameterNode(Reciever<?> preciever,Node pnode) throws  Exception
 	{
-		Parameter l_parameter=makeObject(p_node,Parameter.class);
-		p_reciever.addParameter(l_parameter);
+		Parameter parameter=makeObject(pnode,Parameter.class);
+		preciever.addParameter(parameter);
 		//TODO handle subnodes=>validation?
 	}
 	
-	private Reciever<?> handleRootNode(Node p_node) throws DOMException, Exception
+	private Reciever<?> handleRootNode(Node pnode) throws Exception
 	{
-		if(p_node.getNodeName() != "reciever"){
+		if(pnode.getNodeName() != "reciever"){
 			errors.add("<reciever> expected");
 			return null;
 		}
-		Reciever<?> l_reciever=makeObject(p_node,Reciever.class);
-		if(l_reciever==null){
+		Reciever<?> reciever=makeObject(pnode,Reciever.class);
+		if(reciever==null){
 			return null;
 		}
-		l_reciever.setApplication(application);
-		Node l_node=p_node.getFirstChild();
-		while(l_node != null){
-			if(l_node.getNodeType()==Node.ELEMENT_NODE){
-				if(l_node.getNodeName()=="parameter"){
-					handleParameterNode(l_reciever,l_node);
+		reciever.setApplication(application);
+		Node node=pnode.getFirstChild();
+		while(node != null){
+			if(node.getNodeType()==Node.ELEMENT_NODE){
+				if(node.getNodeName()=="parameter"){
+					handleParameterNode(reciever,node);
 				} else {
-					errors.add("Invalid node, 'parameter' expected, but '"+l_node.getNodeName()+"' found");
+					errors.add("Invalid node, 'parameter' expected, but '"+node.getNodeName()+"' found");
 				}
 			}
-			l_node=l_node.getNextSibling();
+			node=node.getNextSibling();
 		}
-		return l_reciever;
+		return reciever;
 	}
 	
-	public Reciever<?> parseXml(String p_fileName) throws DOMException, Exception
+	public Reciever<?> parseXml(String pfileName) throws  Exception
 	{
-		DocumentBuilderFactory l_factory=DocumentBuilderFactory.newInstance();
-		DocumentBuilder l_builder=l_factory.newDocumentBuilder();
+		DocumentBuilderFactory factory=DocumentBuilderFactory.newInstance();
+		DocumentBuilder builder=factory.newDocumentBuilder();
 		
-		InputStream l_input= application.getConfigStream(p_fileName);
+		InputStream input= application.getConfigStream(pfileName);
 		
-		Document l_doc=l_builder.parse(l_input);
+		Document doc=builder.parse(input);
 
 
-		Node l_node=l_doc.getFirstChild();
-		l_node.normalize();
-		return handleRootNode(l_node);
+		Node node=doc.getFirstChild();
+		node.normalize();
+		return handleRootNode(node);
 		
 	}
 }

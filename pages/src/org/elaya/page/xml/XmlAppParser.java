@@ -9,14 +9,14 @@ public abstract  class XmlAppParser extends XmlParser {
 	private Application application;
 	
 	
-	public XmlAppParser(Application p_application, Map<String, Object> p_nameIndex) {
-		super(p_nameIndex);
-		application=p_application;
+	public XmlAppParser(Application papplication, Map<String, Object> pnameIndex) {
+		super(pnameIndex);
+		application=papplication;
 	}
 
-	public XmlAppParser(Application p_application) {
+	public XmlAppParser(Application papplication) {
 		super();
-		application=p_application;
+		application=papplication;
 	}
 	
 
@@ -27,8 +27,8 @@ public abstract  class XmlAppParser extends XmlParser {
 
 	public abstract String getAliasNamespace();
 	@Override
-	protected String normalizeClassName(String p_name) throws Exception {
-		return application.normalizeClassName(p_name,getAliasNamespace());
+	protected String normalizeClassName(String pname) throws Exception {
+		return application.normalizeClassName(pname,getAliasNamespace());
 	}
 
 

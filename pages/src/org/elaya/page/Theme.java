@@ -6,24 +6,24 @@ public class Theme {
 	private String baseName;
 	private String defaultTheme;
 	
-	public Theme(String p_baseName)
+	public Theme(String pbaseName)
 	{
-		baseName=p_baseName;
+		baseName=pbaseName;
 		defaultTheme="org.elaya.page.defaultTheme";
 	}
 	
-	public ThemeItemBase getThemeItem(String p_name) throws ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException
+	public ThemeItemBase getThemeItem(String pname) throws ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException
 	{
-		Class<?> l_class;
+		Class<?> className;
 		try{			
-			l_class=Class.forName(baseName+"."+p_name);
-		}catch(ClassNotFoundException l_e){
-			l_class=Class.forName(defaultTheme+"."+p_name);
+			className=Class.forName(baseName+"."+pname);
+		}catch(ClassNotFoundException e){
+			className=Class.forName(defaultTheme+"."+pname);
 		}
-		Class<?>[] l_types={};
-		Object[] l_params={};
+		Class<?>[] types={};
+		Object[] params={};
 		
-		return (ThemeItemBase)(l_class.getConstructor(l_types).newInstance(l_params));
+		return (ThemeItemBase)(className.getConstructor(types).newInstance(params));
 	}
 
 }

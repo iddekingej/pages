@@ -5,14 +5,10 @@ import javax.servlet.ServletResponse;
 
 public class DisallowedAction extends Action {
 
-	public DisallowedAction() {
-		super();
-	}
-
 	@Override
-	public ActionResult execute(ServletRequest p_request, ServletResponse p_response, Authenticator p_authenticator)
+	public ActionResult execute(ServletRequest prequest, ServletResponse presponse, Authenticator pauthenticator)
 			throws Exception {
-		return ActionResult.NotAuthorised;
+		return ActionResult.NOTAUTHORISED;
 	}
 
 }

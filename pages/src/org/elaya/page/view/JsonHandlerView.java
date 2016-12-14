@@ -1,6 +1,7 @@
 package org.elaya.page.view;
 
-import java.util.LinkedList;
+
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,30 +18,30 @@ public class JsonHandlerView extends AbstractView {
 	String file;
 	Application application;
 		
-	public JsonHandlerView(PageMode p_mode,String p_file,Application p_application) 
+	public JsonHandlerView(PageMode pmode,String pfile,Application papplication) 
 	{
 		super(); 
-		mode=p_mode;
-		file=p_file;	
-		application=p_application;
+		mode=pmode;
+		file=pfile;	
+		application=papplication;
 	}
  
 	@Override
-	protected void renderMergedOutputModel(Map<String, Object> model, HttpServletRequest p_request,
-			HttpServletResponse p_response) throws Exception {		
-		RecieverParser l_parser=new RecieverParser(application);
-		Reciever<?> l_rec=l_parser.parseXml(file);
-		LinkedList<String> l_errors=l_parser.getErrors();
-		if(l_errors.size()>0){
-			for(String l_error:l_errors){
-				System.out.print(l_error);
+	protected void renderMergedOutputModel(Map<String, Object> model, HttpServletRequest prequest,
+			HttpServletResponse presponse) throws Exception {		
+		RecieverParser parser=new RecieverParser(application);
+		Reciever<?> rec=parser.parseXml(file);
+		List<String> errors=parser.getErrors();
+		if(!errors.isEmpty()){
+			for(String error:errors){
+				System.out.print(error);
 			}
 		} else {			
 			try{
-				l_rec.handleRequest(p_request, p_response);
-			}catch(Throwable l_e)
+				rec.handleRequest(prequest, presponse);
+			}catch(Throwable e)
 			{
-				System.out.print(l_e.getMessage());
+				System.out.print(e.getMessage());
 			}
 		}
 	}

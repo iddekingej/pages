@@ -18,9 +18,9 @@ public class Page extends PageElement<PageThemeItem> {
 		setIsNamespace(true);
 	}
 
-	public void setDocumentType(DocumentType p_type)
+	public void setDocumentType(DocumentType ptype)
 	{
-		documentType=p_type;
+		documentType=ptype;
 	}
 	
 	public DocumentType getDocumentType()
@@ -28,21 +28,21 @@ public class Page extends PageElement<PageThemeItem> {
 		return documentType;
 	}
 	
-	public void setApplication(Application p_application)
+	public void setApplication(Application papplication)
 	{
-		application=p_application;
+		application=papplication;
 	}
 	
 	public String getUrl(){ return url;}
 	
-	public void setUrl(String p_url)
+	public void setUrl(String purl)
 	{		
-		url=p_url;
+		url=purl;
 	}
 	
-	public void setToWindowSize(Boolean p_flag)
+	public void setToWindowSize(Boolean pflag)
 	{
-		toWindowSize=p_flag;
+		toWindowSize=pflag;
 	}
 	
 	public boolean getToWindowSize()
@@ -62,59 +62,59 @@ public class Page extends PageElement<PageThemeItem> {
 		return "pages.page";
 	}
 
-	private LinkedHashSet<String> processSetList(LinkedHashSet<String> p_in,String p_type) throws Exception
+	private LinkedHashSet<String> processSetList(LinkedHashSet<String> pin,String ptype) throws Exception
 	{
-		LinkedHashSet<String> l_return=new LinkedHashSet<String>();
-		for(String l_value:p_in){
-			if(l_value.charAt(0)=='@'){
-				l_value=application.getAlias(l_value.substring(1),p_type,true);
-				String[] l_list=l_value.split(",");
-				for(String l_part:l_list){
-					l_return.add(l_part);
+		LinkedHashSet<String> returnValue=new LinkedHashSet<>();
+		for(String value:pin){
+			if(value.charAt(0)=='@'){
+				value=application.getAlias(value.substring(1),ptype,true);
+				String[] list=value.split(",");
+				for(String part:list){
+					returnValue.add(part);
 				}
 			} else {
-				l_return.add(l_value);
+				returnValue.add(value);
 			}
 		}
-		return l_return;
+		return returnValue;
 	}
 	
 	@Override
-	public void display(Writer p_writer,Data p_data) throws Exception
+	public void display(Writer pwriter,Data pdata) throws Exception
 	{
-		Data l_data=getData(p_data);
-		LinkedHashSet<String> l_js=new LinkedHashSet<String>();
-		LinkedHashSet<String> l_css=new LinkedHashSet<String>();
+		Data data=getData(pdata);
+		LinkedHashSet<String> js=new LinkedHashSet<>();
+		LinkedHashSet<String> css=new LinkedHashSet<>();
 		
-		l_js.add("@pagejs");
-		l_css.add("@pagecss");
-		getAllCssFiles(l_css);
-		getAllJsFiles(l_js);
+		js.add("@pagejs");
+		css.add("@pagecss");
+		getAllCssFiles(css);
+		getAllJsFiles(js);
 		
-		LinkedHashSet<String> l_procCss=processSetList(l_css,AliasData.alias_cssfile);
-		LinkedHashSet<String> l_procJs=processSetList(l_js,AliasData.alias_jsfile);
+		LinkedHashSet<String> procCss=processSetList(css,AliasData.ALIAS_CSSFILE);
+		LinkedHashSet<String> procJs=processSetList(js,AliasData.ALIAS_JSFILE);
 		
-		themeItem.pageHeader(p_writer,documentType,l_procJs,l_procCss);	
-		displaySubElements(p_writer,l_data);
-		p_writer.jsBegin();
-		generateJs(p_writer,p_data);
-		p_writer.jsEnd();
+		themeItem.pageHeader(pwriter,documentType,procJs,procCss);	
+		displaySubElements(pwriter,data);
+		pwriter.jsBegin();
+		generateJs(pwriter,pdata);
+		pwriter.jsEnd();
 		
 
-		themeItem.pageFooter(p_writer);
+		themeItem.pageFooter(pwriter);
 	}	
 	
 	@Override
-	protected void makeJsObject(Writer p_writer,Data p_data)
+	protected void makeJsObject(Writer pwriter,Data pdata)
 	{
 		/* Page doesn't need to create a js object here, already done in page.js */
 	}
 
 	@Override
-	public void preSubJs(Writer p_writer,Data p_data) throws Exception
+	public void preSubJs(Writer pwriter,Data pdata) throws Exception
 	{
 		if(toWindowSize){
-			p_writer.print("pages.page.initToWindowSize();");
+			pwriter.print("pages.page.initToWindowSize();");
 		}
 	}
 	@Override
@@ -124,8 +124,8 @@ public class Page extends PageElement<PageThemeItem> {
 	}
 	
 	@Override
-	public boolean checkElement(Element<?> p_element){
-		return p_element instanceof PageElement;
+	public boolean checkElement(Element<?> pelement){
+		return pelement instanceof PageElement;
 	}
 
 	public void initTheme() throws Exception

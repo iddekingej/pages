@@ -11,20 +11,20 @@ public class StaticElement extends PageElement<ElementThemeItem> {
 	private String className;
 	private String css;
 	
-	public void setText(String p_text){
-		text=p_text;
+	public void setText(String ptext){
+		text=ptext;
 	}
 	
-	public void setIsHtml(Boolean p_flag){
-		isHtml=p_flag;
+	public void setIsHtml(Boolean pflag){
+		isHtml=pflag;
 	}
 	
-	public void setClassName(String p_className){
-		className=p_className;
+	public void setClassName(String pclassName){
+		className=pclassName;
 	}
 	
-	public void setCss(String p_css){
-		css=p_css;
+	public void setCss(String pcss){
+		css=pcss;
 	}
 	
 	public String getText()
@@ -48,14 +48,13 @@ public class StaticElement extends PageElement<ElementThemeItem> {
 	}
 	
 	@Override
-	public void display(Writer p_writer,Data p_data) throws Exception {
-		Data l_data=getData(p_data);
-		themeItem.staticElement(p_writer,replaceVariables(l_data,text), isHtml, replaceVariables(l_data,className), replaceVariables(l_data,css));
+	public void display(Writer pwriter,Data pdata) throws Exception {
+		Data data=getData(pdata);
+		themeItem.staticElement(pwriter,replaceVariables(data,text), isHtml, replaceVariables(data,className), replaceVariables(data,css));
 	}
 
 	@Override
 	public String getThemeName() {
-		// TODO Auto-generated method stub
 		return "ElementThemeItem";
 	}
 

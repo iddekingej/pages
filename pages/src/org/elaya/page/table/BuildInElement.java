@@ -1,6 +1,7 @@
 package org.elaya.page.table;
 
-abstract public class BuildInElement extends TableElement<TableThemeItem> {
+public abstract class BuildInElement extends TableElement<TableThemeItem> {
+	@Override
 	public String getThemeName() {	
 		return "TableThemeItem";
 	}

@@ -18,42 +18,36 @@ public class PageView extends AbstractView {
 	PageMode mode;	
 	Application application;
 	
-	public PageView()
-	{
-		
-	}
-	public PageView(PageMode p_mode,String p_file,Application p_application) {
+	public PageView(PageMode pmode,String pfile,Application papplication) {
 		super(); 
-		mode=p_mode;
-		path=p_file;
-		application=p_application;
+		mode=pmode;
+		path=pfile;
+		application=papplication;
 	}
 
 
 	@Override
-	protected void renderMergedOutputModel(Map<String, Object> p_map, HttpServletRequest p_request, HttpServletResponse p_response)
+	protected void renderMergedOutputModel(Map<String, Object> pmap, HttpServletRequest prequest, HttpServletResponse presponse)
 			throws Exception {
-		// TODO Auto-generated method stub
-		MapData l_md=new MapData("___TOP",null);
-		l_md.setByMap(p_map);
-		String l_fileName="";
+		MapData md=new MapData("___TOP",null);
+		md.setByMap(pmap);
+		String fileName="";
 		
 		
 		if(mode.equals(PageMode.path)){
-			l_fileName=path+p_request.getRequestURI().substring(p_request.getContextPath().length())+".xml";
+			fileName=path+prequest.getRequestURI().substring(prequest.getContextPath().length())+".xml";
 		} else if(mode.equals(PageMode.filename)) {
-			l_fileName=path;
+			fileName=path;
 		}
 
-		Page l_page=application.loadPage(l_fileName,true);
+		Page page=application.loadPage(fileName,true);
 
-		Writer l_writer=new Writer(application,p_request,p_response);
-		if(l_page != null){
-			l_page.calculateData(l_md);
-			l_page.setUrl(p_request.getRequestURI());
-			//p_response.setContentType("application/xml;charset=UTF-8");
-			l_page.display(l_writer,l_md);
-			l_writer.flush();
+		Writer writer=new Writer(application,prequest,presponse);
+		if(page != null){
+			page.calculateData(md);
+			page.setUrl(prequest.getRequestURI());
+			page.display(writer,md);
+			writer.flush();
 		} else {
 			logger.info("Page =null");
 		}

@@ -18,19 +18,19 @@ import org.w3c.dom.Node;
 public class UiXmlParser extends XmlAppParser {
 	private ClassLoader classLoader;
 
-	public UiXmlParser(Application p_application,ClassLoader p_classLoader) {
-		super(p_application);		
-		classLoader=p_classLoader;
+	public UiXmlParser(Application papplication,ClassLoader pclassLoader) {
+		super(papplication);		
+		classLoader=pclassLoader;
 	}
 
-	public UiXmlParser(Application p_application,ClassLoader p_classLoader,Map<String, Object> p_nameIndex) {
-		super(p_application,p_nameIndex);		
-		classLoader=p_classLoader;
+	public UiXmlParser(Application papplication,ClassLoader pclassLoader,Map<String, Object> pnameIndex) {
+		super(papplication,pnameIndex);		
+		classLoader=pclassLoader;
 	}
 	
 	@Override
-	protected InputStream openFile(String p_fileName) throws FileNotFoundException {		
-		return getApplication().getConfigStream(p_fileName);		
+	protected InputStream openFile(String pfileName) throws FileNotFoundException {		
+		return getApplication().getConfigStream(pfileName);		
 	}
  
 	@Override
@@ -38,38 +38,43 @@ public class UiXmlParser extends XmlAppParser {
 		return new UiXmlParser(getApplication(),classLoader,getNameIndex());
 	}
 	
-	private LinkedList<OptionItem> parseOptions(Node p_parent) throws XmlLoadError{
-		LinkedList<OptionItem> l_list=new LinkedList<>();
-		Node l_child=p_parent.getFirstChild();
-		Node l_valueNode;
-		Node l_textNode;
-		while(l_child!=null){
-			if(l_child.getNodeType()==Node.ELEMENT_NODE){
-				if(l_child.getNodeName()=="option"){
-					l_valueNode=l_child.getAttributes().getNamedItem("value");
-					l_textNode=l_child.getAttributes().getNamedItem("text");
-					if(l_valueNode ==null){
-						addError("Missing 'value' attribute in tag ",l_child);				
-					}
-					if(l_textNode == null){
-						addError("Missing 'text' attribute in tag ",l_child);						
-					}
-					if(l_valueNode != null && l_textNode != null){
-						l_list.add(new OptionItem(l_valueNode.getNodeValue(),l_textNode.getNodeValue()));
-					}
-				} else {
-					addError("Options list contain invalid tag ",l_child);
-				}
+	private void processOption(Node child,LinkedList<OptionItem> list) throws XmlLoadError
+	{
+		Node valueNode;
+		Node textNode;
+		if(child.getNodeName()=="option"){
+			valueNode=child.getAttributes().getNamedItem("value");
+			textNode=child.getAttributes().getNamedItem("text");
+			if(valueNode ==null){
+				addError("Missing 'value' attribute in tag ",child);				
 			}
-			l_child=l_child.getNextSibling();
+			if(textNode == null){
+				addError("Missing 'text' attribute in tag ",child);						
+			}
+			if(valueNode != null && textNode != null){
+				list.add(new OptionItem(valueNode.getNodeValue(),textNode.getNodeValue()));
+			}
+		} else {
+			addError("Options list contain invalid tag ",child);
 		}
-		return l_list;
+	}
+	private LinkedList<OptionItem> parseOptions(Node pparent) throws XmlLoadError{
+		LinkedList<OptionItem> list=new LinkedList<>();
+		Node child=pparent.getFirstChild();
+
+		while(child!=null){
+			if(child.getNodeType()==Node.ELEMENT_NODE){
+				processOption(child,list);
+			}
+			child=child.getNextSibling();
+		}
+		return list;
 }
 	@Override
-	protected Object parseCustom(Object p_parent,Node p_node) throws XmlLoadError
+	protected Object parseCustom(Object pparent,Node pnode) throws XmlLoadError
 	{
-		if(p_node.getNodeName()=="options"){
-			return parseOptions(p_node);
+		if(pnode.getNodeName()=="options"){
+			return parseOptions(pnode);
 		}
 		return null;
 	}
@@ -84,28 +89,28 @@ public class UiXmlParser extends XmlAppParser {
 	}
 
 	@Override
-	protected void afterCreate(Object p_object) throws Exception
+	protected void afterCreate(Object pobject) throws Exception
 	{
-		if(p_object instanceof DataModel){
-			((DataModel)p_object).setApplication(getApplication());
+		if(pobject instanceof DataModel){
+			((DataModel)pobject).setApplication(getApplication());
 		}
-		if(p_object instanceof Page){
-			((Page)p_object).setApplication(getApplication());
-			((Page)p_object).initTheme();
+		if(pobject instanceof Page){
+			((Page)pobject).setApplication(getApplication());
+			((Page)pobject).initTheme();
 		}
 	}
 
 	@Override
-	protected String getName(Object p_object) {
-		if(p_object instanceof Element<?>){
-			return ((Element<?>)p_object).getNamespaceName();
+	protected String getName(Object pobject) {
+		if(pobject instanceof Element<?>){
+			return ((Element<?>)pobject).getNamespaceName();
 		}
 		return "";
 	}
 
 	@Override
 	public String getAliasNamespace() {
-		return AliasData.alias_element;
+		return AliasData.ALIAS_ELEMENT;
 	}
 
 }

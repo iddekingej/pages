@@ -7,108 +7,82 @@ public class ElementThemeItem extends org.elaya.page.element.ElementThemeItem {
 
 
 	@Override
-	public void staticElement(Writer p_writer,String p_text, boolean p_isHtml, String p_class, String p_css) throws IOException {
-		p_writer.print("<span "+propertyF("class",p_class)+propertyF("style",p_css)+">");
-		if(p_isHtml){
-			p_writer.print(p_text);
+	public void staticElement(Writer pwriter,String ptext, boolean pisHtml, String pclass, String pcss) throws IOException {
+		pwriter.print("<span "+propertyF("class",pclass)+propertyF("style",pcss)+">");
+		if(pisHtml){
+			pwriter.print(ptext);
 		} else {
-			p_writer.print(escape(p_text));
+			pwriter.print(escape(ptext));
 		}
-		p_writer.print("</span>");
+		pwriter.print("</span>");
 
 	}
 
 	@Override
-	public void image(Writer p_writer,String p_url, String p_class, String p_css) throws IOException {
-		p_writer.print("<img "+property("src",p_url)+propertyF("class",p_class)+propertyF("style",p_css)+"/>");
+	public void image(Writer pwriter,String purl, String pclass, String pcss) throws IOException {
+		pwriter.print("<img "+property("src",purl)+propertyF("class",pclass)+propertyF("style",pcss)+"/>");
 
 	}
 
 	@Override
-	public void panelHeader(Writer p_writer,String p_class, String p_css) throws IOException {
-		p_writer.print("<div "+propertyF("class",p_class)+propertyF("style",p_css)+">");
+	public void panelHeader(Writer pwriter,String pclass, String pcss) throws IOException {
+		pwriter.print("<div "+propertyF("class",pclass)+propertyF("style",pcss)+">");
 
 	}
 
 	@Override
-	public void panelFooter(Writer p_writer) throws IOException {
-		p_writer.print("</div>");
+	public void panelFooter(Writer pwriter) throws IOException {
+		pwriter.print("</div>");
 	}
 
 	@Override
-	public void link(Writer p_writer,String p_url, String p_text, String p_class, String p_css) throws IOException {
-		p_writer.print("<a "+property("href",p_url)+propertyF("class",p_class)+propertyF("style",p_css)+">"+escape(p_text)+"</a>");
+	public void link(Writer pwriter,String purl, String ptext, String pclass, String pcss) throws IOException {
+		pwriter.print("<a "+property("href",purl)+propertyF("class",pclass)+propertyF("style",pcss)+">"+escape(ptext)+"</a>");
 	}
 
 	@Override
-	public void horizontalSpacer(Writer p_writer) throws IOException {
-		p_writer.print("<div style='width:100%'>&#160;</div>");
+	public void horizontalSpacer(Writer pwriter) throws IOException {
+		pwriter.print("<div style='width:100%'>&#160;</div>");
 	}
 
 	@Override
-	public void verticalSpacer(Writer p_writer) throws IOException {
-		p_writer.print("<div style='height:100%'>&#160;</div>");
+	public void verticalSpacer(Writer pwriter) throws IOException {
+		pwriter.print("<div style='height:100%'>&#160;</div>");
 	}
 	
 	@Override
-	public void MenubarHeader(Writer p_writer,String p_domId) throws IOException
-	{
-		p_writer.print("<ul "+property("id",p_domId)+">\n");
-	}
-	@Override
-	public void MenubarFooter(Writer p_writer) throws IOException{
-		p_writer.print("</ul>\n");
-	}
-	@Override
-	public void SubMenuHeader(Writer p_writer,String p_icon,String p_title)  throws IOException
-	{
-	    p_writer.print("<li> <a "+propertyF("data-icon",p_icon)+">"+escape(p_title)+"</a><ul>\n");
-	}
-	@Override
-	public void SubMenuFooter(Writer p_writer)  throws IOException
-	{
-		p_writer.print("</ul></li>\n");
-	}
-	
-	@Override
-	public void MenuItem(Writer p_writer,String p_icon,String p_title,String p_url)  throws IOException
-	{
-		  p_writer.print("<li> <a "+propertyF("data-icon",p_icon)+propertyF("href",p_url)+">"+escape(p_title)+"</a></li>\n");
-	}
-
-	@Override
-	public void menuBarHeader(Writer p_writer) throws IOException {
-		p_writer.print("<table class='menubar'><tr>");
+	public void menuBarHeader(Writer pwriter) throws IOException {
+		pwriter.print("<table class='menubar'><tr>");
 		
 	}
 
 	@Override
-	public void menuBarItemHeader(Writer p_writer) throws IOException {
-		p_writer.print("<td class='menubar_item'>");
+	public void menuBarItemHeader(Writer pwriter) throws IOException {
+		pwriter.print("<td class='menubar_item'>");
 	}
 
 	@Override
-	public void menuBarItemFooter(Writer p_writer) throws IOException {
-		p_writer.print("</td>");
+	public void menuBarItemFooter(Writer pwriter) throws IOException {
+		pwriter.print("</td>");
 		
 	}
 
 	@Override
-	public void menuBarFooter(Writer p_writer) throws IOException {
-		p_writer.print("<td style='width:100%'>&nbsp;</td></tr></table>");
+	public void menuBarFooter(Writer pwriter) throws IOException {
+		pwriter.print("<td style='width:100%'>&nbsp;</td></tr></table>");
 	}
 	
 
 
 	@Override
-	public void menu(Writer p_writer, String p_id, String p_title) throws IOException {
+	public void menu(Writer pwriter, String pid, String ptitle) throws IOException {
 		// TODO Auto-generated method stub
-		p_writer.print("<div class='menu' "+property("id",p_id)+" >"+escape(p_title)+"</div>");
+		pwriter.print("<div class='menu' "+property("id",pid)+" >"+escape(ptitle)+"</div>");
 	}
 
 	@Override
-	public void menuSeperator(Writer p_writer) throws IOException {
-		p_writer.print("<div class='menu_seperator'>&nbsp;</div>");		
+	public void menuSeperator(Writer pwriter) throws IOException {
+		pwriter.print("<div class='menu_seperator'>&nbsp;</div>");		
 	}
 
 	

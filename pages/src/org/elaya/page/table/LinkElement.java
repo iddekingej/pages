@@ -14,12 +14,12 @@ public class LinkElement extends BuildInElement {
 		}
 	}
 	@Override
-	public void display(Writer p_writer,Data p_data) throws Exception {
-		Data l_data=getData(p_data);
-		Object l_value=getValueByName(p_data);		
-		if(l_value instanceof LinkData){
-			LinkData l_linkData=(LinkData)l_value;
-			themeItem.linkItem(p_writer,replaceVariables(l_data,l_linkData.getUrlText()), replaceVariables(l_data,l_linkData.getText()));
+	public void display(Writer pwriter,Data pdata) throws Exception {
+		Data data=getData(pdata);
+		Object value=getValueByName(pdata);		
+		if(value instanceof LinkData){
+			LinkData linkData=(LinkData)value;
+			themeItem.linkItem(pwriter,replaceVariables(data,linkData.getUrlText()), replaceVariables(data,linkData.getText()));
 		} else {
 			throw new ValueNotLinkData();
 		}

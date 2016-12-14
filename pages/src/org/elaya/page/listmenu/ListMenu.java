@@ -16,17 +16,17 @@ public class ListMenu extends PageElement<ListMenuThemeItem> {
 		setIsNamespace(true);
 	}
 	
-	public void setTitle(String p_title)
+	public void setTitle(String ptitle)
 	{
-		title=p_title;
+		title=ptitle;
 	}
 	
 	public String getTitle(){
 		return title;
 	}
 	
-	public void setSelectionVariable(String p_selectionVariable){
-		selectionVariable=p_selectionVariable;
+	public void setSelectionVariable(String pselectionVariable){
+		selectionVariable=pselectionVariable;
 	}
 	
 	public String getSelectionVariable()
@@ -35,37 +35,37 @@ public class ListMenu extends PageElement<ListMenuThemeItem> {
 	}
 	
 	@Override
-	public boolean checkElement(Element<?> p_element)
+	public boolean checkElement(Element<?> pelement)
 	{
-		return p_element instanceof ListMenuItem;
+		return pelement instanceof ListMenuItem;
 	}
 	
 	
 	@Override
-	public void display(Writer p_writer,Data p_data) throws Exception {
-		Data l_data=getData(p_data);		
-		Object l_selectedValue=null;
+	public void display(Writer pwriter,Data pdata) throws Exception {
+		Data data=getData(pdata);		
+		Object selectedValue=null;
 		if(selectionVariable.length()>0){
-			l_selectedValue=l_data.get(selectionVariable);
+			selectedValue=data.get(selectionVariable);
 		}
-		themeItem.header(p_writer,replaceVariables(l_data,title));
-		for(Element<?> l_element:getElements()){
+		themeItem.header(pwriter,replaceVariables(data,title));
+		for(Element<?> element:getElements()){
 			
-			if(l_element instanceof ListMenuItem){
-				if(l_element.checkCondition(l_data)){
-					String l_value=((ListMenuItem<?>)l_element).getValue();
-					if( (l_value != null)? l_value.equals(l_selectedValue):false){
-						themeItem.preItemSelected(p_writer);
+			if(element instanceof ListMenuItem){
+				if(element.checkCondition(data)){
+					String value=((ListMenuItem<?>)element).getValue();
+					if( (value != null)? value.equals(selectedValue):false){
+						themeItem.preItemSelected(pwriter);
 					} else {
-						themeItem.preItem(p_writer);
+						themeItem.preItem(pwriter);
 					}
-					l_element.display(p_writer,l_data);
-					themeItem.postItem(p_writer);
+					element.display(pwriter,data);
+					themeItem.postItem(pwriter);
 				}
 			}
 
 		}
-		themeItem.footer(p_writer);
+		themeItem.footer(pwriter);
 	}
 
 	@Override

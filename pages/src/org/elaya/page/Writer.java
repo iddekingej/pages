@@ -17,52 +17,52 @@ public class Writer {
 	private String cssPath="resources/pages/css/";
 	private String imgPath="resources/pages/images/";	
 	
-	public void setContentType(String p_str)
+	public void setContentType(String pstr)
 	{
-		response.setContentType(p_str);
+		response.setContentType(pstr);
 	}
 	
-	public void print(String p_str) throws IOException
+	public void print(String pstr) throws IOException
 	{
-		stream.print(p_str);
+		stream.print(pstr);
 	}
 	
-	public String str(Object p_value){
-		if(p_value==null){
+	public String str(Object pvalue){
+		if(pvalue==null){
 			return "";
 		}
-		return p_value.toString();
+		return pvalue.toString();
 	}
 	
-	public String escape(String p_value)
+	public String escape(String pvalue)
 	{
-		return HtmlUtils.htmlEscape(str(p_value));
+		return HtmlUtils.htmlEscape(str(pvalue));
 	}
 	
-	public String escape(Object p_value){
-		return escape(str(p_value));
+	public String escape(Object pvalue){
+		return escape(str(pvalue));
 	}
 	
-	public String property(String p_name,Object p_value)
+	public String property(String pname,Object pvalue)
 	{
-		return p_name+"=\""+escape(p_value)+"\" ";
+		return pname+"=\""+escape(pvalue)+"\" ";
 	}
 	
-	public String propertyF(String p_name,Object p_value)
+	public String propertyF(String pname,Object pvalue)
 	{
-		String l_str=str(p_value);
-		if(l_str.length()>0){
-			return property(p_name,p_value);
+		String str=str(pvalue);
+		if(str.length()>0){
+			return property(pname,pvalue);
 		}
 		return "";
 	}
 
-	public void jsInclude(String p_path) throws IOException{
-		print("<script type='text/javascript' "+property("src",p_path)+"></script>");
+	public void jsInclude(String ppath) throws IOException{
+		print("<script type='text/javascript' "+property("src",ppath)+"></script>");
 	}
 	
-	public void cssInclude(String p_path) throws IOException{
-		print("<link rel='stylesheet' type='text/css' "+property("href",p_path)+"></link>");
+	public void cssInclude(String ppath) throws IOException{
+		print("<link rel='stylesheet' type='text/css' "+property("href",ppath)+"></link>");
 	}
 	
 	public void jsBegin() throws IOException
@@ -81,53 +81,55 @@ public class Writer {
 	}
 	
 	
-	public String js_toString(Object p_value){
-		if(p_value==null) return "\"\"";
-		return "\""+str(p_value).replace("\"","\\\"")+"\"";
+	public String js_toString(Object pvalue){
+		if(pvalue==null){
+			return "\"\"";
+		}
+		return "\""+str(pvalue).replace("\"","\\\"")+"\"";
 	}
 	
-	public void objVar(String p_var,String p_value) throws IOException
+	public void objVar(String pvar,String pvalue) throws IOException
 	{
-		print("this."+p_var+"="+js_toString(p_value)+";");
+		print("this."+pvar+"="+js_toString(pvalue)+";");
 	}
 
 	public String getBasePath(){
 		return request.getContextPath();
 	}
 	
-	public String procesUrl(String p_url) throws Exception
+	public String procesUrl(String purl) throws Exception
 	{
-		String l_url=p_url;
-		if(l_url.startsWith("@")){
-			l_url=application.getAlias(l_url.substring(1),AliasData.alias_url,true);
+		String url=purl;
+		if(url.startsWith("@")){
+			url=application.getAlias(url.substring(1),AliasData.ALIAS_URL,true);
 		}
-		if(l_url.startsWith("+")){
-			return getBasePath()+"/"+l_url.substring(1);
+		if(url.startsWith("+")){
+			return getBasePath()+"/"+url.substring(1);
 		} else {
-			return l_url;
+			return url;
 		}
 	}
 	
-	public String getJsPath(String p_file)
+	public String getJsPath(String pfile)
 	{
-		return getBasePath()+"/"+jsPath+p_file;
+		return getBasePath()+"/"+jsPath+pfile;
 	}
 	
-	public String getCssPath(String p_file)
+	public String getCssPath(String pfile)
 	{
-		return getBasePath()+"/"+cssPath+p_file;
+		return getBasePath()+"/"+cssPath+pfile;
 	}
 	
-	public String getImgPath(String p_file)
+	public String getImgPath(String pfile)
 	{
-		return getBasePath()+"/"+imgPath+p_file;
+		return getBasePath()+"/"+imgPath+pfile;
 	}
 		
 	
-	public Writer(Application p_application,HttpServletRequest p_request,HttpServletResponse p_response) throws IOException {
-		application=p_application;
-		response=p_response;
-		request=p_request;
+	public Writer(Application papplication,HttpServletRequest prequest,HttpServletResponse presponse) throws IOException {
+		application=papplication;
+		response=presponse;
+		request=prequest;
 		stream=response.getOutputStream();
 	}
 

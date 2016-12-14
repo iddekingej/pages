@@ -19,9 +19,9 @@ public abstract  class Reciever<T extends Dynamic> extends DynamicMethod {
 	private List<Parameter> parameters=new LinkedList<>();
 	private Application application;
 
-	void setApplication(Application p_application)
+	void setApplication(Application papplication)
 	{
-		application=p_application;
+		application=papplication;
 	}
 	
 	protected Application getApplication()
@@ -30,18 +30,18 @@ public abstract  class Reciever<T extends Dynamic> extends DynamicMethod {
 	}
 	protected Dynamic getObject() throws NoSuchMethodException, ClassNotFoundException, InstantiationException, IllegalAccessException,  InvocationTargetException, InvalidObjectType
 	{ 
-		Constructor<?> l_dataConstructor=DynamicObject.getConstructorByName(dataClass,new Class<?>[]{});
-		Object l_object=l_dataConstructor.newInstance();
-		if(l_object instanceof Dynamic){
-			return (Dynamic)l_object;
+		Constructor<?> dataConstructor=DynamicObject.getConstructorByName(dataClass,new Class<?>[]{});
+		Object object=dataConstructor.newInstance();
+		if(object instanceof Dynamic){
+			return (Dynamic)object;
 		}
 		
-		throw new Errors.InvalidObjectType(l_object,"DynamicData");
+		throw new Errors.InvalidObjectType(object,"DynamicData");
 	}
 	
-	public void addParameter(Parameter p_parameter)
+	public void addParameter(Parameter pparameter)
 	{
-		parameters.add(p_parameter);
+		parameters.add(pparameter);
 	}
 	
 	public List<Parameter> getParameters()
@@ -50,9 +50,9 @@ public abstract  class Reciever<T extends Dynamic> extends DynamicMethod {
 	}
 	
 	
-	public void setDataClass( String p_dataClass)
+	public void setDataClass( String pdataClass)
 	{
-		dataClass=p_dataClass;		
+		dataClass=pdataClass;		
 	}
 	
 	public  String getDataClass()
@@ -60,6 +60,6 @@ public abstract  class Reciever<T extends Dynamic> extends DynamicMethod {
 		return dataClass;
 	}
 	
-	 public abstract void handleRequest(HttpServletRequest p_request,HttpServletResponse p_response ) throws  Throwable;
+	 public abstract void handleRequest(HttpServletRequest prequest,HttpServletResponse presponse ) throws  Throwable;
 		
 }

@@ -14,26 +14,26 @@ public abstract  class DataModel {
 	
 	}
 	
-	public void setApplication(Application p_application){
-		application=p_application;
+	public void setApplication(Application papplication){
+		application=papplication;
 	}
 	public Application getApplication()
 	{
 		return application;
 	}
 	
-	protected abstract  void _processData(MapData p_data) throws Exception;
+	protected abstract  void _processData(MapData pdata) throws Exception;
 	
-	public MapData	processData(MapData p_data) throws Exception
+	public MapData	processData(MapData pdata) throws Exception
 	{
-		MapData l_data=new MapData(this,p_data);
-		_processData(p_data);
-		return l_data;
+		MapData data=new MapData(this,pdata);
+		_processData(pdata);
+		return data;
 	}
 	
-	public DriverManagerDataSource getDB(String p_name)
+	public DriverManagerDataSource getDB(String pname)
 	{
-		return application.getDB(p_name); 
+		return application.getDB(pname); 
 	}
 	
 	public DriverManagerDataSource getDefaultDB() throws Exception

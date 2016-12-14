@@ -8,9 +8,9 @@ public class FormExceptions {
 		private String varName;
 		String getVarName(){ return varName;}
 		
-		ValueNotFoundException(String p_varName){
-			super("Value not found for element"+p_varName);
-			varName=p_varName;
+		ValueNotFoundException(String pvarName){
+			super("Value not found for element"+pvarName);
+			varName=pvarName;
 		}
 	}
 	
@@ -19,8 +19,8 @@ public class FormExceptions {
 
 		private static final long serialVersionUID = 2668483595983679387L;
 
-		InvalidPropertyValue(String p_message){
-			super(p_message);
+		InvalidPropertyValue(String pmessage){
+			super(pmessage);
 		}
 	}
 	
@@ -30,8 +30,8 @@ public class FormExceptions {
 
 		private static final long serialVersionUID = 3888842605596529222L;
 		
-		public ElementNoSub(String p_where){
-			super("Element "+p_where+" has no subelements");
+		public ElementNoSub(String pwhere){
+			super("Element "+pwhere+" has no subelements");
 		}
 	}
 	
@@ -39,8 +39,8 @@ public class FormExceptions {
 
 		private static final long serialVersionUID = -2937862517810211929L;
 
-		public propertyNotSet(String p_property,String p_formName){
-			super(p_property+" not set for form '"+p_formName+"'");
+		public propertyNotSet(String pproperty,String pformName){
+			super(pproperty+" not set for form '"+pformName+"'");
 		}
 	}
 }

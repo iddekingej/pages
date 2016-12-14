@@ -9,9 +9,9 @@ public class SessionMatcher extends RequestMatcher {
 	}
 
 	@Override
-	boolean matchOwnRequest(ServletRequest p_request) {
-		AuthorisationData l_sessionData=getSessionFromRequest(p_request);
-		return l_sessionData != null;
+	boolean matchOwnRequest(ServletRequest prequest) {
+		AuthorisationData sessionData=getSessionFromRequest(prequest);
+		return sessionData != null;
 	}
 
 }

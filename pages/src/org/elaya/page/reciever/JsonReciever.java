@@ -9,65 +9,65 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public abstract class JsonReciever<T extends Dynamic> extends Reciever<T> {
-	protected void validateRequest(JSONResult p_result,T p_data,String p_cmd) throws JSONException
+	protected void validateRequest(JSONResult presult,T pdata,String pcmd) throws JSONException
 	{
 		
 	}
-	protected abstract  void handleJson(JSONResult p_result,T p_data,String p_cmd) throws Exception;
+	protected abstract  void handleJson(JSONResult presult,T pdata,String pcmd) throws Exception;
 	
-	private JSONObject getJson(HttpServletRequest p_request) throws IOException, JSONException
+	private JSONObject getJson(HttpServletRequest prequest) throws IOException, JSONException
 	{
-		StringBuffer l_data=new StringBuffer();
-		String l_part;
-		BufferedReader l_reader=p_request.getReader(); 
-		while((l_part=l_reader.readLine())!= null){
-			l_data.append(l_part);
+		StringBuilder data=new StringBuilder();
+		String part;
+		BufferedReader reader=prequest.getReader(); 
+		while((part=reader.readLine())!= null){
+			data.append(part);
 		}
-		return new JSONObject(l_data.toString());
+		return new JSONObject(data.toString());
 	}
 	
-	public void failure(HttpServletResponse p_response, Exception l_e) throws IOException, JSONException 
+	public void failure(HttpServletResponse presponse, Exception e) throws IOException, JSONException 
 	{
-		System.out.print(l_e.toString());
+		System.out.print(e.toString());
 
-		JSONResult l_result=new JSONResult();
-		l_result.addError("", "Internal error:"+l_e.toString());
-		p_response.setContentType("application/json");
-		p_response.getOutputStream().print(l_result.toString());
+		JSONResult result=new JSONResult();
+		result.addError("", "Internal error:"+e.toString());
+		presponse.setContentType("application/json");
+		presponse.getOutputStream().print(result.toString());
 	}
 	@SuppressWarnings("unchecked")
 	@Override
-	public void handleRequest(HttpServletRequest p_request,HttpServletResponse p_response ) throws Throwable
+	public void handleRequest(HttpServletRequest prequest,HttpServletResponse presponse ) throws Throwable
 	{
 		try{
-			Object l_value;
-			Dynamic l_object=getObject();
+			Object value;
+			Dynamic object=getObject();
 			//TODO fail when mandatory and parameter is not given				
 
-			JSONObject l_json=getJson(p_request);
-			String l_cmd=l_json.getString("cmd");
-			JSONObject l_data=l_json.getJSONObject("data");
+			JSONObject json=getJson(prequest);
+			String cmd=json.getString("cmd");
+			JSONObject data=json.getJSONObject("data");
 			//TODO Handle exception and when parameter does not exists
-			for(Parameter l_parameter:getParameters()){
-				l_value=l_data.get(l_parameter.getName());
-				if(l_parameter.getType()==ParameterType.integer && "".equals(l_value)){
-					l_value=null;
+			for(Parameter parameter:getParameters()){
+				value=data.get(parameter.getName());
+				if(parameter.getType()==ParameterType.integer && "".equals(value)){
+					value=null;
 				}
-				l_object.put(l_parameter.getName(),l_value);
+				object.put(parameter.getName(),value);
 			}
 
-			T l_information;
+			T information;
 
-			l_information=(T)l_object;
-			JSONResult l_result=new JSONResult();
-			validateRequest(l_result,l_information,l_cmd);
-			if(!l_result.hasErrors()){
-				handleJson(l_result,l_information,l_cmd);
+			information=(T)object;
+			JSONResult result=new JSONResult();
+			validateRequest(result,information,cmd);
+			if(!result.hasErrors()){
+				handleJson(result,information,cmd);
 			}
-			p_response.setContentType("application/json");
-			p_response.getOutputStream().print(l_result.toString());
-		} catch(Exception l_e){
-			failure(p_response,l_e);
+			presponse.setContentType("application/json");
+			presponse.getOutputStream().print(result.toString());
+		} catch(Exception e){
+			failure(presponse,e);
 		}
 	}
 	

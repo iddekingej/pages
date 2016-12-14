@@ -4,15 +4,15 @@ import java.io.IOException;
 import org.elaya.page.ThemeItemBase;
 import org.elaya.page.Writer;
 
-abstract public class ListMenuThemeItem extends ThemeItemBase {
+public abstract class ListMenuThemeItem extends ThemeItemBase {
 
-	abstract public void header(Writer p_writer,String p_title) throws IOException;
-	abstract public void preItem(Writer p_writer) throws IOException;
-	abstract public void preItemSelected(Writer p_writer) throws IOException;
-	abstract public void linkItem(Writer p_writer,String p_domId,String p_text,String p_url) throws IOException;
-	abstract public void postItem(Writer p_writer) throws IOException;
-	abstract public void footer(Writer p_writer) throws IOException;
-	abstract public void groupHeader(Writer p_writer,String p_title) throws IOException;
-	abstract public void groupFooter(Writer p_writer)throws IOException;
+	public abstract void header(Writer pwriter,String ptitle) throws IOException;
+	public abstract void preItem(Writer pwriter) throws IOException;
+	public abstract void preItemSelected(Writer pwriter) throws IOException;
+	public abstract void linkItem(Writer pwriter,String pdomId,String ptext,String purl) throws IOException;
+	public abstract void postItem(Writer pwriter) throws IOException;
+	public abstract void footer(Writer pwriter) throws IOException;
+	public abstract void groupHeader(Writer pwriter,String ptitle) throws IOException;
+	public abstract void groupFooter(Writer pwriter)throws IOException;
 	
 }

@@ -14,24 +14,24 @@ public abstract class JSPlug extends DynamicMethod{
 
 		private static final long serialVersionUID = 4931294830378071369L;
 
-		public InvalidJsPlugType(Object p_object)
+		public InvalidJsPlugType(Object pobject)
 		{
-			super("Invalid jsplug "+(p_object==null?"null object":p_object.getClass().getName()));
+			super("Invalid jsplug "+(pobject==null?"null object":pobject.getClass().getName()));
 		}
 	}
 	
 	
-	protected boolean checkParent(Element<?> p_element)
+	protected boolean checkParent(Element<?> pelement)
 	{
 		return true;
 	}
 	
-	public void setParent(Element<?> p_parent) throws InvalidJsPlugType
+	public void setParent(Element<?> pparent) throws InvalidJsPlugType
 	{
-		if(!checkParent(p_parent)){
-			throw new InvalidJsPlugType(p_parent);
+		if(!checkParent(pparent)){
+			throw new InvalidJsPlugType(pparent);
 		}
-		parent=p_parent;
+		parent=pparent;
 	}
 	
 	public Element<?> getParent()
@@ -40,7 +40,7 @@ public abstract class JSPlug extends DynamicMethod{
 		return parent;
 	}
 	
-	public void display(Writer p_writer) throws IOException
+	public void display(Writer pwriter) throws IOException
 	{
 		
 	}

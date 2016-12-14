@@ -8,89 +8,99 @@ import org.elaya.page.Writer;
 
 public class LayoutThemeItem extends org.elaya.page.LayoutThemeItem {
 
-	private void makeCell(Writer p_writer,String p_classPrefix,HorizontalAlign p_horizontalAlign,VerticalAlign p_verticalAlign,String p_layoutWidth,String p_layoutHeight) throws IOException
+	private void makeCell(Writer pwriter,String pclassPrefix,HorizontalAlign phorizontalAlign,VerticalAlign pverticalAlign,String playoutWidth,String playoutHeight) throws IOException
 	{
-		String l_style="";
-		String l_layoutWidth=str(p_layoutWidth);
-		String l_layoutHeight=str(p_layoutHeight);
-		if(l_layoutWidth.length()>0) l_style += "width:"+l_layoutWidth+";";
-		if(l_layoutHeight.length()>0) l_style += "height:"+l_layoutHeight+";";
-		p_writer.print("<td "+ property("class",p_classPrefix+"page_layout")+property("align",p_horizontalAlign.gettagValue())+property("valign",p_verticalAlign)+propertyF("style",l_style)+">");
+		String style="";
+		String layoutWidth=str(playoutWidth);
+		String layoutHeight=str(playoutHeight);
+		if(layoutWidth.length()>0){
+			style += "width:"+layoutWidth+";";
+		}
+		if(layoutHeight.length()>0){
+			style += "height:"+layoutHeight+";";
+		}
+		pwriter.print("<td "+ property("class",pclassPrefix+"page_layout")+property("align",phorizontalAlign.gettagValue())+property("valign",pverticalAlign)+propertyF("style",style)+">");
 	}
 
-	public void getCssFiles(Set<String> p_files){ 
-		p_files.add("page.css");
+	@Override
+	public void getCssFiles(Set<String> pfiles){ 
+		pfiles.add("page.css");
 	}
 	
-	public void verticalHeader(Writer p_writer) throws IOException{
-		p_writer.print("<table style='width:100%;height:100%'>");
+	@Override
+	public void verticalHeader(Writer pwriter) throws IOException{
+		pwriter.print("<table style='width:100%;height:100%'>");
 	}
 	
-	public void verticalItemHeader(Writer p_writer,HorizontalAlign p_horizontalAlign,VerticalAlign p_verticalAlign,String p_layoutWidth,String p_layoutHeight)throws IOException{
-		p_writer.print("<tr>");
-		makeCell(p_writer,"",p_horizontalAlign,p_verticalAlign,p_layoutWidth,p_layoutHeight);
+	@Override
+	public void verticalItemHeader(Writer pwriter,HorizontalAlign phorizontalAlign,VerticalAlign pverticalAlign,String playoutWidth,String playoutHeight)throws IOException{
+		pwriter.print("<tr>");
+		makeCell(pwriter,"",phorizontalAlign,pverticalAlign,playoutWidth,playoutHeight);
 	}
 	
-	public void verticalItemFooter(Writer p_writer) throws IOException{
-		p_writer.print("</td></tr>");
+	@Override
+	public void verticalItemFooter(Writer pwriter) throws IOException{
+		pwriter.print("</td></tr>");
 	}
 	
-	public void verticalFooter(Writer p_writer) throws IOException{
-		p_writer.print("</table>");
+	@Override
+	public void verticalFooter(Writer pwriter) throws IOException{
+		pwriter.print("</table>");
 	}
 	
-	public void HorizontalHeader(Writer p_writer) throws IOException {
-		p_writer.print("<table style='width:100%'><tr>");
+	@Override
+	public void horizontalHeader(Writer pwriter) throws IOException {
+		pwriter.print("<table style='width:100%'><tr>");
 	}
 
 	
 	@Override
-	public void HorizontalItemHeader(Writer p_writer,HorizontalAlign p_horizontalAlign,VerticalAlign p_verticalAlign,String p_layoutWidth,String p_layoutHeight) throws IOException {
-		makeCell(p_writer,"",p_horizontalAlign,p_verticalAlign,p_layoutWidth,p_layoutHeight);
+	public void horizontalItemHeader(Writer pwriter,HorizontalAlign phorizontalAlign,VerticalAlign pverticalAlign,String playoutWidth,String playoutHeight) throws IOException {
+		makeCell(pwriter,"",phorizontalAlign,pverticalAlign,playoutWidth,playoutHeight);
 	}
 
 	@Override
-	public void HorizontalItemFooter(Writer p_writer) throws IOException {
-		p_writer.print("</td>");
-
-	}
-
-	@Override
-	public void HorizontalFooter(Writer p_writer) throws IOException {
-		p_writer.print("</tr></table>");
+	public void horizontalItemFooter(Writer pwriter) throws IOException {
+		pwriter.print("</td>");
 
 	}
 
 	@Override
-	public void gridHeader(Writer p_writer) throws IOException {
-		p_writer.print("<table>");
+	public void horizontalFooter(Writer pwriter) throws IOException {
+		pwriter.print("</tr></table>");
+
 	}
 
 	@Override
-	public void gridRowHeader(Writer p_writer) throws IOException {
-		p_writer.print("<tr>");
+	public void gridHeader(Writer pwriter) throws IOException {
+		pwriter.print("<table>");
+	}
+
+	@Override
+	public void gridRowHeader(Writer pwriter) throws IOException {
+		pwriter.print("<tr>");
 		
 	}
 
 	@Override
-	public void gridItemHeader(Writer p_writer,String p_classPrefix,HorizontalAlign p_horizontalAlign,VerticalAlign p_verticalAlign,String p_layoutWidth,String p_layoutHeight) throws IOException {
-		makeCell(p_writer,p_classPrefix,p_horizontalAlign,p_verticalAlign,p_layoutWidth,p_layoutHeight);
+	public void gridItemHeader(Writer pwriter,String pclassPrefix,HorizontalAlign phorizontalAlign,VerticalAlign pverticalAlign,String playoutWidth,String playoutHeight) throws IOException {
+		makeCell(pwriter,pclassPrefix,phorizontalAlign,pverticalAlign,playoutWidth,playoutHeight);
 	}
 
 	@Override
-	public void gridItemFooter(Writer p_writer) throws IOException {
-		p_writer.print("</td>");
+	public void gridItemFooter(Writer pwriter) throws IOException {
+		pwriter.print("</td>");
 		
 	}
 
 	@Override
-	public void gridRowFooter(Writer p_writer) throws IOException {
-		p_writer.print("</tr>");
+	public void gridRowFooter(Writer pwriter) throws IOException {
+		pwriter.print("</tr>");
 	}
 
 	@Override
-	public void gridFooter(Writer p_writer) throws IOException {
-		p_writer.print("</table>");
+	public void gridFooter(Writer pwriter) throws IOException {
+		pwriter.print("</table>");
 	}
 
 }

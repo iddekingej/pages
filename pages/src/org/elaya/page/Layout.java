@@ -7,11 +7,13 @@ public abstract class Layout extends PageElement<LayoutThemeItem> {
 		super();
 	}
 
+	@Override
 	public Element<?> getFirstWidget()
 	{
 		return this.getParent().getFirstWidget();
 	}
 	
+	@Override
 	public String getThemeName() {
 		return "LayoutThemeItem";
 	}

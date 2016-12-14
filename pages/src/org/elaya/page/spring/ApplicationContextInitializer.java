@@ -5,11 +5,11 @@ import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
-public class ApplicationContextInitializer extends Initializer implements ApplicationContextAware {
+public class ApplicationContextInitializer implements Initializer , ApplicationContextAware {
 	
 	ApplicationContext applicationContext;
-	public ApplicationContextInitializer(ApplicationContext p_applicationContext){
-		applicationContext=p_applicationContext;
+	public ApplicationContextInitializer(ApplicationContext papplicationContext){
+		applicationContext=papplicationContext;
 	}
 
 	public ApplicationContextInitializer()
@@ -18,15 +18,15 @@ public class ApplicationContextInitializer extends Initializer implements Applic
 	}
 	
 	@Override
-	public void processObject(Object p_object) {
-		if(p_object instanceof ApplicationContextAware){
-			((ApplicationContextAware)p_object).setApplicationContext(applicationContext);
+	public void processObject(Object pobject) {
+		if(pobject instanceof ApplicationContextAware){
+			((ApplicationContextAware)pobject).setApplicationContext(applicationContext);
 		}
 	}
 
 	@Override
-	public void setApplicationContext(ApplicationContext p_applicationContext) throws BeansException {
-		applicationContext=p_applicationContext;		
+	public void setApplicationContext(ApplicationContext papplicationContext) throws BeansException {
+		applicationContext=papplicationContext;		
 	}
 
 }

@@ -5,48 +5,42 @@ import java.lang.reflect.Method;
 
 public class DynamicData implements Dynamic {
 
-	
-	public DynamicData() {
-		// TODO Auto-generated constructor stub
+	@Override
+	public Object get(String pname) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+		Field field=getClass().getField(pname);
+		return field.get(this);
 	}
 
 	@Override
-	public Object get(String p_name) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
-		// TODO Auto-generated method stub
-		Field l_field=getClass().getField(p_name);
-		return l_field.get(this);
-	}
-
-	@Override
-	public void put(String p_name, Object p_value) throws Throwable {
-		Field l_field;
+	public void put(String pname, Object pvalue) throws Throwable {
+		Field field;
 		try{
-			l_field=getClass().getField(p_name);
-		} catch(java.lang.NoSuchFieldException l_e){
-			throw new  java.lang.NoSuchFieldException(l_e.getMessage()+"(Classname="+getClass().getName()+")");
+			field=getClass().getField(pname);
+		} catch(java.lang.NoSuchFieldException e){
+			throw new  java.lang.NoSuchFieldException(e.getMessage()+"(Classname="+getClass().getName()+")");
 		}
-		Class<?> l_class=l_field.getType();
-		Object l_value=p_value;
-		if(l_value !=null){
-			if(!l_class.getName().equals(p_value.getClass().getName())){
-				Method l_method=l_class.getMethod("valueOf", l_value.getClass());
+		Class<?> className=field.getType();
+		Object value=pvalue;
+		if(value !=null){
+			if(!className.getName().equals(pvalue.getClass().getName())){
+				Method method=className.getMethod("valueOf", value.getClass());
 				try{
-					l_value=l_method.invoke(null, l_value);
-				} catch(java.lang.reflect.InvocationTargetException l_e){
-					throw l_e.getCause();
+					value=method.invoke(null, value);
+				} catch(java.lang.reflect.InvocationTargetException e){
+					throw e.getCause();
 				}
 			}
 		}
-		l_field.set(this,l_value);
+		field.set(this,value);
 		
 	}
 
 	@Override
-	public boolean containsKey(String p_name) {
+	public boolean containsKey(String pname) {
 		try{
 			@SuppressWarnings("unused")
-			Field l_field=getClass().getField(p_name);
-		} catch(NoSuchFieldException l_e)
+			Field field=getClass().getField(pname);
+		} catch(NoSuchFieldException e)
 		{
 			return false;
 		}

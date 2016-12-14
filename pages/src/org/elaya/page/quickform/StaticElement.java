@@ -10,8 +10,8 @@ public class StaticElement extends BuildInFormElement {
 	{
 		super();
 	}
-	public void setIsHtml(boolean p_isHtml){
-		isHtml=p_isHtml;
+	public void setIsHtml(boolean pisHtml){
+		isHtml=pisHtml;
 	}
 	
 	public boolean getIsHtml(){
@@ -19,9 +19,9 @@ public class StaticElement extends BuildInFormElement {
 	}
 	
 	@Override
-	public void display(Writer p_writer,Data p_data) throws Exception {
-		Object l_value=getValueByName(p_data);
-		themeItem.StaticElement(p_writer,getDomId(),getName(),getIsHtml(),l_value);
+	public void display(Writer pwriter,Data pdata) throws Exception {
+		Object value=getValueByName(pdata);
+		themeItem.staticElement(pwriter,getDomId(),getName(),getIsHtml(),value);
 	}
 
 	@Override

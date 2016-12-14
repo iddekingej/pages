@@ -11,28 +11,28 @@ public class DynamicLinkMenuItem extends BuildinListMenuItem {
 	}
 
 	@Override
-	public void display(Writer p_writer, Data p_data) throws Exception {
+	public void display(Writer pwriter, Data pdata) throws Exception {
 		
-		Data l_data=getData(p_data);
-		Object l_value=this.getValueByName(l_data);
-		Object l_selectedValue=null;
+		Data data=getData(pdata);
+		Object value=this.getValueByName(data);
+		Object selectedValue=null;
 		if(getParent() instanceof ListMenu){
-			String l_selectionVariable = ((ListMenu)getParent()).getSelectionVariable();
-			l_selectedValue=l_data.get(l_selectionVariable);
+			String selectionVariable = ((ListMenu)getParent()).getSelectionVariable();
+			selectedValue=data.get(selectionVariable);
 			
 		}
-		if(l_value instanceof Iterable){
-			for(Object l_object:(Iterable<?>)l_value){
-				if(l_object instanceof LinkMenuData){
-					LinkMenuData l_menuData=(LinkMenuData)l_object;
-					if( (l_menuData.getId() != null)? l_menuData.getId().equals(l_selectedValue):false){
-						themeItem.preItemSelected(p_writer);
+		if(value instanceof Iterable){
+			for(Object object:(Iterable<?>)value){
+				if(object instanceof LinkMenuData){
+					LinkMenuData menuData=(LinkMenuData)object;
+					if( (menuData.getId() != null)? menuData.getId().equals(selectedValue):false){
+						themeItem.preItemSelected(pwriter);
 					} else {
-						themeItem.preItem(p_writer);
+						themeItem.preItem(pwriter);
 					}
 					
-					themeItem.linkItem(p_writer,getDomId(),l_menuData.getText(),p_writer.procesUrl(l_menuData.getUrlText()));
-					themeItem.postItem(p_writer);
+					themeItem.linkItem(pwriter,getDomId(),menuData.getText(),pwriter.procesUrl(menuData.getUrlText()));
+					themeItem.postItem(pwriter);
 				}
 					
 			}

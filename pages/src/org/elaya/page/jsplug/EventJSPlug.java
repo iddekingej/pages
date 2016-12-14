@@ -9,18 +9,18 @@ public class EventJSPlug extends JSPlug {
 	private String event;
 	private String js;
 	
-	public void setEvent(String p_event)
+	public void setEvent(String pevent)
 	{
-		event=p_event;
+		event=pevent;
 	}
 	
 	public String getEvent(){
 		return event;
 	}
 
-	public void setJs(String p_js)
+	public void setJs(String pjs)
 	{
-		js=p_js;
+		js=pjs;
 	}
 	
 	public String getJs()
@@ -28,8 +28,9 @@ public class EventJSPlug extends JSPlug {
 		return js;
 	}
 	
-	public void display(Writer p_writer) throws IOException
+	@Override
+	public void display(Writer pwriter) throws IOException
 	{
-		p_writer.print("this.on("+p_writer.js_toString(event)+",function(){"+js+"});");
+		pwriter.print("this.on("+pwriter.js_toString(event)+",function(){"+js+"});");
 	}
 }

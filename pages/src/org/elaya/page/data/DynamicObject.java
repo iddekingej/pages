@@ -13,74 +13,74 @@ public class DynamicObject {
 
 			private static final long serialVersionUID = 5084017331992006760L;
 			
-			public DynamicError(String p_message){
-				super(p_message);
+			public DynamicError(String pmessage){
+				super(pmessage);
 			}
 			
 		}
-		public static Object createObjectFromName(String p_name) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ClassNotFoundException
+		public static Object createObjectFromName(String pname) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ClassNotFoundException
 		{
-			Objects.requireNonNull(p_name);
-			return createObjectFromName(p_name,new Class<?>[]{},new Object[]{});
+			Objects.requireNonNull(pname);
+			return createObjectFromName(pname,new Class<?>[]{},new Object[]{});
 		}
 		
-		public static Constructor<?> getConstructorByName(String p_name,Class<?>[] p_types) throws NoSuchMethodException, ClassNotFoundException
+		public static Constructor<?> getConstructorByName(String pname,Class<?>[] ptypes) throws NoSuchMethodException, ClassNotFoundException
 		{
-			Class<?> l_class;		
-			l_class=Class.forName(p_name);			
-			Constructor<?> l_constructor;
-			l_constructor=l_class.getConstructor(p_types);
-			return l_constructor;
+			Class<?> className;		
+			className=Class.forName(pname);			
+			Constructor<?> constructor;
+			constructor=className.getConstructor(ptypes);
+			return constructor;
 		}
-		public static Object createObjectFromName(String p_name,Class<?>[] p_types,Object[] p_params) throws NoSuchMethodException, ClassNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+		public static Object createObjectFromName(String pname,Class<?>[] ptypes,Object[] pparams) throws NoSuchMethodException, ClassNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		
-			Constructor<?>l_constructor=getConstructorByName(p_name,p_types);
-			if(l_constructor != null){
-				Object l_object=l_constructor.newInstance(p_params);
-				return l_object;
+			Constructor<?>constructor=getConstructorByName(pname,ptypes);
+			if(constructor != null){
+				Object object=constructor.newInstance(pparams);
+				return object;
 			} else {
 				return null;
 			}
 		}
 
-		public static Method getMethod(Object p_object,String p_name) throws methodNotFound{
-			Objects.requireNonNull(p_object);
-			for(Method l_method:p_object.getClass().getMethods()){
-				if(l_method.getName().toLowerCase().equals(p_name)){
-					return l_method;
+		public static Method getMethod(Object pobject,String pname) throws methodNotFound{
+			Objects.requireNonNull(pobject);
+			for(Method method:pobject.getClass().getMethods()){
+				if(method.getName().toLowerCase().equals(pname)){
+					return method;
 				}
 			}
-			throw new methodNotFound(p_object,p_name);
+			throw new methodNotFound(pobject,pname);
 		}		
 		
-		public static Object get(Object p_object,String p_name) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, methodNotFound
+		public static Object get(Object pobject,String pname) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, methodNotFound
 		{			
-			Method l_method=getMethod(p_object,"get"+p_name);
-			return l_method.invoke(p_object);		
+			Method method=getMethod(pobject,"get"+pname);
+			return method.invoke(pobject);		
 		}
 
-		public static void put(Object p_object,String p_name, Object p_value) throws Exception
+		public static void put(Object pobject,String pname, Object pvalue) throws Exception
 		{
-			Method l_method=getMethod(p_object,"set"+p_name);
-			Class<?> l_params[]=l_method.getParameterTypes();
-			Object l_value=p_value;
-			if(l_params.length>=1 && p_value != null){
-				if(!l_params[0].getName().equals(p_value.getClass().getName())){
+			Method method=getMethod(pobject,"set"+pname);
+			Class<?> params[]=method.getParameterTypes();
+			Object value=pvalue;
+			if(params.length>=1 && pvalue != null){
+				if(!params[0].getName().equals(pvalue.getClass().getName())){
 					
-					Method l_methodConv=l_params[0].getMethod("valueOf",p_value.getClass());
-					l_value=l_methodConv.invoke(null,l_value);
+					Method methodConv=params[0].getMethod("valueOf",pvalue.getClass());
+					value=methodConv.invoke(null,value);
 					
 				}
 			}
-			l_method.invoke(p_object, l_value);		
+			method.invoke(pobject, value);		
 		}	
 		
-		public static boolean containsKey(Object p_object,String p_name) {
+		public static boolean containsKey(Object pobject,String pname) {
 			try{
 				@SuppressWarnings("unused")
-				Method l_method=DynamicObject.getMethod(p_object,"set"+p_name) ;
+				Method method=DynamicObject.getMethod(pobject,"set"+pname) ;
 				return true;
-			}catch(methodNotFound l_e){
+			}catch(methodNotFound e){
 				return false;
 			}
 		}

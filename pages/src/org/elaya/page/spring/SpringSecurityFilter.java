@@ -8,25 +8,20 @@ import org.springframework.context.ApplicationContextAware;
 
 public class SpringSecurityFilter extends SecurityFilter implements ApplicationContextAware{
 
-	public SpringSecurityFilter()
-	{
-		super();
-	}
-	
 	private ApplicationContext applicationContext=null;
-	
-	
-	public void setApplicationContext(ApplicationContext p_applicationContext)  {
-		applicationContext=p_applicationContext;
+
+	@Override
+	public void setApplicationContext(ApplicationContext papplicationContext)  {
+		applicationContext=papplicationContext;
 	}
 	
-	public void initParser(XmlSecurityParser p_parser)
+	@Override
+	public void initParser(XmlSecurityParser pparser)
 	{
-		p_parser.addInitializer(new ApplicationContextInitializer(applicationContext));
+		pparser.addInitializer(new ApplicationContextInitializer(applicationContext));
 	}
 	@Override
 	public void destroy() {
-		// TODO Auto-generated method stub
 		
 	}
 

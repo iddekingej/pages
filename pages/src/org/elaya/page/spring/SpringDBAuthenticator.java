@@ -10,16 +10,13 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 public class SpringDBAuthenticator extends AbstractDBAuthenticator implements ApplicationContextAware {
-	ApplicationContext applicationContext;
-	String connectionName;
+	private ApplicationContext applicationContext;
+	private String connectionName;
 
-	public SpringDBAuthenticator() {
-		// TODO Auto-generated constructor stub
-	}
-	
-	public void setConnectionName(String p_connectionName)
+
+	public void setConnectionName(String pconnectionName)
 	{
-		connectionName=p_connectionName;
+		connectionName=pconnectionName;
 	}
 	
 	public String getConnectionName()
@@ -29,8 +26,8 @@ public class SpringDBAuthenticator extends AbstractDBAuthenticator implements Ap
 	
 	@Override
 	protected Connection getConnection() throws ClassNotFoundException, SQLException {
-		DriverManagerDataSource l_db=applicationContext.getBean(connectionName,DriverManagerDataSource.class);
-		return l_db.getConnection();
+		DriverManagerDataSource db=applicationContext.getBean(connectionName,DriverManagerDataSource.class);
+		return db.getConnection();
 	}
 
 	public ApplicationContext getApplicationContext()
@@ -39,8 +36,8 @@ public class SpringDBAuthenticator extends AbstractDBAuthenticator implements Ap
 	}
 	
 	@Override
-	public void setApplicationContext(ApplicationContext p_applicationContext) throws BeansException {
-		applicationContext=p_applicationContext;
+	public void setApplicationContext(ApplicationContext papplicationContext) throws BeansException {
+		applicationContext=papplicationContext;
 	}
 
 }

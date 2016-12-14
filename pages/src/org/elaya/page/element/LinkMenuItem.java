@@ -7,18 +7,22 @@ public class LinkMenuItem extends BaseMenuItem<ElementThemeItem> {
 	private String url;
 	private String text;
 	
-	public void setUrl(String p_url)
+	public LinkMenuItem() {
+		super();
+	}
+
+	public void setUrl(String purl)
 	{
-		url=p_url;
+		url=purl;
 	}
 	
 	public String getUrl(){
 		return url;
 	}
 	
-	public void setText(String p_text)
+	public void setText(String ptext)
 	{
-		text=p_text;
+		text=ptext;
 	}
 	
 	public String getText()
@@ -26,19 +30,17 @@ public class LinkMenuItem extends BaseMenuItem<ElementThemeItem> {
 		return text;
 	}
 	
-	protected void makeSetupJs(Writer p_writer,Data p_data) throws Exception
+	@Override
+	protected void makeSetupJs(Writer pwriter,Data pdata) throws Exception
 	{
-		Data l_data=getData(p_data);
-		p_writer.objVar("text", replaceVariables(l_data,text));
-		p_writer.objVar("url", p_writer.procesUrl(replaceVariables(l_data,url)));
+		Data data=getData(pdata);
+		pwriter.objVar("text", replaceVariables(data,text));
+		pwriter.objVar("url", pwriter.procesUrl(replaceVariables(data,url)));
 	}
 	
-	public LinkMenuItem() {
-		super();
-	}
 
 	@Override
-	public void display(Writer p_stream, Data p_data) throws Exception {
+	public void display(Writer pstream, Data pdata) throws Exception {
 
 	}
 

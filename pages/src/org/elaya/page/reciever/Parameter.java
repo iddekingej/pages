@@ -6,9 +6,9 @@ public class Parameter extends DynamicMethod {
 	private String name;
 	private ParameterType type;
 	
-	public void setName(String p_name)
+	public void setName(String pname)
 	{
-		name=p_name;
+		name=pname;
 	}
 	
 	public String getName()
@@ -16,9 +16,9 @@ public class Parameter extends DynamicMethod {
 		return name;
 	}
 
-	public void setType(ParameterType p_type)
+	public void setType(ParameterType ptype)
 	{
-		type=p_type;
+		type=ptype;
 	}
 	
 	public ParameterType getType()

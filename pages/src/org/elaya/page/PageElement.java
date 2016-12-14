@@ -1,7 +1,7 @@
 package org.elaya.page;
 
 
-public abstract class PageElement<themeItem extends ThemeItemBase> extends Element<themeItem> {
+public abstract class PageElement<T extends ThemeItemBase> extends Element<T> {
 
 	public PageElement()
 	{
@@ -9,7 +9,7 @@ public abstract class PageElement<themeItem extends ThemeItemBase> extends Eleme
 	}
 	
 	@Override
-	public boolean checkElement(Element<?> p_element){
+	public boolean checkElement(Element<?> pelement){
 		return true;
 	}
 

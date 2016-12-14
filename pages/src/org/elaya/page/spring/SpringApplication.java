@@ -13,32 +13,31 @@ import org.springframework.web.context.ServletContextAware;
 public class SpringApplication extends Application implements ServletContextAware,ApplicationContextAware {
 	private ServletContext servletContext;
 	private ApplicationContext applicationContext;
-	
-	public SpringApplication() {
-		super();
-	}
 
 	@Override
-	protected void initUiParser(UiXmlParser p_parser)
+	protected void initUiParser(UiXmlParser pparser)
 	{
-		p_parser.addInitializer(new ApplicationContextInitializer(applicationContext));
+		pparser.addInitializer(new ApplicationContextInitializer(applicationContext));
+	}
+	
+	public ApplicationContext getApplicationContext(){
+		return applicationContext;
 	}
 	
 	@Override
-	public void setServletContext(ServletContext p_servletContext) {
-		servletContext=p_servletContext;
+	public void setServletContext(ServletContext pservletContext) {
+		servletContext=pservletContext;
 		servletContext.setAttribute("application",this);
 	}
 
 	@Override
-	public void setApplicationContext(ApplicationContext p_applicationContext) throws BeansException {
-		applicationContext=p_applicationContext;
+	public void setApplicationContext(ApplicationContext papplicationContext) throws BeansException {
+		applicationContext=papplicationContext;
 	}
 
 	@Override
-	public DriverManagerDataSource getDB(String p_name) {
-		// TODO Auto-generated method stub
-		return applicationContext.getBean(p_name,DriverManagerDataSource.class);
+	public DriverManagerDataSource getDB(String pname) {
+		return applicationContext.getBean(pname,DriverManagerDataSource.class);
 	}
 
 }

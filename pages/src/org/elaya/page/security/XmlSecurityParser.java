@@ -12,17 +12,17 @@ import org.elaya.page.xml.XmlParser;
 public class XmlSecurityParser extends XmlAppParser {
 
 	
-	public XmlSecurityParser(Application p_application) {
-		super(p_application);
+	public XmlSecurityParser(Application papplication) {
+		super(papplication);
 	}
 
-	public XmlSecurityParser(Application p_application,Map<String, Object> p_nameIndex) {
-		super(p_application,p_nameIndex);
+	public XmlSecurityParser(Application papplication,Map<String, Object> pnameIndex) {
+		super(papplication,pnameIndex);
 	}
 
 	@Override
-	protected InputStream openFile(String p_fileName) throws FileNotFoundException {
-		return getApplication().getConfigStream(p_fileName);
+	protected InputStream openFile(String pfileName) throws FileNotFoundException {
+		return getApplication().getConfigStream(pfileName);
 	}
 
 	@Override
@@ -39,14 +39,14 @@ public class XmlSecurityParser extends XmlAppParser {
 	}
 
 	@Override
-	protected String getName(Object p_object) {
+	protected String getName(Object pobject) {
 		return "";
 		
 	}
 
 	@Override
 	public String getAliasNamespace() {
-		return AliasData.alias_security;
+		return AliasData.ALIAS_SECURITY;
 	}
 
 }

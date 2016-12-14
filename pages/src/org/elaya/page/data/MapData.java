@@ -9,56 +9,72 @@ public class MapData extends Data{
 		private HashMap<String,Object> attributes=new HashMap<>();
 		private HashMap<Object,Data> childeren=new HashMap<>();
 		
-		public int getSize()
-		{
-			int l_length=attributes.size();
-			if(parent!=null)l_length +=parent.getSize();
-			return l_length;
-			
-		}
-		public MapData(Object p_id,MapData p_parent) {
-			parent=p_parent;
+		public MapData(Object pid,MapData parentData) {
+			parent=parentData;
 			if(parent != null){
 				parent.addToChilderen(this);
 			}
-			id=p_id;
+			id=pid;
 		}
 		
-		public void setByMap(Map<String,Object> p_data)
+		
+		@Override
+		public int getSize()
 		{
-			attributes.putAll(p_data);
+			int length=attributes.size();
+			if(parent!=null){
+				length +=parent.getSize();
+			}
+			return length;
+			
 		}
-		
-		void addToChilderen(Data p_item)
+
+		public void setByMap(Map<String,Object> pdata)
 		{
-			childeren.put(p_item.getId(), p_item);
+			attributes.putAll(pdata);
 		}
 		
-		public Data getChild(Object p_id)
+		void addToChilderen(Data pitem)
 		{
-			return childeren.get(p_id);
+			childeren.put(pitem.getId(), pitem);
 		}
 		
+		public Data getChild(Object pid)
+		{
+			return childeren.get(pid);
+		}
+		
+		@Override
 		public Object getId(){ return id;}
+		
+		@Override
 		public Data getParent(){ return parent;}
 		
-		
-		public Object get(String p_name){
-			if(attributes.containsKey(p_name)){
-				return attributes.get(p_name);
+		@Override
+		public Object get(String pname){
+			if(attributes.containsKey(pname)){
+				return attributes.get(pname);
 			}
 			if(parent !=null){
-				return parent.get(p_name);
+				return parent.get(pname);
 			}
 			return null;
 		}
-		public boolean containsKey(String p_name){
-			if(attributes.containsKey(p_name)) return true;
-			if(parent==null) return false;
-			return parent.containsKey(p_name);
+		
+		@Override
+		public boolean containsKey(String pname){
+			if(attributes.containsKey(pname)){
+				return true;
+			}
+			if(parent==null){
+				return false;
+			}
+			return parent.containsKey(pname);
 		}
-		public void put(String p_name,Object p_value){
-			attributes.put(p_name, p_value);
+		
+		@Override
+		public void put(String pname,Object pvalue){
+			attributes.put(pname, pvalue);
 		}
 		
 

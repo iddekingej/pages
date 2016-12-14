@@ -10,11 +10,6 @@ import org.elaya.page.data.Data;
 
 public class Form extends PageElement<FormThemeItem>{
 	
-	public Form() {
-		super();
-		setIsNamespace(true);
-	}
-
 	private String title;
 	private String url="";
 	private String cmd;
@@ -24,11 +19,18 @@ public class Form extends PageElement<FormThemeItem>{
 	private String nextUrl="";
 	private String cancelUrl="";
 	private String[] hiddenElements=null;
-	private SubmitType submitType=SubmitType.json;
+	private SubmitType submitType=SubmitType.JSON;
 	
-	public void setHiddenElements(String p_hiddenElements)
+	
+	public Form() {
+		super();
+		setIsNamespace(true);
+	}
+
+
+	public void setHiddenElements(String phiddenElements)
 	{
-		hiddenElements=p_hiddenElements.split(",");
+		hiddenElements=phiddenElements.split(",");
 	}
 	
 	public String[] getHiddenElements()
@@ -36,9 +38,9 @@ public class Form extends PageElement<FormThemeItem>{
 		return hiddenElements;
 	}
 	
-	public void setNextUrl(String p_nextUrl)
+	public void setNextUrl(String pnextUrl)
 	{
-		nextUrl=p_nextUrl;
+		nextUrl=pnextUrl;
 	}
 	
 	public String getNextUrl()
@@ -46,9 +48,9 @@ public class Form extends PageElement<FormThemeItem>{
 		return nextUrl;
 	}
 	
-	public void setCancelUrl(String p_cancelUrl)
+	public void setCancelUrl(String pcancelUrl)
 	{
-		cancelUrl=p_cancelUrl;
+		cancelUrl=pcancelUrl;
 	}
 	
 	public String getCancelUrl()
@@ -57,9 +59,9 @@ public class Form extends PageElement<FormThemeItem>{
 	}
 	
 	
-	public void setWidth(String p_width)
+	public void setWidth(String pwidth)
 	{
-		width=p_width;
+		width=pwidth;
 	}
 	
 	public String getWidth()
@@ -67,9 +69,9 @@ public class Form extends PageElement<FormThemeItem>{
 		return width;
 	}
 	
-	public void setUrl(String p_url)
+	public void setUrl(String purl)
 	{
-		url=p_url;
+		url=purl;
 	}
 	
 	public String getUrl()
@@ -77,9 +79,9 @@ public class Form extends PageElement<FormThemeItem>{
 		return url;
 	}
 	
-	public void setSubmitText(String p_text)
+	public void setSubmitText(String ptext)
 	{
-		submitText=p_text;
+		submitText=ptext;
 	}
 	
 	public String getSubmitText()
@@ -87,9 +89,9 @@ public class Form extends PageElement<FormThemeItem>{
 		return submitText;
 	}
 	
-	public void setCancelText(String p_text)
+	public void setCancelText(String ptext)
 	{
-		cancelText=p_text;
+		cancelText=ptext;
 	}
 	
 	public String getCancelText()
@@ -97,9 +99,9 @@ public class Form extends PageElement<FormThemeItem>{
 		return cancelText;
 	}
 
-	public void setSubmitType(SubmitType p_submitType)
+	public void setSubmitType(SubmitType psubmitType)
 	{
-		submitType=p_submitType;
+		submitType=psubmitType;
 	}
 	
 	public SubmitType getSubmitType()
@@ -107,27 +109,27 @@ public class Form extends PageElement<FormThemeItem>{
 		return submitType;
 	}
 	
-	public void setCmd(String p_cmd)
+	public void setCmd(String pcmd)
 	{
-		cmd=p_cmd;
+		cmd=pcmd;
 	}
 	
 	
 	public String getCmd(){ return cmd;}
 	
-	public void addJsFile(Set<String> p_set)
+	public void addJsFile(Set<String> pset)
 	{
-		p_set.add("form.js");
+		pset.add("form.js");
 	}
 	
-	public boolean checkElement(Element<?> p_element) 
+	public boolean checkElement(Element<?> pelement) 
 	{
-		return p_element instanceof FormElement; 
+		return pelement instanceof FormElement; 
 	}
 	
-	public void setTitle(String p_title)
+	public void setTitle(String ptitle)
 	{
-		title=p_title;
+		title=ptitle;
 	}
 	protected String getJsClassName()
 	{
@@ -139,60 +141,62 @@ public class Form extends PageElement<FormThemeItem>{
 		return "FormThemeItem";		
 	}
 	
-	public void display(Writer p_writer,Data p_data) throws Exception
+	public void display(Writer pwriter,Data pdata) throws Exception
 	{
-		Data l_data=getData(p_data);		
-		String l_method="";
-		if(submitType.equals(SubmitType.get)){
-			l_method="get";
-		} else if(submitType.equals(SubmitType.post)){
-			l_method="post";
+		Data data=getData(pdata);		
+		String method="";
+		if(submitType.equals(SubmitType.GET)){
+			method="get";
+		} else if(submitType.equals(SubmitType.POST)){
+			method="post";
 		}
-		themeItem.formHeader(p_writer,getDomId(),replaceVariables(l_data,title),p_writer.getBasePath()+replaceVariables(l_data,url),l_method,getWidth());
+		themeItem.formHeader(pwriter,getDomId(),replaceVariables(data,title),pwriter.getBasePath()+replaceVariables(data,url),method,getWidth());
 		if(hiddenElements!=null){
-			for(String l_name:hiddenElements){
-				themeItem.formHiddenElement(p_writer, getDomId()+"_h_"+l_name, l_name, l_data.getString(l_name));
+			for(String name:hiddenElements){
+				themeItem.formHiddenElement(pwriter, getDomId()+"_h_"+name, name, data.getString(name));
 			}
 		}
-		displaySubElements(p_writer,l_data);
-		themeItem.formFooterBegin(p_writer);
-		themeItem.FormFooterOk(p_writer, getDomId(), getSubmitText());
-		themeItem.FormFooterBetween(p_writer);
-		if(cancelUrl.length()>0)themeItem.FormFooterCancel(p_writer, getDomId(), getCancelText());
-		themeItem.formFooter(p_writer);
+		displaySubElements(pwriter,data);
+		themeItem.formFooterBegin(pwriter);
+		themeItem.FormFooterOk(pwriter, getDomId(), getSubmitText());
+		themeItem.FormFooterBetween(pwriter);
+		if(cancelUrl.length()>0){
+			themeItem.FormFooterCancel(pwriter, getDomId(), getCancelText());
+		}
+		themeItem.formFooter(pwriter);
 		
 	}
 	
-	protected void makeSetupJs(Writer p_writer,Data p_data) throws Exception
+	protected void makeSetupJs(Writer pwriter,Data pdata) throws Exception
 	{
-		String l_next=p_writer.procesUrl(replaceVariables(p_data,nextUrl));
-		p_writer.print("this.cmd="+p_writer.js_toString(replaceVariables(p_data,cmd))+";\n");
-		p_writer.print("this.nextUrl="+p_writer.js_toString(l_next)+";\n");
-		if(this.cancelUrl.length()>0)p_writer.print("this.cancelUrl="+p_writer.js_toString(replaceVariables(p_data,cancelUrl))+";\n");
-		p_writer.print("this.submitType="+p_writer.js_toString(submitType.getValue()));
+		String next=pwriter.procesUrl(replaceVariables(pdata,nextUrl));
+		pwriter.print("this.cmd="+pwriter.js_toString(replaceVariables(pdata,cmd))+";\n");
+		pwriter.print("this.nextUrl="+pwriter.js_toString(next)+";\n");
+		if(this.cancelUrl.length()>0)pwriter.print("this.cancelUrl="+pwriter.js_toString(replaceVariables(pdata,cancelUrl))+";\n");
+		pwriter.print("this.submitType="+pwriter.js_toString(submitType.getValue()));
 	}
 	
 	@Override
-	protected void preSubJs(Writer p_writer,Data p_data) throws IOException
+	protected void preSubJs(Writer pwriter,Data pdata) throws IOException
 	{
 		if(this.hiddenElements!= null){
-			Element<?> l_namespaceParent=getNamespaceParent();
+			Element<?> namespaceParent=getNamespaceParent();
 			if(getIsNamespace()){
-				l_namespaceParent=this;
+				namespaceParent=this;
 			}
-			for(String l_name:this.hiddenElements){
-				p_writer.print("var l_element=new THiddenElement("+getJsFullname()+","+p_writer.js_toString(l_name)+","+p_writer.js_toString(l_name)+","+p_writer.js_toString(getDomId()+"_h_"+l_name)+");\n");
-				if(l_namespaceParent!=null){
-					p_writer.print("l_element.namespaceParent="+l_namespaceParent.getNamespaceName()+";\n");
+			for(String name:this.hiddenElements){
+				pwriter.print("var element=new THiddenElement("+getJsFullname()+","+pwriter.js_toString(name)+","+pwriter.js_toString(name)+","+pwriter.js_toString(getDomId()+"_h_"+name)+");\n");
+				if(namespaceParent!=null){
+					pwriter.print("element.namespaceParent="+namespaceParent.getNamespaceName()+";\n");
 				}
-				p_writer.print("l_element.setup();");
+				pwriter.print("element.setup();");
 			}
 		}
 	}
 	@Override
-	protected void postSubJs(Writer p_writer,Data p_data) throws IOException
+	protected void postSubJs(Writer pwriter,Data pdata) throws IOException
 	{
-		p_writer.print(getJsFullname()+".afterSetup();");
+		pwriter.print(getJsFullname()+".afterSetup();");
 		
 	}
  

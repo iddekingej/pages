@@ -8,12 +8,12 @@ public class PanelElement extends PageElement<ElementThemeItem> {
 	private String css;
 	private String className;
 	
-	public void setClassName(String p_className){
-		className=p_className;
+	public void setClassName(String pclassName){
+		className=pclassName;
 	}
 	
-	public void setCss(String p_css){
-		css=p_css;
+	public void setCss(String pcss){
+		css=pcss;
 	}
 	
 	public String getClassName()
@@ -27,12 +27,12 @@ public class PanelElement extends PageElement<ElementThemeItem> {
 	}
 	
 	@Override
-	public void display(Writer p_writer,Data p_data) throws Exception {
-		Data l_data=getData(p_data);
-		themeItem.panelHeader(p_writer,replaceVariables(l_data,className), replaceVariables(l_data,css));
-		displaySubElements(p_writer,l_data);
-		themeItem.panelFooter(p_writer);
-	}
+	public void display(Writer pwriter,Data pdata) throws Exception {
+		Data data=getData(pdata);
+		themeItem.panelHeader(pwriter,replaceVariables(data,className), replaceVariables(data,css));
+		displaySubElements(pwriter,data);
+		themeItem.panelFooter(pwriter);
+	} 
 
 	@Override
 	public String getThemeName() {

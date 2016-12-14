@@ -7,49 +7,49 @@ import org.elaya.page.*;
 public class FormThemeItem extends org.elaya.page.quickform.FormThemeItem {
 
 	@Override
-	public void getCssFiles(Set<String> p_files){ 
-		p_files.add("form.css");
+	public void getCssFiles(Set<String> pfiles){ 
+		pfiles.add("form.css");
 	}
 	
 	@Override
-	public void formHiddenElement(Writer p_writer,String p_domId,String p_name,String p_value) throws IOException
+	public void formHiddenElement(Writer pwriter,String pdomId,String pname,String pvalue) throws IOException
 	{
-		p_writer.print("<input type='hidden' "+property("id",p_domId)+property("name",p_name)+property("value",p_value)+"/>");
+		pwriter.print("<input type='hidden' "+property("id",pdomId)+property("name",pname)+property("value",pvalue)+"/>");
 	}
 	
 	@Override
-	public void formHeader(Writer p_writer,String p_domId,String p_title,String p_url,String p_method,String p_width) throws IOException
+	public void formHeader(Writer pwriter,String pdomId,String ptitle,String purl,String pmethod,String pwidth) throws IOException
 	{
-		p_writer.print("<form "+property("id",p_domId)+property("method",p_method)+propertyF("action",p_url)+"><table class=\"pages_formTable\">\n");
-		p_writer.print("<tr><td colspan='2' class='pages_formTitle' style='width:"+p_width+";\'>"+escape(p_title)+"</td></tr>");
+		pwriter.print("<form "+property("id",pdomId)+property("method",pmethod)+propertyF("action",purl)+"><table class=\"pages_formTable\">\n");
+		pwriter.print("<tr><td colspan='2' class='pages_formTitle' style='width:"+pwidth+";\'>"+escape(ptitle)+"</td></tr>");
 	}
 	
 	@Override
-	public void formFooterBegin(Writer p_writer) throws IOException{
-		p_writer.print("<tr><td>");
+	public void formFooterBegin(Writer pwriter) throws IOException{
+		pwriter.print("<tr><td>");
 	}
 	
 	@Override
-	public void FormFooterOk(Writer p_writer,String p_domId,String p_saveText) throws IOException
+	public void FormFooterOk(Writer pwriter,String pdomId,String psaveText) throws IOException
 	{
-		p_writer.print("<input "+property("id",p_domId+"_submit")+property("onclick","this.form._control.save()")+"type='button' "+property("value",p_saveText)+"/>");
+		pwriter.print("<input "+property("id",pdomId+"_submit")+property("onclick","this.form._control.save()")+"type='button' "+property("value",psaveText)+"/>");
 	}
 
 	@Override
-	public void FormFooterBetween(Writer p_writer) throws IOException
+	public void FormFooterBetween(Writer pwriter) throws IOException
 	{
-		p_writer.print("</td><td>");
+		pwriter.print("</td><td>");
 	}
 	
 	@Override
-	public void FormFooterCancel(Writer p_writer,String p_domId, String p_cancelText) throws IOException
+	public void FormFooterCancel(Writer pwriter,String pdomId, String pcancelText) throws IOException
 	{
-		p_writer.print("<input "+property("id",p_domId+"_cancel")+property("onclick","this.form._control.cancel()")+"type='button' "+property("value",p_cancelText)+"/>");
+		pwriter.print("<input "+property("id",pdomId+"_cancel")+property("onclick","this.form._control.cancel()")+"type='button' "+property("value",pcancelText)+"/>");
 	}
 	
 	@Override
-	public void formFooter(Writer p_writer) throws IOException
+	public void formFooter(Writer pwriter) throws IOException
 	{		
-		p_writer.print("</td></tr></table></form>");
+		pwriter.print("</td></tr></table></form>");
 	}
 }

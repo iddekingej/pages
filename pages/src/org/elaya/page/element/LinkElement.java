@@ -12,8 +12,8 @@ public class LinkElement extends PageElement<ElementThemeItem> {
 	private String css;
 	private LinkType linkType=LinkType.LINK_APPLICATION;
 	
-	public void setUrl(String p_url){
-		url=p_url;
+	public void setUrl(String purl){
+		url=purl;
 	}
 	
 	
@@ -22,8 +22,8 @@ public class LinkElement extends PageElement<ElementThemeItem> {
 		return url;
 	}
 	
-	public void setText(String p_text){
-		text=p_text;
+	public void setText(String ptext){
+		text=ptext;
 	}
 	
 	public String getText()
@@ -31,12 +31,12 @@ public class LinkElement extends PageElement<ElementThemeItem> {
 		return text;
 	}
 	
-	public void setClassName(String p_className){
-		className=p_className;
+	public void setClassName(String pclassName){
+		className=pclassName;
 	}
 	
-	public void setCss(String p_css){
-		css=p_css;
+	public void setCss(String pcss){
+		css=pcss;
 	}
 	
 	public String getClassName()
@@ -50,14 +50,14 @@ public class LinkElement extends PageElement<ElementThemeItem> {
 	}
 	
 	@Override
-	public void display(Writer p_writer,Data p_data) throws Exception {
-		Data l_data=getData(p_data);
-		String l_url=replaceVariables(l_data,url);
+	public void display(Writer pwriter,Data pdata) throws Exception {
+		Data data=getData(pdata);
+		String resultUrl=replaceVariables(data,url);
 		
 		if(linkType==LinkType.LINK_APPLICATION){
-			l_url=p_writer.getBasePath()+l_url;
+			resultUrl=pwriter.getBasePath()+resultUrl;
 		}
-		themeItem.link(p_writer,l_url, replaceVariables(l_data,text), replaceVariables(l_data,className), replaceVariables(l_data,css)); 
+		themeItem.link(pwriter,resultUrl, replaceVariables(data,text), replaceVariables(data,className), replaceVariables(data,css)); 
 		
 	}
 

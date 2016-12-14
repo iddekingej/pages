@@ -12,8 +12,8 @@ public class VerticalSpacer extends PageElement<ElementThemeItem> {
 	}
 
 	@Override
-	public void display(Writer p_writer, Data p_data) throws Exception {
-		themeItem.verticalSpacer(p_writer);
+	public void display(Writer pwriter, Data pdata) throws Exception {
+		themeItem.verticalSpacer(pwriter);
 	}
 
 	@Override

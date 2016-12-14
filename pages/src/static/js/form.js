@@ -103,7 +103,7 @@ TForm.prototype.sendData=function()
 				,	form:this.name
 				,	data:l_data
 		};
-		l_this=this;
+		var l_this=this;
 	try{
 		core.ajax("post",this.url,JSON.stringify(l_message),
 			{
@@ -173,7 +173,9 @@ TRadioElement.prototype=Object.create(TFormElement.prototype);
 TRadioElement.prototype.getValue=function()
 {
 	for(var l_cnt=0;l_cnt<this.numElements;l_cnt++){
-		if(this.elements[l_cnt].checked)return this.elements[l_cnt].value;
+		if(this.elements[l_cnt].checked){
+			return this.elements[l_cnt].value;
+		}
 	}
 	return null;
 }

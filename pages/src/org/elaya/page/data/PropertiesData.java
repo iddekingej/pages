@@ -4,42 +4,33 @@ import java.lang.reflect.Field;
 
 public class PropertiesData extends Data {
 
-	
-
 	@Override
-	public Object get(String p_name) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
-		// TODO Auto-generated method stub
-		Field l_field=getClass().getField(p_name);
-		return l_field.get(this);
+	public Object get(String pname) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+		Field field=getClass().getField(pname);
+		return field.get(this);
 	}
 
 	@Override
-	public void put(String p_name, Object p_value) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
-		Field l_field;
+	public void put(String pname, Object pvalue) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+		Field field;
 		try{
-			l_field=getClass().getField(p_name);
-		} catch(java.lang.NoSuchFieldException l_e){
-			throw new  java.lang.NoSuchFieldException(l_e.getMessage()+"(Classname="+getClass().getName()+")");
+			field=getClass().getField(pname);
+		} catch(java.lang.NoSuchFieldException e){
+			throw new  java.lang.NoSuchFieldException(e.getMessage()+"(Classname="+getClass().getName()+")");
 		}
-		l_field.set(this,p_value);
-		
+		field.set(this,pvalue);
 	}
 
 	@Override
-	public boolean containsKey(String p_name) {
+	public boolean containsKey(String pname) {
 		try{
 			@SuppressWarnings("unused")
-			Field l_field=getClass().getField(p_name);
-		} catch(NoSuchFieldException l_e)
+			Field field=getClass().getField(pname);
+		} catch(NoSuchFieldException e)
 		{
 			return false;
 		}
 		return true;
-	}
-	
-	
-	public PropertiesData() {
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -48,7 +39,7 @@ public class PropertiesData extends Data {
 	}
 
 	@Override
-	public Data getChild(Object p_object) {
+	public Data getChild(Object pobject) {
 		return null;
 	}
 

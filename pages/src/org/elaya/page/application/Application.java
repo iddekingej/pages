@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.elaya.page.AliasData;
 import org.elaya.page.AliasParser;
@@ -13,7 +14,7 @@ import org.elaya.page.UiXmlParser;
 import org.elaya.page.data.Url;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
-abstract public class Application{
+public abstract class Application{
 
 	private String themeBase="org.elaya.page.defaultTheme";	
 	private String aliasFiles;
@@ -38,29 +39,29 @@ abstract public class Application{
 
 		private static final long serialVersionUID = -7739276897593055425L;
 
-		public InvalidAliasType(String p_typeReq,String p_typeGot)
+		public InvalidAliasType(String ptypeReq,String ptypeGot)
 		{
-			super("Invalid alias type, '"+p_typeReq+"' expected but '"+p_typeGot+"' found");
+			super("Invalid alias type, '"+ptypeReq+"' expected but '"+ptypeGot+"' found");
 		}
 	}
 	/**
 	 * When loading a xml file, "classBase" is added to the classname when classname is relative
 	 * ("start with a ".")
 	 *  
-	 * @param p_classBase
+	 * @param pclassBase
 	 */
-	public void setClassBase(String p_classBase)
+	public void setClassBase(String pclassBase)
 	{
-		classBase=p_classBase;
+		classBase=pclassBase;
 	}
 	
 	public String getClassBase()
 	{
 		return classBase;
 	}
-	public void setDefaultDBConnection(String p_defaultDBConnection)
+	public void setDefaultDBConnection(String pdefaultDBConnection)
 	{
-		defaultDBConnection=p_defaultDBConnection;
+		defaultDBConnection=pdefaultDBConnection;
 	}
 	
 	public String getDefaultDBConnection()
@@ -68,9 +69,9 @@ abstract public class Application{
 		return defaultDBConnection;
 	}
 	
-	public void setXmlPath(String p_path)
+	public void setXmlPath(String ppath)
 	{
-		xmlPath=p_path;
+		xmlPath=ppath;
 	}
 	
 	public String getXmlPath()
@@ -79,19 +80,19 @@ abstract public class Application{
 	}
 	//--(xml parsing -------------------
 	
-	public String normalizeClassName(String p_name,String p_type) throws Exception
+	public String normalizeClassName(String pname,String ptype) throws Exception
 	{
-		if(p_name.charAt(0)=='.'){
-			return classBase+p_name;
-		} else if(p_name.charAt(0)=='@'){
-			return getAlias(p_name.substring(1), p_type);
+		if(pname.charAt(0)=='.'){
+			return classBase+pname;
+		} else if(pname.charAt(0)=='@'){
+			return getAlias(pname.substring(1), ptype);
 		} 
-		return p_name;
+		return pname;
 	}
 	
 	//--(db)------------------------------------------------------------------------
 	
-	public abstract DriverManagerDataSource getDB(String p_name);
+	public abstract DriverManagerDataSource getDB(String pname);
 	
 	public DriverManagerDataSource getDefaultDB() throws Exception
 	{
@@ -104,108 +105,108 @@ abstract public class Application{
 /**
  * Called after parser is created. This routine can be used to set for example initializers
  * 
- * @param p_parser
+ * @param pparser
  */
-	protected void initUiParser(UiXmlParser p_parser)
+	protected void initUiParser(UiXmlParser pparser)
 	{
 		
 	}
 	
 /**
- * Parse UI definition file in p_fileName and returns the Page Object
+ * Parse UI definition file in pfileName and returns the Page Object
  * The XML ui definition must describe a page.
- * When p_cache=true the page object is cached. When this function is called
- * again with the same filename and p_cache=true than a cached copy is returned.
+ * When pcache=true the page object is cached. When this function is called
+ * again with the same filename and pcache=true than a cached copy is returned.
  * 
- * @param p_fileName  XML describing the page
- * @param p_cache     Cache Page object 
+ * @param pfileName  XML describing the page
+ * @param pcache     Cache Page object 
  * @return            Page object representing page
  * @throws Exception  
  */
 	
 	
 	
-	public synchronized Page loadPage(String p_fileName,boolean p_cache) throws Exception
+	public synchronized Page loadPage(String pfileName,boolean pcache) throws Exception
 	{
-		if(p_cache && pageCache.containsKey(p_fileName)){
-			return pageCache.get(p_fileName);
+		if(pcache && pageCache.containsKey(pfileName)){
+			return pageCache.get(pfileName);
 		}
-		UiXmlParser l_parser=new UiXmlParser(this,getClass().getClassLoader());
-		initUiParser(l_parser);
-		Object l_object=l_parser.parse(p_fileName);
+		UiXmlParser parser=new UiXmlParser(this,getClass().getClassLoader());
+		initUiParser(parser);
+		Object object=parser.parse(pfileName);
 
 		
-		List<String> l_errors=l_parser.getErrors();
-		if(l_errors.size()>0){
-			String l_text="";
-			for(String l_error:l_errors){
-				l_text =l_text +(p_fileName+":"+l_error)+"\n";
+		List<String> errors=parser.getErrors();
+		if(!errors.isEmpty()){
+			StringBuilder text=new StringBuilder();
+			for(String error:errors){
+				text.append(pfileName+":"+error+"\n");
 			}
-			throw new Errors.LoadingPageFailed(l_text);
+			throw new Errors.LoadingPageFailed(text.toString());
 		}
-		Page l_page;
-		if(l_object instanceof Page){
-			l_page=(Page)l_object;	
+		Page page;
+		if(object instanceof Page){
+			page=(Page)object;	
 		}   else {
-			throw new Errors.LoadingPageFailed("File "+p_fileName+" contains not a Page but a '"+l_object.getClass().getName()+"'");
+			throw new Errors.LoadingPageFailed("File "+pfileName+" contains not a Page but a '"+object.getClass().getName()+"'");
 		}
-		if(p_cache){
-			pageCache.put(p_fileName, l_page);
+		if(pcache){
+			pageCache.put(pfileName, page);
 		}
-		return l_page;
+		return page;
 	}
 	
-	public String getRealConfigPath(String p_fileName)
+	public String getRealConfigPath(String pfileName)
 	{
-		String l_fileName=p_fileName;
-		if(l_fileName.charAt(0)!='/'){
-			l_fileName=xmlPath+l_fileName;
+		String fileName=pfileName;
+		if(fileName.charAt(0)!='/'){
+			fileName=xmlPath+fileName;
 		} 
-		return l_fileName;
+		return fileName;
 	}
 	
-	public InputStream getConfigStream(String p_fileName) throws FileNotFoundException
+	public InputStream getConfigStream(String pfileName) throws FileNotFoundException
 	{
-		String l_fileName=getRealConfigPath(p_fileName);
-		InputStream l_stream=getClass().getResourceAsStream(l_fileName);
-		if(l_stream==null){
-			throw new FileNotFoundException(p_fileName+"("+l_fileName+")");
+		String fileName=getRealConfigPath(pfileName);
+		InputStream stream=getClass().getResourceAsStream(fileName);
+		if(stream==null){
+			throw new FileNotFoundException(pfileName+"("+fileName+")");
 		}
-		return l_stream;
+		return stream;
 	}
 	
 /* Alias handling */
 //TODO error handling
-	private void addAliasses(String p_fileName) throws Exception
+	private void addAliasses(String pfileName) throws Exception
 	{
-		AliasParser l_parser=new AliasParser();
-		InputStream l_input=getConfigStream(p_fileName);
-		l_parser.parseAliases(l_input, aliasses);
+		AliasParser parser=new AliasParser();
+		InputStream input=getConfigStream(pfileName);
+		parser.parseAliases(input, aliasses);
 		
-		if(!l_parser.getErrors().isEmpty()){
-			String l_text="";
-			for(String l_error:l_parser.getErrors()){
-				l_text=l_text+"\n"+l_error;
+		if(!parser.getErrors().isEmpty()){
+			StringBuilder text=new StringBuilder();
+			for(String error:parser.getErrors()){
+				text.append("\n").append(error);
 			}
-			throw new Errors.LoadingPageFailed("Error:"+l_text);
+			throw new Errors.LoadingPageFailed("Error:"+text);
 		}
 	}
 	
-	public void setAliasFiles(String p_aliasFiles) 
+	public void setAliasFiles(String paliasFiles) 
 	{
-		aliasFiles=p_aliasFiles;
+		aliasFiles=paliasFiles;
 	}
 	
 	private void loadAliasFiles() throws Exception
 	{
-		aliasses=new HashMap<String,AliasData>();
-		String[] l_fileNames=aliasFiles.split(",");
-		for(String l_fileName:l_fileNames){
-			addAliasses(l_fileName);
+		aliasses=new HashMap<>();
+		String[] fileNames=aliasFiles.split(",");
+		for(String fileName:fileNames){
+			addAliasses(fileName);
 		}
 	}
 	
-	public HashMap<String,AliasData> getAliasses() throws Exception
+	public Map<String,AliasData> getAliasses() throws Exception
 	{
 		if(aliasses==null){
 			loadAliasFiles();
@@ -213,43 +214,39 @@ abstract public class Application{
 		return aliasses;
 	}
 	 
-	public String getAlias(String p_name,String p_type) throws Exception
+	public String getAlias(String pname,String ptype) throws Exception
 	{
-		AliasData l_data=getAliasses().get(p_name);
-		if(l_data != null){			
-			if(l_data.getType() != p_type){
-				throw new InvalidAliasType(p_type,l_data.getType());
+		AliasData data=getAliasses().get(pname);
+		if(data != null){			
+			if(data.getType() != ptype){
+				throw new InvalidAliasType(ptype,data.getType());
 			}
-			return l_data.getValue();
+			return data.getValue();
 		}
 		return null;
 	}
 	
-	public String getAlias(String p_name,String p_type,boolean p_mandatory) throws Exception
+	public String getAlias(String pname,String ptype,boolean pmandatory) throws Exception
 	{
-		String l_return=getAlias(p_name,p_type);
-		if((l_return==null) && p_mandatory){
-			throw new Errors.AliasNotFound(p_name);
+		String returnValue=getAlias(pname,ptype);
+		if((returnValue==null) && pmandatory){
+			throw new Errors.AliasNotFound(pname);
 		}
-		return l_return;
+		return returnValue;
 	}
 
-	public Url getUrlByAlias(String p_name) throws Exception
+	public Url getUrlByAlias(String pname) throws Exception
 	{
-		return new Url(getAlias(p_name,AliasData.alias_url,true));
+		return new Url(getAlias(pname,AliasData.ALIAS_URL,true));
 	}
 	
 	public String getThemeBase(){
 		return themeBase;
 	}
 	
-	public void setThemeBase(String p_base)
+	public void setThemeBase(String pbase)
 	{
-		themeBase=p_base;
-	}
-	
-		
-	public  Application() {		
+		themeBase=pbase;
 	}
 
 }

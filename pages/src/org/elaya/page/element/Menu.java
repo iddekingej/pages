@@ -8,11 +8,11 @@ public class Menu extends PageElement<ElementThemeItem> {
 	private String title;
 	
 	public String getTitle(){ return title;}
-	public void setTitle(String p_title){ title=p_title;}
+	public void setTitle(String ptitle){ title=ptitle;}
 	@Override
-	public void display(Writer p_stream, Data p_data) throws Exception {
-		Data l_data=getData(p_data);
-		themeItem.menu(p_stream, getDomId(), replaceVariables(l_data,title));
+	public void display(Writer pstream, Data pdata) throws Exception {
+		Data data=getData(pdata);
+		themeItem.menu(pstream, getDomId(), replaceVariables(data,title));
 		
 	}
 

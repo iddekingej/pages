@@ -6,9 +6,9 @@ public class LinkMenuItem extends BuildinListMenuItem{
 	private String text;
 	private String url;
 	
-	public void setText(String p_text)
+	public void setText(String ptext)
 	{
-		text=p_text;
+		text=ptext;
 	}
 	
 	public String getText()
@@ -17,8 +17,8 @@ public class LinkMenuItem extends BuildinListMenuItem{
 	}
 	
 	
-	public void setUrl(String p_url){
-		url=p_url;
+	public void setUrl(String purl){
+		url=purl;
 	}
 	
 	public String getUrl()
@@ -26,15 +26,11 @@ public class LinkMenuItem extends BuildinListMenuItem{
 		return url;
 	}
 
-	public LinkMenuItem() {
-		super();
-	}
-
 	@Override
-	public void display(Writer p_writer,Data p_data) throws Exception {
-		Data l_data=getData(p_data);
-		String 	l_url=p_writer.procesUrl(replaceVariables(l_data,url));
-		themeItem.linkItem(p_writer,getDomId(),replaceVariables(l_data,text),l_url  );
+	public void display(Writer pwriter,Data pdata) throws Exception {
+		Data data=getData(pdata);
+		String 	resultUrl=pwriter.procesUrl(replaceVariables(data,url));
+		themeItem.linkItem(pwriter,getDomId(),replaceVariables(data,text),resultUrl  );
 	}
 
 

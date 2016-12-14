@@ -8,55 +8,60 @@ import javax.servlet.ServletResponse;
 public abstract class RequestMatcher {
 	private LinkedList<Action> actions=new  LinkedList<>();
 	private LinkedList<RequestMatcher> subMatcher=new LinkedList<>(); 
-	
-	public RequestMatcher() {
-		// TODO Auto-generated constructor stub
-	}
-	
-	protected AuthorisationData getSessionFromRequest(ServletRequest p_request)
+
+	protected AuthorisationData getSessionFromRequest(ServletRequest prequest)
 	{
-		Object l_object=p_request.getAttribute("org.elaya.page.security.SessionData");
-		if(l_object != null){
-			if(l_object instanceof AuthorisationData){
-				return (AuthorisationData)l_object;
-			}
+		Object object=prequest.getAttribute("org.elaya.page.security.SessionData");
+		if(object !=null && object instanceof AuthorisationData){
+			return (AuthorisationData)object;
 		}
+
 		return null;
 	}
 	
 	
-	final public RequestMatcher matchRequest(ServletRequest p_request){
-		if(matchOwnRequest(p_request)){
-			RequestMatcher l_found;
-			for(RequestMatcher l_sub:subMatcher){
-				l_found=l_sub.matchRequest(p_request);
-				if(l_found != null) return l_found;
+	public final RequestMatcher matchRequest(ServletRequest prequest){
+		if(matchOwnRequest(prequest)){
+			RequestMatcher found;
+			for(RequestMatcher sub:subMatcher){
+				found=sub.matchRequest(prequest);
+				if(found != null){
+					return found;
+				}
 			}
 			return this;
 		} else {
 			return null;
 		}
 	}
-	abstract boolean matchOwnRequest(ServletRequest p_request);
+	abstract boolean matchOwnRequest(ServletRequest prequest);
 	
-	public MatchActionResult execute(ServletRequest p_request,ServletResponse p_response,Authenticator p_authenticator) throws Exception{
-		ActionResult l_result;
-		boolean l_nextFilter=true;
-		for(Action l_action:actions){
-			l_result=l_action.execute(p_request, p_response,p_authenticator);
-			if(l_result==ActionResult.SecurityFailed) return MatchActionResult.SecurityFailed;
-			if(l_result==ActionResult.NotAuthorised) return MatchActionResult.NotAuthorised;
-			if(l_result==ActionResult.StopActions) break;
-			if(l_result==ActionResult.NoNextFilter) l_nextFilter=false;
+	public MatchActionResult execute(ServletRequest prequest,ServletResponse presponse,Authenticator pauthenticator) throws Exception{
+		ActionResult result;
+		boolean nextFilter=true;
+		for(Action action:actions){
+			result=action.execute(prequest, presponse,pauthenticator);
+			if(result==ActionResult.SECURITYFAILED){
+				return MatchActionResult.SECURITYFAILED;
+			}
+			if(result==ActionResult.NOTAUTHORISED){
+				return MatchActionResult.NOTAUTHORIZED;
+			}
+			if(result==ActionResult.STOPACTIONS){
+				break;
+			}
+			if(result==ActionResult.NONEXTFILTER){
+				nextFilter=false;
+			}
 		}
-		return l_nextFilter?MatchActionResult.NextFilter:MatchActionResult.NoNextFilter;
+		return nextFilter?MatchActionResult.NEXTFILTER:MatchActionResult.NONEXTFILTER;
 	}
 	
-	public void addAction(Action p_action){
-		actions.add(p_action);
+	public void addAction(Action paction){
+		actions.add(paction);
 	}
 	
-	public void addRequestMatcher(RequestMatcher p_requestMatcher){
-		subMatcher.add(p_requestMatcher);
+	public void addRequestMatcher(RequestMatcher prequestMatcher){
+		subMatcher.add(prequestMatcher);
 	}
 }

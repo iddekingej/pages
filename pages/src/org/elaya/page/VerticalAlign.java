@@ -2,14 +2,17 @@ package org.elaya.page;
 
 public enum VerticalAlign {
 	
-	top("top"),middle("middle"),bottom("bottom");
+	TOP("top"),MIDDLE("middle"),BOTTOM("bottom");
+	
 	private String tagValue;
+	
+	VerticalAlign(String ptagValue)
+	{
+		tagValue=ptagValue;
+	}
 	public String gettagValue()
 	{
 		return tagValue;
 	}
-	VerticalAlign(String p_tagValue)
-	{
-		tagValue=p_tagValue;
-	}
+
 }

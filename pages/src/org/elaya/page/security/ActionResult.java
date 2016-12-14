@@ -1,9 +1,9 @@
 package org.elaya.page.security;
 
 public enum ActionResult {
-	SecurityFailed
-,   NotAuthorised
-,	NextFilter
-,	NoNextFilter
-,	StopActions
+	SECURITYFAILED
+,   NOTAUTHORISED
+,	NEXTFILTER
+,	NONEXTFILTER
+,	STOPACTIONS
 }

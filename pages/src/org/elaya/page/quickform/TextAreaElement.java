@@ -7,12 +7,12 @@ public class TextAreaElement extends BuildInFormElement {
 	String width="100%";
 	String height="100px";
 	
-	public void setWidth(String p_width){
-		width=p_width;
+	public void setWidth(String pwidth){
+		width=pwidth;
 	}
 	
-	public void setHeight(String p_height){
-		height=p_height;
+	public void setHeight(String pheight){
+		height=pheight;
 	}
 	
 	public String getWidth()
@@ -25,20 +25,15 @@ public class TextAreaElement extends BuildInFormElement {
 		return height;
 	}
 	
-	public TextAreaElement() {
-		super();
-	}
-
 	@Override
 	public String getJsClassName() {
-		// TODO Auto-generated method stub
 		return "TTextareaElement";
 	}
 
 	@Override
-	public void display(Writer p_writer,Data p_data) throws Exception {
-		Object l_value=getValueByName(p_data);
-		themeItem.textArea(p_writer,getDomId(), getName(), getHeight(), getWidth(), l_value);
+	public void display(Writer pwriter,Data pdata) throws Exception {
+		Object value=getValueByName(pdata);
+		themeItem.textArea(pwriter,getDomId(), getName(), getHeight(), getWidth(), value);
 	}
 
 }

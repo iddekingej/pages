@@ -18,8 +18,8 @@ public class SecurityManager {
 	class InvalidSessionData extends Exception{
 
 		private static final long serialVersionUID = 1L;
-		public InvalidSessionData(String p_message){
-			super(p_message);
+		public InvalidSessionData(String pmessage){
+			super(pmessage);
 		}
 	}
 	
@@ -28,9 +28,9 @@ public class SecurityManager {
 	private LinkedList<RequestMatcher> requestMatchers=new LinkedList<>();
 	private Authenticator authenticator;
 	
-	public void setAuthenticator(Authenticator p_authenticator)
+	public void setAuthenticator(Authenticator pauthenticator)
 	{
-			authenticator=p_authenticator;
+			authenticator=pauthenticator;
 	}
 	
 	public Authenticator getAuthenticator()
@@ -40,91 +40,98 @@ public class SecurityManager {
 
 	
 
-	public void setLoginCheckUrl(String p_url){
-		loginCheckUrl=p_url;
+	public void setLoginCheckUrl(String purl){
+		loginCheckUrl=purl;
 	}
 	
 	public String getLoginCheckUrl(){
 		return loginCheckUrl;
 	}
 	
-	public void setLoginPageUrl(String p_url){
-		loginPageUrl=p_url;
+	public void setLoginPageUrl(String purl){
+		loginPageUrl=purl;
 	}
 	
 	public String getLoginPageUrl(){
 		return loginPageUrl;
 	}
 	
-	protected RequestMatcher matchRequest(ServletRequest p_request)
+	protected RequestMatcher matchRequest(ServletRequest prequest)
 	{
-		RequestMatcher l_found;
-		for(RequestMatcher l_requestMatcher:requestMatchers){
-			l_found=l_requestMatcher.matchRequest(p_request);
-			if(l_found != null) return l_found;
+		RequestMatcher found=null;
+		for(RequestMatcher requestMatcher:requestMatchers){
+			found=requestMatcher.matchRequest(prequest);			
+			if(found != null){
+				return found;
+			}
 		}
-		return null;
+		return found;
 	}
 	
-	protected void redirectToPage(String p_url,ServletRequest p_request,ServletResponse p_response) throws ServletException, IOException
+	protected void redirectToPage(String purl,ServletRequest prequest,ServletResponse presponse) throws ServletException, IOException
 	{
-		if(p_request instanceof HttpServletRequest){			
-			HttpServletResponse l_httpResponse=(HttpServletResponse) p_response;		
-			l_httpResponse.sendRedirect(((HttpServletRequest)p_request).getContextPath()+p_url);
+		if(prequest instanceof HttpServletRequest){			
+			HttpServletResponse httpResponse=(HttpServletResponse) presponse;		
+			httpResponse.sendRedirect(((HttpServletRequest)prequest).getContextPath()+purl);
 		}
 	}
 	
-	protected void afterCreateSession(AuthorisationData p_authorisationData)
+	protected void afterCreateSession(AuthorisationData pauthorisationData)
 	{
 		
 	}
 	
-	private void createStoredSession(ServletRequest p_request) throws NoSuchMethodException, ClassNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, InvalidSessionData, NotSerializableException
+	private void initSessionById(Object objectId,Object typeObject,ServletRequest request) throws InvalidSessionData, NotSerializableException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ClassNotFoundException
 	{
-		if(p_request instanceof HttpServletRequest){
-			HttpServletRequest l_request=(HttpServletRequest)p_request;
-			HttpSession l_session=l_request.getSession(false);
-			if(l_session != null){
-				Object l_typeObject=l_session.getAttribute("type");
-				Object l_objectId=l_session.getAttribute("id");
-				if(l_objectId != null && l_typeObject != null){
-					Serializable l_id;
-					if(l_objectId instanceof Serializable ){
-						l_id=(Serializable)l_objectId;
-					} else {
-						throw new NotSerializableException("ID attribute of session is not Serializable (type="+l_objectId.getClass().getName()+")");
-					}
-					Object l_object=DynamicObject.createObjectFromName(l_typeObject.toString());
-					if(l_object instanceof AuthorisationData){
-						AuthorisationData l_authorisationData=(AuthorisationData)l_object;
-						p_request.setAttribute("org.elaya.page.security.SessionData", l_object);
-						afterCreateSession(l_authorisationData);
-						l_authorisationData.initSessionData(l_id);
-					} else {
-						throw new InvalidSessionData("Sessiondata object (type="+l_object.getClass().getName()+") doesn't descent from SessionData");
-					}			
+		Serializable id;
+		if(objectId instanceof Serializable ){
+			id=(Serializable)objectId;
+		} else {
+			throw new NotSerializableException("ID attribute of session is not Serializable (type="+objectId.getClass().getName()+")");
+		}
+		Object object=DynamicObject.createObjectFromName(typeObject.toString());
+		if(object instanceof AuthorisationData){
+			AuthorisationData authorisationData=(AuthorisationData)object;
+			request.setAttribute("org.elaya.page.security.SessionData", object);
+			afterCreateSession(authorisationData);
+			authorisationData.initSessionData(id);
+		} else {
+			throw new InvalidSessionData("Sessiondata object (type="+object.getClass().getName()+") doesn't descent from SessionData");
+		}		
+	}
+	
+	private void createStoredSession(ServletRequest servletRequest) throws NoSuchMethodException, ClassNotFoundException, InstantiationException, IllegalAccessException,  InvocationTargetException, InvalidSessionData, NotSerializableException
+	{
+		if(servletRequest instanceof HttpServletRequest){
+			HttpServletRequest request=(HttpServletRequest)servletRequest;
+			HttpSession session=request.getSession(false);
+			if(session != null){
+				Object typeObject=session.getAttribute("type");
+				Object objectId=session.getAttribute("id");
+				if(objectId != null && typeObject != null){
+					initSessionById(objectId,typeObject,request);
 				}
 			}
 		}
 	}
 	
 	
-	public boolean execute(ServletRequest p_request,ServletResponse p_response) throws Exception
+	public boolean execute(ServletRequest request,ServletResponse response) throws Exception
 	{
-		createStoredSession(p_request);
-		RequestMatcher l_requestMatcher=matchRequest(p_request);
-		if(l_requestMatcher==null){			
-			redirectToPage(loginPageUrl,p_request,p_response);			
+		createStoredSession(request);
+		RequestMatcher requestMatcher=matchRequest(request);
+		if(requestMatcher==null){			
+			redirectToPage(loginPageUrl,request,response);			
 			return false;
 		}
 		
-		MatchActionResult l_result=l_requestMatcher.execute(p_request, p_response,authenticator);		
-		switch(l_result){
-			case NextFilter: return true;
-			case NoNextFilter: return false;
-			case NotAuthorised:				
-			case SecurityFailed:
-				redirectToPage(loginPageUrl,p_request,p_response);
+		MatchActionResult result=requestMatcher.execute(request, response,authenticator);		
+		switch(result){
+			case NEXTFILTER: return true;
+			case NONEXTFILTER: return false;
+			case NOTAUTHORIZED:				
+			case SECURITYFAILED:
+				redirectToPage(loginPageUrl,request,response);
 				return false;
 		}
 		return false;
@@ -132,7 +139,7 @@ public class SecurityManager {
 		
 	}
 	
-	public void addRequestMatcher(RequestMatcher p_requestMatcher){
-		requestMatchers.add(p_requestMatcher);
+	public void addRequestMatcher(RequestMatcher prequestMatcher){
+		requestMatchers.add(prequestMatcher);
 	}
 }

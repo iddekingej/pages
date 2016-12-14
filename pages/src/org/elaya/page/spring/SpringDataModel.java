@@ -6,7 +6,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-abstract public class SpringDataModel extends DataModel implements ApplicationContextAware {
+public abstract class SpringDataModel extends DataModel implements ApplicationContextAware {
 	private ApplicationContext applicationContext;
 	
 	public ApplicationContext getApplicationContext()
@@ -14,18 +14,14 @@ abstract public class SpringDataModel extends DataModel implements ApplicationCo
 		return applicationContext;
 	}
 	
-	public SpringDataModel() {
-		super();
-	}
-
 	@Override
-	public void setApplicationContext(ApplicationContext p_applicationContext) throws BeansException {
-		applicationContext=p_applicationContext;
+	public void setApplicationContext(ApplicationContext papplicationContext) throws BeansException {
+		applicationContext=papplicationContext;
 	}
 
-	public JdbcTemplate getJDBCTemplate(String p_name)
+	public JdbcTemplate getJDBCTemplate(String pname)
 	{
-			return new JdbcTemplate(getApplication().getDB(p_name));
+			return new JdbcTemplate(getApplication().getDB(pname));
 	}
 	
 	public JdbcTemplate getJDBCDefaultTemplate() throws Exception

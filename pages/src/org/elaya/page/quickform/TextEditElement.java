@@ -15,9 +15,9 @@ public  class TextEditElement extends BuildInFormElement {
 		super();
 	}
 	
-	public void setMaxLength(Integer p_size)
+	public void setMaxLength(Integer psize)
 	{
-		maxLength=p_size;
+		maxLength=psize;
 	}
 	
 	public int getMaxLength()
@@ -25,9 +25,9 @@ public  class TextEditElement extends BuildInFormElement {
 		return maxLength;
 	}
 	
-	public void setPassword(Boolean p_password)
+	public void setPassword(Boolean ppassword)
 	{
-		password=p_password;
+		password=ppassword;
 	}
 	
 	public boolean getPassword()
@@ -36,13 +36,13 @@ public  class TextEditElement extends BuildInFormElement {
 	}
 
 	@Override
-	public void display(Writer p_writer,Data p_data) throws Exception {
+	public void display(Writer pwriter,Data pdata) throws Exception {
 		Objects.requireNonNull(themeItem);
-		Object l_value=getValueByName(p_data);
+		Object value=getValueByName(pdata);
 		if(password){
-			themeItem.passwordElement(p_writer,getDomId(),getName(),l_value,maxLength);
+			themeItem.passwordElement(pwriter,getDomId(),getName(),value,maxLength);
 		} else {
-			themeItem.textElement(p_writer,getDomId(),getName(),l_value,maxLength);
+			themeItem.textElement(pwriter,getDomId(),getName(),value,maxLength);
 		}
 	}
 	@Override

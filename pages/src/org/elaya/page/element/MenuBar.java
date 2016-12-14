@@ -1,7 +1,5 @@
 package org.elaya.page.element;
 
-import java.io.IOException;
-
 import org.elaya.page.Element;
 import org.elaya.page.PageElement;
 import org.elaya.page.Writer;
@@ -9,27 +7,24 @@ import org.elaya.page.data.Data;
 
 public class MenuBar extends PageElement<ElementThemeItem> {
 
-	public MenuBar() {
-		// TODO Auto-generated constructor stub
-	}
 	
 	@Override
-	protected void preElement(Writer p_writer,Element<?> p_element) throws IOException, Exception
+	protected void preElement(Writer pwriter,Element<?> pelement) throws Exception
 	{
-		themeItem.menuBarItemHeader(p_writer);
+		themeItem.menuBarItemHeader(pwriter);
 	}
 	@Override
-	protected void postElement(Writer p_writer,Element<?> p_element) throws IOException, Exception
+	protected void postElement(Writer pwriter,Element<?> pelement) throws Exception
 	{		
-		themeItem.menuBarItemFooter(p_writer);
+		themeItem.menuBarItemFooter(pwriter);
 	}
 	
 	@Override
-	public void display(Writer p_stream, Data p_data) throws Exception {
-		Data l_data=getData(p_data);
-		themeItem.menuBarHeader(p_stream);
-		displaySubElements(p_stream,l_data);
-		themeItem.menuBarFooter(p_stream);
+	public void display(Writer pstream, Data pdata) throws Exception {
+		Data data=getData(pdata);
+		themeItem.menuBarHeader(pstream);
+		displaySubElements(pstream,data);
+		themeItem.menuBarFooter(pstream);
 		
 	}
 	

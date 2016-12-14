@@ -7,9 +7,9 @@ import org.springframework.web.util.HtmlUtils;
 public class ThemeItemBase {
 	private String classPrefix="";
 
-	public void setClassPrefix(String p_classPrefix)
+	public void setClassPrefix(String pclassPrefix)
 	{
-		classPrefix=p_classPrefix;	
+		classPrefix=pclassPrefix;	
 	}
 
 	public String getClassPrefix()
@@ -17,45 +17,45 @@ public class ThemeItemBase {
 		return classPrefix;
 	}
 	
-	public void getCssFiles(Set<String> p_files)
+	public void getCssFiles(Set<String> pfiles)
 	{
 		
 	}
 
 	
-	public String str(Object p_value){
-		if(p_value==null){
+	public String str(Object pvalue){
+		if(pvalue==null){
 			return "";
 		}
-		return p_value.toString();
+		return pvalue.toString();
 	}
 	
-	public String escape(String p_value)
+	public String escape(String pvalue)
 	{
-		return HtmlUtils.htmlEscape(str(p_value));
+		return HtmlUtils.htmlEscape(str(pvalue));
 	}
 	
-	public String escape(Object p_value){
-		return escape(str(p_value));
+	public String escape(Object pvalue){
+		return escape(str(pvalue));
 	}
 	
-	public String property(String p_name,Object p_value)
+	public String property(String pname,Object pvalue)
 	{
-		return p_name+"=\""+escape(p_value)+"\" ";
+		return pname+"=\""+escape(pvalue)+"\" ";
 	}
 	
-	public String propertyF(String p_name,Object p_value)
+	public String propertyF(String pname,Object pvalue)
 	{
-		String l_str=str(p_value);
-		if(l_str.length()>0){
-			return property(p_name,p_value);
+		String str=str(pvalue);
+		if(str.length()>0){
+			return property(pname,pvalue);
 		}
 		return "";
 	}
 	
-	protected String classProperty(String p_className)
+	protected String classProperty(String pclassName)
 	{
-		return property("class",classPrefix+p_className);
+		return property("class",classPrefix+pclassName);
 	}
 
 

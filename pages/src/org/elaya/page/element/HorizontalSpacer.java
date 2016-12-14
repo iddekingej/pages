@@ -12,13 +12,12 @@ public class HorizontalSpacer extends PageElement<ElementThemeItem> {
 	}
 
 	@Override
-	public void display(Writer p_writer,Data p_data) throws Exception {
-		themeItem.horizontalSpacer(p_writer);
+	public void display(Writer pwriter,Data pdata) throws Exception {
+		themeItem.horizontalSpacer(pwriter);
 	}
 
 	@Override
 	public String getThemeName() {
-		// TODO Auto-generated method stub
 		return "ElementThemeItem";
 	}
 

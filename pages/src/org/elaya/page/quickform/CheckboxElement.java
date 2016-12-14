@@ -11,9 +11,9 @@ public class CheckboxElement extends BuildInFormElement {
 	}
 
 	@Override
-	public void  display(Writer p_writer,Data p_data) throws Exception {
-		Object l_value=getValueByName(p_data);
-		themeItem.checkBoxElement(p_writer,getDomId(),getName(),l_value);
+	public void  display(Writer pwriter,Data pdata) throws Exception {
+		Object value=getValueByName(pdata);
+		themeItem.checkBoxElement(pwriter,getDomId(),getName(),value);
 
 	}
 	@Override

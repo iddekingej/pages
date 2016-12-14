@@ -3,13 +3,13 @@ package org.elaya.page.listmenu;
 import org.elaya.page.Element;
 import org.elaya.page.ThemeItemBase;
 
-abstract public class ListMenuItem<itemBase extends ThemeItemBase> extends Element<itemBase> {
+public abstract class ListMenuItem<T extends ThemeItemBase> extends Element<T> {
 
 	private String value;
 	
-	public void setValue(String p_value)
+	public void setValue(String pvalue)
 	{
-		value=p_value;
+		value=pvalue;
 	}
 	
 	public String getValue()
