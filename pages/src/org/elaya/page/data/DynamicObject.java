@@ -63,7 +63,6 @@ public class DynamicObject {
 			Class<?>[] params=method.getParameterTypes();
 			Object value=inValue;
 			if(params.length>=1 && value != null && !params[0].isInstance(value)){
-				System.out.println(params[0].getName()+" "+value);
 				Method methodConv=params[0].getMethod("valueOf",value.getClass());
 				value=methodConv.invoke(null,value);				
 			}
