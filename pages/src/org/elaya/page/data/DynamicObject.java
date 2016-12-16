@@ -4,8 +4,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Objects;
-
-import org.elaya.page.data.DynamicMethod.methodNotFound;
+import org.elaya.page.data.DynamicMethod.MethodNotFound;
 
 public class DynamicObject {
 
@@ -32,47 +31,43 @@ public class DynamicObject {
 			constructor=className.getConstructor(ptypes);
 			return constructor;
 		}
-		public static Object createObjectFromName(String pname,Class<?>[] ptypes,Object[] pparams) throws NoSuchMethodException, ClassNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+		public static Object createObjectFromName(String pname,Class<?>[] ptypes,Object[] pparams) throws NoSuchMethodException, ClassNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException  {
 		
 			Constructor<?>constructor=getConstructorByName(pname,ptypes);
 			if(constructor != null){
-				Object object=constructor.newInstance(pparams);
-				return object;
+				return constructor.newInstance(pparams);				
 			} else {
 				return null;
 			}
 		}
 
-		public static Method getMethod(Object pobject,String pname) throws methodNotFound{
+		public static Method getMethod(Object pobject,String pname) throws MethodNotFound{
 			Objects.requireNonNull(pobject);
 			for(Method method:pobject.getClass().getMethods()){
 				if(method.getName().toLowerCase().equals(pname)){
 					return method;
 				}
 			}
-			throw new methodNotFound(pobject,pname);
+			throw new MethodNotFound(pobject,pname);
 		}		
 		
-		public static Object get(Object pobject,String pname) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, methodNotFound
+		public static Object get(Object pobject,String pname) throws  InvocationTargetException, MethodNotFound, IllegalAccessException
 		{			
 			Method method=getMethod(pobject,"get"+pname);
 			return method.invoke(pobject);		
 		}
 
-		public static void put(Object pobject,String pname, Object pvalue) throws Exception
+		public static void put(Object object,String name, Object inValue) throws Exception
 		{
-			Method method=getMethod(pobject,"set"+pname);
-			Class<?> params[]=method.getParameterTypes();
-			Object value=pvalue;
-			if(params.length>=1 && pvalue != null){
-				if(!params[0].getName().equals(pvalue.getClass().getName())){
-					
-					Method methodConv=params[0].getMethod("valueOf",pvalue.getClass());
-					value=methodConv.invoke(null,value);
-					
-				}
+			Method method=getMethod(object,"set"+name);
+			Class<?>[] params=method.getParameterTypes();
+			Object value=inValue;
+			if(params.length>=1 && value != null && !params[0].isInstance(value)){
+				System.out.println(params[0].getName()+" "+value);
+				Method methodConv=params[0].getMethod("valueOf",value.getClass());
+				value=methodConv.invoke(null,value);				
 			}
-			method.invoke(pobject, value);		
+			method.invoke(object, value);		
 		}	
 		
 		public static boolean containsKey(Object pobject,String pname) {
@@ -80,9 +75,13 @@ public class DynamicObject {
 				@SuppressWarnings("unused")
 				Method method=DynamicObject.getMethod(pobject,"set"+pname) ;
 				return true;
-			}catch(methodNotFound e){
+			}catch(MethodNotFound e){
 				return false;
 			}
 		}
 		
+		private DynamicObject()
+		{
+			
+		}
 }

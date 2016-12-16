@@ -6,6 +6,8 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.elaya.page.security.Errors.AuthenticationException;
+
 
 public abstract class Action {
 
@@ -24,6 +26,6 @@ public abstract class Action {
 		return null;
 	}
 	
-	public abstract ActionResult execute(ServletRequest prequest,ServletResponse presponse,Authenticator pauthenticator) throws Exception;
+	public abstract ActionResult execute(ServletRequest prequest,ServletResponse presponse,Authenticator pauthenticator) throws AuthenticationException, IOException ;
 	
 }

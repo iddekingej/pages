@@ -50,7 +50,7 @@ public abstract class JsonReciever<T extends Dynamic> extends Reciever<T> {
 			//TODO Handle exception and when parameter does not exists
 			for(Parameter parameter:getParameters()){
 				value=data.get(parameter.getName());
-				if(parameter.getType()==ParameterType.integer && "".equals(value)){
+				if(parameter.getType()==ParameterType.INTEGER && "".equals(value)){
 					value=null;
 				}
 				object.put(parameter.getName(),value);

@@ -136,11 +136,13 @@ public class Form extends PageElement<FormThemeItem>{
 		return "TForm";
 	}
 	
+	@Override
 	public String getThemeName()
 	{	
 		return "FormThemeItem";		
 	}
 	
+	@Override
 	public void display(Writer pwriter,Data pdata) throws Exception
 	{
 		Data data=getData(pdata);		
@@ -167,13 +169,17 @@ public class Form extends PageElement<FormThemeItem>{
 		
 	}
 	
-	protected void makeSetupJs(Writer pwriter,Data pdata) throws Exception
+	@Override
+	protected void makeSetupJs(Writer writer,Data pdata) throws Exception
 	{
-		String next=pwriter.procesUrl(replaceVariables(pdata,nextUrl));
-		pwriter.print("this.cmd="+pwriter.js_toString(replaceVariables(pdata,cmd))+";\n");
-		pwriter.print("this.nextUrl="+pwriter.js_toString(next)+";\n");
-		if(this.cancelUrl.length()>0)pwriter.print("this.cancelUrl="+pwriter.js_toString(replaceVariables(pdata,cancelUrl))+";\n");
-		pwriter.print("this.submitType="+pwriter.js_toString(submitType.getValue()));
+		String next=writer.procesUrl(replaceVariables(pdata,nextUrl));
+		writer.objVar("cmd",replaceVariables(pdata,cmd));
+		writer.objVar("nextUrl", next);
+				
+		if(this.cancelUrl.length()>0){
+			writer.objVar("cancelUrl",replaceVariables(pdata,cancelUrl));			
+		}
+		writer.objVar("submitType",submitType.getValue());
 	}
 	
 	@Override

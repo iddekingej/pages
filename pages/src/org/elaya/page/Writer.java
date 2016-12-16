@@ -16,6 +16,13 @@ public class Writer {
 	private String jsPath="resources/pages/js/";
 	private String cssPath="resources/pages/css/";
 	private String imgPath="resources/pages/images/";	
+
+	public Writer(Application papplication,HttpServletRequest prequest,HttpServletResponse presponse) throws IOException {
+		application=papplication;
+		response=presponse;
+		request=prequest;
+		stream=response.getOutputStream();
+	}	
 	
 	public void setContentType(String pstr)
 	{
@@ -125,12 +132,5 @@ public class Writer {
 		return getBasePath()+"/"+imgPath+pfile;
 	}
 		
-	
-	public Writer(Application papplication,HttpServletRequest prequest,HttpServletResponse presponse) throws IOException {
-		application=papplication;
-		response=presponse;
-		request=prequest;
-		stream=response.getOutputStream();
-	}
 
 }

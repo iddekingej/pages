@@ -2,14 +2,8 @@ package org.elaya.page.quickform;
 
 
 public abstract class BuildInFormElement extends FormElement<FormElementThemeItem> {
-
-	public BuildInFormElement()
-	{
-		super();
-	}
-	
 	@Override
-	final public String getThemeName() {
+	public final  String getThemeName() {
 		return "FormElementThemeItem";
 	}
 

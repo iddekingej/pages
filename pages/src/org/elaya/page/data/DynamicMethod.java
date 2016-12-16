@@ -1,23 +1,19 @@
 package org.elaya.page.data;
 
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 
 public class DynamicMethod implements Dynamic{
-	public static class methodNotFound extends Exception{
+	public static class MethodNotFound extends Exception{
 		private static final long serialVersionUID = 3175898698076086965L;
 		
-		public methodNotFound(Object pobject,String pname){
+		public MethodNotFound(Object pobject,String pname){
 			super("Method not found :"+pobject.getClass().getName()+"."+pname);
 		}
 	}
 	
-	public DynamicMethod() {
-		// TODO Auto-generated constructor stub
-	}
-	
+
 	@Override
-	public Object get(String pname) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, methodNotFound
+	public Object get(String pname) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, MethodNotFound
 	{			
 		return DynamicObject.get(this, pname);		
 	}
@@ -30,11 +26,10 @@ public class DynamicMethod implements Dynamic{
 
 	@Override
 	public boolean containsKey(String pname) {
-		try{
-			@SuppressWarnings("unused")
-			Method method=DynamicObject.getMethod(this,"set"+pname) ;
+		try{			
+			DynamicObject.getMethod(this,"set"+pname) ;
 			return true;
-		}catch(methodNotFound e){
+		}catch(MethodNotFound e){
 			return false;
 		}
 	}

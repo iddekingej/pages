@@ -1,5 +1,7 @@
 package org.elaya.page.security;
 
+import java.io.IOException;
+
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
@@ -19,8 +21,7 @@ public class LogoutAction extends Action {
 		return redirectUrl;
 	}
 	@Override
-	public ActionResult execute(ServletRequest prequest, ServletResponse presponse, Authenticator pauthenticator)
-			throws Exception {
+	public ActionResult execute(ServletRequest prequest, ServletResponse presponse, Authenticator pauthenticator) throws IOException{
 		if(prequest instanceof HttpServletRequest){
 			HttpServletRequest request=(HttpServletRequest)prequest;
 			request.setAttribute("org.elaya.page.security.SessionData", null);

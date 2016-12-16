@@ -2,19 +2,21 @@ package org.elaya.page.quickform;
 
 
 public class FormExceptions {
-	static public class ValueNotFoundException extends Exception{
+	public static class ValueNotFoundException extends Exception{
 		
 		private static final long serialVersionUID = 202981015266904672L;
-		private String varName;
-		String getVarName(){ return varName;}
+		private final String varName;
 		
 		ValueNotFoundException(String pvarName){
 			super("Value not found for element"+pvarName);
 			varName=pvarName;
 		}
+		
+		String getVarName(){ return varName;}
+
 	}
 	
-	static public class InvalidPropertyValue extends Exception{
+	public static class InvalidPropertyValue extends Exception{
 
 
 		private static final long serialVersionUID = 2668483595983679387L;
@@ -26,7 +28,7 @@ public class FormExceptions {
 	
 
 	
-	static public class ElementNoSub extends Exception{
+	public static class ElementNoSub extends Exception{
 
 		private static final long serialVersionUID = 3888842605596529222L;
 		
@@ -35,12 +37,14 @@ public class FormExceptions {
 		}
 	}
 	
-	static public class propertyNotSet extends Exception{
+	public static class PropertyNotSet extends Exception{
 
 		private static final long serialVersionUID = -2937862517810211929L;
 
-		public propertyNotSet(String pproperty,String pformName){
-			super(pproperty+" not set for form '"+pformName+"'");
+		public PropertyNotSet(String property,String formName){
+			super(property+" not set for form '"+formName+"'");
 		}
 	}
+	
+	private FormExceptions(){}
 }

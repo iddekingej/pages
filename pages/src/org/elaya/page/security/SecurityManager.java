@@ -81,7 +81,7 @@ public class SecurityManager {
 		
 	}
 	
-	private void initSessionById(Object objectId,Object typeObject,ServletRequest request) throws InvalidSessionData, NotSerializableException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ClassNotFoundException
+	private void initSessionById(Object objectId,Object typeObject,ServletRequest request) throws InvalidSessionData, NotSerializableException, InstantiationException, IllegalAccessException,  InvocationTargetException, NoSuchMethodException,  ClassNotFoundException
 	{
 		Serializable id;
 		if(objectId instanceof Serializable ){

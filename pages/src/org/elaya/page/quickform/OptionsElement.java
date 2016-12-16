@@ -10,10 +10,10 @@ import org.elaya.page.data.Data;
 
 public abstract class OptionsElement extends BuildInFormElement {
 	private String optionVar;
-	private LinkedList<OptionItem> items=new LinkedList<>();
+	private OptionList items=new OptionList();
 	
-	public void addOption(String pvalue,String ptext){
-		items.add(new OptionItem(pvalue,ptext));
+	public void addOption(String value,String text){
+		items.addOption(value, text);
 	}
 
 	public void setOptions(List<OptionItem> poptions){
@@ -31,9 +31,7 @@ public abstract class OptionsElement extends BuildInFormElement {
 	public String getListVar(){
 		return optionVar;
 	}
-	
-	
-	
+		
 	public List<OptionItem> getOptions(Data pdata) throws ValueNotFound, NoSuchFieldException, IllegalAccessException, InvalidObjectType{
 		LinkedList<OptionItem> newItems;
 		if(optionVar.length()>0){			
@@ -42,18 +40,12 @@ public abstract class OptionsElement extends BuildInFormElement {
 				throw new Errors.ValueNotFound(optionVar);
 			}
 			Object object=pdata.get(optionVar);
-			if(object instanceof  Iterable){				
-				for(Object item:(Iterable<?>)object){ 
-					if(item instanceof OptionItem){
-						newItems.add((OptionItem)item);
-					} else {
-						throw new Errors.InvalidObjectType(item,"OptionItem");
-					}
-				}
-				newItems.addAll(items);
+			if(object instanceof  Iterable){		
+				items.addIterable((Iterable<?>)object);
 			} else {
 				new Errors.InvalidObjectType(object,"Iterable");
 			}
+			newItems.addAll(items);
 		} else {
 			newItems=items;
 		}

@@ -49,8 +49,7 @@ public class DBAuthenticator extends AbstractDBAuthenticator {
 	protected Connection getConnection() throws ClassNotFoundException, SQLException
 	{
 		Class.forName(driverClass);
-		Connection connection=DriverManager.getConnection(url,username,password);
-		return connection;
+		return DriverManager.getConnection(url,username,password);	
 	}
 	
 	

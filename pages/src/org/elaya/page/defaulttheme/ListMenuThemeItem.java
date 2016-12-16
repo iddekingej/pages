@@ -1,4 +1,4 @@
-package org.elaya.page.defaultTheme;
+package org.elaya.page.defaulttheme;
 
 import java.io.IOException;
 import java.util.Set;

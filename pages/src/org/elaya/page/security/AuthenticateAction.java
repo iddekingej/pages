@@ -1,9 +1,8 @@
 package org.elaya.page.security;
 
-import java.io.IOException;
+
 import java.io.NotSerializableException;
 import java.lang.reflect.InvocationTargetException;
-import java.sql.SQLException;
 import java.util.Map;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -12,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.elaya.page.data.DynamicObject;
+import org.elaya.page.security.Errors.AuthenticationException;
 
 /**
  * Handle authentication. A authentication token(username/password for example) is posted to a url
@@ -28,6 +28,8 @@ public class AuthenticateAction extends Action {
 			super(pmessage);
 		}
 	}
+	
+	
 	
 	private String sessionDataClass;
 	private String failedLoginUrl="";
@@ -67,7 +69,7 @@ public class AuthenticateAction extends Action {
 		/*By default no setup us necessary */
 	}
 	
-	private AuthorisationData createSessionDataGen(ServletRequest prequest,Class<?> ptype,Map<String,Object>pdata) throws InvalidSessionData, NoSuchMethodException, ClassNotFoundException, InstantiationException, IllegalAccessException,  InvocationTargetException, NotSerializableException{
+	private AuthorisationData createSessionDataGen(ServletRequest prequest,Map<String,Object>pdata) throws InvalidSessionData, NoSuchMethodException, ClassNotFoundException, InstantiationException, IllegalAccessException,  InvocationTargetException, NotSerializableException{
 		Object object=DynamicObject.createObjectFromName(sessionDataClass);
 		if(object instanceof AuthorisationData){
 			AuthorisationData authorisationData=(AuthorisationData)object;
@@ -85,20 +87,18 @@ public class AuthenticateAction extends Action {
 
 	
 	protected AuthorisationData createSessionData(ServletRequest prequest,Map<String,Object> pdata) throws NoSuchMethodException, ClassNotFoundException, InstantiationException, IllegalAccessException,  InvocationTargetException, InvalidSessionData, NotSerializableException{
-		return createSessionDataGen(prequest,Map.class,pdata);
+		return createSessionDataGen(prequest,pdata);
 	}
 	
-		
-	@Override
-	public ActionResult execute(ServletRequest prequest, ServletResponse presponse,Authenticator pauthenticator) throws ClassNotFoundException, SQLException, IOException, NoSuchMethodException, InstantiationException, IllegalAccessException,  InvocationTargetException, InvalidSessionData 
+	private  ActionResult checkAuthentication(ServletRequest prequest,ServletResponse presponse,Authenticator pauthenticator) throws AuthenticationException
 	{
-		if(prequest instanceof HttpServletRequest ){
+		try{
 			HttpServletRequest request=(HttpServletRequest)prequest;
 			AuthorisationData sessionData;
 			if(pauthenticator != null){
 				Map<String,Object> auth=pauthenticator.getAuthenicate(prequest);
 				if(auth==null){
-						return ActionResult.SECURITYFAILED;
+					return ActionResult.SECURITYFAILED;
 				}else {
 					sessionData=createSessionData(prequest,auth);
 					HttpSession session=request.getSession();
@@ -113,10 +113,22 @@ public class AuthenticateAction extends Action {
 				} else {
 					return ActionResult.SECURITYFAILED;
 				}
-			}
-		} 
+			}		
+		} catch(Exception e){
+			throw new Errors.AuthenticationException(e);	
+		}
+		return ActionResult.SECURITYFAILED;
+	}
+	
+	@Override
+	public ActionResult execute(ServletRequest prequest, ServletResponse presponse,Authenticator pauthenticator) throws AuthenticationException 
+	{
+			if(prequest instanceof HttpServletRequest ){
+				return checkAuthentication(prequest,presponse,pauthenticator);
+			} 
+
+			return ActionResult.SECURITYFAILED;//TODO: Raise exception?
 		
-		return ActionResult.SECURITYFAILED;//TODO: Raise exception?
 	}
 
 }

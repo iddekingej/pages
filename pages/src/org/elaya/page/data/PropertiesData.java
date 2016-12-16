@@ -24,8 +24,7 @@ public class PropertiesData extends Data {
 	@Override
 	public boolean containsKey(String pname) {
 		try{
-			@SuppressWarnings("unused")
-			Field field=getClass().getField(pname);
+			getClass().getField(pname);
 		} catch(NoSuchFieldException e)
 		{
 			return false;

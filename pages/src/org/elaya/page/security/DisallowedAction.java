@@ -6,8 +6,7 @@ import javax.servlet.ServletResponse;
 public class DisallowedAction extends Action {
 
 	@Override
-	public ActionResult execute(ServletRequest prequest, ServletResponse presponse, Authenticator pauthenticator)
-			throws Exception {
+	public ActionResult execute(ServletRequest prequest, ServletResponse presponse, Authenticator pauthenticator)	 {
 		return ActionResult.NOTAUTHORISED;
 	}
 

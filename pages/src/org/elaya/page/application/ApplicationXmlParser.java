@@ -33,8 +33,8 @@ public class ApplicationXmlParser extends XmlParser {
 	}
 
 	@Override
-	protected String normalizeClassName(String pname) throws Exception {
-		return pname;
+	protected String normalizeClassName(String name) {
+		return name;
 	}
 
 	@Override

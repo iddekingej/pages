@@ -1,11 +1,13 @@
 package org.elaya.page;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedHashSet;
 
 import org.elaya.page.application.Application;
+import org.elaya.page.application.PageApplicationAware;
 import org.elaya.page.data.Data;
 
-public class Page extends PageElement<PageThemeItem> {
+public class Page extends PageElement<PageThemeItem> implements PageApplicationAware {
  
 	private String url;
 	private int idCnt=0;
@@ -27,7 +29,14 @@ public class Page extends PageElement<PageThemeItem> {
 	{
 		return documentType;
 	}
+
 	
+	@Override
+	public Application getApplication() {
+		return application;
+	}
+	
+	@Override	
 	public void setApplication(Application papplication)
 	{
 		application=papplication;
@@ -128,11 +137,11 @@ public class Page extends PageElement<PageThemeItem> {
 		return pelement instanceof PageElement;
 	}
 
-	public void initTheme() throws Exception
+	public void initTheme() throws ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException  
 	{
 		setTheme(new Theme(application.getThemeBase()));
 	}
-	
+
 
 }
 

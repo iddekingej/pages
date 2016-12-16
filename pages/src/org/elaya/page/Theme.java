@@ -9,7 +9,7 @@ public class Theme {
 	public Theme(String pbaseName)
 	{
 		baseName=pbaseName;
-		defaultTheme="org.elaya.page.defaultTheme";
+		defaultTheme="org.elaya.page.defaulttheme";
 	}
 	
 	public ThemeItemBase getThemeItem(String pname) throws ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException

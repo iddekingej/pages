@@ -9,9 +9,8 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-
 import org.elaya.page.application.Application;
-import java.util.Arrays;
+
 public class SecurityFilter implements Filter {
 	private SecurityManager securityManager;
 
@@ -23,15 +22,14 @@ public class SecurityFilter implements Filter {
 				if(securityManager.execute(prequest, presponse)){
 					chain.doFilter(prequest, presponse);
 				}
-			} catch (Exception e) {
-				e.printStackTrace();
-				throw new ServletException(e.getMessage() +" in "+e.getStackTrace());
+			} catch (Exception e) {				
+				throw new ServletException("doFilter failed",e);
 			} 
 		}	}
 
 	public void initParser(XmlSecurityParser pparser)
 	{
-		
+		/* Can be used to initialized parser further */
 	}
 	@Override
 	public void init(FilterConfig pconfig) throws ServletException {
@@ -45,26 +43,28 @@ public class SecurityFilter implements Filter {
 		}
 		XmlSecurityParser parser=new XmlSecurityParser(application);
 		initParser(parser);
-		
+		List<String> errors;
+		Object object;
 		try {
-			Object object=parser.parse(filterFileName);
-			List<String> errors=parser.getErrors();
-			if(!errors.isEmpty()){
-				StringBuilder errorStr=new StringBuilder();
-				for(String error:errors){
-					errorStr.append("\n").append(error);
-				}
-				throw new ServletException(errorStr.toString());
-			}
-			if(object instanceof SecurityManager){
-				securityManager=(SecurityManager)object;				
-			} else {
-				throw new ServletException("Security xml config '"+filterFileName+"' didn't define a security manager");
-			}
+			object=parser.parse(filterFileName);
+			errors=parser.getErrors();
 		} catch (Exception e) {
-			e.printStackTrace();  
-			throw new ServletException(e.getMessage()+" in "+e.getStackTrace().toString());
-		}		
+			throw new ServletException("Filter initalisation failed",e);
+		}	
+		
+		if(!errors.isEmpty()){
+			StringBuilder errorStr=new StringBuilder();
+			for(String error:errors){
+				errorStr.append("\n").append(error);
+			}
+			throw new ServletException(errorStr.toString());
+		}
+		if(object instanceof SecurityManager){
+			securityManager=(SecurityManager)object;				
+		} else {
+			throw new ServletException("Security xml config '"+filterFileName+"' didn't define a security manager");
+		}
+	
 	}
 
 	@Override

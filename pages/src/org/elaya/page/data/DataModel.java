@@ -3,31 +3,30 @@ package org.elaya.page.data;
 
 
 import org.elaya.page.application.Application;
+import org.elaya.page.application.PageApplicationAware;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
-public abstract  class DataModel {
+public abstract  class DataModel implements PageApplicationAware {
 
 	private Application application;
 	
-	public DataModel()
-	{
-	
-	}
-	
+	@Override
 	public void setApplication(Application papplication){
 		application=papplication;
 	}
+	
+	@Override
 	public Application getApplication()
 	{
 		return application;
 	}
 	
-	protected abstract  void _processData(MapData pdata) throws Exception;
+	protected abstract  void processOwnData(MapData pdata) throws Exception;
 	
-	public MapData	processData(MapData pdata) throws Exception
+	public final  MapData	processData(MapData pdata) throws Exception
 	{
 		MapData data=new MapData(this,pdata);
-		_processData(pdata);
+		processOwnData(pdata);
 		return data;
 	}
 	

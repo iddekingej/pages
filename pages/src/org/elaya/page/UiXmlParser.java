@@ -2,6 +2,7 @@ package org.elaya.page;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedList;
 import java.util.Map;
 
@@ -89,14 +90,10 @@ public class UiXmlParser extends XmlAppParser {
 	}
 
 	@Override
-	protected void afterCreate(Object pobject) throws Exception
+	protected void afterCreate(Object object) throws ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException 
 	{
-		if(pobject instanceof DataModel){
-			((DataModel)pobject).setApplication(getApplication());
-		}
-		if(pobject instanceof Page){
-			((Page)pobject).setApplication(getApplication());
-			((Page)pobject).initTheme();
+		if(object instanceof Page){
+			((Page)object).initTheme();
 		}
 	}
 

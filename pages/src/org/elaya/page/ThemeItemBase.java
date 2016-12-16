@@ -19,15 +19,15 @@ public class ThemeItemBase {
 	
 	public void getCssFiles(Set<String> pfiles)
 	{
-		
+		/* This is an abstract class and doesn't have a css file*/
 	}
 
 	
-	public String str(Object pvalue){
-		if(pvalue==null){
+	public String str(Object value){
+		if(value==null){
 			return "";
 		}
-		return pvalue.toString();
+		return value.toString();
 	}
 	
 	public String escape(String pvalue)
@@ -58,8 +58,4 @@ public class ThemeItemBase {
 		return property("class",classPrefix+pclassName);
 	}
 
-
-	
-	public ThemeItemBase() {
-	}
 }

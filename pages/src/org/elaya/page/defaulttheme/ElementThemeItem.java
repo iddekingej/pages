@@ -1,4 +1,4 @@
-package org.elaya.page.defaultTheme;
+package org.elaya.page.defaulttheme;
 
 import java.io.IOException;
 import org.elaya.page.Writer;
@@ -10,7 +10,7 @@ public class ElementThemeItem extends org.elaya.page.element.ElementThemeItem {
 	public void staticElement(Writer pwriter,String ptext, boolean pisHtml, String pclass, String pcss) throws IOException {
 		pwriter.print("<span "+propertyF("class",pclass)+propertyF("style",pcss)+">");
 		if(pisHtml){
-			pwriter.print(ptext);
+			pwriter.print(ptext); 
 		} else {
 			pwriter.print(escape(ptext));
 		}
@@ -76,7 +76,6 @@ public class ElementThemeItem extends org.elaya.page.element.ElementThemeItem {
 
 	@Override
 	public void menu(Writer pwriter, String pid, String ptitle) throws IOException {
-		// TODO Auto-generated method stub
 		pwriter.print("<div class='menu' "+property("id",pid)+" >"+escape(ptitle)+"</div>");
 	}
 

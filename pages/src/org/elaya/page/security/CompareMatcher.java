@@ -32,11 +32,11 @@ public class CompareMatcher extends RequestMatcher {
 			if(query==null){
 				query="";
 			}
- 			if(matchType==CompareMatchType.exact){
+ 			if(matchType==CompareMatchType.EXACT){
 				return query.equals(matchUrl);
-			} else if(matchType==CompareMatchType.startsWith){
+			} else if(matchType==CompareMatchType.STARTSWITH){
 				return query.startsWith(matchUrl);
-			} else if(matchType==CompareMatchType.endsWith){
+			} else if(matchType==CompareMatchType.ENDSWITH){
 				return query.endsWith(matchUrl);
 			}
 		}

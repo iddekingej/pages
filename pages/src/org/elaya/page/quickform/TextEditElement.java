@@ -44,7 +44,7 @@ public  class TextEditElement extends BuildInFormElement {
 		} else {
 			themeItem.textElement(pwriter,getDomId(),getName(),value,maxLength);
 		}
-	}
+	} 
 	@Override
 	public String getJsClassName() {
 		return "TTextEditElement";

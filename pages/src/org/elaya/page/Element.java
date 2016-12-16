@@ -1,6 +1,7 @@
 package org.elaya.page;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -397,7 +398,7 @@ public abstract class Element<T extends ThemeItemBase> extends DynamicMethod {
 	public abstract String getThemeName();
 	
 	@SuppressWarnings("unchecked")
-	public final void setTheme(Theme ptheme) throws Exception
+	public final void setTheme(Theme ptheme) throws ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException 
 	{
 		theme=ptheme;
 		ThemeItemBase newThemeItem=ptheme.getThemeItem(getThemeName());

@@ -1,6 +1,7 @@
 package org.elaya.page.data;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 public class DynamicData implements Dynamic {
@@ -12,34 +13,28 @@ public class DynamicData implements Dynamic {
 	}
 
 	@Override
-	public void put(String pname, Object pvalue) throws Throwable {
+	public void put(String name, Object value) throws NoSuchFieldException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		Field field;
 		try{
-			field=getClass().getField(pname);
+			field=getClass().getField(name);
 		} catch(java.lang.NoSuchFieldException e){
 			throw new  java.lang.NoSuchFieldException(e.getMessage()+"(Classname="+getClass().getName()+")");
 		}
 		Class<?> className=field.getType();
-		Object value=pvalue;
-		if(value !=null){
-			if(!className.getName().equals(pvalue.getClass().getName())){
-				Method method=className.getMethod("valueOf", value.getClass());
-				try{
-					value=method.invoke(null, value);
-				} catch(java.lang.reflect.InvocationTargetException e){
-					throw e.getCause();
-				}
-			}
+		Object usedValue=value;
+		if((value !=null) && (!field.getType().isInstance(value))){
+			Method method=className.getMethod("valueOf", value.getClass());
+			usedValue=method.invoke(null, value);
 		}
-		field.set(this,value);
+		
+		field.set(this,usedValue);
 		
 	}
 
 	@Override
 	public boolean containsKey(String pname) {
 		try{
-			@SuppressWarnings("unused")
-			Field field=getClass().getField(pname);
+			getClass().getField(pname);
 		} catch(NoSuchFieldException e)
 		{
 			return false;

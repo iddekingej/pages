@@ -23,6 +23,21 @@ public class ListMenuGroup extends BuildinListMenuItem {
 	{
 		return pelement instanceof ListMenuItem;
 	}
+	
+	
+	private void handleCheckCondition(Writer writer,Object selectedValue,Element<?> element,Data data) throws Exception
+	{
+		if(element.checkCondition(data)){
+			String value=((ListMenuItem<?>)element).getValue();
+			if( (value != null)? value.equals(selectedValue):false){
+				themeItem.preItemSelected(writer);
+			} else {
+				themeItem.preItem(writer);
+			}
+			element.display(writer,data);
+			themeItem.postItem(writer);
+		}		
+	}
 
 	@Override
 	public void display(Writer pwriter,Data pdata) throws Exception {
@@ -38,16 +53,7 @@ public class ListMenuGroup extends BuildinListMenuItem {
 		for(Element<?> element:getElements()){
 			
 			if(element instanceof ListMenuItem){
-				if(element.checkCondition(data)){
-					String value=((ListMenuItem<?>)element).getValue();
-					if( (value != null)? value.equals(selectedValue):false){
-						themeItem.preItemSelected(pwriter);
-					} else {
-						themeItem.preItem(pwriter);
-					}
-					element.display(pwriter,data);
-					themeItem.postItem(pwriter);
-				}
+				handleCheckCondition(pwriter,selectedValue,element,data);
 			}
 
 		}

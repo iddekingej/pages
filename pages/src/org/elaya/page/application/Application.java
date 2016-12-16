@@ -1,18 +1,24 @@
 package org.elaya.page.application;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.elaya.page.AliasData;
 import org.elaya.page.AliasParser;
 import org.elaya.page.Errors;
+import org.elaya.page.Errors.LoadingAliasFailed;
+import org.elaya.page.Errors.NormalizeClassNameException;
 import org.elaya.page.Page;
 import org.elaya.page.UiXmlParser;
 import org.elaya.page.data.Url;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.xml.sax.SAXException;
 
 public abstract class Application{
 
@@ -78,23 +84,27 @@ public abstract class Application{
 	{
 		return xmlPath;
 	}
-	//--(xml parsing -------------------
+	//--(xml parsing )-------------------
 	
-	public String normalizeClassName(String pname,String ptype) throws Exception
+	public String normalizeClassName(String name,String ptype) throws NormalizeClassNameException 
 	{
-		if(pname.charAt(0)=='.'){
-			return classBase+pname;
-		} else if(pname.charAt(0)=='@'){
-			return getAlias(pname.substring(1), ptype);
+		if(name.charAt(0)=='.'){
+			return classBase+name;
+		} else if(name.charAt(0)=='@'){
+			try{
+				return getAlias(name.substring(1), ptype);
+			}catch(LoadingAliasFailed|InvalidAliasType   e){
+				throw new Errors.NormalizeClassNameException("Normalizing class name "+name+"failed",e);
+			}
 		} 
-		return pname;
+		return name;
 	}
 	
 	//--(db)------------------------------------------------------------------------
 	
 	public abstract DriverManagerDataSource getDB(String pname);
 	
-	public DriverManagerDataSource getDefaultDB() throws Exception
+	public DriverManagerDataSource getDefaultDB() throws DefaultDBConnectionNotSet 
 	{
 		if(defaultDBConnection == null ||defaultDBConnection==""){
 			throw new DefaultDBConnectionNotSet();
@@ -175,20 +185,28 @@ public abstract class Application{
 		return stream;
 	}
 	
-/* Alias handling */
-//TODO error handling
-	private void addAliasses(String pfileName) throws Exception
+/**
+ * Load aliases in fileName and add them to global alias list
+ * 
+ * @param fileName add aliases in xml file
+ * @throws LoadingAliasFailed 
+ */
+	private void addAliases(String fileName) throws LoadingAliasFailed    
 	{
 		AliasParser parser=new AliasParser();
-		InputStream input=getConfigStream(pfileName);
-		parser.parseAliases(input, aliasses);
+		try{
+			InputStream input=getConfigStream(fileName);
+			parser.parseAliases(input, aliasses);
+		} catch(ParserConfigurationException|SAXException|IOException e){
+			throw new Errors.LoadingAliasFailed("Loading alias file "+fileName+" failed",e);
+		}
 		
 		if(!parser.getErrors().isEmpty()){
 			StringBuilder text=new StringBuilder();
 			for(String error:parser.getErrors()){
 				text.append("\n").append(error);
 			}
-			throw new Errors.LoadingPageFailed("Error:"+text);
+			throw new Errors.LoadingAliasFailed("Loading alias file "+fileName+" failed, error:"+text);
 		}
 	}
 	
@@ -197,16 +215,16 @@ public abstract class Application{
 		aliasFiles=paliasFiles;
 	}
 	
-	private void loadAliasFiles() throws Exception
+	private void loadAliasFiles() throws LoadingAliasFailed 
 	{
 		aliasses=new HashMap<>();
 		String[] fileNames=aliasFiles.split(",");
 		for(String fileName:fileNames){
-			addAliasses(fileName);
+			addAliases(fileName);
 		}
 	}
 	
-	public Map<String,AliasData> getAliasses() throws Exception
+	public Map<String,AliasData> getAliases() throws LoadingAliasFailed  
 	{
 		if(aliasses==null){
 			loadAliasFiles();
@@ -214,9 +232,9 @@ public abstract class Application{
 		return aliasses;
 	}
 	 
-	public String getAlias(String pname,String ptype) throws Exception
+	public String getAlias(String pname,String ptype) throws LoadingAliasFailed, InvalidAliasType  
 	{
-		AliasData data=getAliasses().get(pname);
+		AliasData data=getAliases().get(pname);
 		if(data != null){			
 			if(data.getType() != ptype){
 				throw new InvalidAliasType(ptype,data.getType());
@@ -226,7 +244,7 @@ public abstract class Application{
 		return null;
 	}
 	
-	public String getAlias(String pname,String ptype,boolean pmandatory) throws Exception
+	public String getAlias(String pname,String ptype,boolean pmandatory) throws ParserConfigurationException, SAXException, IOException, InvalidAliasType, Errors.AliasNotFound, LoadingAliasFailed 
 	{
 		String returnValue=getAlias(pname,ptype);
 		if((returnValue==null) && pmandatory){
@@ -235,7 +253,7 @@ public abstract class Application{
 		return returnValue;
 	}
 
-	public Url getUrlByAlias(String pname) throws Exception
+	public Url getUrlByAlias(String pname) throws ParserConfigurationException, SAXException, IOException,  InvalidAliasType, Errors.AliasNotFound, LoadingAliasFailed 
 	{
 		return new Url(getAlias(pname,AliasData.ALIAS_URL,true));
 	}

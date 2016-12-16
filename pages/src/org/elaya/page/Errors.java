@@ -81,4 +81,37 @@ public class Errors {
 		}
 		
 	}
+	
+	public static class LoadingAliasFailed extends Exception{
+
+		private static final long serialVersionUID = 1L;
+		
+		public LoadingAliasFailed(String error){
+			super(error);
+		}
+		
+		public LoadingAliasFailed(String error,Throwable cause){
+			super(error,cause);
+		}
+	}
+	
+	public static class NormalizeClassNameException extends Exception
+	{
+
+		private static final long serialVersionUID = 2077963158182896033L;
+		
+		public NormalizeClassNameException(String message,Throwable cause){
+			super(message,cause);
+		}
+	}
+	
+	public static class SettingAttributeException extends Exception
+	{
+		private static final long serialVersionUID = 5025527259790385247L;
+
+		public SettingAttributeException(String attribute,Object object,Throwable cause){
+			super("Setting attribute "+attribute+" at object of class "+object.getClass().getName(),cause);
+		}
+	}
+
 }

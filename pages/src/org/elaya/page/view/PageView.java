@@ -13,7 +13,6 @@ import org.springframework.web.servlet.view.AbstractView;
 
 public class PageView extends AbstractView {
 
-	
 	private String path;	
 	PageMode mode;	
 	Application application;
@@ -25,7 +24,6 @@ public class PageView extends AbstractView {
 		application=papplication;
 	}
 
-
 	@Override
 	protected void renderMergedOutputModel(Map<String, Object> pmap, HttpServletRequest prequest, HttpServletResponse presponse)
 			throws Exception {
@@ -34,9 +32,9 @@ public class PageView extends AbstractView {
 		String fileName="";
 		
 		
-		if(mode.equals(PageMode.path)){
+		if(mode.equals(PageMode.PATH)){
 			fileName=path+prequest.getRequestURI().substring(prequest.getContextPath().length())+".xml";
-		} else if(mode.equals(PageMode.filename)) {
+		} else if(mode.equals(PageMode.FILENAME)) {
 			fileName=path;
 		}
 
