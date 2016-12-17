@@ -4,8 +4,14 @@ import java.io.IOException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.elaya.page.Errors.AliasNotFound;
+import org.elaya.page.Errors.LoadingAliasFailed;
 import org.elaya.page.application.Application;
+import org.elaya.page.application.Application.InvalidAliasType;
 import org.springframework.web.util.HtmlUtils;
+import org.xml.sax.SAXException;
 
 public class Writer {
 	HttpServletRequest  request;
@@ -104,7 +110,7 @@ public class Writer {
 		return request.getContextPath();
 	}
 	
-	public String procesUrl(String purl) throws Exception
+	public String procesUrl(String purl) throws ParserConfigurationException, SAXException, IOException, InvalidAliasType, AliasNotFound, LoadingAliasFailed 
 	{
 		String url=purl;
 		if(url.startsWith("@")){

@@ -5,22 +5,15 @@ import javax.servlet.http.HttpServletResponse;
 import org.elaya.page.data.Dynamic;
 
 public abstract class PostReciever<T extends Dynamic> extends Reciever<T> {
-
-	public abstract void handleRequest(T pdata);
-	
 	@Override
-	@SuppressWarnings("unchecked")
-	public void handleRequest(HttpServletRequest prequest,HttpServletResponse presponse ) throws Throwable
+	public RecieverData convertRequestToData(HttpServletRequest request,HttpServletResponse response) throws Exception   
 	{
-		Dynamic object=getObject();
-		//TODO fail when mandatory and parameter is not given				
+		T object=getObject();
 
 		for(Parameter parameter:getParameters()){			
-			object.put(parameter.getName(), prequest.getParameter(parameter.getName()));
+			object.put(parameter.getName(), request.getParameter(parameter.getName()));
 		}
 
-		T information;
-		information=(T)object;
-		handleRequest(information);
+		return new RecieverData(object,"");
 	}
 }

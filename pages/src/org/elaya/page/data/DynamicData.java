@@ -7,13 +7,13 @@ import java.lang.reflect.Method;
 public class DynamicData implements Dynamic {
 
 	@Override
-	public Object get(String pname) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+	public Object get(String pname) throws NoSuchFieldException,   IllegalAccessException {
 		Field field=getClass().getField(pname);
 		return field.get(this);
 	}
 
 	@Override
-	public void put(String name, Object value) throws NoSuchFieldException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+	public void put(String name, Object value) throws NoSuchFieldException, NoSuchMethodException,  IllegalAccessException,  InvocationTargetException {
 		Field field;
 		try{
 			field=getClass().getField(name);

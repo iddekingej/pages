@@ -27,10 +27,14 @@ public class LinkMenuItem extends BuildinListMenuItem{
 	}
 
 	@Override
-	public void display(Writer pwriter,Data pdata) throws Exception {
-		Data data=getData(pdata);
-		String 	resultUrl=pwriter.procesUrl(replaceVariables(data,url));
-		themeItem.linkItem(pwriter,getDomId(),replaceVariables(data,text),resultUrl  );
+	public void display(Writer pwriter,Data pdata) throws org.elaya.page.Element.DisplayException  {
+		try{
+			Data data=getData(pdata);
+			String 	resultUrl=pwriter.procesUrl(replaceVariables(data,url));
+			themeItem.linkItem(pwriter,getDomId(),replaceVariables(data,text),resultUrl  );
+		}catch(Exception e){
+			throw new DisplayException("",e);
+		}
 	}
 
 

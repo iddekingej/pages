@@ -11,9 +11,13 @@ public class CheckboxElement extends BuildInFormElement {
 	}
 
 	@Override
-	public void  display(Writer pwriter,Data pdata) throws Exception {
-		Object value=getValueByName(pdata);
-		themeItem.checkBoxElement(pwriter,getDomId(),getName(),value);
+	public void  display(Writer pwriter,Data pdata) throws org.elaya.page.Element.DisplayException{
+		try{
+			Object value=getValueByName(pdata);
+			themeItem.checkBoxElement(pwriter,getDomId(),getName(),value);
+		}catch(Exception e){
+			throw new DisplayException("",e);
+		}
 
 	}
 	@Override

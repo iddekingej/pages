@@ -6,8 +6,12 @@ import org.elaya.page.data.Data;
 public class SeperatorMenuItem extends BaseMenuItem<ElementThemeItem> {
 
 	@Override
-	public void display(Writer pstream, Data pdata) throws Exception {
-		themeItem.menuSeperator(pstream);
+	public void display(Writer pstream, Data pdata) throws org.elaya.page.Element.DisplayException {
+		try{
+			themeItem.menuSeperator(pstream);
+		}catch(Exception e){
+			throw new DisplayException("",e);
+		}
 	}
 
 	@Override

@@ -5,8 +5,8 @@ import java.util.List;
 
 import org.elaya.page.Errors;
 import org.elaya.page.Errors.InvalidObjectType;
-import org.elaya.page.Errors.ValueNotFound;
 import org.elaya.page.data.Data;
+import org.elaya.page.data.Data.KeyNotFoundException;
 
 public abstract class OptionsElement extends BuildInFormElement {
 	private String optionVar;
@@ -32,13 +32,10 @@ public abstract class OptionsElement extends BuildInFormElement {
 		return optionVar;
 	}
 		
-	public List<OptionItem> getOptions(Data pdata) throws ValueNotFound, NoSuchFieldException, IllegalAccessException, InvalidObjectType{
+	public List<OptionItem> getOptions(Data pdata) throws KeyNotFoundException, InvalidObjectType {
 		LinkedList<OptionItem> newItems;
 		if(optionVar.length()>0){			
 			newItems=new LinkedList<>();
-			if(!pdata.containsKey(optionVar)){
-				throw new Errors.ValueNotFound(optionVar);
-			}
 			Object object=pdata.get(optionVar);
 			if(object instanceof  Iterable){		
 				items.addIterable((Iterable<?>)object);

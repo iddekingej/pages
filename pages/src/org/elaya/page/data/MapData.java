@@ -39,6 +39,7 @@ public class MapData extends Data{
 			childeren.put(pitem.getId(), pitem);
 		}
 		
+		@Override
 		public Data getChild(Object pid)
 		{
 			return childeren.get(pid);
@@ -51,14 +52,15 @@ public class MapData extends Data{
 		public Data getParent(){ return parent;}
 		
 		@Override
-		public Object get(String pname){
+		public Object get(String pname) throws KeyNotFoundException{
 			if(attributes.containsKey(pname)){
 				return attributes.get(pname);
 			}
 			if(parent !=null){
 				return parent.get(pname);
 			}
-			return null;
+			throw new KeyNotFoundException(pname);
+			
 		}
 		
 		@Override

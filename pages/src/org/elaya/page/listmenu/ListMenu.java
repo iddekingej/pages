@@ -55,21 +55,25 @@ public class ListMenu extends PageElement<ListMenuThemeItem> {
 	}
 	
 	@Override
-	public void display(Writer pwriter,Data pdata) throws Exception {
-		Data data=getData(pdata);		
-		Object selectedValue=null;
-		if(selectionVariable.length()>0){
-			selectedValue=data.get(selectionVariable);
-		}
-		themeItem.header(pwriter,replaceVariables(data,title));
-		for(Element<?> element:getElements()){
-			
-			if(element instanceof ListMenuItem){
-				handleCheckCondition(pwriter,selectedValue,element,data);
+	public void display(Writer pwriter,Data pdata) throws org.elaya.page.Element.DisplayException{
+		try{
+			Data data=getData(pdata);		
+			Object selectedValue=null;
+			if(selectionVariable.length()>0){
+				selectedValue=data.get(selectionVariable);
 			}
+			themeItem.header(pwriter,replaceVariables(data,title));
+			for(Element<?> element:getElements()){
 
+				if(element instanceof ListMenuItem){
+					handleCheckCondition(pwriter,selectedValue,element,data);
+				}
+
+			}
+			themeItem.footer(pwriter);
+		}catch(Exception e){
+			throw new DisplayException("",e);
 		}
-		themeItem.footer(pwriter);
 	}
 
 	@Override

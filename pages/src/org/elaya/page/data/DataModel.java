@@ -23,7 +23,7 @@ public abstract  class DataModel implements PageApplicationAware {
 	
 	protected abstract  void processOwnData(MapData pdata) throws Exception;
 	
-	public final  MapData	processData(MapData pdata) throws Exception
+	public final MapData processData(MapData pdata) throws Exception
 	{
 		MapData data=new MapData(this,pdata);
 		processOwnData(pdata);

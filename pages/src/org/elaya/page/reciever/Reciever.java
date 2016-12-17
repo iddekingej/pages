@@ -1,5 +1,6 @@
 package org.elaya.page.reciever;
 
+import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedList;
@@ -12,13 +13,40 @@ import org.elaya.page.application.Application;
 import org.elaya.page.data.Dynamic;
 import org.elaya.page.data.DynamicMethod;
 import org.elaya.page.data.DynamicObject;
+import org.json.JSONException;
 
 
 public abstract  class Reciever<T extends Dynamic> extends DynamicMethod {
+	public static class FatalFailureException extends Exception{
+		private static final long serialVersionUID = -8412859746278588435L;
+		public FatalFailureException(Throwable cause){
+			super(cause);
+		}
+	}
+	
+	protected class RecieverData{
+		private final T data;
+		private final String cmd;
+		
+		public RecieverData(T pdata,String pcmd)
+		{
+			data=pdata;
+			cmd=pcmd;
+		}
+		
+		public T getData(){ return data;}
+		public String getCmd(){ return cmd;}
+
+	}
+	
 	private String dataClass;
 	private List<Parameter> parameters=new LinkedList<>();
 	private Application application;
 
+	protected abstract void sendFailure(HttpServletResponse response,Exception e) throws JSONException, IOException;
+	protected abstract RecieverData convertRequestToData(HttpServletRequest request,HttpServletResponse response) throws Exception;
+	protected abstract void handleData(HttpServletResponse response,RecieverData data) throws  Exception;	
+	
 	void setApplication(Application papplication)
 	{
 		application=papplication;
@@ -28,12 +56,14 @@ public abstract  class Reciever<T extends Dynamic> extends DynamicMethod {
 	{
 			return application;
 	}
-	protected Dynamic getObject() throws NoSuchMethodException, ClassNotFoundException, InstantiationException, IllegalAccessException,  InvocationTargetException, InvalidObjectType
+	
+	@SuppressWarnings("unchecked")
+	protected T getObject() throws NoSuchMethodException, ClassNotFoundException, InstantiationException, IllegalAccessException,  InvocationTargetException, InvalidObjectType
 	{ 
 		Constructor<?> dataConstructor=DynamicObject.getConstructorByName(dataClass,new Class<?>[]{});
 		Object object=dataConstructor.newInstance();
 		if(object instanceof Dynamic){
-			return (Dynamic)object;
+			return (T)object;
 		}
 		
 		throw new Errors.InvalidObjectType(object,"DynamicData");
@@ -60,6 +90,25 @@ public abstract  class Reciever<T extends Dynamic> extends DynamicMethod {
 		return dataClass;
 	}
 	
-	 public abstract void handleRequest(HttpServletRequest prequest,HttpServletResponse presponse ) throws  Throwable;
+
+	
+	public final void failure(HttpServletResponse response ,Exception e) throws FatalFailureException
+	{
+		try{
+			sendFailure(response,e);
+		} catch(Exception f){
+			throw new FatalFailureException(f);
+		}
+	}
+	
+
+	public final void handleRequest(HttpServletRequest request,HttpServletResponse response) throws FatalFailureException{
+		 try{
+			 RecieverData data=convertRequestToData(request,response);
+			 handleData(response,data);
+		 } catch(Exception e){
+			 failure(response,e);
+		 }
+	 }
 		
 }

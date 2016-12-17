@@ -12,8 +12,12 @@ public class VerticalSpacer extends PageElement<ElementThemeItem> {
 	}
 
 	@Override
-	public void display(Writer pwriter, Data pdata) throws Exception {
-		themeItem.verticalSpacer(pwriter);
+	public void display(Writer pwriter, Data pdata) throws org.elaya.page.Element.DisplayException{
+		try{
+			themeItem.verticalSpacer(pwriter);
+		}catch(Exception e){
+			throw new DisplayException("",e);
+		}
 	}
 
 	@Override

@@ -29,6 +29,10 @@ public class SpringApplication extends Application implements ServletContextAwar
 		servletContext=pservletContext;
 		servletContext.setAttribute("application",this);
 	}
+	
+	public ServletContext getServletContext(){
+		return servletContext;
+	}
 
 	@Override
 	public void setApplicationContext(ApplicationContext papplicationContext) throws BeansException {

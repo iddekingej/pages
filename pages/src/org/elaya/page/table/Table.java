@@ -55,7 +55,7 @@ public class Table extends PageElement<TableThemeItem> {
 		themeItem.itemFooter(pwriter);
 	}
 	
-	public void displayRow(Writer pwriter,Data pdata) throws Exception
+	public void displayRow(Writer pwriter,Data pdata) throws IOException, org.elaya.page.Element.DisplayException 
 	{
 		
 		themeItem.rowHeader(pwriter);
@@ -91,22 +91,25 @@ public class Table extends PageElement<TableThemeItem> {
 	}
 	
 	@Override
-	public void display(Writer writer,Data pdata) throws Exception {
-		
-		Object      abstractList;
-		
-		if(fieldName.isEmpty()){
-			throw new Errors.PropertyNotSet("fieldName");
-		}
-		Data data=getData(pdata);
-		if(!data.containsKey(fieldName)){
-			throw new Errors.ValueNotFound(fieldName);
-		}
-		abstractList=data.get(fieldName);
-		if(abstractList instanceof Iterable){
-			displayList((Iterable<?>)abstractList,writer,data);
-		} else {
-			throw new DataIsNotIterable(fieldName);
+	public void display(Writer writer,Data pdata) throws org.elaya.page.Element.DisplayException {
+		try{
+			Object      abstractList;
+
+			if(fieldName.isEmpty()){
+				throw new Errors.PropertyNotSet("fieldName");
+			}
+			Data data=getData(pdata);
+			if(!data.containsKey(fieldName)){
+				throw new Errors.ValueNotFound(fieldName);
+			}
+			abstractList=data.get(fieldName);
+			if(abstractList instanceof Iterable){
+				displayList((Iterable<?>)abstractList,writer,data);
+			} else {
+				throw new DataIsNotIterable(fieldName);
+			}
+		}catch(Exception e){
+			throw new DisplayException("",e);
 		}
 		
 	} 

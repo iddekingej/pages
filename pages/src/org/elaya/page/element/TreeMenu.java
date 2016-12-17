@@ -7,7 +7,7 @@ import org.elaya.page.data.Data;
 public class TreeMenu extends PageElement<ElementThemeItem> {
 
 	@Override
-	public void display(Writer pwriter,Data pdata) throws Exception {
+	public void display(Writer pwriter,Data pdata) {
 
 	}
 

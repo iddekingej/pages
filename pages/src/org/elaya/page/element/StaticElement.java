@@ -48,9 +48,13 @@ public class StaticElement extends PageElement<ElementThemeItem> {
 	}
 	
 	@Override
-	public void display(Writer pwriter,Data pdata) throws Exception {
-		Data data=getData(pdata);
-		themeItem.staticElement(pwriter,replaceVariables(data,text), isHtml, replaceVariables(data,className), replaceVariables(data,css));
+	public void display(Writer pwriter,Data pdata) throws org.elaya.page.Element.DisplayException  {
+		try{
+			Data data=getData(pdata);
+			themeItem.staticElement(pwriter,replaceVariables(data,text), isHtml, replaceVariables(data,className), replaceVariables(data,css));
+		}catch(Exception e){
+			throw new DisplayException("",e);
+		}
 	}
 
 	@Override

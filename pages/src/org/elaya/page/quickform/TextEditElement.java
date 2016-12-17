@@ -1,7 +1,6 @@
 package org.elaya.page.quickform;
 
 import java.util.Objects;
-
 import org.elaya.page.Writer;
 import org.elaya.page.data.Data;
 
@@ -36,13 +35,17 @@ public  class TextEditElement extends BuildInFormElement {
 	}
 
 	@Override
-	public void display(Writer pwriter,Data pdata) throws Exception {
-		Objects.requireNonNull(themeItem);
-		Object value=getValueByName(pdata);
-		if(password){
-			themeItem.passwordElement(pwriter,getDomId(),getName(),value,maxLength);
-		} else {
-			themeItem.textElement(pwriter,getDomId(),getName(),value,maxLength);
+	public void display(Writer pwriter,Data pdata) throws org.elaya.page.Element.DisplayException{
+		try{
+			Objects.requireNonNull(themeItem);
+			Object value=getValueByName(pdata);
+			if(password){
+				themeItem.passwordElement(pwriter,getDomId(),getName(),value,maxLength);
+			} else {
+				themeItem.textElement(pwriter,getDomId(),getName(),value,maxLength);
+			}
+		}catch(Exception e){
+			throw new DisplayException("",e);
 		}
 	} 
 	@Override

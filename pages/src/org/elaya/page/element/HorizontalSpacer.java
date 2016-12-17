@@ -12,8 +12,12 @@ public class HorizontalSpacer extends PageElement<ElementThemeItem> {
 	}
 
 	@Override
-	public void display(Writer pwriter,Data pdata) throws Exception {
-		themeItem.horizontalSpacer(pwriter);
+	public void display(Writer pwriter,Data pdata) throws org.elaya.page.Element.DisplayException{
+		try{
+			themeItem.horizontalSpacer(pwriter);
+		}catch(Exception e){
+			throw new DisplayException("",e);
+		}
 	}
 
 	@Override

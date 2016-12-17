@@ -40,7 +40,7 @@ public abstract class Application{
 		}
 	}
 	
-	class InvalidAliasType extends Exception
+	public class InvalidAliasType extends Exception
 	{
 
 		private static final long serialVersionUID = -7739276897593055425L;

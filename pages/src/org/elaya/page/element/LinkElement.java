@@ -50,15 +50,18 @@ public class LinkElement extends PageElement<ElementThemeItem> {
 	}
 	
 	@Override
-	public void display(Writer pwriter,Data pdata) throws Exception {
-		Data data=getData(pdata);
-		String resultUrl=replaceVariables(data,url);
-		
-		if(linkType==LinkType.LINK_APPLICATION){
-			resultUrl=pwriter.getBasePath()+resultUrl;
+	public void display(Writer pwriter,Data pdata) throws org.elaya.page.Element.DisplayException {
+		try{
+			Data data=getData(pdata);
+			String resultUrl=replaceVariables(data,url);
+
+			if(linkType==LinkType.LINK_APPLICATION){
+				resultUrl=pwriter.getBasePath()+resultUrl;
+			}
+			themeItem.link(pwriter,resultUrl, replaceVariables(data,text), replaceVariables(data,className), replaceVariables(data,css)); 
+		}catch(Exception e){
+			throw new DisplayException("",e);
 		}
-		themeItem.link(pwriter,resultUrl, replaceVariables(data,text), replaceVariables(data,className), replaceVariables(data,css)); 
-		
 	}
 
 	@Override

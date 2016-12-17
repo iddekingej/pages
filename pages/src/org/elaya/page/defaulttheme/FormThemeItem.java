@@ -30,19 +30,19 @@ public class FormThemeItem extends org.elaya.page.quickform.FormThemeItem {
 	}
 	
 	@Override
-	public void FormFooterOk(Writer pwriter,String pdomId,String psaveText) throws IOException
+	public void formFooterOk(Writer pwriter,String pdomId,String psaveText) throws IOException
 	{
 		pwriter.print("<input "+property("id",pdomId+"_submit")+property("onclick","this.form._control.save()")+"type='button' "+property("value",psaveText)+"/>");
 	}
 
 	@Override
-	public void FormFooterBetween(Writer pwriter) throws IOException
+	public void formFooterBetween(Writer pwriter) throws IOException
 	{
 		pwriter.print("</td><td>");
 	}
 	
 	@Override
-	public void FormFooterCancel(Writer pwriter,String pdomId, String pcancelText) throws IOException
+	public void formFooterCancel(Writer pwriter,String pdomId, String pcancelText) throws IOException
 	{
 		pwriter.print("<input "+property("id",pdomId+"_cancel")+property("onclick","this.form._control.cancel()")+"type='button' "+property("value",pcancelText)+"/>");
 	}

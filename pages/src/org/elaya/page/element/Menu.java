@@ -10,10 +10,13 @@ public class Menu extends PageElement<ElementThemeItem> {
 	public String getTitle(){ return title;}
 	public void setTitle(String ptitle){ title=ptitle;}
 	@Override
-	public void display(Writer pstream, Data pdata) throws Exception {
-		Data data=getData(pdata);
-		themeItem.menu(pstream, getDomId(), replaceVariables(data,title));
-		
+	public void display(Writer pstream, Data pdata) throws org.elaya.page.Element.DisplayException {
+		try{
+			Data data=getData(pdata);
+			themeItem.menu(pstream, getDomId(), replaceVariables(data,title));
+		}catch(Exception e){
+			throw new DisplayException("",e);
+		}
 	}
 
 	@Override

@@ -16,8 +16,8 @@ public abstract class FormElementThemeItem extends ThemeItemBase {
 	public abstract void selectElement(Writer pwriter,String pidDom,String pname,List<OptionItem> pitems,Object pvalue) throws IOException;
 	public abstract void textArea(Writer pwriter,String pidDom,String pname,String pheight,String pwidth,Object pvalue) throws IOException;
 	public abstract void dateElement(Writer pwriter,String pdomId,String pname,Object value) throws IOException;
-	public abstract void elementBegin(String pdomId,Writer pwriter,String plabel) throws Exception;
-	public abstract void elementBeginTop(String pdomId,Writer pwriter,String plabel) throws Exception;
-	public abstract void elementEnd(Writer pwriter) throws Exception;
+	public abstract void elementBegin(String pdomId,Writer pwriter,String plabel) throws IOException ;
+	public abstract void elementBeginTop(String pdomId,Writer pwriter,String plabel) throws IOException;
+	public abstract void elementEnd(Writer pwriter) throws IOException ;
 
 }

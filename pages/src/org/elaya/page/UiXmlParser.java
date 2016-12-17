@@ -6,7 +6,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedList;
 import java.util.Map;
 
-import org.elaya.page.Errors.XmlLoadError;
 import org.elaya.page.application.Application;
 import org.elaya.page.data.DataModel;
 import org.elaya.page.jsplug.JSPlug;
@@ -39,7 +38,7 @@ public class UiXmlParser extends XmlAppParser {
 		return new UiXmlParser(getApplication(),classLoader,getNameIndex());
 	}
 	
-	private void processOption(Node child,LinkedList<OptionItem> list) throws XmlLoadError
+	private void processOption(Node child,LinkedList<OptionItem> list) throws XMLLoadException 
 	{
 		Node valueNode;
 		Node textNode;
@@ -59,7 +58,7 @@ public class UiXmlParser extends XmlAppParser {
 			addError("Options list contain invalid tag ",child);
 		}
 	}
-	private LinkedList<OptionItem> parseOptions(Node pparent) throws XmlLoadError{
+	private LinkedList<OptionItem> parseOptions(Node pparent) throws XMLLoadException {
 		LinkedList<OptionItem> list=new LinkedList<>();
 		Node child=pparent.getFirstChild();
 
@@ -72,7 +71,7 @@ public class UiXmlParser extends XmlAppParser {
 		return list;
 }
 	@Override
-	protected Object parseCustom(Object pparent,Node pnode) throws XmlLoadError
+	protected Object parseCustom(Object pparent,Node pnode) throws XMLLoadException 
 	{
 		if(pnode.getNodeName()=="options"){
 			return parseOptions(pnode);

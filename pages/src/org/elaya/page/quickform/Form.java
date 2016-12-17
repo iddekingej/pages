@@ -8,6 +8,7 @@ import org.elaya.page.SubmitType;
 import org.elaya.page.Writer;
 import org.elaya.page.data.Data;
 
+
 public class Form extends PageElement<FormThemeItem>{
 	
 	private String title;
@@ -117,11 +118,13 @@ public class Form extends PageElement<FormThemeItem>{
 	
 	public String getCmd(){ return cmd;}
 	
+	@Override
 	public void addJsFile(Set<String> pset)
 	{
 		pset.add("form.js");
 	}
 	
+	@Override
 	public boolean checkElement(Element<?> pelement) 
 	{
 		return pelement instanceof FormElement; 
@@ -131,6 +134,8 @@ public class Form extends PageElement<FormThemeItem>{
 	{
 		title=ptitle;
 	}
+	
+	@Override
 	protected String getJsClassName()
 	{
 		return "TForm";
@@ -143,29 +148,33 @@ public class Form extends PageElement<FormThemeItem>{
 	}
 	
 	@Override
-	public void display(Writer pwriter,Data pdata) throws Exception
+	public void display(Writer pwriter,Data pdata) throws org.elaya.page.Element.DisplayException  
 	{
-		Data data=getData(pdata);		
-		String method="";
-		if(submitType.equals(SubmitType.GET)){
-			method="get";
-		} else if(submitType.equals(SubmitType.POST)){
-			method="post";
-		}
-		themeItem.formHeader(pwriter,getDomId(),replaceVariables(data,title),pwriter.getBasePath()+replaceVariables(data,url),method,getWidth());
-		if(hiddenElements!=null){
-			for(String name:hiddenElements){
-				themeItem.formHiddenElement(pwriter, getDomId()+"_h_"+name, name, data.getString(name));
+		try{
+			Data data=getData(pdata);		
+			String method="";
+			if(submitType.equals(SubmitType.GET)){
+				method="get";
+			} else if(submitType.equals(SubmitType.POST)){
+				method="post";
 			}
+			themeItem.formHeader(pwriter,getDomId(),replaceVariables(data,title),pwriter.getBasePath()+replaceVariables(data,url),method,getWidth());
+			if(hiddenElements!=null){
+				for(String name:hiddenElements){
+					themeItem.formHiddenElement(pwriter, getDomId()+"_h_"+name, name, data.getString(name));
+				}
+			}
+			displaySubElements(pwriter,data);
+			themeItem.formFooterBegin(pwriter);
+			themeItem.formFooterOk(pwriter, getDomId(), getSubmitText());
+			themeItem.formFooterBetween(pwriter);
+			if(cancelUrl.length()>0){
+				themeItem.formFooterCancel(pwriter, getDomId(), getCancelText());
+			}
+			themeItem.formFooter(pwriter);
+		}catch(Exception e){
+			throw new DisplayException("",e);
 		}
-		displaySubElements(pwriter,data);
-		themeItem.formFooterBegin(pwriter);
-		themeItem.FormFooterOk(pwriter, getDomId(), getSubmitText());
-		themeItem.FormFooterBetween(pwriter);
-		if(cancelUrl.length()>0){
-			themeItem.FormFooterCancel(pwriter, getDomId(), getCancelText());
-		}
-		themeItem.formFooter(pwriter);
 		
 	}
 	

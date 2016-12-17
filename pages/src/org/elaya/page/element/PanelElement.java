@@ -4,6 +4,7 @@ import org.elaya.page.PageElement;
 import org.elaya.page.Writer;
 import org.elaya.page.data.Data;
 
+
 public class PanelElement extends PageElement<ElementThemeItem> {
 	private String css;
 	private String className;
@@ -27,11 +28,15 @@ public class PanelElement extends PageElement<ElementThemeItem> {
 	}
 	
 	@Override
-	public void display(Writer pwriter,Data pdata) throws Exception {
-		Data data=getData(pdata);
-		themeItem.panelHeader(pwriter,replaceVariables(data,className), replaceVariables(data,css));
-		displaySubElements(pwriter,data);
-		themeItem.panelFooter(pwriter);
+	public void display(Writer pwriter,Data pdata) throws org.elaya.page.Element.DisplayException{
+		try{
+			Data data=getData(pdata);
+			themeItem.panelHeader(pwriter,replaceVariables(data,className), replaceVariables(data,css));
+			displaySubElements(pwriter,data);
+			themeItem.panelFooter(pwriter);
+		}catch(Exception e){
+			throw new DisplayException("",e);
+		}
 	} 
 
 	@Override

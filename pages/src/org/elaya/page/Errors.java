@@ -1,5 +1,6 @@
 package org.elaya.page;
 
+
 public class Errors {
 	private Errors()
 	{
@@ -23,11 +24,11 @@ public class Errors {
 		}
 	}
 	
-	public static class duplicateElementOnPage extends Exception
+	public static class DuplicateElementOnPage extends Exception
 	{
 		private static final long serialVersionUID = 5670782478614650834L;
 		
-		public duplicateElementOnPage(String pname)
+		public DuplicateElementOnPage(String pname)
 		{
 			super("Duplicate element name on page:"+pname);
 		}
@@ -69,18 +70,6 @@ public class Errors {
 		}
 	}
 	
-	public static class XmlLoadError extends Exception{
-
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 5100803934833922124L;
-		
-		public XmlLoadError(String perror){
-			super(perror);
-		}
-		
-	}
 	
 	public static class LoadingAliasFailed extends Exception{
 
@@ -114,4 +103,5 @@ public class Errors {
 		}
 	}
 
+	
 }

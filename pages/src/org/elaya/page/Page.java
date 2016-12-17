@@ -1,11 +1,18 @@
 package org.elaya.page;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedHashSet;
 
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.elaya.page.Errors.AliasNotFound;
+import org.elaya.page.Errors.LoadingAliasFailed;
 import org.elaya.page.application.Application;
+import org.elaya.page.application.Application.InvalidAliasType;
 import org.elaya.page.application.PageApplicationAware;
 import org.elaya.page.data.Data;
+import org.xml.sax.SAXException;
 
 public class Page extends PageElement<PageThemeItem> implements PageApplicationAware {
  
@@ -71,7 +78,7 @@ public class Page extends PageElement<PageThemeItem> implements PageApplicationA
 		return "pages.page";
 	}
 
-	private LinkedHashSet<String> processSetList(LinkedHashSet<String> pin,String ptype) throws Exception
+	private LinkedHashSet<String> processSetList(LinkedHashSet<String> pin,String ptype) throws ParserConfigurationException, SAXException, IOException, InvalidAliasType, AliasNotFound, LoadingAliasFailed 
 	{
 		LinkedHashSet<String> returnValue=new LinkedHashSet<>();
 		for(String value:pin){
@@ -89,28 +96,32 @@ public class Page extends PageElement<PageThemeItem> implements PageApplicationA
 	}
 	
 	@Override
-	public void display(Writer pwriter,Data pdata) throws Exception
+	public void display(Writer pwriter,Data pdata) throws org.elaya.page.Element.DisplayException 
 	{
-		Data data=getData(pdata);
-		LinkedHashSet<String> js=new LinkedHashSet<>();
-		LinkedHashSet<String> css=new LinkedHashSet<>();
-		
-		js.add("@pagejs");
-		css.add("@pagecss");
-		getAllCssFiles(css);
-		getAllJsFiles(js);
-		
-		LinkedHashSet<String> procCss=processSetList(css,AliasData.ALIAS_CSSFILE);
-		LinkedHashSet<String> procJs=processSetList(js,AliasData.ALIAS_JSFILE);
-		
-		themeItem.pageHeader(pwriter,documentType,procJs,procCss);	
-		displaySubElements(pwriter,data);
-		pwriter.jsBegin();
-		generateJs(pwriter,pdata);
-		pwriter.jsEnd();
-		
+		try{
+			Data data=getData(pdata);
+			LinkedHashSet<String> js=new LinkedHashSet<>();
+			LinkedHashSet<String> css=new LinkedHashSet<>();
 
-		themeItem.pageFooter(pwriter);
+			js.add("@pagejs");
+			css.add("@pagecss");
+			getAllCssFiles(css);
+			getAllJsFiles(js);
+
+			LinkedHashSet<String> procCss=processSetList(css,AliasData.ALIAS_CSSFILE);
+			LinkedHashSet<String> procJs=processSetList(js,AliasData.ALIAS_JSFILE);
+
+			themeItem.pageHeader(pwriter,documentType,procJs,procCss);	
+			displaySubElements(pwriter,data);
+			pwriter.jsBegin();
+			generateJs(pwriter,pdata);
+			pwriter.jsEnd();
+
+
+			themeItem.pageFooter(pwriter);
+		}catch(Exception e){
+			throw new DisplayException("",e);
+		}
 	}	
 	
 	@Override

@@ -40,7 +40,7 @@ public class LinkMenuItem extends BaseMenuItem<ElementThemeItem> {
 	
 
 	@Override
-	public void display(Writer pstream, Data pdata) throws Exception {
+	public void display(Writer pstream, Data pdata) {
 
 	}
 

@@ -5,20 +5,24 @@ import java.lang.reflect.Field;
 public class PropertiesData extends Data {
 
 	@Override
-	public Object get(String pname) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
-		Field field=getClass().getField(pname);
-		return field.get(this);
+	public Object get(String name) throws GettingValueException {
+		try{
+			Field field=getClass().getField(name);
+			return field.get(this);
+		} catch(Exception e){
+			throw new GettingValueException("Exception when getting field "+name+" of object of type "+getClass().getName(),e);
+		}
 	}
 
 	@Override
-	public void put(String pname, Object pvalue) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+	public void put(String name, Object value) throws SettingValueException {
 		Field field;
 		try{
-			field=getClass().getField(pname);
-		} catch(java.lang.NoSuchFieldException e){
-			throw new  java.lang.NoSuchFieldException(e.getMessage()+"(Classname="+getClass().getName()+")");
+			field=getClass().getField(name);
+			field.set(this,value);
+		} catch(Exception e){
+			throw new SettingValueException("Exception when setting field "+name+" of object of type "+getClass().getName()+" to "+((value==null)?"Null":value.toString()),e);
 		}
-		field.set(this,pvalue);
 	}
 
 	@Override

@@ -24,14 +24,18 @@ public class ElementContainer extends BuildInFormElement {
 	}
 	
 	@Override
-	public void display(Writer pwriter, Data pdata) throws Exception {
-		if(labelPosition==LabelPosition.LEFT){
-			themeItem.elementBegin(getDomId(),pwriter,label);
-		} else {
-			themeItem.elementBeginTop(getDomId(),pwriter, label);
+	public void display(Writer pwriter, Data pdata) throws org.elaya.page.Element.DisplayException {
+		try{
+			if(labelPosition==LabelPosition.LEFT){
+				themeItem.elementBegin(getDomId(),pwriter,label);
+			} else {
+				themeItem.elementBeginTop(getDomId(),pwriter, label);
+			}
+			displaySubElements(pwriter,pdata);
+			themeItem.elementEnd(pwriter);
+		}catch(Exception e){
+			throw new DisplayException("",e);
 		}
-		displaySubElements(pwriter,pdata);
-		themeItem.elementEnd(pwriter);
 	}
 	
 	@Override

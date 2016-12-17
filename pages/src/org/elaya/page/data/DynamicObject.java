@@ -8,6 +8,10 @@ import org.elaya.page.data.DynamicMethod.MethodNotFound;
 
 public class DynamicObject {
 
+	private DynamicObject()
+	{
+		
+	}
 		public static class DynamicError extends Exception{
 
 			private static final long serialVersionUID = 5084017331992006760L;
@@ -17,7 +21,8 @@ public class DynamicObject {
 			}
 			
 		}
-		public static Object createObjectFromName(String pname) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ClassNotFoundException
+		
+		public static Object createObjectFromName(String pname) throws InstantiationException, IllegalAccessException,  InvocationTargetException, NoSuchMethodException,  ClassNotFoundException
 		{
 			Objects.requireNonNull(pname);
 			return createObjectFromName(pname,new Class<?>[]{},new Object[]{});
@@ -31,7 +36,7 @@ public class DynamicObject {
 			constructor=className.getConstructor(ptypes);
 			return constructor;
 		}
-		public static Object createObjectFromName(String pname,Class<?>[] ptypes,Object[] pparams) throws NoSuchMethodException, ClassNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException  {
+		public static Object createObjectFromName(String pname,Class<?>[] ptypes,Object[] pparams) throws NoSuchMethodException, ClassNotFoundException, InstantiationException, IllegalAccessException,  InvocationTargetException  {
 		
 			Constructor<?>constructor=getConstructorByName(pname,ptypes);
 			if(constructor != null){
@@ -57,7 +62,7 @@ public class DynamicObject {
 			return method.invoke(pobject);		
 		}
 
-		public static void put(Object object,String name, Object inValue) throws Exception
+		public static void put(Object object,String name, Object inValue) throws IllegalAccessException,  InvocationTargetException, MethodNotFound, NoSuchMethodException
 		{
 			Method method=getMethod(object,"set"+name);
 			Class<?>[] params=method.getParameterTypes();
@@ -79,8 +84,4 @@ public class DynamicObject {
 			}
 		}
 		
-		private DynamicObject()
-		{
-			
-		}
 }

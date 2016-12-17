@@ -40,25 +40,28 @@ public class ListMenuGroup extends BuildinListMenuItem {
 	}
 
 	@Override
-	public void display(Writer pwriter,Data pdata) throws Exception {
-		Data data=getData(pdata);
-		themeItem.groupHeader(pwriter,replaceVariables(data,title));		
-		Object selectedValue=null;
-		if(getParent() instanceof ListMenu){
-			String selectionVariable = ((ListMenu)getParent()).getSelectionVariable();
-			selectedValue=data.get(selectionVariable);
-			
-		}
+	public void display(Writer pwriter,Data pdata) throws org.elaya.page.Element.DisplayException {
+		try{
+			Data data=getData(pdata);
+			themeItem.groupHeader(pwriter,replaceVariables(data,title));		
+			Object selectedValue=null;
+			if(getParent() instanceof ListMenu){
+				String selectionVariable = ((ListMenu)getParent()).getSelectionVariable();
+				selectedValue=data.get(selectionVariable);
 
-		for(Element<?> element:getElements()){
-			
-			if(element instanceof ListMenuItem){
-				handleCheckCondition(pwriter,selectedValue,element,data);
 			}
 
-		}
-		themeItem.groupFooter(pwriter);		
+			for(Element<?> element:getElements()){
 
+				if(element instanceof ListMenuItem){
+					handleCheckCondition(pwriter,selectedValue,element,data);
+				}
+
+			}
+			themeItem.groupFooter(pwriter);		
+		}catch(Exception e){
+			throw new DisplayException("",e);
+		}
 	}
 
 }

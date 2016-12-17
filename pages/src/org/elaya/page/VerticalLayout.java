@@ -1,7 +1,6 @@
 package org.elaya.page;
 
 import java.io.IOException;
-
 import org.elaya.page.data.Data;
 
 public class VerticalLayout extends Layout {
@@ -22,11 +21,15 @@ public class VerticalLayout extends Layout {
 		themeItem.verticalItemFooter(pwriter);
 	}
 	@Override
-	public void display(Writer pwriter,Data pdata) throws Exception {
-		Data data=getData(pdata);
-		themeItem.verticalHeader(pwriter);
-		displaySubElements(pwriter,data);
-		themeItem.verticalFooter(pwriter);
+	public void display(Writer pwriter,Data pdata) throws org.elaya.page.Element.DisplayException {
+		try{
+			Data data=getData(pdata);
+			themeItem.verticalHeader(pwriter);
+			displaySubElements(pwriter,data);
+			themeItem.verticalFooter(pwriter);
+		}catch(Exception e){
+			throw new DisplayException("",e);
+		}
 	}
 
 }

@@ -1,8 +1,8 @@
 package org.elaya.page;
 
 import java.io.IOException;
-
 import org.elaya.page.data.Data;
+
 
 public class HorizontalLayout extends Layout{
 
@@ -22,11 +22,15 @@ public class HorizontalLayout extends Layout{
 		themeItem.horizontalItemFooter(pwriter);
 	}
 	@Override
-	public void display(Writer pwriter,Data pdata) throws Exception
+	public void display(Writer pwriter,Data pdata) throws org.elaya.page.Element.DisplayException 
 	{
-		Data data=getData(pdata);
-		themeItem.horizontalHeader(pwriter);
-		displaySubElements(pwriter,data);
-		themeItem.horizontalFooter(pwriter);
+		try{
+			Data data=getData(pdata);
+			themeItem.horizontalHeader(pwriter);
+			displaySubElements(pwriter,data);
+			themeItem.horizontalFooter(pwriter);
+		}catch(Exception e){
+			throw new DisplayException("",e);
+		}
 	}
 }

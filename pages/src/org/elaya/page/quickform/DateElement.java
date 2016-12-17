@@ -49,10 +49,14 @@ public class DateElement extends BuildInFormElement {
 	}
 
 	@Override
-	public void display(Writer pwriter,Data pdata) throws Exception {
-		Data data=getData(pdata);
-		Object value=getValueByName(data);
-		themeItem.dateElement(pwriter,getDomId(),getName(),value);
+	public void display(Writer pwriter,Data pdata) throws org.elaya.page.Element.DisplayException{
+		try{
+			Data data=getData(pdata);
+			Object value=getValueByName(data);
+			themeItem.dateElement(pwriter,getDomId(),getName(),value);
+		}catch(Exception e){
+			throw new DisplayException("",e);
+		}
 	}
 
 	@Override

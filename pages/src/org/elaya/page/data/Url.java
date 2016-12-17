@@ -4,26 +4,26 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 public class Url {
-	private String url;
+	private String urlText;
 	private String query;
 	
-	public Url(String purl)
+	public Url(String url)
 	{
-		url=purl;
+		urlText=url;
 		query="";
 	}
 	
-	public Url(String purl,String pquery)
+	public Url(String url,String pquery)
 	{
-		url=purl;
+		urlText=url;
 		query=pquery;
 	}
 	
 	void addPath(String padd){
-		if(!url.endsWith("/")){
-			url +="/";
+		if(!urlText.endsWith("/")){
+			urlText +="/";
 		}
-		url += padd;
+		urlText += padd;
 	}
 	
 	public Url parameter(String pname,Integer pvalue) throws UnsupportedEncodingException 
@@ -42,7 +42,7 @@ public class Url {
 
 	public Url copy()
 	{
-		return new Url(url,query);
+		return new Url(urlText,query);
 	}
 	   
 	public Url copy(String pname,Integer pvalue) throws UnsupportedEncodingException{
@@ -50,14 +50,14 @@ public class Url {
 	}
 	public Url copy(String pname,String pvalue) throws UnsupportedEncodingException
 	{
-		Url newUrl=new Url(url,query);
+		Url newUrl=new Url(urlText,query);
 		newUrl.parameter(pname, pvalue);
 		return newUrl;
 	}
 	
 	String getUrlText()
 	{
-		return url+query;
+		return urlText+query;
 	}
 
 }

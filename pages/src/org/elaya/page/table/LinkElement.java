@@ -14,16 +14,19 @@ public class LinkElement extends BuildInElement {
 		}
 	}
 	@Override
-	public void display(Writer pwriter,Data pdata) throws Exception {
-		Data data=getData(pdata);
-		Object value=getValueByName(pdata);		
-		if(value instanceof LinkData){
-			LinkData linkData=(LinkData)value;
-			themeItem.linkItem(pwriter,replaceVariables(data,linkData.getUrlText()), replaceVariables(data,linkData.getText()));
-		} else {
-			throw new ValueNotLinkData();
+	public void display(Writer pwriter,Data pdata) throws org.elaya.page.Element.DisplayException  {
+		try{
+			Data data=getData(pdata);
+			Object value=getValueByName(pdata);		
+			if(value instanceof LinkData){
+				LinkData linkData=(LinkData)value;
+				themeItem.linkItem(pwriter,replaceVariables(data,linkData.getUrlText()), replaceVariables(data,linkData.getText()));
+			} else {
+				throw new ValueNotLinkData();
+			}
+		}catch(Exception e){
+			throw new DisplayException("",e);
 		}
-		
 	}
 
 

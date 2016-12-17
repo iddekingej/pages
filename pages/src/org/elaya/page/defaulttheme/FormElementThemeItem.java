@@ -94,20 +94,20 @@ public class FormElementThemeItem extends org.elaya.page.quickform.FormElementTh
 	}
 
 	@Override
-	public void elementBegin(String pdomId,Writer pwriter,String plabel) throws Exception
+	public void elementBegin(String pdomId,Writer pwriter,String plabel) throws IOException
 	{
 		pwriter.print("<tr "+property("id",pdomId)+"><td "+property("class","pages_elementLabel")+">"+escape(plabel)+"</td><td class=\"pages_elementValue\">");
 		
 	}
 
 	@Override
-	public void elementBeginTop(String pdomId,Writer pwriter,String plabel) throws Exception
+	public void elementBeginTop(String pdomId,Writer pwriter,String plabel) throws IOException 
 	{
 		pwriter.print("<tr "+property("id",pdomId)+"><td "+property("class","pages_elementLabel")+">"+escape(plabel)+"</td colspan='2'></tr><tr><td class=\"pages_elementValue\" colspan='2'>");
 	}
 	
 	@Override
-	public void elementEnd(Writer pwriter) throws Exception
+	public void elementEnd(Writer pwriter) throws IOException 
 	{
 		pwriter.print("</td></tr>\n");
 	}

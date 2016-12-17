@@ -9,17 +9,39 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
 import org.elaya.page.Errors;
-import org.elaya.page.Errors.ValueNotFound;
 import org.elaya.page.data.*;
+import org.elaya.page.data.Data.KeyNotFoundException;
 import org.elaya.page.jsplug.JSPlug;
 import org.elaya.page.jsplug.JSPlug.InvalidJsPlugType;
 
+
 public abstract class Element<T extends ThemeItemBase> extends DynamicMethod {
+	public static class InvalidVariableNameException extends Exception{
+		private static final long serialVersionUID = -5605663946752398380L;
+		public InvalidVariableNameException(String message){
+			super(message);
+		}
+	}
+	
+	public static class ReplaceVarException extends Exception{
+		private static final long serialVersionUID = 1L;
+		public ReplaceVarException(String message,Throwable cause){
+			super(message,cause);
+		}
+	}
+	
+	public static class DisplayException extends Exception{
+		private static final long serialVersionUID=2L;
+		public DisplayException(String message,Throwable cause){
+			super(message,cause);
+		}
+	}
+	
 	protected T themeItem;
 	protected Theme theme;
 	protected LinkedList<Element<?>> elements=new LinkedList<>();
 	private LinkedList<JSPlug> jsPlugs=new LinkedList<>();
-	private   Element<?> parent=null;
+	private Element<?> parent=null;
 	private int id=-1;
 	private String name="";
 	private HorizontalAlign horizontalAlign=HorizontalAlign.LEFT;
@@ -117,13 +139,10 @@ public abstract class Element<T extends ThemeItemBase> extends DynamicMethod {
 		return condition;
 	}
 	
-	public boolean checkCondition(Data pdata) throws ValueNotFound, NoSuchFieldException, IllegalAccessException
+	public boolean checkCondition(Data pdata) throws KeyNotFoundException 
 	{ 
 		if(condition.length()==0){
 			return true;
-		}
-		if(!pdata.containsKey(condition)){
-			throw new Errors.ValueNotFound(condition);
 		}
 		Object value=pdata.get(condition);
 		return value.equals(true);
@@ -141,35 +160,37 @@ public abstract class Element<T extends ThemeItemBase> extends DynamicMethod {
 		}
 	}
 	
-	protected String replaceVariables(Data pdata,String pstring) throws Exception
+	
+	
+	protected String replaceVariables(Data pdata,String pstring) throws ReplaceVarException
 	{
 		int pos=0;
 		int newPos;
 		StringBuilder returnValue=new StringBuilder();
 		String varName;
 		Object value;
-		String string=pstring==null?"":pstring;		
-		while(true){
-			newPos=string.indexOf("${",pos);
-			if(newPos==-1){
-				returnValue.append(string.substring(pos));
-				break;
-			}
-			returnValue.append(string.substring(pos,newPos));
-			pos=string.indexOf('}',newPos);
-			if(pos==-1){
-				throw new Exception("Missing end }"); //TODO: Error Location				
-			}
-			varName=string.substring(newPos+2,pos);	
-			if(!pdata.containsKey(varName)){
-				throw new Exception("Variable '"+varName+"' not found in data:"+pdata.getClass().getName());
-			} else {
+		String string=pstring==null?"":pstring;
+		try{
+			while(true){
+				newPos=string.indexOf("${",pos);
+				if(newPos==-1){
+					returnValue.append(string.substring(pos));
+					break;
+				}
+				returnValue.append(string.substring(pos,newPos));
+				pos=string.indexOf('}',newPos);
+				if(pos==-1){
+					throw new InvalidVariableNameException("Missing '}' after position "+newPos); 				
+				}
+				varName=string.substring(newPos+2,pos);	
 				value=pdata.get(varName);				
 				if(value != null){
 					returnValue.append(value.toString());
-				}
+				}			
+				pos++;
 			}
-			pos++;
+		}catch(Exception e){
+			throw new ReplaceVarException("In String "+pstring,e);
 		}
 		return returnValue.toString();
 	}
@@ -196,13 +217,9 @@ public abstract class Element<T extends ThemeItemBase> extends DynamicMethod {
 		return pdata;
 	}
 	
-	public Object getValueByName(Data pdata) throws ValueNotFound, NoSuchFieldException,  IllegalAccessException
+	public Object getValueByName(Data pdata) throws KeyNotFoundException  
 	{
-		if(pdata.containsKey(name)){
-			return pdata.get(name);
-		} else {
-			throw new Errors.ValueNotFound(name);
-		}
+		return pdata.get(name);
 	}
 	
 	public void process()
@@ -331,20 +348,9 @@ public abstract class Element<T extends ThemeItemBase> extends DynamicMethod {
 			themeItem.getCssFiles(pfiles);
 	}
 	
-	//TODO used?
-	public String getObjectName()
-	{
-		return "object_"+Integer.toString(id);
-	}
-	//TODO used? 
-	public String getVarName()
-	{
-		return "var_"+Integer.toString(id);
-	}
-	
 	public Element<?> getParent(){ return parent;}
 	
-	void setParent(Element<?> pparent) throws IOException{
+	void setParent(Element<?> pparent){
 		Objects.requireNonNull(pparent);
 		parent=pparent;
 	}
@@ -374,27 +380,31 @@ public abstract class Element<T extends ThemeItemBase> extends DynamicMethod {
 	}
 	
 	
-	protected void preElement(Writer pwriter,Element<?> pelement) throws Exception
+	protected void preElement(Writer pwriter,Element<?> pelement) throws IOException 
 	{
 		
 	}
-	protected void postElement(Writer pwriter,Element<?> pelement) throws Exception
+	protected void postElement(Writer pwriter,Element<?> pelement) throws IOException
 	{		
 	}
 	
-	public void displaySubElements(Writer pwriter,Data pdata) throws Exception
+	public void displaySubElements(Writer pwriter,Data pdata) throws DisplayException  
 	{
-		for(Element<?> element:elements)
-		{
-			if(element.checkCondition(pdata)){
-				preElement(pwriter,element);
-				element.display(pwriter,pdata);
-				postElement(pwriter,element);
+		try{
+			for(Element<?> element:elements)
+			{
+				if(element.checkCondition(pdata)){
+					preElement(pwriter,element);
+					element.display(pwriter,pdata);
+					postElement(pwriter,element);
+				}
 			}
+		}catch(Exception e){
+			throw new DisplayException("",e);
 		}
 	}
 	
-	public abstract void display(Writer pstream,Data pdata) throws Exception;
+	public abstract void display(Writer pstream,Data pdata) throws DisplayException;
 	public abstract String getThemeName();
 	
 	@SuppressWarnings("unchecked")
@@ -434,7 +444,7 @@ public abstract class Element<T extends ThemeItemBase> extends DynamicMethod {
 			namespace=namespaceParent;			
 		}
 		if(namespace.hasByName(pelement)){
-			throw new Errors.duplicateElementOnPage(pelement.getJsName());//TODO: Duplicate In namespace
+			throw new Errors.DuplicateElementOnPage(pelement.getJsName());
 		}
 		namespace.addByName(pelement);
 	} 

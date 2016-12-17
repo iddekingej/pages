@@ -26,7 +26,7 @@ public class RecieverParser {
 	{
 		return errors;
 	}
-	
+
 	private String getAttributeValue(Node pnode,String pname)
 	{
 		Node valueNode=pnode.getAttributes().getNamedItem(pname);
@@ -36,8 +36,7 @@ public class RecieverParser {
 			return null;
 		}
 	}
-	
-	
+		
 	private String normelizeClassName(String pclassName) throws Exception
 	{
 		
@@ -46,14 +45,10 @@ public class RecieverParser {
 			if(className!=null){
 				return className;
 			}
-			
 		}
 		return pclassName;
 	}
 	
-	
-
-
 	private void setProperties(DynamicMethod pobject,Node pnode) throws  Exception
 	{
 		NamedNodeMap attributes=pnode.getAttributes();
@@ -133,10 +128,8 @@ public class RecieverParser {
 		
 		Document doc=builder.parse(input);
 
-
 		Node node=doc.getFirstChild();
 		node.normalize();
-		return handleRootNode(node);
-		
+		return handleRootNode(node);	
 	}
 }
