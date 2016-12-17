@@ -4,6 +4,8 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Objects;
+
+import org.elaya.page.data.Dynamic.DynamicException;
 import org.elaya.page.data.DynamicMethod.MethodNotFound;
 
 public class DynamicObject {
@@ -56,22 +58,36 @@ public class DynamicObject {
 			throw new MethodNotFound(pobject,pname);
 		}		
 		
-		public static Object get(Object pobject,String pname) throws  InvocationTargetException, MethodNotFound, IllegalAccessException
+		public static Object get(Object pobject,String pname) throws DynamicException 
 		{			
-			Method method=getMethod(pobject,"get"+pname);
-			return method.invoke(pobject);		
+			try{		
+				Method method=getMethod(pobject,"get"+pname);
+				return method.invoke(pobject);		
+			} catch(Exception e){
+				throw new DynamicException("Getting "+pname,e);
+			}				
 		}
 
-		public static void put(Object object,String name, Object inValue) throws IllegalAccessException,  InvocationTargetException, MethodNotFound, NoSuchMethodException
+		public static void put(Object object,String name, Object inValue) throws DynamicException 
 		{
-			Method method=getMethod(object,"set"+name);
-			Class<?>[] params=method.getParameterTypes();
-			Object value=inValue;
-			if(params.length>=1 && value != null && !params[0].isInstance(value)){
-				Method methodConv=params[0].getMethod("valueOf",value.getClass());
-				value=methodConv.invoke(null,value);				
+			try{
+				Method method=getMethod(object,"set"+name);
+				Class<?>[] params=method.getParameterTypes();
+				Object value=inValue;
+				if(params.length>=1 && value != null && !params[0].isInstance(value)){
+					Method methodConv=params[0].getMethod("valueOf",value.getClass());
+					value=methodConv.invoke(null,value);				
+				}
+				method.invoke(object, value);
+			}  catch(Exception e){
+				String valueStr;
+				if(inValue != null){
+					valueStr=inValue.toString();
+				} else {
+					valueStr="<null>";
+				}
+				throw new DynamicException("Setting '"+name+"' to '"+valueStr+"'",e);
 			}
-			method.invoke(object, value);		
 		}	
 		
 		public static boolean containsKey(Object pobject,String pname) {

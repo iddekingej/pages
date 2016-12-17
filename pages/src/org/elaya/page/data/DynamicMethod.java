@@ -1,6 +1,5 @@
 package org.elaya.page.data;
 
-import java.lang.reflect.InvocationTargetException;
 
 public class DynamicMethod implements Dynamic{
 	public static class MethodNotFound extends Exception{
@@ -13,25 +12,20 @@ public class DynamicMethod implements Dynamic{
 	
 
 	@Override
-	public Object get(String pname) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, MethodNotFound
+	public Object get(String pname) throws DynamicException  
 	{			
 		return DynamicObject.get(this, pname);		
 	}
 
 	@Override
-	public void put(String pname, Object pvalue) throws Exception
+	public void put(String pname, Object pvalue) throws DynamicException
 	{
 		DynamicObject.put(this,pname,pvalue);
 	}
 
 	@Override
 	public boolean containsKey(String pname) {
-		try{			
-			DynamicObject.getMethod(this,"set"+pname) ;
-			return true;
-		}catch(MethodNotFound e){
-			return false;
-		}
+		return DynamicObject.containsKey(this, pname);
 	}
 
 }

@@ -89,7 +89,7 @@ public class UiXmlParser extends XmlAppParser {
 	}
 
 	@Override
-	protected void afterCreate(Object object) throws ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException 
+	protected void afterCreate(Object object) throws ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException  
 	{
 		if(object instanceof Page){
 			((Page)object).initTheme();

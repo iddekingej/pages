@@ -17,6 +17,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.elaya.page.Errors;
 import org.elaya.page.Errors.NormalizeClassNameException;
 import org.elaya.page.Errors.SettingAttributeException;
+import org.elaya.page.data.Dynamic.DynamicException;
 import org.elaya.page.data.DynamicMethod.MethodNotFound;
 import org.elaya.page.data.DynamicObject;
 import org.w3c.dom.Document;
@@ -217,7 +218,7 @@ public abstract class XmlParser {
 		}	
 	}
 	
-	void parseNamedObject(Object pobject,Node pnode) throws XMLLoadException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, MethodNotFound 
+	void parseNamedObject(Object pobject,Node pnode) throws DynamicException, XMLLoadException  
 	{
 		String name=getAttributeValue(pnode,"name");
 		if(name != null){
@@ -231,7 +232,7 @@ public abstract class XmlParser {
 		}
 	}
 	
-	private Object createByClass(Node pnode,Class<?> pdefault) throws XMLLoadException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, MethodNotFound, NormalizeClassNameException, ClassNotFoundException 
+	private Object createByClass(Node pnode,Class<?> pdefault) throws XMLLoadException, InstantiationException, IllegalAccessException, DynamicException, NormalizeClassNameException, InvocationTargetException, NoSuchMethodException, ClassNotFoundException  
 	{
 		String className=getAttributeValue(pnode,"class");
 		Object object;
@@ -259,7 +260,7 @@ public abstract class XmlParser {
 		return object;
 	}
 	
-	private Object createObjectByNode(Node node,XmlConfig info) throws XMLLoadException, ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, MethodNotFound, ParserConfigurationException, SAXException, IOException, SettingAttributeException, NormalizeClassNameException 
+	private Object createObjectByNode(Node node,XmlConfig info) throws XMLLoadException, SettingAttributeException, ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, MethodNotFound, ParserConfigurationException, SAXException, IOException, NormalizeClassNameException, DynamicException  
 	{
 		Object object;
 		String ref=getAttributeValue(node,"ref");
@@ -336,7 +337,7 @@ public abstract class XmlParser {
 			DocumentBuilder builder=factory.newDocumentBuilder();
 			InputStream stream=openFile(pfileName);
 			if(stream ==null){
-				throw new FileNotFoundException("pages/"+pfileName);
+				throw new FileNotFoundException(pfileName);
 			}
 			Document doc=builder.parse( stream);
 			NodeList nl=doc.getChildNodes();

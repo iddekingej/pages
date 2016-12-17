@@ -1,8 +1,11 @@
 package org.elaya.page.listmenu;
 
+import java.io.IOException;
+
 import org.elaya.page.Element;
 import org.elaya.page.Writer;
 import org.elaya.page.data.Data;
+import org.elaya.page.data.Data.KeyNotFoundException;
 
 public class ListMenuGroup extends BuildinListMenuItem {
 
@@ -25,7 +28,7 @@ public class ListMenuGroup extends BuildinListMenuItem {
 	}
 	
 	
-	private void handleCheckCondition(Writer writer,Object selectedValue,Element<?> element,Data data) throws Exception
+	private void handleCheckCondition(Writer writer,Object selectedValue,Element<?> element,Data data) throws KeyNotFoundException, IOException, org.elaya.page.Element.DisplayException 
 	{
 		if(element.checkCondition(data)){
 			String value=((ListMenuItem<?>)element).getValue();
