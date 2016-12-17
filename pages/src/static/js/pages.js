@@ -158,9 +158,22 @@ function TMenu(p_parent,p_jsName,p_name,p_id)
 {
 	TElement.call(this,p_parent,p_jsName,p_name,p_id);
 	this.menuTimeout=false;
+	this.state="normal";
 }
 
 TMenu.prototype=Object.create(TElement.prototype); 
+
+TMenu.prototype.setState=function(p_state)
+{
+	this.state=p_state;
+	if(p_state=="normal"){
+		this.element.className="menu";		
+	} else if(p_state=="disabled"){
+		this.element.className="menu_disabled";
+	} else if(p_state=="hidden"){
+		this.element.className="menu_hidden";
+	}
+}
 
 TMenu.prototype.hideMenu=function()
 {
@@ -180,13 +193,15 @@ TMenu.prototype.clearTimeout=function()
 
 TMenu.prototype.openMenu=function()
 {
-	if(this.menu.style.display != "none"){
-		core.display(this.menu,false);
-	} else {
-		core.display(this.menu,true);
-		var l_position=core.getPosition(this.element);
-		l_position.y += this.element.offsetHeight;
-		core.setPosition(this.menu,l_position);
+	if(this.state=="normal"){
+		if(this.menu.style.display != "none"){
+			core.display(this.menu,false);
+		} else {
+			core.display(this.menu,true);
+			var l_position=core.getPosition(this.element);
+			l_position.y += this.element.offsetHeight;
+			core.setPosition(this.menu,l_position);
+		}
 	}
 }
 

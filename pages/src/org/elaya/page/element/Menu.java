@@ -6,9 +6,14 @@ import org.elaya.page.data.Data;
 
 public class Menu extends PageElement<ElementThemeItem> {
 	private String title;
+	private MenuState state=MenuState.NORMAL;
 	
 	public String getTitle(){ return title;}
 	public void setTitle(String ptitle){ title=ptitle;}
+	public MenuState getState(){ return state;}
+	public void setState(MenuState pstate){ state=pstate;}
+	
+	
 	@Override
 	public void display(Writer pstream, Data pdata) throws org.elaya.page.Element.DisplayException {
 		try{
@@ -18,7 +23,13 @@ public class Menu extends PageElement<ElementThemeItem> {
 			throw new DisplayException("",e);
 		}
 	}
-
+	
+	@Override
+	protected void makeSetupJs(Writer writer,Data data) throws Exception
+	{
+		writer.print("this.setState("+writer.js_toString(state.getJsState())+")\n");
+	}
+	
 	@Override
 	public String getJsClassName() {
 		return "TMenu";

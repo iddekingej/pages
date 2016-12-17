@@ -28,6 +28,8 @@ div[class="listmenu_item_selected"]>a {
 .menubar_item{
 	color:#fff;
 }
+
+
 .menu_popup{
 	position:absolute;
 	border-radius:3px;
@@ -40,6 +42,16 @@ div[class="listmenu_item_selected"]>a {
 .menu{
 	cursor:pointer;
 	padding-left:20px;
+	color:#fff
+}
+
+.menu_hidden{
+	display:none;
+}
+.menu_disabled{
+	cursor:hand;
+	padding-left:20px;
+	color:#888;
 }
 
 .menu_seperator{
