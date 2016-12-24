@@ -2,8 +2,6 @@ package org.elaya.page.security;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 
 public class RegexMatcher extends RequestMatcher {
@@ -20,9 +18,9 @@ public class RegexMatcher extends RequestMatcher {
 		return urlRegex;
 	}
 	@Override
-	boolean matchOwnRequest(ServletRequest prequest) {
-		if(prequest instanceof HttpServletRequest){
-			HttpServletRequest request=(HttpServletRequest)prequest;			
+	boolean matchOwnRequest(Session session) {
+		HttpServletRequest request=session.getHttpRequest();
+		if(request !=null){				
 			if(urlRegex==null || urlRegex==""){
 				return true;
 			}

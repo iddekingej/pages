@@ -7,14 +7,15 @@ public class AliasData {
 	public static final String ALIAS_URL="url";
 	public static final String ALIAS_RECIEVER="reciever";
 	public static final String ALIAS_SECURITY="security";
-		
+	private String value;
+	private String type;
+	
 	public AliasData(String ptype,String pvalue) {
 		value=pvalue;
 		type=ptype;
 	}
 
-	private String value;
-	private String type;
+
 	public String getValue(){ return value;}
 	public String getType(){ return type;}
 

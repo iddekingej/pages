@@ -1,6 +1,5 @@
 package org.elaya.page.security;
 
-import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 
 public class CompareMatcher extends RequestMatcher {
@@ -26,9 +25,10 @@ public class CompareMatcher extends RequestMatcher {
 	}
 	
 	@Override
-	boolean matchOwnRequest(ServletRequest prequest) {
-		if(prequest instanceof HttpServletRequest){
-			String query=((HttpServletRequest)prequest).getPathInfo();
+	boolean matchOwnRequest(Session session) {
+		HttpServletRequest request=session.getHttpRequest(); 
+		if(request != null){
+			String query=request.getPathInfo();
 			if(query==null){
 				query="";
 			}

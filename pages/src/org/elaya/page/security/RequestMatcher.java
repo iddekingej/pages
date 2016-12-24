@@ -1,9 +1,11 @@
 package org.elaya.page.security;
 
+import java.io.IOException;
 import java.util.LinkedList;
 
 import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+
+import org.elaya.page.security.Errors.AuthenticationException;
 
 public abstract class RequestMatcher {
 	private LinkedList<Action> actions=new  LinkedList<>();
@@ -20,11 +22,11 @@ public abstract class RequestMatcher {
 	}
 	
 	
-	public final RequestMatcher matchRequest(ServletRequest prequest){
-		if(matchOwnRequest(prequest)){
+	public final RequestMatcher matchRequest(Session session){
+		if(matchOwnRequest(session)){
 			RequestMatcher found;
 			for(RequestMatcher sub:subMatcher){
-				found=sub.matchRequest(prequest);
+				found=sub.matchRequest(session);
 				if(found != null){
 					return found;
 				}
@@ -34,13 +36,13 @@ public abstract class RequestMatcher {
 			return null;
 		}
 	}
-	abstract boolean matchOwnRequest(ServletRequest prequest);
+	abstract boolean matchOwnRequest(Session session);
 	
-	public MatchActionResult execute(ServletRequest prequest,ServletResponse presponse,Authenticator pauthenticator) throws Exception{
+	public MatchActionResult execute(Session session,Authenticator authenticator) throws AuthenticationException, IOException {
 		ActionResult result;
 		boolean nextFilter=true;
 		for(Action action:actions){
-			result=action.execute(prequest, presponse,pauthenticator);
+			result=action.execute(session.getRequest(), session.getResponse(),authenticator);
 			if(result==ActionResult.SECURITYFAILED){
 				return MatchActionResult.SECURITYFAILED;
 			}

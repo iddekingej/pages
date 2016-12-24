@@ -1,7 +1,5 @@
 package org.elaya.page.security;
 
-import javax.servlet.ServletRequest;
-
 public class SessionMatcher extends RequestMatcher {
 
 	public SessionMatcher() {
@@ -9,8 +7,8 @@ public class SessionMatcher extends RequestMatcher {
 	}
 
 	@Override
-	boolean matchOwnRequest(ServletRequest prequest) {
-		AuthorisationData sessionData=getSessionFromRequest(prequest);
+	boolean matchOwnRequest(Session session) {
+		AuthorisationData sessionData=session.getAuthorisationData();
 		return sessionData != null;
 	}
 

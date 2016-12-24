@@ -1,5 +1,7 @@
 package org.elaya.page.security;
 
+import java.io.IOException;
+
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
@@ -58,5 +60,13 @@ public class Session {
 			return httpRequest.getSession(pnew);
 		}
 		return null;
+	}
+	
+	public void redirect(String url) throws IOException
+	{
+		if(httpRequest != null && httpResponse != null){
+			httpResponse.sendRedirect(httpRequest.getContextPath()+url);
+		}
+
 	}
 }
