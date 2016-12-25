@@ -11,11 +11,11 @@ public abstract class RequestMatcher {
 	private LinkedList<Action> actions=new  LinkedList<>();
 	private LinkedList<RequestMatcher> subMatcher=new LinkedList<>(); 
 
-	protected AuthorisationData getSessionFromRequest(ServletRequest prequest)
+	protected AuthorizationData getSessionFromRequest(ServletRequest prequest)
 	{
 		Object object=prequest.getAttribute("org.elaya.page.security.SessionData");
-		if(object !=null && object instanceof AuthorisationData){
-			return (AuthorisationData)object;
+		if(object !=null && object instanceof AuthorizationData){
+			return (AuthorizationData)object;
 		}
 
 		return null;
@@ -42,7 +42,7 @@ public abstract class RequestMatcher {
 		ActionResult result;
 		boolean nextFilter=true;
 		for(Action action:actions){
-			result=action.execute(session.getRequest(), session.getResponse(),authenticator);
+			result=action.execute(session,authenticator);
 			if(result==ActionResult.SECURITYFAILED){
 				return MatchActionResult.SECURITYFAILED;
 			}

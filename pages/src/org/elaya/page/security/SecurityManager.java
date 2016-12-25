@@ -1,24 +1,18 @@
 package org.elaya.page.security;
 
+import java.io.IOException;
 import java.io.NotSerializableException;
-import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedList;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import org.elaya.page.data.DynamicObject;
+
+import org.elaya.page.security.Errors.AuthenticationException;
+import org.elaya.page.security.Session.InvalidSessionData;
 
 public class SecurityManager {
 	
-	class InvalidSessionData extends Exception{
 
-		private static final long serialVersionUID = 1L;
-		public InvalidSessionData(String pmessage){
-			super(pmessage);
-		}
-	}
 	
 	private String loginCheckUrl="";
 	private String loginPageUrl="";
@@ -65,54 +59,17 @@ public class SecurityManager {
 		return found;
 	}
 	
-	protected void afterCreateSession(AuthorisationData pauthorisationData)
-	{
-		
-	}
-	
-	private AuthorisationData initAuthorisationData(Object objectId,Object typeObject,ServletRequest request) throws InvalidSessionData, NotSerializableException, InstantiationException, IllegalAccessException,  InvocationTargetException, NoSuchMethodException,  ClassNotFoundException
-	{
-		Serializable id;
-		AuthorisationData authorisationData=null;
-		if(objectId instanceof Serializable ){
-			id=(Serializable)objectId;
-		} else {
-			throw new NotSerializableException("ID attribute of session is not Serializable (type="+objectId.getClass().getName()+")");
-		}
-		Object object=DynamicObject.createObjectFromName(typeObject.toString());
-		if(object instanceof AuthorisationData){
-			authorisationData=(AuthorisationData)object;
-			request.setAttribute("org.elaya.page.security.SessionData", object);
-			afterCreateSession(authorisationData);
-			authorisationData.initSessionData(id);
-		} else {
-			throw new InvalidSessionData("Sessiondata object (type="+object.getClass().getName()+") doesn't descent from SessionData");
-		}
-		return authorisationData;
-	}
-	
-	private Session createStoredSession(ServletRequest servletRequest,ServletResponse servletResponse) throws NoSuchMethodException, ClassNotFoundException, InstantiationException, IllegalAccessException,  InvocationTargetException, InvalidSessionData, NotSerializableException
+	protected Session createSession(ServletRequest servletRequest,ServletResponse servletResponse) throws NoSuchMethodException, ClassNotFoundException, InstantiationException, IllegalAccessException,  InvocationTargetException, NotSerializableException, InvalidSessionData
 	{
 		Session session=new Session(servletRequest,servletResponse);
-		HttpServletRequest request=session.getHttpRequest();		
-		if(request != null){			
-			HttpSession httpSession=request.getSession(false);
-			if(httpSession != null){
-				Object typeObject=httpSession.getAttribute("type");
-				Object objectId=httpSession.getAttribute("id");
-				if(objectId != null && typeObject != null){
-					AuthorisationData authorisation=initAuthorisationData(objectId,typeObject,request);
-					session.setAuthorisationData(authorisation);
-				}
-			}
-		}
+		session.initSession();
 		return session;
 	}
 	
 	
-	public boolean execute(ServletRequest request,ServletResponse response) throws Exception
+	public boolean execute(ServletRequest request,ServletResponse response) throws NoSuchMethodException, ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, InvalidSessionData, IOException, AuthenticationException 
 	{
-		Session session=createStoredSession(request,response);
+		Session session=createSession(request,response);
 		RequestMatcher requestMatcher=matchRequest(session);
 		if(requestMatcher==null){			
 			session.redirect(loginPageUrl);			
@@ -129,7 +86,6 @@ public class SecurityManager {
 				return false;
 		}
 		return false;
-		
 		
 	}
 	

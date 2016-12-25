@@ -4,7 +4,7 @@ import java.io.NotSerializableException;
 import java.io.Serializable;
 import java.util.Map;
 
-public interface AuthorisationData {
+public interface AuthorizationData {
 	public abstract void initSessionData(Serializable pid);
 	public abstract void initSessionData(Map<String,Object> pdata) throws NotSerializableException;
 	public abstract Serializable getId();

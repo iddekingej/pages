@@ -7,8 +7,6 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.servlet.ServletRequest;
-
 public abstract class AbstractDBAuthenticator implements Authenticator {
 
 	private String parameterOrder;
@@ -40,14 +38,14 @@ public abstract class AbstractDBAuthenticator implements Authenticator {
 	protected  abstract Connection getConnection() throws ClassNotFoundException, SQLException;
 
 	@Override
-	public Map<String, Object> getAuthenicate(ServletRequest prequest) throws SQLException, ClassNotFoundException {
+	public Map<String, Object> getAuthenicate(Session session) throws SQLException, ClassNotFoundException {
 		Map<String,Object> returnValue=null;
 		Connection connection=getConnection();
 		PreparedStatement statement=connection.prepareStatement(sql);		
 		String parameter;
 		for(int cnt=0;cnt<parameterOrderSplit.length;cnt++){
 			parameter=parameterOrderSplit[cnt];
-			statement.setString(cnt+1, prequest.getParameter(parameter));	
+			statement.setString(cnt+1, session.getRequest().getParameter(parameter));	
 		}
 		ResultSet set=statement.executeQuery();
 		if(set.next()){

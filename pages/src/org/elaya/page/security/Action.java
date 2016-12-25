@@ -2,7 +2,6 @@ package org.elaya.page.security;
 
 import java.io.IOException;
 import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -15,17 +14,17 @@ public abstract class Action {
 		presponse.sendRedirect(prequest.getContextPath()+purl);
 	}
 	
-	protected AuthorisationData getSessionFromRequest(ServletRequest prequest)
+	protected AuthorizationData getSessionFromRequest(ServletRequest prequest)
 	{
 		Object object=prequest.getAttribute("org.elaya.page.security.SessionData");
 		
-		if((object != null) && (object instanceof AuthorisationData)){
-			return (AuthorisationData)object;
+		if((object != null) && (object instanceof AuthorizationData)){
+			return (AuthorizationData)object;
 		}
 
 		return null;
 	}
 	
-	public abstract ActionResult execute(ServletRequest prequest,ServletResponse presponse,Authenticator pauthenticator) throws AuthenticationException, IOException ;
+	public abstract ActionResult execute(Session session,Authenticator pauthenticator) throws AuthenticationException, IOException ;
 	
 }

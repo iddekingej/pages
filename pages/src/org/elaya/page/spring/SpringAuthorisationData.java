@@ -1,10 +1,10 @@
 package org.elaya.page.spring;
 
-import org.elaya.page.security.AuthorisationData;
+import org.elaya.page.security.AuthorizationData;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
-public abstract class SpringAuthorisationData implements AuthorisationData ,ApplicationContextAware
+public abstract class SpringAuthorisationData implements AuthorizationData ,ApplicationContextAware
 {
 	private ApplicationContext applicationContext;
 	

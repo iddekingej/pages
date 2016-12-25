@@ -8,7 +8,7 @@ public class SessionMatcher extends RequestMatcher {
 
 	@Override
 	boolean matchOwnRequest(Session session) {
-		AuthorisationData sessionData=session.getAuthorisationData();
+		AuthorizationData sessionData=session.getAuthorisationData();
 		return sessionData != null;
 	}
 

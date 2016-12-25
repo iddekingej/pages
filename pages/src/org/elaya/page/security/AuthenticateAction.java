@@ -4,10 +4,7 @@ package org.elaya.page.security;
 import java.io.NotSerializableException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.elaya.page.data.DynamicObject;
@@ -64,20 +61,20 @@ public class AuthenticateAction extends Action {
 		return failedLoginUrl;
 	}
 		
-	protected void afterCreateSession(AuthorisationData pauthorisationData)
+	protected void afterCreateSession(AuthorizationData pauthorisationData)
 	{
 		/*By default no setup us necessary */
 	}
 	
-	private AuthorisationData createSessionDataGen(ServletRequest prequest,Map<String,Object>pdata) throws InvalidSessionData, NoSuchMethodException, ClassNotFoundException, InstantiationException, IllegalAccessException,  InvocationTargetException, NotSerializableException{
+	private AuthorizationData createSessionDataGen(Session session,Map<String,Object>pdata) throws InvalidSessionData, NoSuchMethodException, ClassNotFoundException, InstantiationException, IllegalAccessException,  InvocationTargetException, NotSerializableException{
 		Object object=DynamicObject.createObjectFromName(sessionDataClass);
-		if(object instanceof AuthorisationData){
-			AuthorisationData authorisationData=(AuthorisationData)object;
-			prequest.setAttribute("org.elaya.page.security.SessionData", object);
+		if(object instanceof AuthorizationData){
+			AuthorizationData authorisationData=(AuthorizationData)object;
+			session.getRequest().setAttribute("org.elaya.page.security.SessionData", object);
 			afterCreateSession(authorisationData);
 			authorisationData.initSessionData(pdata);
 			
-			return (AuthorisationData)object;
+			return (AuthorizationData)object;
 		} else {
 			throw new InvalidSessionData("Sessiondata object (type="+object.getClass().getName()+") doesn't descent from SessionData");
 		}	
@@ -86,30 +83,29 @@ public class AuthenticateAction extends Action {
 	
 
 	
-	protected AuthorisationData createSessionData(ServletRequest prequest,Map<String,Object> pdata) throws NoSuchMethodException, ClassNotFoundException, InstantiationException, IllegalAccessException,  InvocationTargetException, InvalidSessionData, NotSerializableException{
-		return createSessionDataGen(prequest,pdata);
+	protected AuthorizationData createSessionData(Session session,Map<String,Object> pdata) throws NoSuchMethodException, ClassNotFoundException, InstantiationException, IllegalAccessException,  InvocationTargetException, InvalidSessionData, NotSerializableException{
+		return createSessionDataGen(session,pdata);
 	}
-	
-	private  ActionResult checkAuthentication(ServletRequest prequest,ServletResponse presponse,Authenticator pauthenticator) throws AuthenticationException
+	private  ActionResult checkAuthentication(Session session,Authenticator pauthenticator) throws AuthenticationException
 	{
 		try{
-			HttpServletRequest request=(HttpServletRequest)prequest;
-			AuthorisationData sessionData;
+			HttpServletRequest request=session.getHttpRequest();
+			AuthorizationData sessionData;
 			if(pauthenticator != null){
-				Map<String,Object> auth=pauthenticator.getAuthenicate(prequest);
+				Map<String,Object> auth=pauthenticator.getAuthenicate(session);
 				if(auth==null){
 					return ActionResult.SECURITYFAILED;
 				}else {
-					sessionData=createSessionData(prequest,auth);
-					HttpSession session=request.getSession();
-					session.setAttribute("id", sessionData.getId());
-					session.setAttribute("type",sessionData.getClass().getName());
-					redirect(request,(HttpServletResponse)presponse,sessionData.getAfterLoginPath());
+					sessionData=createSessionData(session,auth);
+					HttpSession httpSession=request.getSession();
+					httpSession.setAttribute("id", sessionData.getId());
+					httpSession.setAttribute("type",sessionData.getClass().getName());
+					session.redirect(sessionData.getAfterLoginPath());
 					return ActionResult.NONEXTFILTER;
 				}
 			} else {
 				if(failedLoginUrl != null && failedLoginUrl.length()>0){
-					redirect(request,(HttpServletResponse)presponse,failedLoginUrl);
+					session.redirect(failedLoginUrl);
 				} else {
 					return ActionResult.SECURITYFAILED;
 				}
@@ -121,10 +117,10 @@ public class AuthenticateAction extends Action {
 	}
 	
 	@Override
-	public ActionResult execute(ServletRequest prequest, ServletResponse presponse,Authenticator pauthenticator) throws AuthenticationException 
+	public ActionResult execute(Session session,Authenticator pauthenticator) throws AuthenticationException 
 	{
-			if(prequest instanceof HttpServletRequest ){
-				return checkAuthentication(prequest,presponse,pauthenticator);
+			if(session.getRequest() instanceof HttpServletRequest ){
+				return checkAuthentication(session,pauthenticator);
 			} 
 
 			return ActionResult.SECURITYFAILED;//TODO: Raise exception?

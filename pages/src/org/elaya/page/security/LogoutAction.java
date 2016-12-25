@@ -2,10 +2,7 @@ package org.elaya.page.security;
 
 import java.io.IOException;
 
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 public class LogoutAction extends Action {
 
@@ -21,14 +18,14 @@ public class LogoutAction extends Action {
 		return redirectUrl;
 	}
 	@Override
-	public ActionResult execute(ServletRequest prequest, ServletResponse presponse, Authenticator pauthenticator) throws IOException{
-		if(prequest instanceof HttpServletRequest){
-			HttpServletRequest request=(HttpServletRequest)prequest;
+	public ActionResult execute(Session session, Authenticator pauthenticator) throws IOException{
+		HttpServletRequest request=session.getHttpRequest();		
+		if(request != null){			
 			request.setAttribute("org.elaya.page.security.SessionData", null);
+			session.setAuthorisationData(null);
 			request.getSession().invalidate();
-			HttpServletResponse httpResponse=(HttpServletResponse) presponse;		
-			if(redirectUrl != null){
-				httpResponse.sendRedirect(((HttpServletRequest)prequest).getContextPath()+redirectUrl);
+			if(redirectUrl != null){				
+				session.redirect(redirectUrl);
 			}
 			return ActionResult.NONEXTFILTER;
 		}
