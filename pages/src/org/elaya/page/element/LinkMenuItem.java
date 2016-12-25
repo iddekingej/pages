@@ -6,6 +6,7 @@ import org.elaya.page.data.Data;
 public class LinkMenuItem extends BaseMenuItem<ElementThemeItem> {
 	private String url;
 	private String text;
+	private String iconUrl;
 	
 	public LinkMenuItem() {
 		super();
@@ -25,17 +26,28 @@ public class LinkMenuItem extends BaseMenuItem<ElementThemeItem> {
 		text=ptext;
 	}
 	
+	public String getIconUrl()
+	{
+		return iconUrl;
+	}
+	
+	public void setIconUrl(String piconUrl)
+	{
+		iconUrl=piconUrl;
+	}
+	
 	public String getText()
 	{
 		return text;
 	}
 	
 	@Override
-	protected void makeSetupJs(Writer pwriter,Data pdata) throws Exception
+	protected void makeSetupJs(Writer writer,Data pdata) throws Exception
 	{
 		Data data=getData(pdata);
-		pwriter.objVar("text", replaceVariables(data,text));
-		pwriter.objVar("url", pwriter.procesUrl(replaceVariables(data,url)));
+		writer.objVar("text", replaceVariables(data,text));
+		writer.objVar("url", writer.procesUrl(replaceVariables(data,url)));
+		writer.objVar("iconUrl",writer.procesUrl(replaceVariables(data,iconUrl)));
 	}
 	
 

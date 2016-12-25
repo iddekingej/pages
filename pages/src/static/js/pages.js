@@ -53,56 +53,32 @@ var pages={
 		}
 };
 
-function TElement(p_parent,p_jsName,p_name,p_id)
+//------------( TAbstractElement )-------------------------------
+function TAbstractElement(p_parent,p_jsName,p_name)
 {
 	this.parent=p_parent;
 	this.elements={};
 	this.names={};
-	this.id=p_id;
 	this.name=p_name;
 	this.jsName=p_jsName;
-	this.element=$$(p_id);
 	this.checkCondition=false;
-	this.namespaceParent=false;
+	this.namespaceParent=false;	
 }
 
-
-TElement.prototype.getElementParent=function()
-{
-	return this.element.parent();
-}
-TElement.prototype.isInputElement=function()
+TAbstractElement.prototype.isInputElement=function()
 {
 	return false;
 }
+//TElement.prototype.display=function(p_flag) :Abstract
 
-TElement.prototype.display=function(p_flag)
-{
-	core.display(this.element,p_flag);
-}
-
-TElement.prototype.handleCheckCondition=function()
-{
-	if(this.checkCondition){
-		this.checkCondition();
-	}
-	for(var l_name in this.elements){
-		this.elements[l_name].handleCheckCondition();		
-	}
-}
-
-TElement.prototype.on=function(p_event,p_js)
-{
-	core.ev(this.element,p_event,p_js);	
-}
-TElement.prototype.fillThisData=function(p_data)
+TAbstractElement.prototype.fillThisData=function(p_data)
 {
 	if("getValue" in this){
 		p_data[this.name]=this.getValue();
 	}
 }
 
-TElement.prototype.fillData=function(p_data)
+TAbstractElement.prototype.fillData=function(p_data)
 {
 	this.fillThisData(p_data);
 	for(var l_name in this.elements){
@@ -110,12 +86,12 @@ TElement.prototype.fillData=function(p_data)
 	}
 }
 
-TElement.prototype.addByName=function(p_element)
+TAbstractElement.prototype.addByName=function(p_element)
 {
 	this.names[p_element.jsName]=p_element;
 }
 
-TElement.prototype.getByName=function(p_element)
+TAbstractElement.prototype.getByName=function(p_element)
 {
 	if(p_element in this.names){
 		return this.names[p_element];
@@ -123,12 +99,12 @@ TElement.prototype.getByName=function(p_element)
 	return null;
 }
 
-TElement.prototype.addElement=function(p_jsName,p_element)
+TAbstractElement.prototype.addElement=function(p_jsName,p_element)
 {
 	this.elements[p_jsName]=p_element;
 }
 
-TElement.prototype.setup=function()
+TAbstractElement.prototype.setup=function()
 {
 	if("config" in this){
 		this.config();
@@ -138,6 +114,47 @@ TElement.prototype.setup=function()
 		this.namespaceParent.addByName(this);
 	}	
 }
+
+TAbstractElement.prototype.handleCheckCondition=function()
+{
+	if(this.checkCondition){
+		this.checkCondition();
+	}
+	for(var l_name in this.elements){
+		this.elements[l_name].handleCheckCondition();		
+	}
+}
+
+
+//------------( TElement )-------------------------------
+
+function TElement(p_parent,p_jsName,p_name,p_id)
+{
+	TAbstractElement.call(this,p_parent,p_jsName,p_name);
+	this.id=p_id;
+	this.element=$$(p_id);
+}
+
+TElement.prototype=Object.create(TAbstractElement.prototype);
+
+
+TElement.prototype.getElementParent=function()
+{
+	return this.element.parentNode;
+}
+
+
+TElement.prototype.display=function(p_flag)
+{
+	core.display(this.element,p_flag);
+}
+
+
+TElement.prototype.on=function(p_event,p_js)
+{
+	core.ev(this.element,p_event,p_js);	
+}
+
 
 function TMenuBar(p_form,p_jsName,p_name,p_id)
 {
@@ -225,6 +242,7 @@ function TLinkMenuItem(p_parent,p_jsName,p_name,p_id)
 	TElement.call(this,p_parent,p_jsName,p_name,p_id);
 	this.url="";
 	this.text="";
+	this.iconUrl="";
 }
 TLinkMenuItem.prototype=Object.create(TElement.prototype);
 
@@ -232,6 +250,11 @@ TLinkMenuItem.prototype.setup=function()
 {
 	TElement.prototype.setup.call(this);
 	this.element=core.create("div",{"className":"linkmenuitem"},this.parent.menu);
+	if(this.iconUrl != ""){
+		core.create("img",{"src":this.iconUrl},this.element);
+	}
 	core.text(this.text,this.element);
 	core.ev(this.element,"click",function(){window.location=this.url;},this)
 }
+
+

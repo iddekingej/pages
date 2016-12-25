@@ -359,7 +359,7 @@ public abstract class Element<T extends ThemeItemBase> extends DynamicMethod {
 		return this;
 	}
 	
-	public Element<?> getWidgetParent()
+	public final Element<?> getWidgetParent()
 	{
 		if(parent != null){
 			return parent.getFirstWidget();
@@ -461,9 +461,9 @@ public abstract class Element<T extends ThemeItemBase> extends DynamicMethod {
 	
 	protected void makeJsObject(Writer pwriter,Data pdata) throws Exception
 	{
-		pwriter.print("var element=new "+getJsClassName()+"("+getWidgetParent().getJsFullname()+","+pwriter.js_toString(getJsName())+","+pwriter.js_toString(name)+","+pwriter.js_toString(getDomId())+");\n");
+		pwriter.print("var element=new "+getJsClassName()+"(widgetParent,"+pwriter.js_toString(getJsName())+","+pwriter.js_toString(name)+","+pwriter.js_toString(getDomId())+");\n");
 		if(this.namespaceParent!=null){
-			pwriter.print("element.namespaceParent="+this.namespaceParent.getNamespaceName()+";\n");
+			pwriter.print("element.namespaceParent=namespaceParent;\n");
 		}
 
 		pwriter.print("element.config=function(){");
@@ -508,13 +508,30 @@ public abstract class Element<T extends ThemeItemBase> extends DynamicMethod {
 	{
 		Data data=getData(pdata);
 		makeJsObject(pwriter,data);
+
 		preSubJs(pwriter,data);
-		for(Element<?> element:elements){
-			if(this.checkCondition(pdata)){
-				element.generateJs(pwriter,data);
+		if(!elements.isEmpty()){
+			if((parent==null || parent.getFirstWidget() !=getFirstWidget()) && (getFirstWidget() != null)){				
+				pwriter.print("widgetParent="+getFirstWidget().getJsFullname()+";\n");
+			}
+			if(isNamespace){
+				pwriter.print("namespaceParent="+this.getNamespaceName()+";\n");
+			}
+
+			for(Element<?> element:elements){
+				if(this.checkCondition(pdata)){
+					element.generateJs(pwriter,data);
+				}
+			}
+			if((parent != null) && (parent.getFirstWidget() !=getFirstWidget()) && (parent.getFirstWidget() != null)){
+				pwriter.print("widgetParent="+parent.getFirstWidget().getJsFullname()+";\n");
+			}
+			if(isNamespace && (parent != null)){
+				pwriter.print("namespaceParent="+parent.getNamespaceName()+";\n");
 			}
 		}
 		postSubJs(pwriter,data);
+
 
 	}
 	

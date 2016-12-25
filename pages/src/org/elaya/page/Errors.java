@@ -103,5 +103,12 @@ public class Errors {
 		}
 	}
 
+	public static class InvalidTypeException extends Exception{
+		private static final long serialVersionUID = -3007635928476602360L;
+
+		public InvalidTypeException(String message){
+			super(message);
+		}
+	}
 	
 }

@@ -114,6 +114,7 @@ public class Page extends PageElement<PageThemeItem> implements PageApplicationA
 			themeItem.pageHeader(pwriter,documentType,procJs,procCss);	
 			displaySubElements(pwriter,data);
 			pwriter.jsBegin();
+			pwriter.print("var widgetParent;\nvar namespaceParent;\n");
 			generateJs(pwriter,pdata);
 			pwriter.jsEnd();
 
