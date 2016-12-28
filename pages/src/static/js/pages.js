@@ -4,6 +4,10 @@ var pages={
 			elements:{},
 			names:{},
 			parent:null,
+			isNamespace:true,
+			getNamespaceParent:function(){
+				return this;
+			},
 			addElement:function(p_name,p_object){
 				this.names[p_name]=p_object;
 				this.elements[p_name]=p_object;
@@ -61,15 +65,26 @@ function TAbstractElement(p_parent,p_jsName,p_name)
 	this.names={};
 	this.name=p_name;
 	this.jsName=p_jsName;
-	this.checkCondition=false;
-	this.namespaceParent=false;	
+	this.checkCondition=false;	
+	this.isNamespace=false;
 }
+
+
 
 TAbstractElement.prototype.isInputElement=function()
 {
 	return false;
 }
 //TElement.prototype.display=function(p_flag) :Abstract
+
+TAbstractElement.prototype.getNamespaceParent=function()
+{
+	if(this.isNamespace) return this;
+	if(this.parent!=null){
+		return this.parent.getNamespaceParent();
+	}
+	return null;
+}
 
 TAbstractElement.prototype.fillThisData=function(p_data)
 {
@@ -110,8 +125,10 @@ TAbstractElement.prototype.setup=function()
 		this.config();
 	}
 	this.parent.addElement(this.jsName,this);
-	if(this.namespaceParent){
-		this.namespaceParent.addByName(this);
+	
+	var l_namespaceParent=this.getNamespaceParent();
+	if(l_namespaceParent != null){
+		l_namespaceParent.addByName(this);
 	}	
 }
 
@@ -226,9 +243,7 @@ TMenu.prototype.openMenu=function()
 TMenu.prototype.setup=function()
 {
 	TElement.prototype.setup.call(this);
-	var l_this=this;
 	this.menu=core.create("div",{"className":"menu_popup","style":{"display":"none"}},document.body);
-	var l_this=this;
 	core.ev(this.element,"click",function(){this.openMenu();},this);
 	core.ev(this.element,"mouseout",function(){ this.hideMenu();},this);
 	core.ev(this.element,"mousein",function(){ this.clearTimeout();},this);
@@ -257,4 +272,24 @@ TLinkMenuItem.prototype.setup=function()
 	core.ev(this.element,"click",function(){window.location=this.url;},this)
 }
 
+function TRepeatElement(p_parent,p_jsName,p_name)
+{
+	TAbstractElement(p_parent,p_jsName,p_name);
+}
 
+TRepeatElement.prototype=Object.create(TAbstractElement.prototype);
+
+TRepeatElement.prototype.newItem=function()
+{
+	var l_jsName=this.jsName+"$"+this.elements.length;
+	var l_name=this.name+"$"+this.elements.length;
+	var l_item=new TRepeatElementItem(this,l_jsName,l_name);
+	addElemen(l_item);
+}
+
+function TRepeatElementItem(p_parent,p_jsName,p_name)
+{
+	TAbstractElement(p_parent,p_jsName,p_name);
+}
+
+TRepeatElementItem.prototype=Object.create(TAbstractElement.prototype);

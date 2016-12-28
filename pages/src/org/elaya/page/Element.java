@@ -8,11 +8,20 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
+
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.elaya.page.Errors;
+import org.elaya.page.Errors.AliasNotFound;
+import org.elaya.page.Errors.DuplicateElementOnPage;
+import org.elaya.page.Errors.InvalidElement;
+import org.elaya.page.Errors.LoadingAliasFailed;
+import org.elaya.page.application.Application.InvalidAliasType;
 import org.elaya.page.data.*;
 import org.elaya.page.data.Data.KeyNotFoundException;
 import org.elaya.page.jsplug.JSPlug;
 import org.elaya.page.jsplug.JSPlug.InvalidJsPlugType;
+import org.xml.sax.SAXException;
 
 
 public abstract class Element<T extends ThemeItemBase> extends DynamicMethod {
@@ -54,9 +63,20 @@ public abstract class Element<T extends ThemeItemBase> extends DynamicMethod {
 	private boolean isNamespace=false; 
 	private HashMap<String,Element<?>> byName=null;
 	private Element<?> namespaceParent=null;
+	private boolean isWidgetParent=true;
 
 	public Element()
 	{
+	}
+	
+	public void setIsWidgetParent(boolean p_flag)
+	{
+		isWidgetParent=p_flag;
+	}
+	
+	public boolean getIsWidgetParent()
+	{
+		return isWidgetParent;
 	}
 	
 	void setId(int pid)
@@ -300,28 +320,13 @@ public abstract class Element<T extends ThemeItemBase> extends DynamicMethod {
 		return name;
 	}
 
-	public String getNamespaceName()
-	{				
-		if(namespaceParent==null){
-			return getJsName();
-		}
-		String jsName=namespaceParent.getNamespaceName();
-		if(isNamespace){
-			jsName=jsName+".names."+getJsName();
-		}
-		return jsName;
-	}
-	public String getJsFullname() throws IOException
+	public String getFullName()
 	{
-		
 		if(parent==null){
-			return getJsName();
+			return name;
+		} else{
+			return parent.getName()+"."+name;
 		}
-		String widgetParent=getWidgetParent().getJsFullname();
-		if(widgetParent.length()==0){
-			return getJsName();
-		}
-		return widgetParent+".elements."+getJsName();
 	}
 	
 	public void getAllCssFiles(Set<String> pfiles)
@@ -354,15 +359,15 @@ public abstract class Element<T extends ThemeItemBase> extends DynamicMethod {
 		Objects.requireNonNull(pparent);
 		parent=pparent;
 	}
-	public Element<?> getFirstWidget()
-	{
-		return this;
-	}
 	
 	public final Element<?> getWidgetParent()
 	{
+		if(getIsWidgetParent()){
+			return this;
+		}
+			
 		if(parent != null){
-			return parent.getFirstWidget();
+			return parent.getWidgetParent();
 		}
 		return null;
 	}
@@ -425,7 +430,7 @@ public abstract class Element<T extends ThemeItemBase> extends DynamicMethod {
 		pplug.setParent(this);
 		jsPlugs.add(pplug);
 	}
-	public final void addElement(Element<?> pelement) throws Exception
+	public final void addElement(Element<?> pelement) throws InvalidElement, ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, DuplicateElementOnPage
 	{
 	
 		Objects.requireNonNull(pelement,"addElement(pelement)");
@@ -454,16 +459,16 @@ public abstract class Element<T extends ThemeItemBase> extends DynamicMethod {
 		return "TElement";
 	}
 	
-	protected void makeSetupJs(Writer pwriter,Data pdata) throws Exception
+	protected void makeSetupJs(Writer pwriter,Data pdata) throws IOException, ParserConfigurationException, SAXException, InvalidAliasType, AliasNotFound, LoadingAliasFailed, ReplaceVarException 
 	{
 		
 	}
 	
-	protected void makeJsObject(Writer pwriter,Data pdata) throws Exception
+	protected void makeJsObject(Writer pwriter,Data pdata) throws IOException, ParserConfigurationException, SAXException, InvalidAliasType, AliasNotFound, LoadingAliasFailed, ReplaceVarException 
 	{
-		pwriter.print("var element=new "+getJsClassName()+"(widgetParent,"+pwriter.js_toString(getJsName())+","+pwriter.js_toString(name)+","+pwriter.js_toString(getDomId())+");\n");
-		if(this.namespaceParent!=null){
-			pwriter.print("element.namespaceParent=namespaceParent;\n");
+		pwriter.print("element=new "+getJsClassName()+"(widgetParent,"+pwriter.js_toString(getJsName())+","+pwriter.js_toString(name)+","+pwriter.js_toString(getDomId())+");\n");
+		if(this.isNamespace){
+			pwriter.setVar("element.isNamespace","true");			
 		}
 
 		pwriter.print("element.config=function(){");
@@ -494,44 +499,44 @@ public abstract class Element<T extends ThemeItemBase> extends DynamicMethod {
 	}
 	
 	
-	protected void preSubJs(Writer pwriter,Data pdata) throws Exception
+	protected void preSubJs(Writer pwriter,Data pdata) throws IOException 
 	{
 		
 	}
 	
-	protected void postSubJs(Writer pwriter,Data pdata) throws Exception
+	protected void postSubJs(Writer pwriter,Data pdata) throws IOException 
 	{
 		
 	}
 	
-	protected final void generateJs(Writer pwriter,Data pdata) throws Exception
+	protected void generateSubJs(Writer pwriter,Data data) throws IOException, ParserConfigurationException, SAXException, InvalidAliasType, AliasNotFound, LoadingAliasFailed, ReplaceVarException, KeyNotFoundException
+	{			
+
+		if(isWidgetParent){				
+			pwriter.setFromOther("widgetParent","element");
+		}
+		pwriter.print("{\n");
+		pwriter.print("let element;\n");
+		for(Element<?> element:elements){
+			element.generateJs(pwriter,data);				
+		}
+		if(isWidgetParent){
+			pwriter.setFromOther("widgetParent","widgetParent.parent");
+		}
+		pwriter.print("}\n");
+	}
+	
+	protected final void generateJs(Writer pwriter,Data pdata) throws IOException, ParserConfigurationException, SAXException, InvalidAliasType, AliasNotFound, LoadingAliasFailed, ReplaceVarException, KeyNotFoundException  
 	{
 		Data data=getData(pdata);
-		makeJsObject(pwriter,data);
-
-		preSubJs(pwriter,data);
-		if(!elements.isEmpty()){
-			if((parent==null || parent.getFirstWidget() !=getFirstWidget()) && (getFirstWidget() != null)){				
-				pwriter.print("widgetParent="+getFirstWidget().getJsFullname()+";\n");
+		if(this.checkCondition(pdata)){
+			makeJsObject(pwriter,data);
+			preSubJs(pwriter,data);
+			if(!elements.isEmpty()){
+				generateSubJs(pwriter,data);
 			}
-			if(isNamespace){
-				pwriter.print("namespaceParent="+this.getNamespaceName()+";\n");
-			}
-
-			for(Element<?> element:elements){
-				if(this.checkCondition(pdata)){
-					element.generateJs(pwriter,data);
-				}
-			}
-			if((parent != null) && (parent.getFirstWidget() !=getFirstWidget()) && (parent.getFirstWidget() != null)){
-				pwriter.print("widgetParent="+parent.getFirstWidget().getJsFullname()+";\n");
-			}
-			if(isNamespace && (parent != null)){
-				pwriter.print("namespaceParent="+parent.getNamespaceName()+";\n");
-			}
+			postSubJs(pwriter,data);
 		}
-		postSubJs(pwriter,data);
-
 
 	}
 	

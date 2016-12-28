@@ -1,5 +1,7 @@
 package org.elaya.page.quickform;
 
+import java.io.IOException;
+
 import org.elaya.page.Writer;
 import org.elaya.page.data.Data;
 
@@ -60,7 +62,7 @@ public class DateElement extends BuildInFormElement {
 	}
 
 	@Override
-	protected void makeSetupJs(Writer pwriter,Data pdata) throws Exception
+	protected void makeSetupJs(Writer pwriter,Data pdata) throws IOException 
 	{
 		pwriter.print("this.showOn='"+showMode.getValue()+"';\n");
 		if(buttonText != null && buttonText.length() >0){

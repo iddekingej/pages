@@ -97,11 +97,12 @@ public class UiXmlParser extends XmlAppParser {
 	}
 
 	@Override
-	protected String getName(Object pobject) {
-		if(pobject instanceof Element<?>){
-			return ((Element<?>)pobject).getNamespaceName();
+
+	protected String getName(Object object) {
+		if(object instanceof Element){
+			return ((Element<?>)object).getFullName(); 
 		}
-		return "";
+		return null;
 	}
 
 	@Override

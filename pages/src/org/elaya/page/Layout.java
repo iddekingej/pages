@@ -5,13 +5,9 @@ public abstract class Layout extends PageElement<LayoutThemeItem> {
 
 	public Layout() {
 		super();
+		setIsWidgetParent(false);
 	}
 
-	@Override
-	public Element<?> getFirstWidget()
-	{
-		return this.getParent().getFirstWidget();
-	}
 	
 	@Override
 	public String getThemeName() {

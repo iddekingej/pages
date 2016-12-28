@@ -9,7 +9,6 @@ import org.elaya.page.data.Data;
 
 public class MenuBar extends PageElement<ElementThemeItem> {
 
-	
 	@Override
 	protected void preElement(Writer pwriter,Element<?> pelement) throws IOException 
 	{

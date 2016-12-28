@@ -1,7 +1,15 @@
 package org.elaya.page.element;
 
+import java.io.IOException;
+
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.elaya.page.Errors.AliasNotFound;
+import org.elaya.page.Errors.LoadingAliasFailed;
 import org.elaya.page.Writer;
+import org.elaya.page.application.Application.InvalidAliasType;
 import org.elaya.page.data.Data;
+import org.xml.sax.SAXException;
 
 public class LinkMenuItem extends BaseMenuItem<ElementThemeItem> {
 	private String url;
@@ -42,7 +50,7 @@ public class LinkMenuItem extends BaseMenuItem<ElementThemeItem> {
 	}
 	
 	@Override
-	protected void makeSetupJs(Writer writer,Data pdata) throws Exception
+	protected void makeSetupJs(Writer writer,Data pdata) throws IOException, org.elaya.page.Element.ReplaceVarException, ParserConfigurationException, SAXException, InvalidAliasType, AliasNotFound, LoadingAliasFailed 
 	{
 		Data data=getData(pdata);
 		writer.objVar("text", replaceVariables(data,text));

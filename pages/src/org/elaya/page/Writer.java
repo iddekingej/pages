@@ -18,6 +18,7 @@ public class Writer {
 	HttpServletResponse response;
 	ServletOutputStream stream;
 	Application         application;
+	int idCnt=0;
 //TODO make in configuration.	
 	private String jsPath="resources/pages/js/";
 	private String cssPath="resources/pages/css/";
@@ -29,6 +30,12 @@ public class Writer {
 		request=prequest;
 		stream=response.getOutputStream();
 	}	
+	
+	public int newId()
+	{
+		idCnt++;
+		return idCnt;
+	}
 	
 	public void setContentType(String pstr)
 	{
@@ -101,11 +108,19 @@ public class Writer {
 		return "\""+str(pvalue).replace("\"","\\\"")+"\"";
 	}
 	
-	public void objVar(String pvar,String pvalue) throws IOException
+	public void objVar(String varName,String value) throws IOException
 	{
-		print("this."+pvar+"="+js_toString(pvalue)+";");
+		setVar("this."+varName,value);
 	}
 
+	public void setVar(String varName,String value) throws IOException{
+		print(varName+"="+js_toString(value)+";\n");
+	}
+	
+	public void setFromOther(String varName,String other) throws IOException{
+		print(varName+"="+other+";\n");
+	}
+	
 	public String getBasePath(){
 		return request.getContextPath();
 	}

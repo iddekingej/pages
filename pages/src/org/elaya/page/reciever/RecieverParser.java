@@ -1,18 +1,24 @@
 package org.elaya.page.reciever;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedList;
 import java.util.List;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import org.elaya.page.AliasData;
+import org.elaya.page.Errors.LoadingAliasFailed;
 import org.elaya.page.application.Application;
+import org.elaya.page.application.Application.InvalidAliasType;
+import org.elaya.page.data.Dynamic.DynamicException;
 import org.elaya.page.data.DynamicMethod;
 import org.elaya.page.data.DynamicObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
+import org.xml.sax.SAXException;
 
 public class RecieverParser {
 	private LinkedList<String> errors=new LinkedList<>();
@@ -37,7 +43,7 @@ public class RecieverParser {
 		}
 	}
 		
-	private String normelizeClassName(String pclassName) throws Exception
+	private String normelizeClassName(String pclassName) throws LoadingAliasFailed, InvalidAliasType
 	{
 		
 		if(pclassName.startsWith("@")){			
@@ -49,7 +55,7 @@ public class RecieverParser {
 		return pclassName;
 	}
 	
-	private void setProperties(DynamicMethod pobject,Node pnode) throws  Exception
+	private void setProperties(DynamicMethod pobject,Node pnode) throws  DynamicException 
 	{
 		NamedNodeMap attributes=pnode.getAttributes();
 		Node node;
@@ -63,7 +69,7 @@ public class RecieverParser {
 	}
 	
 	@SuppressWarnings("unchecked")
-	private <T> T makeObject(Node pnode,Class<T> pclass) throws  Exception
+	private <T> T makeObject(Node pnode,Class<T> pclass) throws InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, ClassNotFoundException, LoadingAliasFailed, InvalidAliasType,  DynamicException  
 	{
 		String className=getAttributeValue(pnode,"class");
 		T returnValue=null;
@@ -87,14 +93,14 @@ public class RecieverParser {
 		return returnValue;
 	}
 	
-	private void handleParameterNode(Reciever<?> preciever,Node pnode) throws  Exception
+	private void handleParameterNode(Reciever<?> preciever,Node pnode) throws InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, ClassNotFoundException,  LoadingAliasFailed, InvalidAliasType, DynamicException 
 	{
 		Parameter parameter=makeObject(pnode,Parameter.class);
 		preciever.addParameter(parameter);
 		//TODO handle subnodes=>validation?
 	}
 	
-	private Reciever<?> handleRootNode(Node pnode) throws Exception
+	private Reciever<?> handleRootNode(Node pnode) throws InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, ClassNotFoundException,  LoadingAliasFailed, InvalidAliasType, DynamicException  
 	{
 		if(pnode.getNodeName() != "reciever"){
 			errors.add("<reciever> expected");
@@ -119,7 +125,7 @@ public class RecieverParser {
 		return reciever;
 	}
 	
-	public Reciever<?> parseXml(String pfileName) throws  Exception
+	public Reciever<?> parseXml(String pfileName) throws ParserConfigurationException, SAXException, IOException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, ClassNotFoundException,  LoadingAliasFailed, InvalidAliasType, DynamicException 
 	{
 		DocumentBuilderFactory factory=DocumentBuilderFactory.newInstance();
 		DocumentBuilder builder=factory.newDocumentBuilder();

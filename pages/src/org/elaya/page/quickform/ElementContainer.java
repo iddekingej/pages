@@ -9,18 +9,18 @@ public class ElementContainer extends BuildInFormElement {
 	private String label;
 	private LabelPosition labelPosition=LabelPosition.LEFT;
 	
+	public ElementContainer()
+	{
+		super();
+		setIsWidgetParent(false);
+	}
+	
 	public String getLabel(){ return label;}
 	public void setLabel(String plabel){ label=plabel;}
 	public LabelPosition getLabelPoisition(){ return labelPosition;}
 	
 	public void setLabelPosition(LabelPosition plabelPosition){
 		labelPosition=plabelPosition;
-	}
-	
-	@Override
-	public Element<?> getFirstWidget()
-	{
-		return this.getParent().getFirstWidget();
 	}
 	
 	@Override

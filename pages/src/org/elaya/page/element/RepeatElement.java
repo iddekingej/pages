@@ -8,6 +8,7 @@ import org.elaya.page.data.Data;
 public class RepeatElement extends PageElement<ElementThemeItem> {
 	private String dataVariableName;
 	
+	
 	@Override
 	public void display(Writer writer, Data pdata) throws org.elaya.page.Element.DisplayException {
 		try{
@@ -30,6 +31,12 @@ public class RepeatElement extends PageElement<ElementThemeItem> {
 		}
 	}
 
+	@Override
+	public String getJsClassName()
+	{
+		return "TRepeatElement";
+	}
+	
 	public void setDataVariableName(String variableName)
 	{
 		dataVariableName=variableName;

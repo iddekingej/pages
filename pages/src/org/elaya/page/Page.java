@@ -132,11 +132,12 @@ public class Page extends PageElement<PageThemeItem> implements PageApplicationA
 	}
 
 	@Override
-	public void preSubJs(Writer pwriter,Data pdata) throws Exception
+	public void preSubJs(Writer pwriter,Data pdata) throws IOException 
 	{
 		if(toWindowSize){
-			pwriter.print("pages.page.initToWindowSize();");
-		}
+			pwriter.print("pages.page.initToWindowSize();\n");
+		}		
+		pwriter.print("let element=pages.page;\n");
 	}
 	@Override
 	public String getThemeName()

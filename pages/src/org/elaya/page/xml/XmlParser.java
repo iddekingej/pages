@@ -224,10 +224,12 @@ public abstract class XmlParser {
 		if(name != null){
 			DynamicObject.put(pobject,"name",name);
 			String refName=getName(pobject);
-			if(nameIndex.containsKey(refName)){
-				addError("An object with name "+refName+" allready exists",pnode);
-			} else {
-				nameIndex.put(refName,pobject);
+			if(refName != null){
+				if(nameIndex.containsKey(refName)){
+					addError("An object with name "+refName+" allready exists",pnode);
+				} else {
+					nameIndex.put(refName,pobject);
+				}
 			}
 		}
 	}

@@ -2,11 +2,18 @@ package org.elaya.page.quickform;
 
 import java.io.IOException;
 import java.util.Set;
+
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.elaya.page.Element;
+import org.elaya.page.Errors.AliasNotFound;
+import org.elaya.page.Errors.LoadingAliasFailed;
 import org.elaya.page.PageElement;
 import org.elaya.page.SubmitType;
 import org.elaya.page.Writer;
+import org.elaya.page.application.Application.InvalidAliasType;
 import org.elaya.page.data.Data;
+import org.xml.sax.SAXException;
 
 
 public class Form extends PageElement<FormThemeItem>{
@@ -179,7 +186,7 @@ public class Form extends PageElement<FormThemeItem>{
 	}
 	
 	@Override
-	protected void makeSetupJs(Writer writer,Data pdata) throws Exception
+	protected void makeSetupJs(Writer writer,Data pdata) throws ParserConfigurationException, SAXException, IOException, InvalidAliasType, AliasNotFound, LoadingAliasFailed, org.elaya.page.Element.ReplaceVarException 
 	{
 		String next=writer.procesUrl(replaceVariables(pdata,nextUrl));
 		writer.objVar("cmd",replaceVariables(pdata,cmd));
@@ -195,15 +202,8 @@ public class Form extends PageElement<FormThemeItem>{
 	protected void preSubJs(Writer pwriter,Data pdata) throws IOException
 	{
 		if(this.hiddenElements!= null){
-			Element<?> namespaceParent=getNamespaceParent();
-			if(getIsNamespace()){
-				namespaceParent=this;
-			}
 			for(String name:this.hiddenElements){
-				pwriter.print("var element=new THiddenElement("+getJsFullname()+","+pwriter.js_toString(name)+","+pwriter.js_toString(name)+","+pwriter.js_toString(getDomId()+"_h_"+name)+");\n");
-				if(namespaceParent!=null){
-					pwriter.print("element.namespaceParent="+namespaceParent.getNamespaceName()+";\n");
-				}
+				pwriter.print("var element=new THiddenElement(element,"+pwriter.js_toString(name)+","+pwriter.js_toString(name)+","+pwriter.js_toString(getDomId()+"_h_"+name)+");\n");
 				pwriter.print("element.setup();");
 			}
 		}
@@ -211,7 +211,7 @@ public class Form extends PageElement<FormThemeItem>{
 	@Override
 	protected void postSubJs(Writer pwriter,Data pdata) throws IOException
 	{
-		pwriter.print(getJsFullname()+".afterSetup();");
+		pwriter.print("element.afterSetup();");
 		
 	}
  
