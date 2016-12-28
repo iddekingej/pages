@@ -203,8 +203,7 @@ public class Form extends PageElement<FormThemeItem>{
 	{
 		if(this.hiddenElements!= null){
 			for(String name:this.hiddenElements){
-				pwriter.print("var element=new THiddenElement(element,"+pwriter.js_toString(name)+","+pwriter.js_toString(name)+","+pwriter.js_toString(getDomId()+"_h_"+name)+");\n");
-				pwriter.print("element.setup();");
+				pwriter.print("new THiddenElement(element,"+pwriter.js_toString(name)+","+pwriter.js_toString(name)+","+pwriter.js_toString(getDomId()+"_h_"+name)+").setup();\n");
 			}
 		}
 	}
