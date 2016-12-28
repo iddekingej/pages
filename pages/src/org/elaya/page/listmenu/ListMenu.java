@@ -1,9 +1,12 @@
 package org.elaya.page.listmenu;
 
+import java.io.IOException;
+
 import org.elaya.page.Element;
 import org.elaya.page.PageElement;
 import org.elaya.page.Writer;
 import org.elaya.page.data.Data;
+import org.elaya.page.data.Data.KeyNotFoundException;
 
 public class ListMenu extends PageElement<ListMenuThemeItem> {
 
@@ -34,46 +37,47 @@ public class ListMenu extends PageElement<ListMenuThemeItem> {
 		return selectionVariable;
 	}
 	
+		
 	@Override
-	public boolean checkElement(Element<?> pelement)
-	{
-		return pelement instanceof ListMenuItem;
+	public void displayElement(int id,Writer pwriter,Data data) throws org.elaya.page.Element.DisplayException{
+		try{			
+			themeItem.header(pwriter,replaceVariables(data,title));
+		}catch(Exception e){
+			throw new DisplayException("",e);
+		}
 	}
-	
-	private void handleCheckCondition(Writer writer,Object selectedValue,Element<?> element,Data data) throws Exception
+
+	@Override
+	protected void preElement(Writer writer,Data data,Element<?> element) throws IOException, KeyNotFoundException 
 	{
-		if(element.checkCondition(data)){
+		if(element instanceof ListMenuItem && selectionVariable.length()>0 ){
+			Object selectedValue=null;
+			if(selectionVariable.length()>0){
+				selectedValue=data.get(selectionVariable);
+			}
 			String value=((ListMenuItem<?>)element).getValue();
 			if( (value != null)? value.equals(selectedValue):false){
 				themeItem.preItemSelected(writer);
 			} else {
 				themeItem.preItem(writer);
 			}
-			element.display(writer,data);
-			themeItem.postItem(writer);
-		}		
+		} else {
+			themeItem.preItem(writer);
+		}
+	}
+	@Override
+	protected void postElement(Writer writer,Data data,Element<?> element) throws IOException
+	{		
+		themeItem.postItem(writer);
 	}
 	
 	@Override
-	public void display(Writer pwriter,Data pdata) throws org.elaya.page.Element.DisplayException{
-		try{
-			Data data=getData(pdata);		
-			Object selectedValue=null;
-			if(selectionVariable.length()>0){
-				selectedValue=data.get(selectionVariable);
-			}
-			themeItem.header(pwriter,replaceVariables(data,title));
-			for(Element<?> element:getElements()){
-
-				if(element instanceof ListMenuItem){
-					handleCheckCondition(pwriter,selectedValue,element,data);
-				}
-
-			}
-			themeItem.footer(pwriter);
-		}catch(Exception e){
-			throw new DisplayException("",e);
-		}
+	public void displayElementFooter(int id,Writer pwriter,Data data) throws org.elaya.page.Element.DisplayException{
+	try{
+		themeItem.footer(pwriter);
+	}catch(Exception e){
+		throw new DisplayException("",e);
+	}
 	}
 
 	@Override

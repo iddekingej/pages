@@ -18,6 +18,7 @@ public class Writer {
 	HttpServletResponse response;
 	ServletOutputStream stream;
 	Application         application;
+	JSWriter            jswriter;
 	int idCnt=0;
 //TODO make in configuration.	
 	private String jsPath="resources/pages/js/";
@@ -29,7 +30,13 @@ public class Writer {
 		response=presponse;
 		request=prequest;
 		stream=response.getOutputStream();
+		jswriter=new JSWriter(papplication,request);
 	}	
+	
+	public JSWriter getJSWriter()
+	{
+		return jswriter;
+	}
 	
 	public int newId()
 	{
@@ -100,26 +107,7 @@ public class Writer {
 		stream.flush();
 	}
 	
-	
-	public String js_toString(Object pvalue){
-		if(pvalue==null){
-			return "\"\"";
-		}
-		return "\""+str(pvalue).replace("\"","\\\"")+"\"";
-	}
-	
-	public void objVar(String varName,String value) throws IOException
-	{
-		setVar("this."+varName,value);
-	}
 
-	public void setVar(String varName,String value) throws IOException{
-		print(varName+"="+js_toString(value)+";\n");
-	}
-	
-	public void setFromOther(String varName,String other) throws IOException{
-		print(varName+"="+other+";\n");
-	}
 	
 	public String getBasePath(){
 		return request.getContextPath();
@@ -153,5 +141,10 @@ public class Writer {
 		return getBasePath()+"/"+imgPath+pfile;
 	}
 		
-
+	public void generateJs() throws IOException
+	{
+		jsBegin();
+		print(jswriter.toString());
+		jsEnd();
+	}
 }

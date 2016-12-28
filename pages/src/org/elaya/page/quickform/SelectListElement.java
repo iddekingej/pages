@@ -12,13 +12,12 @@ public class SelectListElement extends OptionsElement {
 	}
 	
 	@Override
-	public void display(Writer pwriter,Data pdata) throws org.elaya.page.Element.DisplayException {
+	public void displayElement(int id,Writer pwriter,Data data) throws org.elaya.page.Element.DisplayException {
 		try{
-			Data data=getData(pdata);
 			Object value=getValueByName(data);
-			List<OptionItem> items=getOptions(pdata);
+			List<OptionItem> items=getOptions(data);
 
-			themeItem.selectElement(pwriter,getDomId(),getName(), items,value);
+			themeItem.selectElement(pwriter,getDomId(id),getName(), items,value);
 		}catch(Exception e){
 			throw new DisplayException("",e);
 		}

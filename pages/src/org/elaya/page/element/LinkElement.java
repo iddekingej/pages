@@ -48,11 +48,10 @@ public class LinkElement extends PageElement<ElementThemeItem> {
 	{
 		return css;
 	}
-	
+	//TODO: id to element and js? 
 	@Override
-	public void display(Writer pwriter,Data pdata) throws org.elaya.page.Element.DisplayException {
-		try{
-			Data data=getData(pdata);
+	public void displayElement(int id,Writer pwriter,Data data) throws org.elaya.page.Element.DisplayException {
+		try{			
 			String resultUrl=replaceVariables(data,url);
 
 			if(linkType==LinkType.LINK_APPLICATION){

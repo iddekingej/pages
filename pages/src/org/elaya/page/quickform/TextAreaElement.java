@@ -31,10 +31,10 @@ public class TextAreaElement extends BuildInFormElement {
 	}
 
 	@Override
-	public void display(Writer pwriter,Data pdata) throws org.elaya.page.Element.DisplayException  {
-		try{
+	public void displayElement(int id,Writer pwriter,Data pdata) throws org.elaya.page.Element.DisplayException  {
+		try{			
 			Object value=getValueByName(pdata);
-			themeItem.textArea(pwriter,getDomId(), getName(), getHeight(), getWidth(), value);
+			themeItem.textArea(pwriter,getDomId(id), getName(), getHeight(), getWidth(), value);
 		}catch(Exception e){
 			throw new DisplayException("",e);
 		}

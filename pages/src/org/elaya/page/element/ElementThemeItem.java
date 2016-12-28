@@ -8,6 +8,13 @@ public abstract class ElementThemeItem extends ThemeItemBase {
 
 	public abstract void staticElement(Writer pwriter,String ptext,boolean pisHtml,String pclass,String pcss) throws IOException;
 	public abstract void image(Writer pwriter,String purl,String pclass,String pcss) throws IOException;
+	/** Display Header of a panel
+	 * 
+	 * @param pwriter  Output writer for generating html
+	 * @param pclass   Class name used in <class> tag
+	 * @param pcss     css of panel
+	 * @throws IOException
+	 */
 	public abstract void panelHeader(Writer pwriter,String pclass,String pcss) throws IOException;
 	public abstract void panelFooter(Writer pwriter) throws IOException;
 	public abstract void link(Writer pwriter,String purl,String ptext,String pclass,String pcss) throws IOException;

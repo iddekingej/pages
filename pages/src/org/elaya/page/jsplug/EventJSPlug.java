@@ -1,8 +1,6 @@
 package org.elaya.page.jsplug;
 
-import java.io.IOException;
-
-import org.elaya.page.Writer;
+import org.elaya.page.JSWriter;
 
 public class EventJSPlug extends JSPlug {
 
@@ -29,8 +27,8 @@ public class EventJSPlug extends JSPlug {
 	}
 	
 	@Override
-	public void display(Writer pwriter) throws IOException
+	public void display(JSWriter pwriter) 
 	{
-		pwriter.print("this.on("+pwriter.js_toString(event)+",function(){"+js+"});");
+		pwriter.print("this.on("+pwriter.toJsString(event)+",function(){"+js+"});");
 	}
 }

@@ -12,25 +12,33 @@ public class HorizontalLayout extends Layout{
 	}
 	
 	@Override
-	public void preElement(Writer pwriter,Element<?> pelement) throws IOException
+	public void preElement(Writer pwriter,Data data,Element<?> pelement) throws IOException
 	{
 			themeItem.horizontalItemHeader(pwriter,pelement.getHorizontalAlign(),pelement.getVerticalAlign(),pelement.getLayoutWidth(),pelement.getLayoutHeight());
 	}
 	
 	@Override
-	public void postElement(Writer pwriter,Element<?> pelement) throws IOException{
+	public void postElement(Writer pwriter,Data data,Element<?> pelement) throws IOException{
 		themeItem.horizontalItemFooter(pwriter);
 	}
+	
 	@Override
-	public void display(Writer pwriter,Data pdata) throws org.elaya.page.Element.DisplayException 
+	public void displayElement(int id,Writer pwriter,Data pdata) throws org.elaya.page.Element.DisplayException 
 	{
 		try{
-			Data data=getData(pdata);
 			themeItem.horizontalHeader(pwriter);
-			displaySubElements(pwriter,data);
+		}catch(Exception e){
+			throw new DisplayException(e);
+		}
+	}
+	
+	@Override
+	public void displayElementFooter(int id,Writer pwriter,Data pdata) throws org.elaya.page.Element.DisplayException 
+	{
+		try{
 			themeItem.horizontalFooter(pwriter);
 		}catch(Exception e){
-			throw new DisplayException("",e);
+			throw new DisplayException(e);
 		}
 	}
 }

@@ -134,8 +134,9 @@ TAbstractElement.prototype.setup=function()
 
 TAbstractElement.prototype.handleCheckCondition=function()
 {
-	if(this.checkCondition){
-		this.checkCondition();
+	var l_namespaceParent=this.getNamespaceParent();
+	if(this.checkCondition && l_namespaceParent){
+		this.checkCondition(l_namespaceParent.names);		
 	}
 	for(var l_name in this.elements){
 		this.elements[l_name].handleCheckCondition();		
@@ -293,3 +294,5 @@ function TRepeatElementItem(p_parent,p_jsName,p_name)
 }
 
 TRepeatElementItem.prototype=Object.create(TAbstractElement.prototype);
+
+var widgetParent=null;

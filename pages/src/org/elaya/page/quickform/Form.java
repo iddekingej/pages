@@ -8,6 +8,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.elaya.page.Element;
 import org.elaya.page.Errors.AliasNotFound;
 import org.elaya.page.Errors.LoadingAliasFailed;
+import org.elaya.page.JSWriter;
 import org.elaya.page.PageElement;
 import org.elaya.page.SubmitType;
 import org.elaya.page.Writer;
@@ -155,30 +156,23 @@ public class Form extends PageElement<FormThemeItem>{
 	}
 	
 	@Override
-	public void display(Writer pwriter,Data pdata) throws org.elaya.page.Element.DisplayException  
+	public void displayElement(int id,Writer pwriter,Data data) throws org.elaya.page.Element.DisplayException  
 	{
+
 		try{
-			Data data=getData(pdata);		
+			String domId=getDomId(id);
 			String method="";
 			if(submitType.equals(SubmitType.GET)){
 				method="get";
 			} else if(submitType.equals(SubmitType.POST)){
 				method="post";
 			}
-			themeItem.formHeader(pwriter,getDomId(),replaceVariables(data,title),pwriter.getBasePath()+replaceVariables(data,url),method,getWidth());
+			themeItem.formHeader(pwriter,domId,replaceVariables(data,title),pwriter.getBasePath()+replaceVariables(data,url),method,getWidth());
 			if(hiddenElements!=null){
 				for(String name:hiddenElements){
-					themeItem.formHiddenElement(pwriter, getDomId()+"_h_"+name, name, data.getString(name));
+					themeItem.formHiddenElement(pwriter, domId+"_h_"+name, name, data.getString(name));
 				}
 			}
-			displaySubElements(pwriter,data);
-			themeItem.formFooterBegin(pwriter);
-			themeItem.formFooterOk(pwriter, getDomId(), getSubmitText());
-			themeItem.formFooterBetween(pwriter);
-			if(cancelUrl.length()>0){
-				themeItem.formFooterCancel(pwriter, getDomId(), getCancelText());
-			}
-			themeItem.formFooter(pwriter);
 		}catch(Exception e){
 			throw new DisplayException("",e);
 		}
@@ -186,7 +180,24 @@ public class Form extends PageElement<FormThemeItem>{
 	}
 	
 	@Override
-	protected void makeSetupJs(Writer writer,Data pdata) throws ParserConfigurationException, SAXException, IOException, InvalidAliasType, AliasNotFound, LoadingAliasFailed, org.elaya.page.Element.ReplaceVarException 
+	public void displayElementFooter(int id,Writer pwriter,Data data) throws org.elaya.page.Element.DisplayException  
+	{
+		try{
+			String domId=getDomId(id);
+			themeItem.formFooterBegin(pwriter);
+			themeItem.formFooterOk(pwriter, domId, getSubmitText());
+			themeItem.formFooterBetween(pwriter);
+			if(cancelUrl.length()>0){
+				themeItem.formFooterCancel(pwriter, domId, getCancelText());
+			}
+			themeItem.formFooter(pwriter);
+		}catch(Exception e){
+			throw new DisplayException("",e);
+		}
+	}
+	
+	@Override
+	protected void makeSetupJs(JSWriter writer,Data pdata) throws ParserConfigurationException, SAXException, IOException, InvalidAliasType, AliasNotFound, LoadingAliasFailed, org.elaya.page.Element.ReplaceVarException 
 	{
 		String next=writer.procesUrl(replaceVariables(pdata,nextUrl));
 		writer.objVar("cmd",replaceVariables(pdata,cmd));
@@ -199,18 +210,20 @@ public class Form extends PageElement<FormThemeItem>{
 	}
 	
 	@Override
-	protected void preSubJs(Writer pwriter,Data pdata) throws IOException
+	protected void generateElementJs(int id,JSWriter writer,Data data) throws ReplaceVarException, ParserConfigurationException, SAXException, IOException, InvalidAliasType, AliasNotFound, LoadingAliasFailed
 	{
+		super.generateElementJs(id, writer, data);
 		if(this.hiddenElements!= null){
 			for(String name:this.hiddenElements){
-				pwriter.print("new THiddenElement(element,"+pwriter.js_toString(name)+","+pwriter.js_toString(name)+","+pwriter.js_toString(getDomId()+"_h_"+name)+").setup();\n");
+				writer.print("new THiddenElement(widgetParent,"+writer.toJsString(name)+","+writer.toJsString(name)+","+writer.toJsString(getDomId(id)+"_h_"+name)+").setup();\n");
 			}
 		}
 	}
 	@Override
-	protected void postSubJs(Writer pwriter,Data pdata) throws IOException
+	protected void generateElementFooterJs(int id,JSWriter writer,Data data)  
 	{
-		pwriter.print("element.afterSetup();");
+		super.generateElementFooterJs(id, writer, data);
+		writer.print("element.afterSetup();");
 		
 	}
  

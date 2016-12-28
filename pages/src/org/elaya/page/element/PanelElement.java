@@ -28,17 +28,23 @@ public class PanelElement extends PageElement<ElementThemeItem> {
 	}
 	
 	@Override
-	public void display(Writer pwriter,Data pdata) throws org.elaya.page.Element.DisplayException{
+	public void displayElement(int id,Writer pwriter,Data pdata) throws org.elaya.page.Element.DisplayException{
 		try{
-			Data data=getData(pdata);
-			themeItem.panelHeader(pwriter,replaceVariables(data,className), replaceVariables(data,css));
-			displaySubElements(pwriter,data);
-			themeItem.panelFooter(pwriter);
+			themeItem.panelHeader(pwriter, className, css);
 		}catch(Exception e){
-			throw new DisplayException("",e);
+			throw new DisplayException(e);
 		}
 	} 
 
+	@Override
+	public void displayElementFooter(int id,Writer pwriter,Data pdata) throws org.elaya.page.Element.DisplayException{
+		try{
+			themeItem.panelFooter(pwriter);
+		}catch(Exception e){
+			throw new DisplayException(e);
+		}
+	} 
+	
 	@Override
 	public String getThemeName() {
 		return "ElementThemeItem";

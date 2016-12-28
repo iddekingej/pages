@@ -10,11 +10,12 @@ public class CheckboxElement extends BuildInFormElement {
 		super();
 	}
 
+	//TODO: getValueByName still working correctly because data is not parentData
 	@Override
-	public void  display(Writer pwriter,Data pdata) throws org.elaya.page.Element.DisplayException{
-		try{
-			Object value=getValueByName(pdata);
-			themeItem.checkBoxElement(pwriter,getDomId(),getName(),value);
+	public void  displayElement(int id,Writer writer,Data data) throws org.elaya.page.Element.DisplayException{
+		try{			
+			Object value=getValueByName(data);
+			themeItem.checkBoxElement(writer,getDomId(id),getName(),value);
 		}catch(Exception e){
 			throw new DisplayException("",e);
 		}

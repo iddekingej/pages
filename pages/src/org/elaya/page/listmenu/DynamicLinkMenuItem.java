@@ -12,9 +12,8 @@ public class DynamicLinkMenuItem extends BuildinListMenuItem {
 	}
 
 	@Override
-	public void display(Writer pwriter, Data pdata) throws org.elaya.page.Element.DisplayException  {
+	public void displayElement(int id,Writer pwriter, Data data) throws org.elaya.page.Element.DisplayException  {
 		try{
-			Data data=getData(pdata);
 			Object value=this.getValueByName(data);
 			Object selectedValue=null;
 			if(getParent() instanceof ListMenu){
@@ -31,8 +30,7 @@ public class DynamicLinkMenuItem extends BuildinListMenuItem {
 						} else {
 							themeItem.preItem(pwriter);
 						}
-
-						themeItem.linkItem(pwriter,getDomId(),menuData.getText(),pwriter.procesUrl(menuData.getUrlText()));
+						themeItem.linkItem(pwriter,getDomId(id),menuData.getText(),pwriter.procesUrl(menuData.getUrlText()));
 						themeItem.postItem(pwriter);
 					}
 

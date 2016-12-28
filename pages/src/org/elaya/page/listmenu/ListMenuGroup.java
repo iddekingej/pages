@@ -28,43 +28,47 @@ public class ListMenuGroup extends BuildinListMenuItem {
 	}
 	
 	
-	private void handleCheckCondition(Writer writer,Object selectedValue,Element<?> element,Data data) throws KeyNotFoundException, IOException, org.elaya.page.Element.DisplayException 
+
+	@Override
+	public void displayElement(int id,Writer pwriter,Data data) throws org.elaya.page.Element.DisplayException{
+		try{			
+			themeItem.groupHeader(pwriter,replaceVariables(data,title));
+		}catch(Exception e){
+			throw new DisplayException("",e);
+		}
+	}
+	
+	
+	@Override
+	protected void preElement(Writer writer,Data data,Element<?> element) throws IOException, KeyNotFoundException 
 	{
-		if(element.checkCondition(data)){
+		if(element instanceof ListMenuItem && getParent() instanceof ListMenu){
+			String selectionVariable = ((ListMenu)getParent()).getSelectionVariable();
+			Object selectedValue=data.get(selectionVariable);
 			String value=((ListMenuItem<?>)element).getValue();
 			if( (value != null)? value.equals(selectedValue):false){
 				themeItem.preItemSelected(writer);
 			} else {
 				themeItem.preItem(writer);
 			}
-			element.display(writer,data);
-			themeItem.postItem(writer);
-		}		
-	}
-
-	@Override
-	public void display(Writer pwriter,Data pdata) throws org.elaya.page.Element.DisplayException {
-		try{
-			Data data=getData(pdata);
-			themeItem.groupHeader(pwriter,replaceVariables(data,title));		
-			Object selectedValue=null;
-			if(getParent() instanceof ListMenu){
-				String selectionVariable = ((ListMenu)getParent()).getSelectionVariable();
-				selectedValue=data.get(selectionVariable);
-
-			}
-
-			for(Element<?> element:getElements()){
-
-				if(element instanceof ListMenuItem){
-					handleCheckCondition(pwriter,selectedValue,element,data);
-				}
-
-			}
-			themeItem.groupFooter(pwriter);		
-		}catch(Exception e){
-			throw new DisplayException("",e);
+		} else {
+			themeItem.preItem(writer);
 		}
+	}
+	
+	@Override
+	protected void postElement(Writer writer,Data data,Element<?> element) throws IOException
+	{		
+		themeItem.postItem(writer);
+	}
+	
+	@Override
+	public void displayElementFooter(int id,Writer pwriter,Data data) throws org.elaya.page.Element.DisplayException{
+	try{
+		themeItem.groupFooter(pwriter);
+	}catch(Exception e){
+		throw new DisplayException(e);
+	}
 	}
 
 }

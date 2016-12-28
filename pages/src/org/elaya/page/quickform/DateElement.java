@@ -2,6 +2,7 @@ package org.elaya.page.quickform;
 
 import java.io.IOException;
 
+import org.elaya.page.JSWriter;
 import org.elaya.page.Writer;
 import org.elaya.page.data.Data;
 
@@ -51,22 +52,21 @@ public class DateElement extends BuildInFormElement {
 	}
 
 	@Override
-	public void display(Writer pwriter,Data pdata) throws org.elaya.page.Element.DisplayException{
+	public void displayElement(int id,Writer pwriter,Data data) throws org.elaya.page.Element.DisplayException{
 		try{
-			Data data=getData(pdata);
 			Object value=getValueByName(data);
-			themeItem.dateElement(pwriter,getDomId(),getName(),value);
+			themeItem.dateElement(pwriter,getDomId(id),getName(),value);
 		}catch(Exception e){
 			throw new DisplayException("",e);
 		}
 	}
 
 	@Override
-	protected void makeSetupJs(Writer pwriter,Data pdata) throws IOException 
+	protected void makeSetupJs(JSWriter pwriter,Data pdata) throws IOException 
 	{
 		pwriter.print("this.showOn='"+showMode.getValue()+"';\n");
 		if(buttonText != null && buttonText.length() >0){
-			pwriter.print("this.buttonText="+pwriter.js_toString(buttonText)+";");
+			pwriter.print("this.buttonText="+pwriter.toJsString(buttonText)+";");
 		}
 	}
 

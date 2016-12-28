@@ -10,27 +10,34 @@ import org.elaya.page.data.Data;
 public class MenuBar extends PageElement<ElementThemeItem> {
 
 	@Override
-	protected void preElement(Writer pwriter,Element<?> pelement) throws IOException 
+	protected void preElement(Writer pwriter,Data data,Element<?> pelement) throws IOException 
 	{
 		themeItem.menuBarItemHeader(pwriter);
 	}
 	@Override
-	protected void postElement(Writer pwriter,Element<?> pelement) throws IOException
+	protected void postElement(Writer pwriter,Data data,Element<?> pelement) throws IOException
 	{		
 		themeItem.menuBarItemFooter(pwriter);
 	}
 	
 	@Override
-	public void display(Writer pstream, Data pdata) throws org.elaya.page.Element.DisplayException {
+	public void displayElement(int id,Writer pstream, Data pdata) throws org.elaya.page.Element.DisplayException {
 		try{
-			Data data=getData(pdata);
 			themeItem.menuBarHeader(pstream);
-			displaySubElements(pstream,data);
+		}catch(Exception e){
+			throw new DisplayException("",e);
+		}
+	}
+	
+	@Override
+	public void displayElementFooter(int id,Writer pstream, Data pdata) throws org.elaya.page.Element.DisplayException {
+		try{
 			themeItem.menuBarFooter(pstream);
 		}catch(Exception e){
 			throw new DisplayException("",e);
 		}
 	}
+	
 	
 	@Override
 	public String getThemeName() {

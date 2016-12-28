@@ -35,14 +35,15 @@ public  class TextEditElement extends BuildInFormElement {
 	}
 
 	@Override
-	public void display(Writer pwriter,Data pdata) throws org.elaya.page.Element.DisplayException{
-		try{
+	public void displayElement(int id,Writer pwriter,Data pdata) throws org.elaya.page.Element.DisplayException{
+		try{		
+			String domId=getDomId(id);
 			Objects.requireNonNull(themeItem);
 			Object value=getValueByName(pdata);
 			if(password){
-				themeItem.passwordElement(pwriter,getDomId(),getName(),value,maxLength);
+				themeItem.passwordElement(pwriter,domId,getName(),value,maxLength);
 			} else {
-				themeItem.textElement(pwriter,getDomId(),getName(),value,maxLength);
+				themeItem.textElement(pwriter,domId,getName(),value,maxLength);
 			}
 		}catch(Exception e){
 			throw new DisplayException("",e);

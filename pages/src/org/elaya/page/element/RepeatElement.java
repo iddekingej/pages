@@ -8,9 +8,9 @@ import org.elaya.page.data.Data;
 public class RepeatElement extends PageElement<ElementThemeItem> {
 	private String dataVariableName;
 	
-	
+	//TODO: Use new setup
 	@Override
-	public void display(Writer writer, Data pdata) throws org.elaya.page.Element.DisplayException {
+	public void displayElement(int id,Writer writer, Data pdata) throws org.elaya.page.Element.DisplayException {
 		try{
 			Data data=getData(pdata);
 			Object dataValue=data.get(dataVariableName);

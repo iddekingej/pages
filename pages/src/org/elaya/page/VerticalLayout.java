@@ -10,26 +10,33 @@ public class VerticalLayout extends Layout {
 	}
 
 	@Override
-	protected void preElement(Writer pwriter,Element<?> pelement) throws IOException
+	protected void preElement(Writer pwriter,Data data,Element<?> pelement) throws IOException
 	{
 			themeItem.verticalItemHeader(pwriter,pelement.getHorizontalAlign(),pelement.getVerticalAlign(),pelement.getLayoutWidth(),pelement.getLayoutHeight());		
 	}
 	
 	@Override
-	protected void postElement(Writer pwriter,Element<?> pelement) throws IOException
+	protected void postElement(Writer pwriter,Data data,Element<?> pelement) throws IOException
 	{
 		themeItem.verticalItemFooter(pwriter);
 	}
 	@Override
-	public void display(Writer pwriter,Data pdata) throws org.elaya.page.Element.DisplayException {
+	public void displayElement(int id,Writer writer,Data data) throws org.elaya.page.Element.DisplayException {
 		try{
-			Data data=getData(pdata);
-			themeItem.verticalHeader(pwriter);
-			displaySubElements(pwriter,data);
+			themeItem.verticalHeader(writer);
+		}catch(Exception e){
+			throw new DisplayException("",e);
+		}
+	}
+
+	@Override
+	public void displayElementFooter(int id,Writer pwriter,Data pdata) throws org.elaya.page.Element.DisplayException {
+		try{
 			themeItem.verticalFooter(pwriter);
 		}catch(Exception e){
 			throw new DisplayException("",e);
 		}
 	}
+	
 
 }

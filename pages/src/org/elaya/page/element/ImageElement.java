@@ -36,10 +36,10 @@ public class ImageElement extends PageElement<ElementThemeItem> {
 		return css;
 	}
 	
+	//TODO: add id to element andjs?
 	@Override
-	public void display(Writer pwriter,Data pdata) throws org.elaya.page.Element.DisplayException{
+	public void displayElement(int id,Writer pwriter,Data data) throws org.elaya.page.Element.DisplayException{
 		try{
-			Data data=getData(pdata);
 			themeItem.image(pwriter,replaceVariables(data,url),replaceVariables(data,className),replaceVariables(data,css));
 		}catch(Exception e){
 			throw new DisplayException("",e);

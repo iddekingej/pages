@@ -2,6 +2,7 @@ package org.elaya.page.element;
 
 import java.io.IOException;
 
+import org.elaya.page.JSWriter;
 import org.elaya.page.PageElement;
 import org.elaya.page.Writer;
 import org.elaya.page.data.Data;
@@ -17,19 +18,18 @@ public class Menu extends PageElement<ElementThemeItem> {
 	
 	
 	@Override
-	public void display(Writer pstream, Data pdata) throws org.elaya.page.Element.DisplayException {
+	public void displayElement(int id,Writer writer, Data data) throws org.elaya.page.Element.DisplayException {
 		try{
-			Data data=getData(pdata);
-			themeItem.menu(pstream, getDomId(), replaceVariables(data,title));
+			themeItem.menu(writer, getDomId(id), replaceVariables(data,title));
 		}catch(Exception e){
 			throw new DisplayException("",e);
 		}
 	}
 	
 	@Override
-	protected void makeSetupJs(Writer writer,Data data) throws IOException
+	protected void makeSetupJs(JSWriter writer,Data data) throws IOException
 	{
-		writer.print("this.setState("+writer.js_toString(state.getJsState())+")\n");
+		writer.print("this.setState("+writer.toJsString(state.getJsState())+")\n");
 	}
 	
 	@Override

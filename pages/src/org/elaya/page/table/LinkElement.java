@@ -14,10 +14,9 @@ public class LinkElement extends BuildInElement {
 		}
 	}
 	@Override
-	public void display(Writer pwriter,Data pdata) throws org.elaya.page.Element.DisplayException  {
-		try{
-			Data data=getData(pdata);
-			Object value=getValueByName(pdata);		
+	public void displayElement(int id,Writer pwriter,Data data) throws org.elaya.page.Element.DisplayException  {
+		try{			
+			Object value=getValueByName(data);		
 			if(value instanceof LinkData){
 				LinkData linkData=(LinkData)value;
 				themeItem.linkItem(pwriter,replaceVariables(data,linkData.getUrlText()), replaceVariables(data,linkData.getText()));

@@ -19,12 +19,12 @@ public class RadioElement extends OptionsElement {
 	public void setIsHorizontal(Boolean phorizontal){ isHorizontal=phorizontal;}
 
 	@Override
-	public void display(Writer pwriter,Data pdata) throws org.elaya.page.Element.DisplayException {
+	public void displayElement(int id,Writer pwriter,Data data) throws org.elaya.page.Element.DisplayException {
 		try{
-			Data data=getData(pdata);
+
 			Object value=getValueByName(data);
 			List<OptionItem> items=getOptions(data);
-			themeItem.radioElement(pwriter,getDomId(),getName(), items, isHorizontal,value);
+			themeItem.radioElement(pwriter,getDomId(id),getName(), items, isHorizontal,value);
 		}catch(Exception e){
 			throw new DisplayException("",e);
 		}

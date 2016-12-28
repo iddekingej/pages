@@ -17,7 +17,6 @@ import org.xml.sax.SAXException;
 public class Page extends PageElement<PageThemeItem> implements PageApplicationAware {
  
 	private String url;
-	private int idCnt=0;
 	private boolean toWindowSize=false;
 	Application application;
 	DocumentType documentType=DocumentType.DT_XHTML;
@@ -65,15 +64,9 @@ public class Page extends PageElement<PageThemeItem> implements PageApplicationA
 	{
 		return toWindowSize;
 	}
-	
-	public int newId()
-	{
-		idCnt++;
-		return idCnt;
-	}
 
 	@Override
-	public String getJsName()
+	public String getJsName(int id)
 	{
 		return "pages.page";
 	}
@@ -96,10 +89,9 @@ public class Page extends PageElement<PageThemeItem> implements PageApplicationA
 	}
 	
 	@Override
-	public void display(Writer pwriter,Data pdata) throws org.elaya.page.Element.DisplayException 
+	public void displayElement(int id,Writer pwriter,Data pdata) throws org.elaya.page.Element.DisplayException 
 	{
 		try{
-			Data data=getData(pdata);
 			LinkedHashSet<String> js=new LinkedHashSet<>();
 			LinkedHashSet<String> css=new LinkedHashSet<>();
 
@@ -112,33 +104,32 @@ public class Page extends PageElement<PageThemeItem> implements PageApplicationA
 			LinkedHashSet<String> procJs=processSetList(js,AliasData.ALIAS_JSFILE);
 
 			themeItem.pageHeader(pwriter,documentType,procJs,procCss);	
-			displaySubElements(pwriter,data);
-			pwriter.jsBegin();
-			pwriter.print("var widgetParent;\nvar namespaceParent;\n");
-			generateJs(pwriter,pdata);
-			pwriter.jsEnd();
-
-
-			themeItem.pageFooter(pwriter);
 		}catch(Exception e){
-			throw new DisplayException("",e);
+			throw new DisplayException(e);
 		}
 	}	
 	
 	@Override
-	protected void makeJsObject(Writer pwriter,Data pdata)
+	public void displayElementFooter(int id,Writer pwriter,Data pdata) throws org.elaya.page.Element.DisplayException 
 	{
-		/* Page doesn't need to create a js object here, already done in page.js */
-	}
+		try{
+			pwriter.generateJs();
+			themeItem.pageFooter(pwriter);
+		}catch(Exception e){
+			throw new DisplayException(e);
+		}
 
+	}
+	
 	@Override
-	public void preSubJs(Writer pwriter,Data pdata) throws IOException 
+	protected void generateElementJs(int id,JSWriter pwriter,Data pdata)
 	{
 		if(toWindowSize){
-			pwriter.print("pages.page.initToWindowSize();\n");
+			pwriter.printNl("pages.page.initToWindowSize();");
 		}		
-		pwriter.print("let element=pages.page;\n");
+		pwriter.printNl("let element=pages.page;\nwidgetParent=element;");	
 	}
+
 	@Override
 	public String getThemeName()
 	{

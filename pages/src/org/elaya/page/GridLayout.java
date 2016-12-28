@@ -18,12 +18,10 @@ public class GridLayout extends Layout {
 		columns=pcolumns;
 	}
 	
-
 	@Override
-	public void display(Writer pwriter,Data pdata) throws org.elaya.page.Element.DisplayException {
+	public void displaySubElements(Writer pwriter,Data data) throws DisplayException  
+	{
 		try{
-			Data data=getData(pdata);
-			themeItem.gridHeader(pwriter);
 			int col=0;
 			boolean hasEnd=true;
 			for(Element<?> element:getElements()){
@@ -52,11 +50,30 @@ public class GridLayout extends Layout {
 					col++;
 				}
 				themeItem.gridRowFooter(pwriter);
-			}		
-			themeItem.gridFooter(pwriter);
+			}
+		} catch(Exception e){
+			throw new DisplayException("",e);
+		}
+	}
+	@Override
+	public void displayElement(int id,Writer pwriter,Data pdata) throws org.elaya.page.Element.DisplayException {
+		try{
+			themeItem.gridHeader(pwriter);
 		}catch(Exception e){
 			throw new DisplayException("",e);
 		}
 	}
+	
+	@Override 
+	public void displayElementFooter(int id,Writer pwriter,Data pdata) throws org.elaya.page.Element.DisplayException 
+	{
+		try{
+			themeItem.gridFooter(pwriter);
+		}catch(Exception e){
+			throw new DisplayException("",e);
+		}
+
+	}
+
 
 }

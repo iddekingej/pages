@@ -10,10 +10,11 @@ public class StaticElement extends BuildInElement {
 	}
 
 	@Override
-	public void display(Writer pwriter,Data pdata) throws org.elaya.page.Element.DisplayException {
+	public void displayElement(int id,Writer pwriter,Data data) throws org.elaya.page.Element.DisplayException {
 		try{
-			Object value=getValueByName(pdata);
-			themeItem.staticItem(pwriter,getDomId(),value);
+			
+			Object value=getValueByName(data);
+			themeItem.staticItem(pwriter,getDomId(id),value);
 		}catch(Exception e){
 			throw new DisplayException("",e);
 		}

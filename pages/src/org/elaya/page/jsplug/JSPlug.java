@@ -1,9 +1,7 @@
 package org.elaya.page.jsplug;
 
-import java.io.IOException;
-
 import org.elaya.page.Element;
-import org.elaya.page.Writer;
+import org.elaya.page.JSWriter;
 import org.elaya.page.data.DynamicMethod;
 
 public abstract class JSPlug extends DynamicMethod{
@@ -40,7 +38,7 @@ public abstract class JSPlug extends DynamicMethod{
 		return parent;
 	}
 	
-	public void display(Writer pwriter) throws IOException
+	public void display(JSWriter writer) 
 	{
 		
 	}
