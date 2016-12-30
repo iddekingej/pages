@@ -4,7 +4,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -15,7 +14,7 @@ import org.elaya.page.Errors;
 import org.elaya.page.Errors.LoadingAliasFailed;
 import org.elaya.page.Errors.NormalizeClassNameException;
 import org.elaya.page.Page;
-import org.elaya.page.UiXmlParser;
+import org.elaya.page.PageLoader;
 import org.elaya.page.data.Url;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.xml.sax.SAXException;
@@ -24,12 +23,13 @@ public abstract class Application{
 
 	private String themeBase="org.elaya.page.defaultTheme";	
 	private String aliasFiles;
-	private HashMap<String,Page> pageCache=new HashMap<>(); 
 	private HashMap<String,AliasData> aliasses;
 	private String xmlPath="../pages/"; 
 	private String defaultDBConnection;
 	private String classBase="";
+	private PageLoader pageLoader;
 	 
+	
 	
 	public class DefaultDBConnectionNotSet extends Exception
 	{
@@ -50,6 +50,8 @@ public abstract class Application{
 			super("Invalid alias type, '"+ptypeReq+"' expected but '"+ptypeGot+"' found");
 		}
 	}
+	
+
 	/**
 	 * When loading a xml file, "classBase" is added to the classname when classname is relative
 	 * ("start with a ".")
@@ -112,16 +114,20 @@ public abstract class Application{
 		return getDB(defaultDBConnection);
 	}
 	
-/**
- * Called after parser is created. This routine can be used to set for example initializers
- * 
- * @param pparser
- */
-	protected void initUiParser(UiXmlParser pparser)
+	protected void setPageLoader(PageLoader ppageLoader)
 	{
-		
+		pageLoader=ppageLoader;
 	}
 	
+	protected PageLoader getPageLoader()
+	{
+		return pageLoader;
+	}
+	
+	protected void initPageLoader()
+	{
+		pageLoader=new PageLoader();
+	}
 /**
  * Parse UI definition file in pfileName and returns the Page Object
  * The XML ui definition must describe a page.
@@ -137,33 +143,12 @@ public abstract class Application{
 	
 	
 	public synchronized Page loadPage(String pfileName,boolean pcache) throws Exception
-	{
-		if(pcache && pageCache.containsKey(pfileName)){
-			return pageCache.get(pfileName);
+	{		
+		if(pageLoader==null){
+			initPageLoader();
 		}
-		UiXmlParser parser=new UiXmlParser(this,getClass().getClassLoader());
-		initUiParser(parser);
-		Object object=parser.parse(pfileName);
+		return pageLoader.loadPage(this, pfileName, pcache);
 
-		
-		List<String> errors=parser.getErrors();
-		if(!errors.isEmpty()){
-			StringBuilder text=new StringBuilder();
-			for(String error:errors){
-				text.append(pfileName+":"+error+"\n");
-			}
-			throw new Errors.LoadingPageFailed(text.toString());
-		}
-		Page page;
-		if(object instanceof Page){
-			page=(Page)object;	
-		}   else {
-			throw new Errors.LoadingPageFailed("File "+pfileName+" contains not a Page but a '"+object.getClass().getName()+"'");
-		}
-		if(pcache){
-			pageCache.put(pfileName, page);
-		}
-		return page;
 	}
 	
 	public String getRealConfigPath(String pfileName)
