@@ -96,8 +96,8 @@ TAbstractElement.prototype.fillThisData=function(p_data)
 TAbstractElement.prototype.fillData=function(p_data)
 {
 	this.fillThisData(p_data);
-	for(var l_name in this.elements){
-		this.elements[l_name].fillData(p_data);
+	for(var l_name in this.names){
+		this.names[l_name].fillData(p_data);
 	}
 }
 

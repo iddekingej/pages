@@ -34,6 +34,7 @@ public class SecurityFilter implements Filter {
 	@Override
 	public void init(FilterConfig pconfig) throws ServletException {
 		Application application;
+		System.out.println("Security filter init start");
 		String filterFileName=pconfig.getInitParameter("securityConfigFile");
 		Object appObject=pconfig.getServletContext().getAttribute("application");		
 		if(appObject instanceof Application){
@@ -45,8 +46,9 @@ public class SecurityFilter implements Filter {
 		initParser(parser);
 		List<String> errors;
 		Object object;
-		try {
+		try {			
 			object=parser.parse(filterFileName);
+			System.out.println("End parsing security xml");
 			errors=parser.getErrors();
 		} catch (Exception e) {
 			throw new ServletException("Filter initalisation failed",e);
@@ -64,7 +66,7 @@ public class SecurityFilter implements Filter {
 		} else {
 			throw new ServletException("Security xml config '"+filterFileName+"' didn't define a security manager");
 		}
-	
+		System.out.println("Security filter finished");
 	}
 
 	@Override

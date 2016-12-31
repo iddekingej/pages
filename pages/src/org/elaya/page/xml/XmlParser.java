@@ -4,7 +4,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -13,7 +12,6 @@ import java.util.Objects;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-
 import org.elaya.page.Errors;
 import org.elaya.page.Errors.NormalizeClassNameException;
 import org.elaya.page.Errors.SettingAttributeException;
@@ -105,10 +103,21 @@ public abstract class XmlParser {
 		configs.put(pname,pconfig);
 	}
 
+
+	private XmlConfig getConfig(Node node){
+		String nodeName=node.getNodeName();
+		if(! configs.containsKey(nodeName)){
+			new XMLLoadException("Unknown node type :'"+nodeName+"'",node);
+		}		
+		return configs.get(nodeName);		
+	}
+	
 	private Object parseParameterValueNode(Object pparent,Node pnode) throws XMLLoadException 
 	{
 		Node first=pnode.getFirstChild();
-		if(first.getNextSibling() != null){
+		if(first==null){
+			return "";
+		} else 	if(first.getNextSibling() != null){
 			throw new XMLLoadException("Parameter should contain definition of one",pnode);					
 		} else if(first.getNodeType() != Node.ELEMENT_NODE){
 			return first.getTextContent();
@@ -126,12 +135,8 @@ public abstract class XmlParser {
 			if(name==null){
 				throw new XMLLoadException("Name attribute not found",child);
 			}
-			Object value;
-			if(child.getChildNodes().getLength()==0){
-				value="";
-			} else {
-				value=parseParameterValueNode(parent,child);
-			}
+			Object value=parseParameterValueNode(parent,child);
+
 			try{
 				DynamicObject.put(parent, name, value);
 			}catch(Exception e){
@@ -149,23 +154,15 @@ public abstract class XmlParser {
 		}
 	}
 
-	private XmlConfig getConfig(Node node){
-		String nodeName=node.getNodeName();
-		if(! configs.containsKey(nodeName)){
-			new XMLLoadException("Unkown node type :'"+nodeName+"'",node);
-		}		
-		return configs.get(nodeName);		
-	}
-	
 	private void parseElement(Object parent,Node child) throws ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, XMLLoadException, MethodNotFound, ParserConfigurationException, SAXException, IOException, SettingAttributeException, NormalizeClassNameException  
 	{
 		Object object=parseNode(parent,child);
 		if(object != null){
 			XmlConfig info=getConfig(child);
 			String methodName=info.getDefaultSetMethod();
-			try{							
-				Method method=parent.getClass().getMethod(methodName, new Class<?>[]{info.getBaseClass()});
-				method.invoke(parent,object);
+
+			try{
+				DynamicObject.call(parent, methodName,new Class<?>[]{info.getBaseClass()},new Object[]{object});
 			} catch(NoSuchMethodException e){
 				throw new XMLLoadException("Method "+methodName + " in object "+parent.getClass().getName()+" doesn't exists",e,child);
 			}
@@ -176,15 +173,12 @@ public abstract class XmlParser {
 	{
 		Node child=pnode.getFirstChild();
 		while(child!=null){
-			if("parameters".equals(child.getNodeName())){
-				parseParameters(pparent,child);
-			} else {
-			
-				if(child.getNodeType()==Node.ELEMENT_NODE){
-
-						parseElement(pparent,child);
-					
-				}
+			if(child.getNodeType()==Node.ELEMENT_NODE){
+				if("parameters".equals(child.getNodeName())){
+					parseParameters(pparent,child);
+				} else {
+					parseElement(pparent,child);					
+				}				
 			}
 			child=child.getNextSibling();
 		}
@@ -195,16 +189,13 @@ public abstract class XmlParser {
 		String attributeName;
 		attributeName=attribute.getNodeName();
 		if(!"name".equals(attributeName) && !"ref".equals(attributeName) && !"class".equals(attributeName) && !"file".equals(attributeName)){
-			if(!DynamicObject.containsKey(object,attribute.getNodeName())){
-				addError("Object of type "+object.getClass().getName()+" doesn't contain attribute "+attributeName,node);
-			} else {
-				try{
-					DynamicObject.put(object,attributeName,attribute.getNodeValue());
-				} catch(Exception e){
-					throw new Errors.SettingAttributeException(attributeName,object,e);
-				}
+			try{
+				DynamicObject.put(object,attributeName,attribute.getNodeValue());
+			} catch(Exception e){
+				throw new Errors.SettingAttributeException(attributeName,object,e);
 			}
 		}
+		
 	}
 	
 	private void parseAttributes(Object pobject,Node pnode) throws XMLLoadException, SettingAttributeException 

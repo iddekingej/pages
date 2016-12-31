@@ -48,30 +48,43 @@ public class DynamicObject {
 			}
 		}
 
-		public static Method getMethod(Object pobject,String pname) throws MethodNotFound{
-			Objects.requireNonNull(pobject);
-			for(Method method:pobject.getClass().getMethods()){
-				if(method.getName().toLowerCase().equals(pname)){
+		public static Method getMethod(Object object,String name) throws MethodNotFound{
+			Objects.requireNonNull(object);
+			for(Method method:object.getClass().getMethods()){
+				if(method.getName().equals(name)){
 					return method;
 				}
 			}
-			throw new MethodNotFound(pobject,pname);
+			throw new MethodNotFound(object,name);
 		}		
 		
-		public static Object get(Object pobject,String pname) throws DynamicException 
+		
+		public static Object call(Object object,String methodName,Class<?>[] parameterTypes,Object[] parameters) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException
+		{
+				Method method=object.getClass().getMethod(methodName, parameterTypes);
+				return method.invoke(object,parameters);
+		}
+		
+		
+		
+		public static Object get(Object object,String name) throws DynamicException 
 		{			
+			String methodName="";
 			try{		
-				Method method=getMethod(pobject,"get"+pname);
-				return method.invoke(pobject);		
+				methodName="get"+name.substring(0,1).toUpperCase()+name.substring(1);
+				Method method=getMethod(object,methodName);
+				return method.invoke(object);		
 			} catch(Exception e){
-				throw new DynamicException("Getting "+pname,e);
+				throw new DynamicException("Getting "+name+" (through method '"+methodName+"')",e);
 			}				
 		}
 
 		public static void put(Object object,String name, Object inValue) throws DynamicException 
 		{
+			String methodName="";
 			try{
-				Method method=getMethod(object,"set"+name);
+				methodName="set"+name.substring(0,1).toUpperCase()+name.substring(1);
+				Method method=getMethod(object,methodName);
 				Class<?>[] params=method.getParameterTypes();
 				Object value=inValue;
 				if(params.length>=1 && value != null && !params[0].isInstance(value)){
@@ -86,14 +99,16 @@ public class DynamicObject {
 				} else {
 					valueStr="<null>";
 				}
-				throw new DynamicException("Setting '"+name+"' to '"+valueStr+"'",e);
+				throw new DynamicException("Setting '"+name+"' to '"+valueStr+"' (trough method "+methodName+")",e);
 			}
 		}	
 		
-		public static boolean containsKey(Object pobject,String pname) {
+		public static boolean containsKey(Object object,String name) {
 			try{
+				
+				String methodName="get"+name.substring(0,1).toUpperCase()+name.substring(1);
 				@SuppressWarnings("unused")
-				Method method=DynamicObject.getMethod(pobject,"set"+pname) ;
+				Method method=DynamicObject.getMethod(object,methodName) ;
 				return true;
 			}catch(MethodNotFound e){
 				return false;

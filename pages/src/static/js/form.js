@@ -94,7 +94,7 @@ TForm.prototype.sendData=function()
 		var l_data={};
 		for(var l_key in this.names){
 			if("fillData" in this.names[l_key]){				
-				this.elements[l_key].fillData(l_data);
+				this.names[l_key].fillData(l_data);
 			}
 		}
 

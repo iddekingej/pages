@@ -130,12 +130,12 @@ public abstract class Element<T extends ThemeItemBase> extends DynamicMethod {
 		return byName.get(pname);
 	}
 	
-	public void setJSCondition(String pcondition)
+	public void setJsCondition(String pcondition)
 	{		
 		jsCondition=pcondition;
 	}
 	
-	public String getJSCondition()
+	public String getJsCondition()
 	{
 		return jsCondition;
 	}
@@ -286,7 +286,7 @@ public abstract class Element<T extends ThemeItemBase> extends DynamicMethod {
 		horizontalAlign=palign;
 	}
 	
-	public void setVerticalalign(VerticalAlign palign)
+	public void setVerticalAlign(VerticalAlign palign)
 	{
 		verticalAlign=palign;
 	}
