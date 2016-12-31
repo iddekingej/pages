@@ -2,15 +2,44 @@ package org.elaya.page.element;
 
 import org.elaya.page.PageElement;
 import org.elaya.page.Writer;
+
+import java.io.IOException;
+
+import org.elaya.page.Element;
 import org.elaya.page.Errors;
 import org.elaya.page.data.Data;
+import org.elaya.page.data.Data.KeyNotFoundException;
 
 public class RepeatElement extends PageElement<ElementThemeItem> {
 	private String dataVariableName;
 	
-	//TODO: Use new setup
+	public RepeatElement()
+	{
+		super();
+		setIsNamespace(true);
+		
+	}
+	
 	@Override
 	public void displayElement(int id,Writer writer, Data pdata) throws org.elaya.page.Element.DisplayException {
+//Nothing to do for repeat element
+	}
+	
+	@Override
+	protected void preElement(Writer writer,Data data,Element<?> element) throws IOException, KeyNotFoundException 
+	{
+		writer.getJSWriter().setFromOther("widgetParent", "widgetParent.newItem()");
+	}
+	
+	@Override
+	protected void postElement(Writer writer,Data data,Element<?> element) throws IOException
+	{		
+		writer.getJSWriter().setFromOther("widgetParent","widgetParent.parent");
+	}
+	
+	@Override
+	public void displaySubElements(Writer pwriter,Data pdata) throws DisplayException  
+	{
 		try{
 			Data data=getData(pdata);
 			Object dataValue=data.get(dataVariableName);
@@ -18,8 +47,8 @@ public class RepeatElement extends PageElement<ElementThemeItem> {
 				Iterable<?> iter=(Iterable<?>)dataValue;
 				for(Object item:iter){
 					if(item instanceof Data){
-						displaySubElements(writer,(Data)item);
-					} else {
+						super.displaySubElements(pwriter, (Data)item);
+					}else {
 						throw new Errors.InvalidTypeException("element of dataVariable must be inherited from elaya.org.data.Data class");
 					}
 				}
@@ -30,7 +59,6 @@ public class RepeatElement extends PageElement<ElementThemeItem> {
 			throw new DisplayException("",e);
 		}
 	}
-
 	@Override
 	public String getJsClassName()
 	{

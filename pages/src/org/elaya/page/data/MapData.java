@@ -17,6 +17,10 @@ public class MapData extends Data{
 			id=pid;
 		}
 		
+		public MapData(){
+			parent=null;
+			id=null;
+		}
 		
 		@Override
 		public int getSize()

@@ -8,6 +8,9 @@ var pages={
 			getNamespaceParent:function(){
 				return this;
 			},
+			_getNamespaceParent:function(){
+				return this;
+			},
 			addElement:function(p_name,p_object){
 				this.names[p_name]=p_object;
 				this.elements[p_name]=p_object;
@@ -77,7 +80,8 @@ TAbstractElement.prototype.isInputElement=function()
 }
 //TElement.prototype.display=function(p_flag) :Abstract
 
-TAbstractElement.prototype.getNamespaceParent=function()
+
+TAbstractElement.prototype._getNamespaceParent=function()
 {
 	if(this.isNamespace) return this;
 	if(this.parent!=null){
@@ -85,6 +89,16 @@ TAbstractElement.prototype.getNamespaceParent=function()
 	}
 	return null;
 }
+
+TAbstractElement.prototype.getNamespaceParent=function()
+{
+	if(this.parent != null){
+		return this.parent._getNamespaceParent();
+	}
+	return null;
+}
+
+
 
 TAbstractElement.prototype.fillThisData=function(p_data)
 {
@@ -97,7 +111,13 @@ TAbstractElement.prototype.fillData=function(p_data)
 {
 	this.fillThisData(p_data);
 	for(var l_name in this.names){
-		this.names[l_name].fillData(p_data);
+		if(this.names[l_name].jsName==this.jsName){			
+			throw new Error("Element is added in it's own namespace "+this.jsName);
+		} else if(l_name in p_data){
+			throw new Error("Duplicate data in data set:"+this.names); 
+		}else {
+			this.names[l_name].fillData(p_data);
+		}
 	}
 }
 
@@ -275,22 +295,38 @@ TLinkMenuItem.prototype.setup=function()
 
 function TRepeatElement(p_parent,p_jsName,p_name)
 {
-	TAbstractElement(p_parent,p_jsName,p_name);
+	TAbstractElement.call(this,p_parent,p_jsName,p_name);
+	this.elementCnt=0;
 }
 
 TRepeatElement.prototype=Object.create(TAbstractElement.prototype);
 
 TRepeatElement.prototype.newItem=function()
 {
-	var l_jsName=this.jsName+"$"+this.elements.length;
-	var l_name=this.name+"$"+this.elements.length;
+	var l_jsName=this.jsName+"$"+this.elementCnt;
+	var l_name=this.elementCnt;
 	var l_item=new TRepeatElementItem(this,l_jsName,l_name);
-	addElemen(l_item);
+	this.addElement(l_item.jsName,l_item);
+	this.addByName(l_item);
+	this.elementCnt++;
+	return l_item;
+}
+
+TRepeatElement.prototype.fillData=function(p_data)
+{
+	var l_result=[];
+	for(var l_name in this.names){
+		var l_data={};
+		this.names[l_name].fillData(l_data);
+		l_result.push(l_data);
+	}
+	p_data[this.name]=l_result;
 }
 
 function TRepeatElementItem(p_parent,p_jsName,p_name)
 {
-	TAbstractElement(p_parent,p_jsName,p_name);
+	TAbstractElement.call(this,p_parent,p_jsName,p_name);
+	this.isNamespace=true;
 }
 
 TRepeatElementItem.prototype=Object.create(TAbstractElement.prototype);

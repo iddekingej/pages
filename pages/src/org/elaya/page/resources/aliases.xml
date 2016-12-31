@@ -15,6 +15,7 @@
 	<element alias="link" value="org.elaya.page.element.LinkElement" />
 	<element alias='static' value="org.elaya.page.element.StaticElement" />
 	<element alias="panel" value="org.elaya.page.element.PanelElement" />
+	<element alias="repeat" value="org.elaya.page.element.RepeatElement" />
 <!--  Menu  -->	
 	<element alias="menubar" value="org.elaya.page.element.MenuBar" />
 	<element alias="menu" value="org.elaya.page.element.Menu" />
