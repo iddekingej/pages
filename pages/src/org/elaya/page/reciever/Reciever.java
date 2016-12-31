@@ -40,13 +40,24 @@ public abstract  class Reciever<T extends Dynamic> extends DynamicMethod {
 	}
 	
 	private String dataClass;
-	private List<Parameter> parameters=new LinkedList<>();
+	private LinkedList<Parameter> parameters=new LinkedList<>();
 	private Application application;
 
 	protected abstract void sendFailure(HttpServletResponse response,Exception e) throws JSONException, IOException;
 	protected abstract RecieverData convertRequestToData(HttpServletRequest request,HttpServletResponse response) throws Exception;
-	protected abstract void handleData(HttpServletResponse response,RecieverData data) throws  Exception;	
+	protected abstract void handleData(HttpServletResponse response,RecieverData data) throws  Exception;
 	
+	
+	protected void validate(Result result,RecieverData data) throws JSONException, DynamicException
+	{
+		Object value;
+		for(Parameter parameter:parameters){
+			value=data.getData().get(parameter.getName());
+			if(parameter.getIsMandatory() && (value==null||"".equals(value.toString()))){
+				result.addError(parameter.getName(),"Is mandatory");
+			}
+		}
+	}
 	void setApplication(Application papplication)
 	{
 		application=papplication;
@@ -69,9 +80,9 @@ public abstract  class Reciever<T extends Dynamic> extends DynamicMethod {
 		throw new Errors.InvalidObjectType(object,"DynamicData");
 	}
 	
-	public void addParameter(Parameter pparameter)
+	public void addParameter(Parameter parameter)
 	{
-		parameters.add(pparameter);
+		parameters.add(parameter);
 	}
 	
 	public List<Parameter> getParameters()
@@ -90,8 +101,6 @@ public abstract  class Reciever<T extends Dynamic> extends DynamicMethod {
 		return dataClass;
 	}
 	
-
-	
 	public final void failure(HttpServletResponse response ,Exception e) throws FatalFailureException
 	{
 		try{
@@ -100,6 +109,7 @@ public abstract  class Reciever<T extends Dynamic> extends DynamicMethod {
 			throw new FatalFailureException(f);
 		}
 	}
+	
 	
 
 	public final void handleRequest(HttpServletRequest request,HttpServletResponse response) throws FatalFailureException{

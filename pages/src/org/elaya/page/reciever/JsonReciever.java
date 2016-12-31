@@ -54,7 +54,8 @@ public abstract class JsonReciever<T extends Dynamic> extends Reciever<T> {
 	protected final  void handleData(HttpServletResponse response,RecieverData data) throws Exception
 	{
 		JSONResult result=new JSONResult();
-		validateRequest(result,data.getData(),data.getCmd());
+		validate(result,data);
+		validateRequest(result,data.getData(),data.getCmd());		
 		if(!result.hasErrors()){
 			handleJson(result,data.getData(),data.getCmd());
 		}
@@ -67,14 +68,13 @@ public abstract class JsonReciever<T extends Dynamic> extends Reciever<T> {
 	{
 			Object value;
 			T object=getObject();
-			//TODO fail when mandatory and parameter is not given				
+
 
 			JSONObject json=getJson(request);
 			String cmd=json.getString("cmd");
 			JSONObject data=json.getJSONObject("data");
-			//TODO Handle exception and when parameter does not exists
-			for(Parameter parameter:getParameters()){
-				value=data.get(parameter.getName());
+			for(Parameter parameter :getParameters()){			
+				value=data.get(parameter.getName());//TODO: when data doesn't exists
 				value=convertValue(value,parameter);
 				object.put(parameter.getName(),value);
 			}

@@ -10,10 +10,11 @@ public abstract class PostReciever<T extends Dynamic> extends Reciever<T> {
 	{
 		T object=getObject();
 
-		for(Parameter parameter:getParameters()){			
+		for(Parameter parameter :getParameters()){			
 			object.put(parameter.getName(), request.getParameter(parameter.getName()));
 		}
 
 		return new RecieverData(object,"");
 	}
+	
 }
