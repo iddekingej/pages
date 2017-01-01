@@ -6,7 +6,6 @@ import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import javax.xml.parsers.DocumentBuilder;
@@ -55,8 +54,7 @@ public abstract class XmlParser {
 	}
 	
 	private String fileName;
-	private HashMap<String,XmlConfig> configs=new HashMap<>();
-	private LinkedList<String> errors=new LinkedList<>();
+	private HashMap<String,XmlConfig> configs=new HashMap<>();	
 	private Map<String,Object> nameIndex;
 	private LinkedList<Initializer> initializers=new LinkedList<>();
 		
@@ -89,9 +87,7 @@ public abstract class XmlParser {
 			return null;
 		}		
 	}
-		
-	public List<String> getErrors(){ return errors;}
-	
+			
 	protected void addError(String perror,Node node) throws XMLLoadException 
 	{
 		
@@ -184,7 +180,7 @@ public abstract class XmlParser {
 		}
 	}
 	
-	private void setAttribute(Object object,Node attribute,Node node) throws XMLLoadException, SettingAttributeException
+	private void setAttribute(Object object,Node attribute) throws XMLLoadException, SettingAttributeException
 	{
 		String attributeName;
 		attributeName=attribute.getNodeName();
@@ -205,7 +201,7 @@ public abstract class XmlParser {
 		Node attribute;
 		for(int cnt=0;cnt<map.getLength();cnt++){
 			attribute=map.item(cnt);
-			setAttribute(pobject,attribute,pnode);
+			setAttribute(pobject,attribute);
 		}	
 	}
 	
@@ -322,7 +318,17 @@ public abstract class XmlParser {
 		}
 	}
 	
-	public Object parse(String pfileName) throws XMLLoadException {
+	@SuppressWarnings("unchecked")
+	public <T>T parse(String fileName,Class<T> type) throws XMLLoadException
+	{
+		Object object=parse(fileName);
+		if(type.isInstance(object)){
+			return (T)object;
+		}
+		throw new XMLLoadException("Object is of type "+object.getClass().getName()+" and is not inherited from "+type.getName()+" as required, in xml file "+fileName,null);
+	}
+	
+	private Object parse(String pfileName) throws XMLLoadException {
 		try{
 			fileName=pfileName;
 			addConfig();
@@ -356,7 +362,7 @@ public abstract class XmlParser {
 	{
 		return null;
 	}
-	protected abstract InputStream openFile(String pfileName) throws FileNotFoundException;
+	protected abstract InputStream openFile(String fileName) throws FileNotFoundException;
 	protected abstract XmlParser createParser();
 	protected abstract void addConfig();
 	protected abstract String normalizeClassName(String pname) throws  NormalizeClassNameException ;

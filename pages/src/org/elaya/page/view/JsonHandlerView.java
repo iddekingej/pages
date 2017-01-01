@@ -1,12 +1,9 @@
 package org.elaya.page.view;
 
 
-import java.util.List;
 import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.elaya.page.PageMode;
 import org.elaya.page.application.Application;
 import org.elaya.page.reciever.Reciever;
@@ -30,15 +27,8 @@ public class JsonHandlerView extends AbstractView {
 	protected void renderMergedOutputModel(Map<String, Object> model, HttpServletRequest prequest,
 			HttpServletResponse presponse) throws Exception {		
 		RecieverParser parser=new RecieverParser(application);
-		Reciever<?> rec=parser.parseXml(file);
-		List<String> errors=parser.getErrors();
-		if(!errors.isEmpty()){
-			for(String error:errors){
-				System.out.print(error);
-			}
-		} else {			
-			rec.handleRequest(prequest, presponse);
-		}
+		Reciever<?> rec=parser.parse(file,Reciever.class);
+		rec.handleRequest(prequest, presponse);
 	}
 
 }

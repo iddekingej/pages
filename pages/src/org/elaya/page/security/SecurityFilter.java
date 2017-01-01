@@ -1,8 +1,6 @@
 package org.elaya.page.security;
  
 import java.io.IOException;
-import java.util.List;
-
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -43,29 +41,13 @@ public class SecurityFilter implements Filter {
 			throw new ServletException("Application not set");
 		}
 		XmlSecurityParser parser=new XmlSecurityParser(application);
-		initParser(parser);
-		List<String> errors;
-		Object object;
+		initParser(parser);		
 		try {			
-			object=parser.parse(filterFileName);
-			System.out.println("End parsing security xml");
-			errors=parser.getErrors();
+			securityManager=parser.parse(filterFileName,SecurityManager.class);
 		} catch (Exception e) {
 			throw new ServletException("Filter initalisation failed",e);
 		}	
 		
-		if(!errors.isEmpty()){
-			StringBuilder errorStr=new StringBuilder();
-			for(String error:errors){
-				errorStr.append("\n").append(error);
-			}
-			throw new ServletException(errorStr.toString());
-		}
-		if(object instanceof SecurityManager){
-			securityManager=(SecurityManager)object;				
-		} else {
-			throw new ServletException("Security xml config '"+filterFileName+"' didn't define a security manager");
-		}
 		System.out.println("Security filter finished");
 	}
 

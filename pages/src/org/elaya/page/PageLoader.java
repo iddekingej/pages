@@ -1,8 +1,6 @@
 package org.elaya.page;
 
 import java.util.HashMap;
-import java.util.List;
-
 import org.elaya.page.application.Application;
 
 public class PageLoader {
@@ -40,23 +38,8 @@ public class PageLoader {
 		}
 		UiXmlParser parser=new UiXmlParser(application,getClass().getClassLoader());
 		initUiParser(parser);
-		Object object=parser.parse(pfileName);
-
-		
-		List<String> errors=parser.getErrors();
-		if(!errors.isEmpty()){
-			StringBuilder text=new StringBuilder();
-			for(String error:errors){
-				text.append(pfileName+":"+error+"\n");
-			}
-			throw new Errors.LoadingPageFailed(text.toString());
-		}
 		Page page;
-		if(object instanceof Page){
-			page=(Page)object;	
-		}   else {
-			throw new Errors.LoadingPageFailed("File "+pfileName+" contains not a Page but a '"+object.getClass().getName()+"'");
-		}
+		page=parser.parse(pfileName,Page.class);
 		if(pcache){
 			pageCache.put(pfileName, page);
 		}

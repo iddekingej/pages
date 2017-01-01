@@ -1,15 +1,39 @@
 package org.elaya.page.reciever;
 
 import org.elaya.page.data.DynamicMethod;
+import org.json.JSONException;
 
 public class Parameter extends DynamicMethod {
 	private String name;
 	private ParameterType type;
-	private boolean isMandatory;
+	private boolean isMandatory=false;
+	private long maxLength=-1;
 	
-	public void setIsMandatory(Boolean p_flag)
+	public void validate(Result result,Object value) throws JSONException
 	{
-		isMandatory=p_flag;
+		if(getIsMandatory() && (value==null || value.toString().isEmpty())){
+			result.addError(name, "Is mandatory");			
+		}
+		if(value != null){
+			if(maxLength>-1 && value.toString().length()>maxLength){
+				result.addError(name,"Value is too long, maximum length is "+maxLength);
+			}
+		}
+	}
+	
+	public void setMaxLength(long pmaxLength)
+	{
+		maxLength=pmaxLength;
+	}
+	
+	public long getMaxLength()
+	{
+		return maxLength;
+	}
+	
+	public void setIsMandatory(Boolean flag)
+	{
+		isMandatory=flag;
 	}
 	
 	public boolean getIsMandatory()

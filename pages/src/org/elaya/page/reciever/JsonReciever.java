@@ -2,6 +2,8 @@ package org.elaya.page.reciever;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.elaya.page.data.Dynamic;
@@ -30,6 +32,7 @@ public abstract class JsonReciever<T extends Dynamic> extends Reciever<T> {
 	{
 		JSONResult result=new JSONResult();
 		result.addError("", "Internal error:"+e.toString());
+		e.printStackTrace();
 		response.setContentType("application/json");
 		response.getOutputStream().print(result.toString());
 	}
@@ -51,7 +54,7 @@ public abstract class JsonReciever<T extends Dynamic> extends Reciever<T> {
 	}
 
 	@Override
-	protected final  void handleData(HttpServletResponse response,RecieverData data) throws Exception
+	protected final  void handleData(HttpServletResponse response,RecieverData<T> data) throws Exception
 	{
 		JSONResult result=new JSONResult();
 		validate(result,data);
@@ -64,7 +67,7 @@ public abstract class JsonReciever<T extends Dynamic> extends Reciever<T> {
 	}
 	
 	@Override
-	protected RecieverData convertRequestToData(HttpServletRequest request,HttpServletResponse response) throws Exception   
+	protected RecieverData<T> convertRequestToData(HttpServletRequest request,HttpServletResponse response) throws Exception   
 	{
 			Object value;
 			T object=getObject();
@@ -73,14 +76,16 @@ public abstract class JsonReciever<T extends Dynamic> extends Reciever<T> {
 			JSONObject json=getJson(request);
 			String cmd=json.getString("cmd");
 			JSONObject data=json.getJSONObject("data");
-			for(Parameter parameter :getParameters()){			
-				value=data.get(parameter.getName());//TODO: when data doesn't exists
-				value=convertValue(value,parameter);
-				object.put(parameter.getName(),value);
+			String name;
+			for(Map.Entry<String,Parameter> paramEnt :getParameters().entrySet()){
+				name=paramEnt.getKey();
+				value=data.get(name);//TODO: when data doesn't exists
+				value=convertValue(value,paramEnt.getValue());
+				object.put(name,value);
 			}
 
 			
-			return new RecieverData(object,cmd);
+			return new RecieverData<>(object,cmd);
 	}
 	
 }

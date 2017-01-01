@@ -1,11 +1,13 @@
 package org.elaya.page.reciever;
 
+import org.elaya.page.data.Dynamic;
 import org.elaya.page.data.DynamicMethod;
+import org.json.JSONException;
 
-public class Validator extends DynamicMethod {
+public abstract class Validator<T extends Dynamic> extends DynamicMethod {
 
 	public Validator() {
-		// TODO Auto-generated constructor stub
 	}
 
+	abstract void validate(Result result,RecieverData<T> data) throws DynamicException, JSONException;
 }

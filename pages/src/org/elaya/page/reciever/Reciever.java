@@ -3,20 +3,25 @@ package org.elaya.page.reciever;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.elaya.page.Errors;
 import org.elaya.page.Errors.InvalidObjectType;
 import org.elaya.page.application.Application;
+import org.elaya.page.application.PageApplicationAware;
 import org.elaya.page.data.Dynamic;
 import org.elaya.page.data.DynamicMethod;
 import org.elaya.page.data.DynamicObject;
 import org.json.JSONException;
 
 
-public abstract  class Reciever<T extends Dynamic> extends DynamicMethod {
+public abstract  class Reciever<T extends Dynamic> extends DynamicMethod implements PageApplicationAware {
+	
 	public static class FatalFailureException extends Exception{
 		private static final long serialVersionUID = -8412859746278588435L;
 		public FatalFailureException(Throwable cause){
@@ -24,46 +29,55 @@ public abstract  class Reciever<T extends Dynamic> extends DynamicMethod {
 		}
 	}
 	
-	protected class RecieverData{
-		private final T data;
-		private final String cmd;
-		
-		public RecieverData(T pdata,String pcmd)
+	public static class DuplicateParameter extends RuntimeException{
+		private static final long serialVersionUID = 103474339716771399L;
+		public DuplicateParameter(String name)
 		{
-			data=pdata;
-			cmd=pcmd;
+			super("Duplicate parameter '"+name+"'");
 		}
 		
-		public T getData(){ return data;}
-		public String getCmd(){ return cmd;}
-
 	}
 	
 	private String dataClass;
-	private LinkedList<Parameter> parameters=new LinkedList<>();
+	private HashMap<String,Parameter> parameters=new HashMap<>();
 	private Application application;
+	private LinkedList<Validator<T>> validators=new LinkedList<>();
 
 	protected abstract void sendFailure(HttpServletResponse response,Exception e) throws JSONException, IOException;
-	protected abstract RecieverData convertRequestToData(HttpServletRequest request,HttpServletResponse response) throws Exception;
-	protected abstract void handleData(HttpServletResponse response,RecieverData data) throws  Exception;
+	protected abstract RecieverData<T> convertRequestToData(HttpServletRequest request,HttpServletResponse response) throws Exception;
+	protected abstract void handleData(HttpServletResponse response,RecieverData<T> data) throws  Exception;
 	
-	
-	protected void validate(Result result,RecieverData data) throws JSONException, DynamicException
+	public void addValidator(Validator<T> validator)
 	{
-		Object value;
-		for(Parameter parameter:parameters){
-			value=data.getData().get(parameter.getName());
-			if(parameter.getIsMandatory() && (value==null||"".equals(value.toString()))){
-				result.addError(parameter.getName(),"Is mandatory");
-			}
+		validators.add(validator);
+	}
+	
+	public List<Validator<T>> getValidators()
+	{
+		return validators;
+	}
+	
+	protected void validate(Result result,RecieverData<T> data) throws JSONException, DynamicException
+	{
+		Object value;		
+		String name;
+		for(Map.Entry<String,Parameter> parEnt:parameters.entrySet()){
+			name=parEnt.getKey();
+			value=data.getData().get(name);
+			parEnt.getValue().validate(result, value);
+		}
+		for(Validator<T> validator:validators){
+			validator.validate(result, data);
 		}
 	}
-	void setApplication(Application papplication)
+	@Override
+	public void setApplication(Application papplication)
 	{
 		application=papplication;
 	}
 	
-	protected Application getApplication()
+	@Override
+	public Application getApplication()
 	{
 			return application;
 	}
@@ -82,10 +96,13 @@ public abstract  class Reciever<T extends Dynamic> extends DynamicMethod {
 	
 	public void addParameter(Parameter parameter)
 	{
-		parameters.add(parameter);
+		if(parameter.containsKey(parameter.getName())){
+			throw new DuplicateParameter(parameter.getName());
+		}
+		parameters.put(parameter.getName(),parameter);
 	}
 	
-	public List<Parameter> getParameters()
+	public Map<String,Parameter> getParameters()
 	{
 		return parameters;
 	}
@@ -114,7 +131,7 @@ public abstract  class Reciever<T extends Dynamic> extends DynamicMethod {
 
 	public final void handleRequest(HttpServletRequest request,HttpServletResponse response) throws FatalFailureException{
 		 try{
-			 RecieverData data=convertRequestToData(request,response);
+			 RecieverData<T> data=convertRequestToData(request,response);
 			 handleData(response,data);
 		 } catch(Exception e){
 			 failure(response,e);
