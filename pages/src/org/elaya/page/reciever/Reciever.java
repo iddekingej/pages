@@ -3,6 +3,7 @@ package org.elaya.page.reciever;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.elaya.page.Errors;
 import org.elaya.page.Errors.InvalidObjectType;
 import org.elaya.page.application.Application;
+import org.elaya.page.application.Application.DefaultDBConnectionNotSet;
 import org.elaya.page.application.PageApplicationAware;
 import org.elaya.page.data.Dynamic;
 import org.elaya.page.data.DynamicMethod;
@@ -44,8 +46,8 @@ public abstract  class Reciever<T extends Dynamic> extends DynamicMethod impleme
 	private LinkedList<Validator<T>> validators=new LinkedList<>();
 
 	protected abstract void sendFailure(HttpServletResponse response,Exception e) throws JSONException, IOException;
-	protected abstract RecieverData<T> convertRequestToData(HttpServletRequest request,HttpServletResponse response) throws Exception;
-	protected abstract void handleData(HttpServletResponse response,RecieverData<T> data) throws  Exception;
+	protected abstract RecieverData<T> convertRequestToData(HttpServletRequest request,HttpServletResponse response) throws NoSuchMethodException, ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, InvalidObjectType, DynamicException, JSONException, IOException ;
+	protected abstract void handleData(HttpServletResponse response,RecieverData<T> data) throws JSONException, DynamicException, IOException, SQLException, DefaultDBConnectionNotSet ;
 	
 	public void addValidator(Validator<T> validator)
 	{
@@ -57,7 +59,7 @@ public abstract  class Reciever<T extends Dynamic> extends DynamicMethod impleme
 		return validators;
 	}
 	
-	protected void validate(Result result,RecieverData<T> data) throws JSONException, DynamicException
+	protected void validate(Result result,RecieverData<T> data) throws DynamicException, JSONException
 	{
 		Object value;		
 		String name;

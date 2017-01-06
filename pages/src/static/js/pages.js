@@ -285,12 +285,25 @@ TLinkMenuItem.prototype=Object.create(TElement.prototype);
 TLinkMenuItem.prototype.setup=function()
 {
 	TElement.prototype.setup.call(this);
-	this.element=core.create("div",{"className":"linkmenuitem"},this.parent.menu);
+	this.element=core.create("div",{"className":"menu_linkmenuitem"},this.parent.menu);
 	if(this.iconUrl != ""){
 		core.create("img",{"src":this.iconUrl},this.element);
 	}
 	core.text(this.text,this.element);
 	core.ev(this.element,"click",function(){window.location=this.url;},this)
+}
+
+function TSeperatorMenuItem(p_parent,p_jsName,p_name,p_id)
+{
+	TElement.call(this,p_parent,p_jsName,p_name,p_id);	
+}
+
+TSeperatorMenuItem.prototype=Object.create(TElement.prototype);
+
+TSeperatorMenuItem.prototype.setup=function()
+{
+	TElement.prototype.setup.call(this);
+	this.element=core.create("div",{"className":"menu_seperator"},this.parent.menu);
 }
 
 function TRepeatElement(p_parent,p_jsName,p_name)

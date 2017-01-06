@@ -51,6 +51,11 @@ public abstract class XmlParser {
 		public Node getNode(){ return node;}
 		public String getExceptionFileName(){ return exceptionFileName;}
 		public void setFileName(String xmlFileName){exceptionFileName=xmlFileName;}
+		@Override
+		public String toString()
+		{
+			return super.toString()+" while parsing '"+exceptionFileName+"'";
+		}
 	}
 	
 	private String fileName;
@@ -124,7 +129,7 @@ public abstract class XmlParser {
 	
 	private void parseParameter(Object parent,Node child) throws XMLLoadException  
 	{
-		if(!"parameter".equals(child.getNodeName())){
+		if(!"value".equals(child.getNodeName())){
 			throw new XMLLoadException("'parameter' node expected, but "+child.getNodeName()+" found",child);
 		} else {
 			String name=getAttributeValue(child,"name");
@@ -170,7 +175,7 @@ public abstract class XmlParser {
 		Node child=pnode.getFirstChild();
 		while(child!=null){
 			if(child.getNodeType()==Node.ELEMENT_NODE){
-				if("parameters".equals(child.getNodeName())){
+				if("values".equals(child.getNodeName())){
 					parseParameters(pparent,child);
 				} else {
 					parseElement(pparent,child);					
@@ -292,6 +297,9 @@ public abstract class XmlParser {
 	{
 		try{
 			XmlConfig info=getConfig(pnode);
+			if(info==null){
+				throw new XMLLoadException("Invalid element '"+pnode.getNodeName()+"'",pnode);
+			}
 			Object object;
 			String fileNameAttr=getAttributeValue(pnode,"file");
 			if(pparent==null && info.getNeedParent()){
@@ -347,6 +355,7 @@ public abstract class XmlParser {
 			return object;
 
 		}catch(XMLLoadException e){
+			System.out.println("FileName:"+fileName);
 			e.setFileName(pfileName);
 			throw e;
 		}catch(Exception e){

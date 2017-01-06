@@ -5,7 +5,6 @@ import org.elaya.page.Writer;
 
 public class ElementThemeItem extends org.elaya.page.element.ElementThemeItem {
 
-
 	@Override
 	public void staticElement(Writer pwriter,String ptext, boolean pisHtml, String pclass, String pcss) throws IOException {
 		pwriter.print("<span "+propertyF("class",pclass)+propertyF("style",pcss)+">");
@@ -72,17 +71,9 @@ public class ElementThemeItem extends org.elaya.page.element.ElementThemeItem {
 		pwriter.print("<td style='width:100%'>&nbsp;</td></tr></table>");
 	}
 	
-
-
 	@Override
 	public void menu(Writer pwriter, String pid, String ptitle) throws IOException {
 		pwriter.print("<div class='menu' "+property("id",pid)+" >"+escape(ptitle)+"</div>");
 	}
-
-	@Override
-	public void menuSeperator(Writer pwriter) throws IOException {
-		pwriter.print("<div class='menu_seperator'>&nbsp;</div>");		
-	}
-
 	
 }

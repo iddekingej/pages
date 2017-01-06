@@ -2,10 +2,15 @@ package org.elaya.page.reciever;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.sql.SQLException;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.elaya.page.Errors.InvalidObjectType;
+import org.elaya.page.application.Application.DefaultDBConnectionNotSet;
 import org.elaya.page.data.Dynamic;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -13,7 +18,7 @@ import org.json.JSONObject;
 public abstract class JsonReciever<T extends Dynamic> extends Reciever<T> {
 
 	protected abstract void validateRequest(JSONResult presult,T pdata,String pcmd) throws JSONException;
-	protected abstract void handleJson(JSONResult presult,T pdata,String pcmd) throws Exception;
+	protected abstract void handleJson(JSONResult presult,T pdata,String pcmd) throws SQLException, JSONException, DefaultDBConnectionNotSet ;
 	
 	private JSONObject getJson(HttpServletRequest prequest) throws IOException, JSONException
 	{
@@ -54,7 +59,7 @@ public abstract class JsonReciever<T extends Dynamic> extends Reciever<T> {
 	}
 
 	@Override
-	protected final  void handleData(HttpServletResponse response,RecieverData<T> data) throws Exception
+	protected final  void handleData(HttpServletResponse response,RecieverData<T> data) throws DefaultDBConnectionNotSet, DynamicException, JSONException, SQLException, IOException 
 	{
 		JSONResult result=new JSONResult();
 		validate(result,data);
@@ -67,7 +72,7 @@ public abstract class JsonReciever<T extends Dynamic> extends Reciever<T> {
 	}
 	
 	@Override
-	protected RecieverData<T> convertRequestToData(HttpServletRequest request,HttpServletResponse response) throws Exception   
+	protected RecieverData<T> convertRequestToData(HttpServletRequest request,HttpServletResponse response) throws JSONException, NoSuchMethodException, ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, InvalidObjectType, IOException, DynamicException    
 	{
 			Object value;
 			T object=getObject();

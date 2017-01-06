@@ -53,6 +53,13 @@ div[class="listmenu_item_selected"]>a {
 	padding-left:20px;
 	color:#888;
 }
+.menu_seperator{
+	border-bottom:solid 1px #000
+}
+
+.menu_linkitem{
+	
+}
 
 .menu_seperator{
 	border-top:solid 1px #eee;

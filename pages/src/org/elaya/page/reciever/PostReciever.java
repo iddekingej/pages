@@ -1,14 +1,17 @@
 package org.elaya.page.reciever;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.elaya.page.Errors.InvalidObjectType;
 import org.elaya.page.data.Dynamic;
 
 public abstract class PostReciever<T extends Dynamic> extends Reciever<T> {
 	@Override
-	public RecieverData<T> convertRequestToData(HttpServletRequest request,HttpServletResponse response) throws Exception   
+	public RecieverData<T> convertRequestToData(HttpServletRequest request,HttpServletResponse response) throws NoSuchMethodException, ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, InvalidObjectType, DynamicException    
 	{
 		T object=getObject();
 		String name;
