@@ -35,10 +35,12 @@ public class GridLayout extends Layout {
 					themeItem.gridItemFooter(pwriter);
 				}
 				col++;
+				System.out.println(col+" "+columns);
 				if(col>=columns){
 					col=0;
 				}
 				if(col==0){
+					System.out.println("Grid end");
 					themeItem.gridRowFooter(pwriter);
 					hasEnd=true;
 				}

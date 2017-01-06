@@ -22,5 +22,10 @@ public abstract  class LayoutThemeItem extends ThemeItemBase {
 	public abstract void gridItemFooter(Writer pwriter) throws IOException;
 	public abstract void gridRowFooter(Writer pwriter) throws IOException;
 	public abstract void gridFooter(Writer pwriter) throws IOException;
-
+	public abstract void tableHeader(Writer writer,String classNamePrefix) throws IOException;
+	public abstract void tableRowHeader(Writer writer) throws IOException;
+	public abstract void tableCellHeader(Writer writer,String classNamePrefix,HorizontalAlign phorizontalAlign,VerticalAlign pverticalAlign,String playoutWidth,String playoutHeight) throws IOException;
+	public abstract void tableCellFooter(Writer writer) throws IOException;
+	public abstract void tableRowFooter(Writer writer) throws IOException;
+	public abstract void tableFooter(Writer writer) throws IOException;
 }

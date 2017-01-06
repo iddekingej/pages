@@ -103,4 +103,38 @@ public class LayoutThemeItem extends org.elaya.page.LayoutThemeItem {
 		pwriter.print("</table>");
 	}
 
+	@Override
+	public void tableHeader(Writer writer, String className) throws IOException {
+		writer.print("<table "+property("class",className)+">");
+		
+	}
+
+	@Override
+	public void tableRowHeader(Writer writer) throws IOException {
+		writer.print("<tr >");
+	}
+
+	@Override
+	public void tableCellHeader(Writer writer,String classNamePrefix,HorizontalAlign phorizontalAlign,VerticalAlign pverticalAlign,String playoutWidth,String playoutHeight) throws IOException{
+		makeCell(writer,classNamePrefix,phorizontalAlign,pverticalAlign,playoutWidth,playoutHeight);
+	}
+
+	@Override
+	public void tableCellFooter(Writer writer) throws IOException {
+		writer.print("</td>");
+		
+	}
+
+	@Override
+	public void tableRowFooter(Writer writer) throws IOException {
+		writer.print("</tr>");
+	}
+
+	@Override
+	public void tableFooter(Writer writer) throws IOException {
+		writer.print("</table>");
+	}
+
+	
+	
 }

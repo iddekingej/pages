@@ -6,11 +6,6 @@ import org.elaya.page.data.Data;
 
 public class HorizontalLayout extends Layout{
 
-	public HorizontalLayout()
-	{
-		super();
-	}
-	
 	@Override
 	public void preElement(Writer pwriter,Data data,Element<?> pelement) throws IOException
 	{

@@ -12,6 +12,8 @@
 	<element alias="layout_horizontal" value="org.elaya.page.HorizontalLayout" />
 	<element alias='spacer_vertical' value="org.elaya.page.element.VerticalSpacer" />
 	<element alias='spacer_horizontal' value="org.elaya.page.element.HorizontalSpacer" />
+	<element alias='layout_table' value='org.elaya.page.TableLayout'/>
+	<element alias='layout_row'   value='org.elaya.page.TableRowLayout' />
 	<element alias="link" value="org.elaya.page.element.LinkElement" />
 	<element alias='static' value="org.elaya.page.element.StaticElement" />
 	<element alias="panel" value="org.elaya.page.element.PanelElement" />
