@@ -1,4 +1,4 @@
-package org.elaya.page.reciever;
+package org.elaya.page.receiver;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,7 +15,7 @@ import org.elaya.page.data.Dynamic;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public abstract class JsonReciever<T extends Dynamic> extends Reciever<T> {
+public abstract class JsonReceiver<T extends Dynamic> extends Receiver<T> {
 
 	protected abstract void validateRequest(JSONResult presult,T pdata,String pcmd) throws JSONException;
 	protected abstract void handleJson(JSONResult presult,T pdata,String pcmd) throws SQLException, JSONException, DefaultDBConnectionNotSet ;
@@ -59,7 +59,7 @@ public abstract class JsonReciever<T extends Dynamic> extends Reciever<T> {
 	}
 
 	@Override
-	protected final  void handleData(HttpServletResponse response,RecieverData<T> data) throws DefaultDBConnectionNotSet, DynamicException, JSONException, SQLException, IOException 
+	protected final  void handleData(HttpServletResponse response,ReceiverData<T> data) throws DefaultDBConnectionNotSet, DynamicException, JSONException, SQLException, IOException 
 	{
 		JSONResult result=new JSONResult();
 		validate(result,data);
@@ -72,7 +72,7 @@ public abstract class JsonReciever<T extends Dynamic> extends Reciever<T> {
 	}
 	
 	@Override
-	protected RecieverData<T> convertRequestToData(HttpServletRequest request,HttpServletResponse response) throws JSONException, NoSuchMethodException, ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, InvalidObjectType, IOException, DynamicException    
+	protected ReceiverData<T> convertRequestToData(HttpServletRequest request,HttpServletResponse response) throws JSONException, NoSuchMethodException, ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, InvalidObjectType, IOException, DynamicException    
 	{
 			Object value;
 			T object=getObject();
@@ -90,7 +90,7 @@ public abstract class JsonReciever<T extends Dynamic> extends Reciever<T> {
 			}
 
 			
-			return new RecieverData<>(object,cmd);
+			return new ReceiverData<>(object,cmd);
 	}
 	
 }

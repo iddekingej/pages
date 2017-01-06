@@ -1,5 +1,6 @@
-package org.elaya.page;
+package org.elaya.page.layout;
 
+import org.elaya.page.PageElement;
 
 public abstract class Layout extends PageElement<LayoutThemeItem> {
 

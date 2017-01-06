@@ -1,6 +1,11 @@
-package org.elaya.page;
+package org.elaya.page.layout;
 
 import java.io.IOException;
+
+import org.elaya.page.HorizontalAlign;
+import org.elaya.page.ThemeItemBase;
+import org.elaya.page.VerticalAlign;
+import org.elaya.page.Writer;
 
 public abstract  class LayoutThemeItem extends ThemeItemBase {
 

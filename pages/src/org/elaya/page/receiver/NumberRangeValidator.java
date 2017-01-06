@@ -1,4 +1,4 @@
-package org.elaya.page.reciever;
+package org.elaya.page.receiver;
 import org.elaya.page.data.Dynamic;
 import org.json.JSONException;
 
@@ -42,7 +42,7 @@ public class NumberRangeValidator<T extends Dynamic> extends VarValidator<T> {
 	}
 	
 	@Override
-	void validateValue(Result result,RecieverData<T> data, Object value) throws JSONException{
+	void validateValue(Result result,ReceiverData<T> data, Object value) throws JSONException{
 		String name=getVarName();		
 		if(value instanceof Number ){
 			long number=((Number)value).longValue();

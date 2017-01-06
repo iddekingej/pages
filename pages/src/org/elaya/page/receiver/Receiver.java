@@ -1,4 +1,4 @@
-package org.elaya.page.reciever;
+package org.elaya.page.receiver;
 
 import java.io.IOException;
 import java.lang.reflect.Constructor;
@@ -22,7 +22,7 @@ import org.elaya.page.data.DynamicObject;
 import org.json.JSONException;
 
 
-public abstract  class Reciever<T extends Dynamic> extends DynamicMethod implements PageApplicationAware {
+public abstract  class Receiver<T extends Dynamic> extends DynamicMethod implements PageApplicationAware {
 	
 	public static class FatalFailureException extends Exception{
 		private static final long serialVersionUID = -8412859746278588435L;
@@ -46,8 +46,8 @@ public abstract  class Reciever<T extends Dynamic> extends DynamicMethod impleme
 	private LinkedList<Validator<T>> validators=new LinkedList<>();
 
 	protected abstract void sendFailure(HttpServletResponse response,Exception e) throws JSONException, IOException;
-	protected abstract RecieverData<T> convertRequestToData(HttpServletRequest request,HttpServletResponse response) throws NoSuchMethodException, ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, InvalidObjectType, DynamicException, JSONException, IOException ;
-	protected abstract void handleData(HttpServletResponse response,RecieverData<T> data) throws JSONException, DynamicException, IOException, SQLException, DefaultDBConnectionNotSet ;
+	protected abstract ReceiverData<T> convertRequestToData(HttpServletRequest request,HttpServletResponse response) throws NoSuchMethodException, ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, InvalidObjectType, DynamicException, JSONException, IOException ;
+	protected abstract void handleData(HttpServletResponse response,ReceiverData<T> data) throws JSONException, DynamicException, IOException, SQLException, DefaultDBConnectionNotSet ;
 	
 	public void addValidator(Validator<T> validator)
 	{
@@ -59,7 +59,7 @@ public abstract  class Reciever<T extends Dynamic> extends DynamicMethod impleme
 		return validators;
 	}
 	
-	protected void validate(Result result,RecieverData<T> data) throws DynamicException, JSONException
+	protected void validate(Result result,ReceiverData<T> data) throws DynamicException, JSONException
 	{
 		Object value;		
 		String name;
@@ -133,7 +133,7 @@ public abstract  class Reciever<T extends Dynamic> extends DynamicMethod impleme
 
 	public final void handleRequest(HttpServletRequest request,HttpServletResponse response) throws FatalFailureException{
 		 try{
-			 RecieverData<T> data=convertRequestToData(request,response);
+			 ReceiverData<T> data=convertRequestToData(request,response);
 			 handleData(response,data);
 		 } catch(Exception e){
 			 failure(response,e);

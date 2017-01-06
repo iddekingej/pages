@@ -5,4 +5,4 @@
  * @author jeroen
  *
  */
-package org.elaya.page.reciever;
+package org.elaya.page.layout;

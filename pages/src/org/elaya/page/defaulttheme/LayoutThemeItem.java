@@ -6,7 +6,7 @@ import org.elaya.page.HorizontalAlign;
 import org.elaya.page.VerticalAlign;
 import org.elaya.page.Writer;
 
-public class LayoutThemeItem extends org.elaya.page.LayoutThemeItem {
+public class LayoutThemeItem extends org.elaya.page.layout.LayoutThemeItem {
 
 	private void makeCell(Writer pwriter,String pclassPrefix,HorizontalAlign phorizontalAlign,VerticalAlign pverticalAlign,String playoutWidth,String playoutHeight) throws IOException
 	{

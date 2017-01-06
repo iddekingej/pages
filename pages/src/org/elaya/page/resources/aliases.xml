@@ -7,17 +7,20 @@
 	<element alias="quick_textarea" value="org.elaya.page.quickform.TextAreaElement" />
 	<element alias="quick_date" value="org.elaya.page.quickform.DateElement" />
 	<element alias="quick_checkbox" value="org.elaya.page.quickform.CheckboxElement" />
-	<element alias="layout_grid" value="org.elaya.page.GridLayout" />
-	<element alias="layout_vertical" value="org.elaya.page.VerticalLayout" />
-	<element alias="layout_horizontal" value="org.elaya.page.HorizontalLayout" />
+	
 	<element alias='spacer_vertical' value="org.elaya.page.element.VerticalSpacer" />
 	<element alias='spacer_horizontal' value="org.elaya.page.element.HorizontalSpacer" />
-	<element alias='layout_table' value='org.elaya.page.TableLayout'/>
-	<element alias='layout_row'   value='org.elaya.page.TableRowLayout' />
+
 	<element alias="link" value="org.elaya.page.element.LinkElement" />
 	<element alias='static' value="org.elaya.page.element.StaticElement" />
 	<element alias="panel" value="org.elaya.page.element.PanelElement" />
 	<element alias="repeat" value="org.elaya.page.element.RepeatElement" />
+<!--  Layout -->
+	<element alias="layout_grid" value="org.elaya.page.layout.GridLayout" />
+	<element alias="layout_vertical" value="org.elaya.page.layout.VerticalLayout" />
+	<element alias="layout_horizontal" value="org.elaya.page.layout.HorizontalLayout" />
+	<element alias='layout_table' value='org.elaya.page.layout.TableLayout'/>
+	<element alias='layout_row'   value='org.elaya.page.layout.TableRowLayout' />	
 <!--  Menu  -->	
 	<element alias="menubar" value="org.elaya.page.element.MenuBar" />
 	<element alias="menu" value="org.elaya.page.element.Menu" />
@@ -30,9 +33,9 @@
 	<element alias="listmenu_group" value="org.elaya.page.listmenu.ListMenuGroup" />
 	<element alias="lm_dynamic" value="org.elaya.page.listmenu.DynamicLinkMenuItem" />
 	<element alias="elementcontainer" value="org.elaya.page.quickform.ElementContainer" />
-	<!-- Reciever -->
-	<reciever alias="rec_parameter" value="org.elaya.page.reciever.Parameter" />
-	<!-- Js -->
+	<!-- Receiver -->
+	<reciever alias="rec_parameter" value="org.elaya.page.receiver.Parameter" />
+	<!-- Js --> 
 	<jsfile alias="pagejs" value="core.js,pages.js" />
 	<cssfile alias="pagecss"
 		value="page.css" />

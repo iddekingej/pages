@@ -1,7 +1,10 @@
-package org.elaya.page;
+package org.elaya.page.layout;
 
 import java.io.IOException;
 
+import org.elaya.page.Element;
+import org.elaya.page.Writer;
+import org.elaya.page.Element.DisplayException;
 import org.elaya.page.data.Data;
 import org.elaya.page.data.Data.KeyNotFoundException;
 

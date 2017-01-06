@@ -1,4 +1,4 @@
-package org.elaya.page.reciever;
+package org.elaya.page.receiver;
 
 public enum SendType {
 	POST,JSON;

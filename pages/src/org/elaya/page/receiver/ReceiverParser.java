@@ -1,4 +1,4 @@
-package org.elaya.page.reciever;
+package org.elaya.page.receiver;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -10,13 +10,13 @@ import org.elaya.page.xml.XmlAppParser;
 import org.elaya.page.xml.XmlConfig;
 import org.elaya.page.xml.XmlParser;
 
-public class RecieverParser extends XmlAppParser {
+public class ReceiverParser extends XmlAppParser {
 
-	public RecieverParser(Application application,Map<String, Object> nameIndex) {
+	public ReceiverParser(Application application,Map<String, Object> nameIndex) {
 		super(application,nameIndex);
 	}
 
-	public RecieverParser(Application application) {
+	public ReceiverParser(Application application) {
 		super(application);
 	}
 
@@ -27,12 +27,12 @@ public class RecieverParser extends XmlAppParser {
 
 	@Override
 	protected XmlParser createParser() {
-		return new RecieverParser(getApplication(),getNameIndex());
+		return new ReceiverParser(getApplication(),getNameIndex());
 	}
 
 	@Override
 	protected void addConfig() {
-		addConfig("reciever",new XmlConfig(Reciever.class,null,false,"",false));
+		addConfig("reciever",new XmlConfig(Receiver.class,null,false,"",false));
 		addConfig("data",new XmlConfig(Parameter.class,Parameter.class,false,"addParameter",true));
 		addConfig("validator",new XmlConfig(Validator.class,null,false,"addValidator",true));
 	}

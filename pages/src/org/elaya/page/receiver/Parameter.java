@@ -1,4 +1,4 @@
-package org.elaya.page.reciever;
+package org.elaya.page.receiver;
 
 import org.elaya.page.data.DynamicMethod;
 import org.json.JSONException;
