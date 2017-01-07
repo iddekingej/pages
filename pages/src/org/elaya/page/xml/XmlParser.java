@@ -11,6 +11,9 @@ import java.util.Objects;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+
+import org.elaya.page.ElementVariantList.ElementVariantNotFound;
+import org.elaya.page.ElementVariantParser.VariantParserException;
 import org.elaya.page.Errors;
 import org.elaya.page.Errors.NormalizeClassNameException;
 import org.elaya.page.Errors.SettingAttributeException;
@@ -83,7 +86,7 @@ public abstract class XmlParser {
 	protected String getFileName(){
 		return fileName;
 	}
-	private String getAttributeValue(Node pnode,String pname)
+	protected String getAttributeValue(Node pnode,String pname)
 	{
 		Node valueNode=pnode.getAttributes().getNamedItem(pname);
 		if(valueNode !=null){
@@ -113,7 +116,7 @@ public abstract class XmlParser {
 		return configs.get(nodeName);		
 	}
 	
-	private Object parseParameterValueNode(Object pparent,Node pnode) throws XMLLoadException 
+	private Object parseParameterValueNode(Object pparent,Node pnode) throws XMLLoadException, ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, MethodNotFound, ParserConfigurationException, SAXException, IOException, SettingAttributeException, NormalizeClassNameException 
 	{
 		Node first=pnode.getFirstChild();
 		if(first==null){
@@ -123,11 +126,11 @@ public abstract class XmlParser {
 		} else if(first.getNodeType() != Node.ELEMENT_NODE){
 			return first.getTextContent();
 		} else {
-			return parseNode(pparent,pnode);
+			return parseElement(pparent,pnode);
 		}
 	}
 	
-	private void parseParameter(Object parent,Node child) throws XMLLoadException  
+	private void parseParameter(Object parent,Node child) throws XMLLoadException, ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, MethodNotFound, ParserConfigurationException, SAXException, IOException, SettingAttributeException, NormalizeClassNameException  
 	{
 		if(!"value".equals(child.getNodeName())){
 			throw new XMLLoadException("'parameter' node expected, but "+child.getNodeName()+" found",child);
@@ -155,21 +158,7 @@ public abstract class XmlParser {
 		}
 	}
 
-	private void parseElement(Object parent,Node child) throws ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, XMLLoadException, MethodNotFound, ParserConfigurationException, SAXException, IOException, SettingAttributeException, NormalizeClassNameException  
-	{
-		Object object=parseNode(parent,child);
-		if(object != null){
-			XmlConfig info=getConfig(child);
-			String methodName=info.getDefaultSetMethod();
 
-			try{
-				DynamicObject.call(parent, methodName,new Class<?>[]{info.getBaseClass()},new Object[]{object});
-			} catch(NoSuchMethodException e){
-				throw new XMLLoadException("Method "+methodName + " in object "+parent.getClass().getName()+" doesn't exists",e,child);
-			}
-			parseChildNodes(object,child);
-		}
-	}
 	private void parseChildNodes(Object pparent,Node pnode) throws ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, XMLLoadException, MethodNotFound, ParserConfigurationException, SAXException, IOException, SettingAttributeException, NormalizeClassNameException 
 	{
 		Node child=pnode.getFirstChild();
@@ -293,31 +282,60 @@ public abstract class XmlParser {
 		afterCreate(object);		
 	}
 	
-	Object parseNode(Object pparent,Node pnode) throws XMLLoadException 
+	protected Node getVariant(Node node) throws VariantParserException, ElementVariantNotFound{
+		return null;
+	}
+	
+	Object parseElement(Object pparent,Node pnode) throws XMLLoadException 
 	{
+		Node node=pnode;
+		Node extraNode=null;
 		try{
+			Node variant=getVariant(node);
+			if(variant !=null){
+				extraNode=node;
+				node=variant;				
+			}
+
 			XmlConfig info=getConfig(pnode);
 			if(info==null){
-				throw new XMLLoadException("Invalid element '"+pnode.getNodeName()+"'",pnode);
+				throw new XMLLoadException("Invalid element '"+node.getNodeName()+"'",node);
 			}
 			Object object;
-			String fileNameAttr=getAttributeValue(pnode,"file");
+			String fileNameAttr=getAttributeValue(node,"file");
 			if(pparent==null && info.getNeedParent()){
-				addError("Element "+pnode.getNodeName()+" needs a parent but=null",pnode);
+				addError("Element "+node.getNodeName()+" needs a parent but=null",node);
 			}
 			
 			if(info.getCustom()){
-				return parseCustom(pparent,pnode);
+				return parseCustom(pparent,node);
 			} else if(fileNameAttr != null){
 				XmlParser parser=createParser();
 				object=parser.parse(fileNameAttr);
-			} else {
-				object=createObjectByNode(pnode,info);
+			} else {				
+				object=createObjectByNode(node,info);
 			}
 			
 			if(object!=null){
 				setupObject(object);
-				parseAttributes(object,pnode);
+
+				if(pparent != null){
+					String methodName=info.getDefaultSetMethod();
+
+					try{
+						DynamicObject.call(pparent, methodName,new Class<?>[]{info.getBaseClass()},new Object[]{object});
+					} catch(NoSuchMethodException e){
+						throw new XMLLoadException("Method "+methodName + " in object "+pparent.getClass().getName()+" doesn't exists",e,pnode);
+					}										
+				}
+				parseAttributes(object,node);
+				if(extraNode !=null){
+					parseAttributes(object,extraNode);
+				}
+				parseChildNodes(object,node);
+				if(extraNode !=null){
+					parseChildNodes(object,extraNode);
+				}
 			}
 			
 			return object;
@@ -325,7 +343,7 @@ public abstract class XmlParser {
 			throw new XMLLoadException(e,pnode);
 		}
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public <T>T parse(String fileName,Class<T> type) throws XMLLoadException
 	{
@@ -350,12 +368,9 @@ public abstract class XmlParser {
 			NodeList nl=doc.getChildNodes();
 			Node rootNode=nl.item(0);
 			rootNode.normalize();
-			Object object=parseNode(null,rootNode);
-			parseChildNodes(object,rootNode);
-			return object;
+			return parseElement(null,rootNode);
 
 		}catch(XMLLoadException e){
-			System.out.println("FileName:"+fileName);
 			e.setFileName(pfileName);
 			throw e;
 		}catch(Exception e){

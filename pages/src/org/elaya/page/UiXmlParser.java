@@ -6,6 +6,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedList;
 import java.util.Map;
 
+import org.elaya.page.ElementVariantList.ElementVariantNotFound;
+import org.elaya.page.ElementVariantParser.VariantParserException;
 import org.elaya.page.application.Application;
 import org.elaya.page.data.DataModel;
 import org.elaya.page.jsplug.JSPlug;
@@ -75,6 +77,19 @@ public class UiXmlParser extends XmlAppParser {
 	{
 		if(pnode.getNodeName()=="options"){
 			return parseOptions(pnode);
+		}
+		return null;
+	}
+	
+	@Override
+	protected Node getVariant(Node node) throws VariantParserException, ElementVariantNotFound
+	{
+		String className=this.getAttributeValue(node, "class");
+		if((className != null) && (className.charAt(0)=='@')){
+			ElementVariant variant=getApplication().getVariantByName(className.substring(1));
+			if(variant != null){
+				return variant.getContent();
+			}
 		}
 		return null;
 	}

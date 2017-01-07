@@ -10,6 +10,11 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.elaya.page.AliasData;
 import org.elaya.page.AliasParser;
+import org.elaya.page.ElementVariant;
+import org.elaya.page.ElementVariantList;
+import org.elaya.page.ElementVariantList.ElementVariantNotFound;
+import org.elaya.page.ElementVariantParser;
+import org.elaya.page.ElementVariantParser.VariantParserException;
 import org.elaya.page.Errors;
 import org.elaya.page.Errors.LoadingAliasFailed;
 import org.elaya.page.Errors.NormalizeClassNameException;
@@ -23,6 +28,8 @@ public abstract class Application{
 
 	private String themeBase="org.elaya.page.defaultTheme";	
 	private String aliasFiles;
+	private String elementVariantFiles;
+	private ElementVariantList elementVariants;
 	private HashMap<String,AliasData> aliasses;
 	private String xmlPath="../pages/"; 
 	private String defaultDBConnection;
@@ -170,6 +177,33 @@ public abstract class Application{
 		return stream;
 	}
 	
+	public void setElementVariantFiles(String files)
+	{
+		elementVariantFiles=files;
+	}
+	
+	public String getElementVariantFiles()
+	{
+		return elementVariantFiles;
+	}
+	
+	private void processElementVariantFiles() throws VariantParserException
+	{
+		elementVariants=new ElementVariantList();
+		String[] files=elementVariantFiles.split(",");
+		for(String variantFile:files){
+			ElementVariantParser variantParser=new ElementVariantParser(this);
+			variantParser.parse(variantFile, elementVariants);
+		}
+	}
+	
+	public ElementVariant getVariantByName(String name) throws VariantParserException, ElementVariantNotFound
+	{
+		if(elementVariants==null){
+			processElementVariantFiles();
+		}
+		return elementVariants.getElementVariantByName(name);
+	}
 /**
  * Load aliases in fileName and add them to global alias list
  * 
