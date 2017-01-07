@@ -24,15 +24,15 @@ public class ElementVariantList {
 	
 	private HashMap<String,ElementVariant> variants=new HashMap<>();
 	
-	public void addElementVariant(String name,Node node) throws DuplicateElementVariant
+	public void addVariant(ElementVariant variant) throws DuplicateElementVariant
 	{
-		if(variants.containsKey(name)){
-			throw new DuplicateElementVariant(name);
+		if(variants.containsKey(variant.getName())){
+			throw new DuplicateElementVariant(variant.getName());
 		}
-		variants.put(name,new ElementVariant(name,node));
+		variants.put(variant.getName(),variant);
 	}
 	
-	public ElementVariant getElementVariantByName(String name) throws ElementVariantNotFound
+	public ElementVariant getElementVariantByName(String name)
 	{
 		if(!variants.containsKey(name)){
 			return null; 

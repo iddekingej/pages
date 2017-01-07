@@ -2,75 +2,26 @@ package org.elaya.page;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
+import java.util.Map;
 
 import org.elaya.page.application.Application;
-import org.w3c.dom.Document;
+import org.elaya.page.xml.XmlAppParser;
+import org.elaya.page.xml.XmlConfig;
+import org.elaya.page.xml.XmlParser;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
-public class ElementVariantParser {
-	public static  class VariantParserException extends Exception
-	{
-		private final transient Node node;
-		private String fileName;
-		private static final long serialVersionUID = -1607030494090125690L;
-		
-		public VariantParserException(String pmessage,Node pnode)
-		{		
-			super(pmessage);
-			node=pnode;
-		}
-	
-		public VariantParserException(Throwable error,Node pnode)
-		{
-			super("Parsing failed",error);
-			node=pnode;
-		}
-		public String getFileName()
-		{
-			return fileName;
-		}
-		
-		
-		public void setFileName(String pfileName)
-		{
-			fileName=pfileName;
-		}
-		
-		public Node getNode()
-		{
-			return node;
-		}
-		@Override
-		public String toString()
-		{
-			return super.toString()+"  in file '"+fileName+"'";
-		}
+public class ElementVariantParser extends XmlAppParser{
+
+	public ElementVariantParser(Application papplication) {
+		super(papplication);
+	}
+
+	public ElementVariantParser(Application papplication,Map<String, Object> pnameIndex) {
+		super(papplication,pnameIndex);		
 	}
 	
-	private String fileName;
-	private Application application;
 	
-	
-	public ElementVariantParser(Application papplication)
-	{
-		application=papplication;
-	}
-	
-	private String getAttributeValue(Node pnode,String pname)
-	{
-		Node valueNode=pnode.getAttributes().getNamedItem(pname);
-		if(valueNode !=null){
-			return valueNode.getNodeValue();
-		} else {
-			return null;
-		}		
-	}
-	
-	Node getNextElementNode(Node node)
+	private Node getNextElementNode(Node node)
 	{
 		Node iter=node;
 		while(iter != null){
@@ -82,68 +33,51 @@ public class ElementVariantParser {
 		return iter;
 	}
 	
-	void parseVariant(ElementVariantList list,Node node) throws VariantParserException
+	@Override
+	public Object parseCustom(Object parent,Node node) throws XMLLoadException
 	{
-		String name=getAttributeValue(node,"name");
-		if(name==null){
-			throw new VariantParserException("Variant name missing",node);
+		if(parent instanceof  ElementVariant){
+			Node content=getNextElementNode(node.getFirstChild());
+			if(content==null){
+				throw new XMLLoadException("'content' node should contain xml nodes",node);
+			}
+			if(getNextElementNode(content.getNextSibling()) != null){
+				throw new XMLLoadException("There should be only one xml top node inside content",node);
+			}
+			((ElementVariant)parent).setContent(content);
 		}
-		Node child=getNextElementNode(node.getFirstChild());
-		if(child==null){
-			throw new VariantParserException("A xml node expected",node);
-		}
-		if(getNextElementNode(child.getNextSibling())!=null){
-			throw new VariantParserException("Only one xml node expected",node);
-		}		
-		try{
-			list.addElementVariant(name, child);
-		} catch(ElementVariantList.DuplicateElementVariant e){
-			throw new VariantParserException(e,node);
-		}
+		return node;
 	}
 	
-	private ElementVariantList parseRoot(Node rootNode,ElementVariantList list) throws VariantParserException
-	{
-		if(rootNode.getNodeName()!="variants"){
-			throw new VariantParserException("'variant' node expected",rootNode);
-		}
-		Node node=rootNode.getFirstChild();
-		while(node !=null){
-			if(node.getNodeType()==Node.ELEMENT_NODE){
-				if("variant".equals(node.getNodeName())){
-					parseVariant(list,node);
-				} else {
-					throw new VariantParserException("'variant' node expected",node);
-				}
-			}
-			node=node.getNextSibling();
-		}
-		return list;
+	@Override
+	protected XmlParser createParser() {
+		return new ElementVariantParser(getApplication(),getNameIndex());
 	}
-	public ElementVariantList parse(String pfileName,ElementVariantList list) throws VariantParserException{
-			try{
-				fileName=pfileName;
+	
+	@Override
+	public String getAliasNamespace() {
+		return null;
+	}
 
-				DocumentBuilderFactory factory=DocumentBuilderFactory.newInstance();
-				DocumentBuilder builder=factory.newDocumentBuilder();
-				InputStream stream=application.getConfigStream(pfileName);
-				if(stream ==null){
-					throw new FileNotFoundException(pfileName);
-				}
-				Document doc=builder.parse( stream);
-				NodeList nl=doc.getChildNodes();
-				Node rootNode=nl.item(0);
-				rootNode.normalize();
-				return parseRoot(rootNode,list);
-			}
-			catch(VariantParserException e)
-			{
-				e.setFileName(fileName);
-				throw e;
-			}
-			catch(Exception e)
-			{
-				throw new VariantParserException(e,null);
-			}
+	@Override
+	protected InputStream openFile(String fileName) throws FileNotFoundException {
+		return getApplication().getConfigStream(fileName);		
 	}
+
+
+
+	@Override
+	protected void addConfig() {
+		addConfig("variants",new XmlConfig(ElementVariantList.class,ElementVariantList.class,false ,null,false));
+		addConfig("variant",new XmlConfig(ElementVariant.class,ElementVariant.class,false,"addVariant",true));
+		addConfig("content",new XmlConfig(Node.class,null,true,"",true));
+		addConfig("parameter",new XmlConfig(ElementVariantParameter.class,ElementVariantParameter.class,false,"addParameter",true));
+	}
+
+	@Override
+	protected String getName(Object pobject) {
+		return null;
+	}
+
+
 }

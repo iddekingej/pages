@@ -12,15 +12,14 @@ import org.elaya.page.AliasData;
 import org.elaya.page.AliasParser;
 import org.elaya.page.ElementVariant;
 import org.elaya.page.ElementVariantList;
-import org.elaya.page.ElementVariantList.ElementVariantNotFound;
 import org.elaya.page.ElementVariantParser;
-import org.elaya.page.ElementVariantParser.VariantParserException;
 import org.elaya.page.Errors;
 import org.elaya.page.Errors.LoadingAliasFailed;
 import org.elaya.page.Errors.NormalizeClassNameException;
 import org.elaya.page.Page;
 import org.elaya.page.PageLoader;
 import org.elaya.page.data.Url;
+import org.elaya.page.xml.XmlParser.XMLLoadException;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.xml.sax.SAXException;
 
@@ -187,17 +186,16 @@ public abstract class Application{
 		return elementVariantFiles;
 	}
 	
-	private void processElementVariantFiles() throws VariantParserException
-	{
-		elementVariants=new ElementVariantList();
+	private void processElementVariantFiles() throws XMLLoadException{
+		//elementVariants=new ElementVariantList();
 		String[] files=elementVariantFiles.split(",");
 		for(String variantFile:files){
 			ElementVariantParser variantParser=new ElementVariantParser(this);
-			variantParser.parse(variantFile, elementVariants);
+			 elementVariants=variantParser.parse(variantFile,ElementVariantList.class);
 		}
 	}
 	
-	public ElementVariant getVariantByName(String name) throws VariantParserException, ElementVariantNotFound
+	public ElementVariant getVariantByName(String name) throws XMLLoadException
 	{
 		if(elementVariants==null){
 			processElementVariantFiles();

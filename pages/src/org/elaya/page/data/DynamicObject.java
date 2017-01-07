@@ -59,7 +59,7 @@ public class DynamicObject {
 		}		
 		
 		
-		public static Object call(Object object,String methodName,Class<?>[] parameterTypes,Object[] parameters) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException
+		public static Object call(Object object,String methodName,Class<?>[] parameterTypes,Object[] parameters) throws NoSuchMethodException, IllegalAccessException,  InvocationTargetException
 		{
 				Method method=object.getClass().getMethod(methodName, parameterTypes);
 				return method.invoke(object,parameters);

@@ -4,7 +4,6 @@ import org.elaya.page.Element;
 import org.elaya.page.HorizontalAlign;
 import org.elaya.page.VerticalAlign;
 import org.elaya.page.Writer;
-import org.elaya.page.Element.DisplayException;
 import org.elaya.page.data.Data;
 
 public class GridLayout extends Layout {

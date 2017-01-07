@@ -36,7 +36,7 @@ public class PageLoader {
 		if(pcache && pageCache.containsKey(pfileName)){
 			return pageCache.get(pfileName);
 		}
-		UiXmlParser parser=new UiXmlParser(application,getClass().getClassLoader());
+		UiXmlParser parser=new UiXmlParser(application);
 		initUiParser(parser);
 		Page page;
 		page=parser.parse(pfileName,Page.class);

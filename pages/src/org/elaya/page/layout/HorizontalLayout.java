@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import org.elaya.page.Element;
 import org.elaya.page.Writer;
-import org.elaya.page.Element.DisplayException;
 import org.elaya.page.data.Data;
 
 

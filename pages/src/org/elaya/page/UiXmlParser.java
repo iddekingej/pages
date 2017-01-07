@@ -3,11 +3,12 @@ package org.elaya.page;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 
-import org.elaya.page.ElementVariantList.ElementVariantNotFound;
-import org.elaya.page.ElementVariantParser.VariantParserException;
+import org.elaya.page.Element.ReplaceVarException;
+import org.elaya.page.Errors.ValueNotFound;
 import org.elaya.page.application.Application;
 import org.elaya.page.data.DataModel;
 import org.elaya.page.jsplug.JSPlug;
@@ -15,20 +16,21 @@ import org.elaya.page.quickform.OptionItem;
 import org.elaya.page.xml.XmlAppParser;
 import org.elaya.page.xml.XmlConfig;
 import org.elaya.page.xml.XmlParser;
+import org.w3c.dom.DOMException;
 import org.w3c.dom.Node;
 
 public class UiXmlParser extends XmlAppParser {
-	private ClassLoader classLoader;
-
-	public UiXmlParser(Application papplication,ClassLoader pclassLoader) {
+	
+	public UiXmlParser(Application papplication) {
 		super(papplication);		
-		classLoader=pclassLoader;
+
 	}
 
-	public UiXmlParser(Application papplication,ClassLoader pclassLoader,Map<String, Object> pnameIndex) {
+	public UiXmlParser(Application papplication,Map<String, Object> pnameIndex) {
 		super(papplication,pnameIndex);		
-		classLoader=pclassLoader;
 	}
+	
+	
 	
 	@Override
 	protected InputStream openFile(String pfileName) throws FileNotFoundException {		
@@ -37,7 +39,7 @@ public class UiXmlParser extends XmlAppParser {
  
 	@Override
 	protected XmlParser createParser() {
-		return new UiXmlParser(getApplication(),classLoader,getNameIndex());
+		return new UiXmlParser(getApplication(),getNameIndex());
 	}
 	
 	private void processOption(Node child,LinkedList<OptionItem> list) throws XMLLoadException 
@@ -82,16 +84,14 @@ public class UiXmlParser extends XmlAppParser {
 	}
 	
 	@Override
-	protected Node getVariant(Node node) throws VariantParserException, ElementVariantNotFound
+	protected ElementVariant getVariant(Node node) throws XMLLoadException, DOMException, ReplaceVarException 
 	{
 		String className=this.getAttributeValue(node, "class");
+		ElementVariant variant=null;
 		if((className != null) && (className.charAt(0)=='@')){
-			ElementVariant variant=getApplication().getVariantByName(className.substring(1));
-			if(variant != null){
-				return variant.getContent();
-			}
+			variant=getApplication().getVariantByName(className.substring(1));
 		}
-		return null;
+		return variant;
 	}
 	
 	@Override
