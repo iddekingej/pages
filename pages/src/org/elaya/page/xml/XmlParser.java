@@ -23,7 +23,6 @@ import org.elaya.page.Errors.ValueNotFound;
 import org.elaya.page.data.Dynamic.DynamicException;
 import org.elaya.page.data.DynamicMethod.MethodNotFound;
 import org.elaya.page.data.DynamicObject;
-import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -145,7 +144,7 @@ public abstract class XmlParser {
 	protected String getFileName(){
 		return fileName;
 	}
-	protected String getAttributeValue(Node pnode,String pname) throws DOMException, ReplaceVarException
+	protected String getAttributeValue(Node pnode,String pname) throws  ReplaceVarException
 	{
 		Node valueNode=pnode.getAttributes().getNamedItem(pname);
 		if(valueNode !=null){
@@ -189,7 +188,7 @@ public abstract class XmlParser {
 		}
 	}
 	
-	private void parseParameter(Object parent,Node child) throws XMLLoadException, ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, MethodNotFound, ParserConfigurationException, SAXException, IOException, SettingAttributeException, NormalizeClassNameException, DOMException, ReplaceVarException  
+	private void parseParameter(Object parent,Node child) throws XMLLoadException, ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, MethodNotFound, ParserConfigurationException, SAXException, IOException, SettingAttributeException, NormalizeClassNameException,  ReplaceVarException  
 	{
 		if(!"value".equals(child.getNodeName())){
 			throw new XMLLoadException("'parameter' node expected, but "+child.getNodeName()+" found",child);
@@ -207,7 +206,7 @@ public abstract class XmlParser {
 			}			
 		}
 	}
-	private void parseParameters(Object pparent,Node pnode) throws ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, XMLLoadException, MethodNotFound, ParserConfigurationException, SAXException, IOException, SettingAttributeException, NormalizeClassNameException, DOMException, ReplaceVarException {
+	private void parseParameters(Object pparent,Node pnode) throws ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, XMLLoadException, MethodNotFound, ParserConfigurationException, SAXException, IOException, SettingAttributeException, NormalizeClassNameException,  ReplaceVarException {
 		Node child=pnode.getFirstChild();
 		while(child!=null){
 			if(child.getNodeType()==Node.ELEMENT_NODE){
@@ -218,7 +217,7 @@ public abstract class XmlParser {
 	}
 
 
-	private void parseChildNodes(Object pparent,Node pnode) throws ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, XMLLoadException, MethodNotFound, ParserConfigurationException, SAXException, IOException, SettingAttributeException, NormalizeClassNameException, DOMException, ReplaceVarException 
+	private void parseChildNodes(Object pparent,Node pnode) throws ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, XMLLoadException, MethodNotFound, ParserConfigurationException, SAXException, IOException, SettingAttributeException, NormalizeClassNameException,  ReplaceVarException 
 	{
 		Node child=pnode.getFirstChild();
 		while(child!=null){
@@ -233,32 +232,32 @@ public abstract class XmlParser {
 		}
 	}
 	
-	private void setAttribute(Object object,Node attribute) throws XMLLoadException, SettingAttributeException
+	private void setAttribute(Object object,Node attribute,ElementVariant variant) throws XMLLoadException, SettingAttributeException
 	{
 		String attributeName;
 		attributeName=attribute.getNodeName();
-		if(!"name".equals(attributeName) && !"ref".equals(attributeName) && !"class".equals(attributeName) && !"file".equals(attributeName)){
-			try{
-				DynamicObject.put(object,attributeName,replaceVariables(attribute.getNodeValue()));
-			} catch(Exception e){
-				throw new Errors.SettingAttributeException(attributeName,object,e);
+		if(variant == null || !variant.containsParameter(attributeName)){
+			if(!"name".equals(attributeName) && !"ref".equals(attributeName) && !"class".equals(attributeName) && !"file".equals(attributeName)){
+				try{
+					DynamicObject.put(object,attributeName,replaceVariables(attribute.getNodeValue()));
+				} catch(Exception e){
+					throw new Errors.SettingAttributeException(attributeName,object,e);
+				}
 			}
 		}
 		
 	}
 	
-	private void parseAttributes(Object pobject,Node pnode) throws XMLLoadException, SettingAttributeException 
+	private void parseAttributes(Object pobject,Node pnode,ElementVariant variant) throws XMLLoadException, SettingAttributeException 
 	{
 		Objects.requireNonNull(pobject);
-		NamedNodeMap map=pnode.getAttributes();
-		Node attribute;
-		for(int cnt=0;cnt<map.getLength();cnt++){
-			attribute=map.item(cnt);
-			setAttribute(pobject,attribute);
+		NamedNodeMap map=pnode.getAttributes();		
+		for(int cnt=0;cnt<map.getLength();cnt++){			
+			setAttribute(pobject,map.item(cnt),variant);
 		}	
 	}
 	
-	void parseNamedObject(Object pobject,Node pnode) throws DynamicException, XMLLoadException, DOMException, ReplaceVarException  
+	void parseNamedObject(Object pobject,Node pnode) throws DynamicException, XMLLoadException,  ReplaceVarException  
 	{
 		String name=getAttributeValue(pnode,"name");
 		if(name != null){
@@ -274,7 +273,7 @@ public abstract class XmlParser {
 		}
 	}
 	
-	private Object createByClass(Node pnode,Class<?> pdefault) throws XMLLoadException, InstantiationException, IllegalAccessException, DynamicException, NormalizeClassNameException, InvocationTargetException, NoSuchMethodException, ClassNotFoundException, DOMException, ReplaceVarException  
+	private Object createByClass(Node pnode,Class<?> pdefault) throws XMLLoadException, InstantiationException, IllegalAccessException, DynamicException, NormalizeClassNameException, InvocationTargetException, NoSuchMethodException, ClassNotFoundException,  ReplaceVarException  
 	{
 		String className=getAttributeValue(pnode,"class");
 		Object object;
@@ -303,35 +302,50 @@ public abstract class XmlParser {
 		return object;
 	}
 	
-	private Object createObjectByNode(Node node,XmlConfig info) throws XMLLoadException, SettingAttributeException, ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, MethodNotFound, ParserConfigurationException, SAXException, IOException, NormalizeClassNameException, DynamicException, DOMException, ReplaceVarException  
+	private Object createObjectByNode(Object parent,Node node,XmlConfig info) throws XMLLoadException, SettingAttributeException, ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, MethodNotFound, ParserConfigurationException, SAXException, IOException, NormalizeClassNameException, DynamicException,  ReplaceVarException  
 	{
 		Object object;
-		String ref=getAttributeValue(node,"ref");
-		if(ref != null){
-			if(nameIndex.containsKey(ref)){
-				object=nameIndex.get(ref);
-				parseAttributes(object,node);
-				parseChildNodes(object,node);
-				return null;
+		String fileNameAttr=getAttributeValue(node,"file");
+		if(fileNameAttr != null){
+			XmlParser parser=createParser();
+			object=parser.parse(fileNameAttr);
+		} else {			
+			String ref=getAttributeValue(node,"ref");
+			if(ref != null){
 
+				if(nameIndex.containsKey(ref)){
+					return nameIndex.get(ref);
+
+				} else {
+					addError("Reference to item "+ref+" does not exists",node);
+					return null;
+				}
+			} else if(info.getBaseClass() != null){
+				object=createByClass(node,info.getDefaultClass());
+				if(object==null){
+					return null;
+				}
 			} else {
-				addError("Reference to item "+ref+" does not exists",node);
-				return null;
-			}
-		} else if(info.getBaseClass() != null){
-			object=createByClass(node,info.getDefaultClass());
-			if(object==null){
-				return null;
-			}
-		} else {
-			if(info.getDefaultClass() ==null){
-				addError("Internal error. Not a dynamic object, but defaultClass not set in config. Node name="+node.getNodeName(),node);
-				return null;
-			} else {
-				object=info.getDefaultClass().newInstance();
-				parseNamedObject(object,node);
+				if(info.getDefaultClass() ==null){
+					addError("Internal error. Not a dynamic object, but defaultClass not set in config. Node name="+node.getNodeName(),node);
+					return null;
+				} else {
+					object=info.getDefaultClass().newInstance();
+					parseNamedObject(object,node);
+				}	
 			}	
-		}	
+		}
+		
+		if(object != null && parent != null){
+			String methodName=info.getDefaultSetMethod();
+
+			try{
+				DynamicObject.call(parent, methodName,new Class<?>[]{info.getBaseClass()},new Object[]{object});
+			} catch(NoSuchMethodException e){
+				throw new XMLLoadException("Method "+methodName + " in object "+parent.getClass().getName()+" doesn't exists",e,node);
+			}										
+		}
+		
 		return object;
 	}
 	
@@ -342,7 +356,7 @@ public abstract class XmlParser {
 		afterCreate(object);		
 	}
 	
-	protected ElementVariant getVariant(Node node) throws  XMLLoadException, DOMException, ReplaceVarException {
+	protected ElementVariant getVariant(Node node) throws  XMLLoadException,  ReplaceVarException {
 		return null;
 	}
 	
@@ -364,40 +378,27 @@ public abstract class XmlParser {
 			if(info==null){
 				throw new XMLLoadException("Invalid element '"+node.getNodeName()+"'",node);
 			}
+			if(info.getCustom()){
+				return parseCustom(pparent,node);
+			} 			
 			Object object;
-			String fileNameAttr=getAttributeValue(node,"file");
 			if(pparent==null && info.getNeedParent()){
 				addError("Element "+node.getNodeName()+" needs a parent but=null",node);
 			}
 			
-			if(info.getCustom()){
-				return parseCustom(pparent,node);
-			} else if(fileNameAttr != null){
-				XmlParser parser=createParser();
-				object=parser.parse(fileNameAttr);
-			} else {				
-				object=createObjectByNode(node,info);
-			}
-			
+			object=createObjectByNode(pparent,node,info);
+
 			if(object!=null){
 				setupObject(object);
 
-				if(pparent != null){
-					String methodName=info.getDefaultSetMethod();
-
-					try{
-						DynamicObject.call(pparent, methodName,new Class<?>[]{info.getBaseClass()},new Object[]{object});
-					} catch(NoSuchMethodException e){
-						throw new XMLLoadException("Method "+methodName + " in object "+pparent.getClass().getName()+" doesn't exists",e,pnode);
-					}										
-				}
 				if(variant != null){
 					Map<String,String> data=variant.getDataFromNode(extraNode);
 					addValues(data);
 				}
-				parseAttributes(object,node);
+				
+				parseAttributes(object,node,null);
 				if(extraNode !=null){
-					//parseAttributes(object,extraNode);
+					parseAttributes(object,extraNode,variant);
 				}
 				parseChildNodes(object,node);
 				if(extraNode !=null){

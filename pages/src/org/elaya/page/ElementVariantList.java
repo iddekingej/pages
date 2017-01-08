@@ -1,7 +1,6 @@
 package org.elaya.page;
 
 import java.util.HashMap;
-import org.w3c.dom.Node;
 
 public class ElementVariantList {
 	public static class DuplicateElementVariant extends Exception{

@@ -36,6 +36,11 @@ public class ElementVariant {
 		return content;
 	}
 
+	public boolean containsParameter(String name)
+	{
+		return parameters.containsKey(name);
+	}
+	
 	public void addParameter(ElementVariantParameter parameter) throws UniqueNamedObjectList.DuplicateItemName
 	{
 		parameters.put(parameter);
