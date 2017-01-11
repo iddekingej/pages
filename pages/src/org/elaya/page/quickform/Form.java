@@ -8,6 +8,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.elaya.page.Element;
 import org.elaya.page.Errors.AliasNotFound;
 import org.elaya.page.Errors.LoadingAliasFailed;
+import org.elaya.page.Errors.ReplaceVarException;
 import org.elaya.page.JSWriter;
 import org.elaya.page.PageElement;
 import org.elaya.page.SubmitType;
@@ -197,7 +198,7 @@ public class Form extends PageElement<FormThemeItem>{
 	}
 	
 	@Override
-	protected void makeSetupJs(JSWriter writer,Data pdata) throws ParserConfigurationException, SAXException, IOException, InvalidAliasType, AliasNotFound, LoadingAliasFailed, org.elaya.page.Element.ReplaceVarException 
+	protected void makeSetupJs(JSWriter writer,Data pdata) throws ParserConfigurationException, SAXException, IOException, InvalidAliasType, AliasNotFound, LoadingAliasFailed, ReplaceVarException 
 	{
 		String next=writer.procesUrl(replaceVariables(pdata,nextUrl));
 		writer.objVar("cmd",replaceVariables(pdata,cmd));

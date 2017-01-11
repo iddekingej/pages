@@ -15,9 +15,8 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.elaya.page.ElementVariant;
 import org.elaya.page.Errors;
-import org.elaya.page.Element.InvalidVariableNameException;
-import org.elaya.page.Element.ReplaceVarException;
 import org.elaya.page.Errors.NormalizeClassNameException;
+import org.elaya.page.Errors.ReplaceVarException;
 import org.elaya.page.Errors.SettingAttributeException;
 import org.elaya.page.Errors.ValueNotFound;
 import org.elaya.page.data.Dynamic.DynamicException;
@@ -30,7 +29,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 
-public abstract class XmlParser {
+public abstract class XMLParser {
 	
 	public static class XMLLoadException extends Exception
 	{
@@ -65,17 +64,17 @@ public abstract class XmlParser {
 	}
 	
 	private String fileName;
-	private HashMap<String,XmlConfig> configs=new HashMap<>();	
+	private HashMap<String,XMLConfig> configs=new HashMap<>();	
 	private Map<String,Object> nameIndex;
 	private LinkedList<Initializer> initializers=new LinkedList<>();
 	private LinkedList<Map<String,String>> values=new LinkedList<>();
 	
 	
-	public XmlParser(Map<String,Object> pnameIndex) {
+	public XMLParser(Map<String,Object> pnameIndex) {
 		nameIndex=pnameIndex;
 	}
 		
-	public XmlParser()
+	public XMLParser()
 	{
 		this(new HashMap<String,Object>());
 	}
@@ -98,7 +97,7 @@ public abstract class XmlParser {
 				returnValue.append(string.substring(pos,newPos));
 				pos=string.indexOf('}',newPos);
 				if(pos==-1){
-					throw new InvalidVariableNameException("Missing '}' after position "+newPos); 				
+					throw new ReplaceVarException("Missing '}' after position "+newPos); 				
 				}
 				varName=string.substring(newPos+3,pos);	
 				value=getValue(varName);				
@@ -160,13 +159,13 @@ public abstract class XmlParser {
 		throw new XMLLoadException(perror,node);
 	}
 
-	protected void addConfig(String pname,XmlConfig pconfig)
+	protected void addConfig(String pname,XMLConfig pconfig)
 	{
 		configs.put(pname,pconfig);
 	}
 
 
-	private XmlConfig getConfig(Node node){
+	private XMLConfig getConfig(Node node){
 		String nodeName=node.getNodeName();
 		if(! configs.containsKey(nodeName)){
 			new XMLLoadException("Unknown node type :'"+nodeName+"'",node);
@@ -251,13 +250,13 @@ public abstract class XmlParser {
 	private void parseAttributes(Object pobject,Node pnode,ElementVariant variant) throws XMLLoadException, SettingAttributeException 
 	{
 		Objects.requireNonNull(pobject);
-		NamedNodeMap map=pnode.getAttributes();		
-		for(int cnt=0;cnt<map.getLength();cnt++){			
-			setAttribute(pobject,map.item(cnt),variant);
+		NamedNodeMap attributes=pnode.getAttributes();		
+		for(int cnt=0;cnt<attributes.getLength();cnt++){			
+			setAttribute(pobject,attributes.item(cnt),variant);
 		}	
 	}
 	
-	void parseNamedObject(Object pobject,Node pnode) throws DynamicException, XMLLoadException,  ReplaceVarException  
+	private void parseNamedObject(Object pobject,Node pnode) throws DynamicException, XMLLoadException,  ReplaceVarException  
 	{
 		String name=getAttributeValue(pnode,"name");
 		if(name != null){
@@ -279,35 +278,31 @@ public abstract class XmlParser {
 		Object object;
 		if(className == null){
 			if(pdefault ==null){
-				addError("Node "+pnode.getNodeName()+" requires 'class' property "+pnode.getNodeName(),pnode);
-						
-				return null;
+				throw new XMLLoadException("Node "+pnode.getNodeName()+" requires 'class' property ",pnode);		
 			} else {
-				object=pdefault.newInstance();
-				parseNamedObject(object,pnode);
+				object=pdefault.newInstance();			
 			}
 		} else {
 			String normalizedClass=normalizeClassName(className);
 			if(normalizedClass==null){
-				addError("Alias "+className+" not found",pnode);
-				return null;
+				throw new XMLLoadException("Alias "+className+" not found",pnode);				
 			}
 			object=DynamicObject.createObjectFromName(normalizedClass);
 			if(object==null){
 				return null;
 			}
-			parseNamedObject(object,pnode);
 
 		}
+		parseNamedObject(object,pnode);
 		return object;
 	}
 	
-	private Object createObjectByNode(Object parent,Node node,XmlConfig info) throws XMLLoadException, SettingAttributeException, ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, MethodNotFound, ParserConfigurationException, SAXException, IOException, NormalizeClassNameException, DynamicException,  ReplaceVarException  
+	private Object createObjectByNode(Object parent,Node node,XMLConfig info) throws XMLLoadException, SettingAttributeException, ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, MethodNotFound, ParserConfigurationException, SAXException, IOException, NormalizeClassNameException, DynamicException,  ReplaceVarException  
 	{
 		Object object;
 		String fileNameAttr=getAttributeValue(node,"file");
 		if(fileNameAttr != null){
-			XmlParser parser=createParser();
+			XMLParser parser=createParser();
 			object=parser.parse(fileNameAttr);
 		} else {			
 			String ref=getAttributeValue(node,"ref");
@@ -317,8 +312,7 @@ public abstract class XmlParser {
 					return nameIndex.get(ref);
 
 				} else {
-					addError("Reference to item "+ref+" does not exists",node);
-					return null;
+					throw new XMLLoadException("Referenced item '"+ref+"' does not exists",node);					
 				}
 			} else if(info.getBaseClass() != null){
 				object=createByClass(node,info.getDefaultClass());
@@ -327,8 +321,7 @@ public abstract class XmlParser {
 				}
 			} else {
 				if(info.getDefaultClass() ==null){
-					addError("Internal error. Not a dynamic object, but defaultClass not set in config. Node name="+node.getNodeName(),node);
-					return null;
+					throw new XMLLoadException("Internal error. Class name is empty, but defaultClass not set in config. Node name="+node.getNodeName(),node);					
 				} else {
 					object=info.getDefaultClass().newInstance();
 					parseNamedObject(object,node);
@@ -364,51 +357,38 @@ public abstract class XmlParser {
 	Object parseElement(Object pparent,Node pnode) throws XMLLoadException 
 	{
 		Node node=pnode;
-		Node extraNode=null;
 		ElementVariant variant=null;
 		try{
-			variant=getVariant(node);
-			if(variant !=null){
-				
-				extraNode=node;
-				node=variant.getContent();				
-			}
-
-			XmlConfig info=getConfig(node);
+			Object object;
+			XMLConfig info=getConfig(node);
 			if(info==null){
 				throw new XMLLoadException("Invalid element '"+node.getNodeName()+"'",node);
-			}
-			if(info.getCustom()){
-				return parseCustom(pparent,node);
-			} 			
-			Object object;
+			}	
 			if(pparent==null && info.getNeedParent()){
 				addError("Element "+node.getNodeName()+" needs a parent but=null",node);
 			}
 			
-			object=createObjectByNode(pparent,node,info);
-
+			if(info.getCustom()){
+				return parseCustom(pparent,node);
+			} 			
+		
+			variant=getVariant(node);
+			if(variant !=null){
+				
+				addValues(variant.getDataFromNode(node));
+				object=parseElement(pparent,variant.getContent());
+			} else {
+				object=createObjectByNode(pparent,node,info);
+			}
 			if(object!=null){
 				setupObject(object);
-
-				if(variant != null){
-					Map<String,String> data=variant.getDataFromNode(extraNode);
-					addValues(data);
-				}
 				
-				parseAttributes(object,node,null);
-				if(extraNode !=null){
-					parseAttributes(object,extraNode,variant);
-				}
+				parseAttributes(object,node,variant);
 				parseChildNodes(object,node);
-				if(extraNode !=null){
-					parseChildNodes(object,extraNode);					
-				}
-				if(variant != null){
-					popValues();
-				}
 			}
-			
+			if(variant !=null){
+				popValues();
+			}
 			return object;
 		} catch(Exception e){
 			throw new XMLLoadException(e,pnode);
@@ -458,7 +438,7 @@ public abstract class XmlParser {
 		return null;
 	}
 	protected abstract InputStream openFile(String fileName) throws FileNotFoundException;
-	protected abstract XmlParser createParser();
+	protected abstract XMLParser createParser();
 	protected abstract void addConfig();
 	protected abstract String normalizeClassName(String pname) throws  NormalizeClassNameException ;
 	protected abstract String getName(Object pobject);

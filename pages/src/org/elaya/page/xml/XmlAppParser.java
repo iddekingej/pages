@@ -7,7 +7,7 @@ import org.elaya.page.Errors.NormalizeClassNameException;
 import org.elaya.page.application.Application;
 import org.elaya.page.application.PageApplicationAware;
 
-public abstract  class XmlAppParser extends XmlParser {
+public abstract  class XmlAppParser extends XMLParser {
 	
 	private Application application;
 	

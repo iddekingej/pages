@@ -1,6 +1,6 @@
 package org.elaya.page.xml;
 
-public class XmlConfig {
+public class XMLConfig {
 	private Class<?>  baseClass;
 	private Class<?>  defaultClass;
 	private boolean   custom;
@@ -17,7 +17,7 @@ public class XmlConfig {
 	 * @param pneedParent           true: If object can needs a parent node
 	 */
 	
-	public XmlConfig(Class<?> pbaseClass,Class<?> pdefaultClass,boolean pcustom,String pdefaultSetMethod,boolean pneedParent) 
+	public XMLConfig(Class<?> pbaseClass,Class<?> pdefaultClass,boolean pcustom,String pdefaultSetMethod,boolean pneedParent) 
 	{
 		baseClass        = pbaseClass;
 		defaultClass     = pdefaultClass;

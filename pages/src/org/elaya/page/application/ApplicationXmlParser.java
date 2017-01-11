@@ -3,10 +3,10 @@ package org.elaya.page.application;
 import java.io.InputStream;
 import java.util.Map;
 
-import org.elaya.page.xml.XmlConfig;
-import org.elaya.page.xml.XmlParser;
+import org.elaya.page.xml.XMLConfig;
+import org.elaya.page.xml.XMLParser;
 
-public class ApplicationXmlParser extends XmlParser {
+public class ApplicationXmlParser extends XMLParser {
 
 	public ApplicationXmlParser() {
 		super();
@@ -22,13 +22,13 @@ public class ApplicationXmlParser extends XmlParser {
 	}
 
 	@Override
-	protected XmlParser createParser() {
+	protected XMLParser createParser() {
 		return new ApplicationXmlParser(getNameIndex());
 	}
 
 	@Override
 	protected void addConfig() {
-		addConfig("application",new XmlConfig(Application.class,null,false,"",false));
+		addConfig("application",new XMLConfig(Application.class,null,false,"",false));
 
 	}
 

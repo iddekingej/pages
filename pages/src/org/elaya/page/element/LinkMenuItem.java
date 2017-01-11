@@ -6,6 +6,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.elaya.page.Errors.AliasNotFound;
 import org.elaya.page.Errors.LoadingAliasFailed;
+import org.elaya.page.Errors.ReplaceVarException;
 import org.elaya.page.JSWriter;
 import org.elaya.page.Writer;
 import org.elaya.page.application.Application.InvalidAliasType;
@@ -51,7 +52,7 @@ public class LinkMenuItem extends BaseMenuItem<ElementThemeItem> {
 	}
 	
 	@Override
-	protected void makeSetupJs(JSWriter writer,Data pdata) throws org.elaya.page.Element.ReplaceVarException, ParserConfigurationException, SAXException, IOException, InvalidAliasType, AliasNotFound, LoadingAliasFailed 
+	protected void makeSetupJs(JSWriter writer,Data pdata)  throws ParserConfigurationException, SAXException, IOException, InvalidAliasType, AliasNotFound, LoadingAliasFailed, ReplaceVarException 
 	{
 		Data data=getData(pdata);
 		writer.objVar("text", replaceVariables(data,text));

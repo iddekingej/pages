@@ -5,14 +5,15 @@ import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedList;
 import java.util.Map;
-import org.elaya.page.Element.ReplaceVarException;
+
+import org.elaya.page.Errors.ReplaceVarException;
 import org.elaya.page.application.Application;
 import org.elaya.page.data.DataModel;
 import org.elaya.page.jsplug.JSPlug;
 import org.elaya.page.quickform.OptionItem;
 import org.elaya.page.xml.XmlAppParser;
-import org.elaya.page.xml.XmlConfig;
-import org.elaya.page.xml.XmlParser;
+import org.elaya.page.xml.XMLConfig;
+import org.elaya.page.xml.XMLParser;
 import org.w3c.dom.Node;
 
 public class UiXmlParser extends XmlAppParser {
@@ -34,7 +35,7 @@ public class UiXmlParser extends XmlAppParser {
 	}
  
 	@Override
-	protected XmlParser createParser() {
+	protected XMLParser createParser() {
 		return new UiXmlParser(getApplication(),getNameIndex());
 	}
 	
@@ -80,7 +81,7 @@ public class UiXmlParser extends XmlAppParser {
 	}
 	
 	@Override
-	protected ElementVariant getVariant(Node node) throws XMLLoadException,  ReplaceVarException 
+	protected ElementVariant getVariant(Node node) throws XMLLoadException, ReplaceVarException   
 	{
 		String className=this.getAttributeValue(node, "class");
 		ElementVariant variant=null;
@@ -92,11 +93,11 @@ public class UiXmlParser extends XmlAppParser {
 	
 	@Override
 	protected void addConfig() {
-		addConfig("page",new XmlConfig(Page.class,Page.class,false,"",false));
-		addConfig("element",new XmlConfig(Element.class,null, false, "addElement",true));
-		addConfig("options",new XmlConfig(null,null,true,"",true));
-		addConfig("jsplug",new XmlConfig(JSPlug.class,null,false,"addJsPlug",true));
-		addConfig("datamodel",new XmlConfig(DataModel.class,null,false,"setDataModel",true));
+		addConfig("page",new XMLConfig(Page.class,Page.class,false,"",false));
+		addConfig("element",new XMLConfig(Element.class,null, false, "addElement",true));
+		addConfig("options",new XMLConfig(null,null,true,"",true));
+		addConfig("jsplug",new XMLConfig(JSPlug.class,null,false,"addJsPlug",true));
+		addConfig("datamodel",new XMLConfig(DataModel.class,null,false,"setDataModel",true));
 	}
 
 	@Override

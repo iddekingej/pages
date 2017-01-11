@@ -15,6 +15,7 @@ import org.elaya.page.Errors.AliasNotFound;
 import org.elaya.page.Errors.DuplicateElementOnPage;
 import org.elaya.page.Errors.InvalidElement;
 import org.elaya.page.Errors.LoadingAliasFailed;
+import org.elaya.page.Errors.ReplaceVarException;
 import org.elaya.page.application.Application.InvalidAliasType;
 import org.elaya.page.data.*;
 import org.elaya.page.data.Data.KeyNotFoundException;
@@ -32,12 +33,7 @@ public abstract class Element<T extends ThemeItemBase> extends DynamicMethod {
 		}
 	}
 	
-	public static class ReplaceVarException extends Exception{
-		private static final long serialVersionUID = 1L;
-		public ReplaceVarException(String message,Throwable cause){
-			super(message,cause);
-		}
-	}
+
 	
 	public static class DisplayException extends Exception{
 		private static final long serialVersionUID=2L;

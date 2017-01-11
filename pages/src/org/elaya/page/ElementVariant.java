@@ -9,7 +9,7 @@ public class ElementVariant {
 		private static final long serialVersionUID = 4382532741034742320L;
 		public PropertyNotFoundException(String name)
 		{
-			super(String.format("Property '%s' is mandetory,but not found ",name));
+			super(String.format("Property '%s' is mandatory, but not found",name));
 		}
 	}
 	private String name;

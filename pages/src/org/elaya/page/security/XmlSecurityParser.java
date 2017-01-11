@@ -6,8 +6,8 @@ import java.util.Map;
 import org.elaya.page.AliasData;
 import org.elaya.page.application.Application;
 import org.elaya.page.xml.XmlAppParser;
-import org.elaya.page.xml.XmlConfig;
-import org.elaya.page.xml.XmlParser;
+import org.elaya.page.xml.XMLConfig;
+import org.elaya.page.xml.XMLParser;
 
 public class XmlSecurityParser extends XmlAppParser {
 
@@ -26,16 +26,16 @@ public class XmlSecurityParser extends XmlAppParser {
 	}
 
 	@Override
-	protected XmlParser createParser() {
+	protected XMLParser createParser() {
 		return new XmlSecurityParser(getApplication(),getNameIndex());
 	}
 
 	@Override
 	protected void addConfig() {
-		addConfig("security",new XmlConfig(SecurityManager.class,SecurityManager.class,false,"",false));
-		addConfig("match",new XmlConfig(RequestMatcher.class,null,false,"addRequestMatcher",false));
-		addConfig("action",new XmlConfig(Action.class,null,false,"addAction",false));
-		addConfig("authenticator",new XmlConfig(Authenticator.class,null,false,"setAuthenticator",false));
+		addConfig("security",new XMLConfig(SecurityManager.class,SecurityManager.class,false,"",false));
+		addConfig("match",new XMLConfig(RequestMatcher.class,null,false,"addRequestMatcher",false));
+		addConfig("action",new XMLConfig(Action.class,null,false,"addAction",false));
+		addConfig("authenticator",new XMLConfig(Authenticator.class,null,false,"setAuthenticator",false));
 	}
 
 	@Override

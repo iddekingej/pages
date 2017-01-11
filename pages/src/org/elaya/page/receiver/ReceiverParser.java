@@ -7,8 +7,8 @@ import java.util.Map;
 import org.elaya.page.AliasData;
 import org.elaya.page.application.Application;
 import org.elaya.page.xml.XmlAppParser;
-import org.elaya.page.xml.XmlConfig;
-import org.elaya.page.xml.XmlParser;
+import org.elaya.page.xml.XMLConfig;
+import org.elaya.page.xml.XMLParser;
 
 public class ReceiverParser extends XmlAppParser {
 
@@ -26,15 +26,15 @@ public class ReceiverParser extends XmlAppParser {
 	}
 
 	@Override
-	protected XmlParser createParser() {
+	protected XMLParser createParser() {
 		return new ReceiverParser(getApplication(),getNameIndex());
 	}
 
 	@Override
 	protected void addConfig() {
-		addConfig("reciever",new XmlConfig(Receiver.class,null,false,"",false));
-		addConfig("data",new XmlConfig(Parameter.class,Parameter.class,false,"addParameter",true));
-		addConfig("validator",new XmlConfig(Validator.class,null,false,"addValidator",true));
+		addConfig("reciever",new XMLConfig(Receiver.class,null,false,"",false));
+		addConfig("data",new XMLConfig(Parameter.class,Parameter.class,false,"addParameter",true));
+		addConfig("validator",new XMLConfig(Validator.class,null,false,"addValidator",true));
 	}
 
 @Override

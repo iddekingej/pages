@@ -111,4 +111,16 @@ public class Errors {
 		}
 	}
 	
+	
+	public static class ReplaceVarException extends Exception{
+		private static final long serialVersionUID = 1L;
+		public ReplaceVarException(String message,Throwable cause){
+			super(message,cause);
+		}
+		
+		public ReplaceVarException(String message){
+			super(message);
+		}
+
+	}
 }

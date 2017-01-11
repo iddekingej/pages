@@ -19,7 +19,7 @@ import org.elaya.page.Errors.NormalizeClassNameException;
 import org.elaya.page.Page;
 import org.elaya.page.PageLoader;
 import org.elaya.page.data.Url;
-import org.elaya.page.xml.XmlParser.XMLLoadException;
+import org.elaya.page.xml.XMLParser.XMLLoadException;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.xml.sax.SAXException;
 
