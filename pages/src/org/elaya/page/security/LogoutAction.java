@@ -18,7 +18,7 @@ public class LogoutAction extends Action {
 		return redirectUrl;
 	}
 	@Override
-	public ActionResult execute(Session session, Authenticator pauthenticator) throws IOException{
+	public ActionResult execute(Session session) throws IOException{
 		HttpServletRequest request=session.getHttpRequest();		
 		if(request != null){			
 			request.setAttribute("org.elaya.page.security.SessionData", null);

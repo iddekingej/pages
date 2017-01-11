@@ -173,21 +173,40 @@ public abstract class XMLParser {
 		return configs.get(nodeName);		
 	}
 	
+	private Node getNextFilledNode(Node node)
+	{
+		Node nodeIter=node;
+		while(nodeIter!= null && nodeIter.getNodeType() != Node.ELEMENT_NODE ){
+			if(nodeIter.getNodeType() ==Node.CDATA_SECTION_NODE||nodeIter.getNodeType()==Node.TEXT_NODE){
+				String value=nodeIter.getTextContent();
+				if(!value.trim().isEmpty()){
+					break;
+				}
+			}
+			nodeIter=nodeIter.getNextSibling();
+		}
+		return nodeIter;
+	}
+	//TODO: handle CDATA=>Error when trimmed
+	
 	private Object parseParameterValueNode(Object pparent,Node pnode) throws XMLLoadException, ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, MethodNotFound, ParserConfigurationException, SAXException, IOException, SettingAttributeException, NormalizeClassNameException 
 	{
-		Node first=pnode.getFirstChild();
-		if(first==null){
+		Node element=getNextFilledNode(pnode.getFirstChild());		
+		if(element==null){
 			return "";
-		} else 	if(first.getNextSibling() != null){
-			throw new XMLLoadException("Parameter should contain definition of one",pnode);					
-		} else if(first.getNodeType() != Node.ELEMENT_NODE){
-			return first.getTextContent();
-		} else {
-			return parseElement(pparent,pnode);
+		} else{
+			Node next=getNextFilledNode(element.getNextSibling());
+			if(next != null){
+				throw new XMLLoadException("Value should contain only one node, extra node="+next.getNodeName()+", type="+next.getNodeType()+", content="+next.getTextContent(),next);					
+			} else if(element.getNodeType() != Node.ELEMENT_NODE){
+				return element.getTextContent();
+			} else {
+				return parseElement(null,element);
+			}
 		}
 	}
 	
-	private void parseParameter(Object parent,Node child) throws XMLLoadException, ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, MethodNotFound, ParserConfigurationException, SAXException, IOException, SettingAttributeException, NormalizeClassNameException,  ReplaceVarException  
+	private void parseParameter(Object parent,Node child) throws XMLLoadException, ReplaceVarException  
 	{
 		if(!"value".equals(child.getNodeName())){
 			throw new XMLLoadException("'parameter' node expected, but "+child.getNodeName()+" found",child);
@@ -196,13 +215,12 @@ public abstract class XMLParser {
 			if(name==null){
 				throw new XMLLoadException("Name attribute not found",child);
 			}
-			Object value=parseParameterValueNode(parent,child);
-
 			try{
+				Object value=parseParameterValueNode(parent,child);
 				DynamicObject.put(parent, name, value);
-			}catch(Exception e){
-				throw new XMLLoadException(e,child);
-			}			
+			}	catch(Exception e){
+					throw new XMLLoadException(e,child);
+			}
 		}
 	}
 	private void parseParameters(Object pparent,Node pnode) throws ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, XMLLoadException, MethodNotFound, ParserConfigurationException, SAXException, IOException, SettingAttributeException, NormalizeClassNameException,  ReplaceVarException {
@@ -390,7 +408,9 @@ public abstract class XMLParser {
 				popValues();
 			}
 			return object;
-		} catch(Exception e){
+		} catch(XMLLoadException e){
+			throw e;
+		}catch(Exception e){
 			throw new XMLLoadException(e,pnode);
 		}
 	}

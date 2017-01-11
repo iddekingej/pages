@@ -25,6 +25,6 @@ public abstract class Action {
 		return null;
 	}
 	
-	public abstract ActionResult execute(Session session,Authenticator pauthenticator) throws AuthenticationException, IOException ;
+	public abstract ActionResult execute(Session session) throws AuthenticationException, IOException ;
 	
 }

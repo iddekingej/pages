@@ -38,11 +38,11 @@ public abstract class RequestMatcher {
 	}
 	abstract boolean matchOwnRequest(Session session);
 	
-	public MatchActionResult execute(Session session,Authenticator authenticator) throws AuthenticationException, IOException {
+	public MatchActionResult execute(Session session) throws AuthenticationException, IOException {
 		ActionResult result;
 		boolean nextFilter=true;
 		for(Action action:actions){
-			result=action.execute(session,authenticator);
+			result=action.execute(session);
 			if(result==ActionResult.SECURITYFAILED){
 				return MatchActionResult.SECURITYFAILED;
 			}

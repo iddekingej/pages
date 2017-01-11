@@ -76,7 +76,7 @@ public class SecurityManager {
 			return false;
 		}
 		
-		MatchActionResult result=requestMatcher.execute(session,authenticator);		
+		MatchActionResult result=requestMatcher.execute(session);		
 		switch(result){
 			case NEXTFILTER: return true;
 			case NONEXTFILTER: return false;

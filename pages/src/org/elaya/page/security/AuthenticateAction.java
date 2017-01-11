@@ -30,10 +30,22 @@ public class AuthenticateAction extends Action {
 	
 	private String sessionDataClass;
 	private String failedLoginUrl="";
+	private Authenticator authenticator=null;
 	
 	public AuthenticateAction() {
 		super();
 	}
+	
+	public void setAuthenticator(Authenticator pauthenticator)
+	{
+		authenticator=pauthenticator;
+	}
+	
+	public Authenticator getAuthenticator()
+	{
+		return authenticator;
+	}
+	
 	
 	public void setSessionDataClass(String psessionDataClass)
 	{
@@ -86,13 +98,13 @@ public class AuthenticateAction extends Action {
 	protected AuthorizationData createSessionData(Session session,Map<String,Object> pdata) throws NoSuchMethodException, ClassNotFoundException, InstantiationException, IllegalAccessException,  InvocationTargetException, InvalidSessionData, NotSerializableException{
 		return createSessionDataGen(session,pdata);
 	}
-	private  ActionResult checkAuthentication(Session session,Authenticator pauthenticator) throws AuthenticationException
+	private  ActionResult checkAuthentication(Session session) throws AuthenticationException
 	{
 		try{
 			HttpServletRequest request=session.getHttpRequest();
 			AuthorizationData sessionData;
-			if(pauthenticator != null){
-				Map<String,Object> auth=pauthenticator.getAuthenicate(session);
+			if(authenticator != null){
+				Map<String,Object> auth=authenticator.getAuthenicate(session);
 				if(auth==null){
 					return ActionResult.SECURITYFAILED;
 				}else {
@@ -117,10 +129,10 @@ public class AuthenticateAction extends Action {
 	}
 	
 	@Override
-	public ActionResult execute(Session session,Authenticator pauthenticator) throws AuthenticationException 
+	public ActionResult execute(Session session) throws AuthenticationException 
 	{
 			if(session.getRequest() instanceof HttpServletRequest ){
-				return checkAuthentication(session,pauthenticator);
+				return checkAuthentication(session);
 			} 
 
 			return ActionResult.SECURITYFAILED;//TODO: Raise exception?

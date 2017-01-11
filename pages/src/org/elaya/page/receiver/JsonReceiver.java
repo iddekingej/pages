@@ -84,12 +84,11 @@ public abstract class JsonReceiver<T extends Dynamic> extends Receiver<T> {
 			String name;
 			for(Map.Entry<String,Parameter> paramEnt :getParameters().entrySet()){
 				name=paramEnt.getKey();
-				value=data.get(name);//TODO: when data doesn't exists
+				value=data.get(name);	//TXODO: when data doesn't exists
 				value=convertValue(value,paramEnt.getValue());
 				object.put(name,value);
 			}
 
-			
 			return new ReceiverData<>(object,cmd);
 	}
 	
