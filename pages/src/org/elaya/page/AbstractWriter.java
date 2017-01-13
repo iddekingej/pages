@@ -10,6 +10,7 @@ import org.elaya.page.Element.InvalidVariableNameException;
 import org.elaya.page.Errors.AliasNotFound;
 import org.elaya.page.Errors.LoadingAliasFailed;
 import org.elaya.page.Errors.ReplaceVarException;
+import org.elaya.page.application.AliasData;
 import org.elaya.page.application.Application;
 import org.elaya.page.application.Application.InvalidAliasType;
 import org.elaya.page.data.Data;

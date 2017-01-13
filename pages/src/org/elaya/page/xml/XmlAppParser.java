@@ -29,12 +29,12 @@ public abstract  class XmlAppParser extends XMLParser {
 	}
 
 	@Override
-	protected void setupObject(Object object) throws ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException 
+	protected void initializeObject(Object object) throws ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException 
 	{
 		if(object instanceof PageApplicationAware){
 			((PageApplicationAware)object).setApplication(application);
 		}
-		super.setupObject(object);
+		super.initializeObject(object);
 	}
 	
 	public abstract String getAliasNamespace();

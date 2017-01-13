@@ -1,4 +1,4 @@
-package org.elaya.page;
+package org.elaya.page.application;
 
 public class AliasData {
 	public static final String ALIAS_ELEMENT="element";

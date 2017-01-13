@@ -1,16 +1,12 @@
 package org.elaya.page.xml;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Objects;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.elaya.page.ElementVariant;
@@ -22,48 +18,13 @@ import org.elaya.page.Errors.ValueNotFound;
 import org.elaya.page.data.Dynamic.DynamicException;
 import org.elaya.page.data.DynamicMethod.MethodNotFound;
 import org.elaya.page.data.DynamicObject;
-import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 
-public abstract class XMLParser {
+public abstract class XMLParser extends XMLParserBase<Object> {
 	
-	public static class XMLLoadException extends Exception
-	{
-		private static final long serialVersionUID = 4450324776754322884L;
-		private final transient Node node;
-		private String exceptionFileName="";
-		
-		
-		public XMLLoadException(String message,Throwable cause,Node exNode){
-			super(message,cause);
-			node=exNode;			
-		}
-		
-		public XMLLoadException(String message,Node exNode){
-			super(message);
-			node=exNode;
-		}
-		
-		public XMLLoadException(Throwable cause,Node exNode){
-			super(cause);
-			node=exNode;
-		}
-		
-		public Node getNode(){ return node;}
-		public String getExceptionFileName(){ return exceptionFileName;}
-		public void setFileName(String xmlFileName){exceptionFileName=xmlFileName;}
-		@Override
-		public String toString()
-		{
-			return super.toString()+" while parsing '"+exceptionFileName+"'";
-		}
-	}
-	
-	private String fileName;
 	private HashMap<String,XMLConfig> configs=new HashMap<>();	
 	private Map<String,Object> nameIndex;
 	private LinkedList<Initializer> initializers=new LinkedList<>();
@@ -71,6 +32,7 @@ public abstract class XMLParser {
 	
 	
 	public XMLParser(Map<String,Object> pnameIndex) {
+		setupConfig();
 		nameIndex=pnameIndex;
 	}
 		
@@ -140,9 +102,6 @@ public abstract class XMLParser {
 	}
 		public Map<String,Object> getNameIndex(){ return nameIndex;}
 	
-	protected String getFileName(){
-		return fileName;
-	}
 	protected String getAttributeValue(Node pnode,String pname) throws  ReplaceVarException
 	{
 		Node valueNode=pnode.getAttributes().getNamedItem(pname);
@@ -187,7 +146,6 @@ public abstract class XMLParser {
 		}
 		return nodeIter;
 	}
-	//TODO: handle CDATA=>Error when trimmed
 	
 	private Object parseParameterValueNode(Object pparent,Node pnode) throws XMLLoadException, ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, MethodNotFound, ParserConfigurationException, SAXException, IOException, SettingAttributeException, NormalizeClassNameException 
 	{
@@ -360,49 +318,64 @@ public abstract class XMLParser {
 		return object;
 	}
 	
-	protected void setupObject(Object object) throws ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException{
+	
+	/**
+	*  After an object is created from it's XML definition, the object is setup further with initializers 
+	*
+	*  @param object - object to be setup
+	*/
+	
+	protected void initializeObject(Object object) throws ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException{
 		for(Initializer initializer:initializers){
 			initializer.processObject(object);
 		}
 		afterCreate(object);		
 	}
 	
+	/**
+	*    It is possible to define 'Variant' items,  and item based on existing items. 
+	*    This routine checks if it points to a variant and to which variant.
+	*    This is used for ElementVariants
+	*
+	*    @param node - Node to check
+	*    @return     - Returns null , or the variant node if the node refers to a variant.
+	*/
+	
 	protected ElementVariant getVariant(Node node) throws  XMLLoadException,  ReplaceVarException {
 		return null;
 	}
 	
 	
-	Object parseElement(Object pparent,Node pnode) throws XMLLoadException 
+	protected Object parseElement(Object pparent,Node pnode) throws XMLLoadException 
 	{
-		Node node=pnode;
 		ElementVariant variant=null;
 		try{
 			Object object;
-			XMLConfig info=getConfig(node);
+			XMLConfig info=getConfig(pnode);
 			if(info==null){
-				throw new XMLLoadException("Invalid element '"+node.getNodeName()+"'",node);
+				throw new XMLLoadException("Invalid element '"+pnode.getNodeName()+"'",pnode);
 			}	
 			if(pparent==null && info.getNeedParent()){
-				addError("Element "+node.getNodeName()+" needs a parent but=null",node);
+				throw new XMLLoadException("Element "+pnode.getNodeName()+" needs a parent but=null",pnode);
 			}
 			
 			if(info.getCustom()){
-				return parseCustom(pparent,node);
+				return parseCustom(pparent,pnode);
 			} 			
 		
-			variant=getVariant(node);
+			variant=getVariant(pnode);
 			if(variant !=null){
 				
-				addValues(variant.getDataFromNode(node));
+				addValues(variant.getDataFromNode(pnode));
 				object=parseElement(pparent,variant.getContent());
 			} else {
-				object=createObjectByNode(pparent,node,info);
+				object=createObjectByNode(pparent,pnode,info);
 			}
 			if(object!=null){
-				setupObject(object);
+				initializeObject(object);
 				
-				parseAttributes(object,node,variant);
-				parseChildNodes(object,node);
+				parseAttributes(object,pnode,variant);
+				parseChildNodes(object,pnode);
 			}
 			if(variant !=null){
 				popValues();
@@ -415,6 +388,12 @@ public abstract class XMLParser {
 		}
 	}
 
+	@Override
+	protected Object parseRootNode(Node node) throws XMLLoadException
+	{
+		return parseElement(null,node);
+	}
+	
 	@SuppressWarnings("unchecked")
 	public <T>T parse(String fileName,Class<T> type) throws XMLLoadException
 	{
@@ -425,29 +404,9 @@ public abstract class XMLParser {
 		throw new XMLLoadException("Object is of type "+object.getClass().getName()+" and is not inherited from "+type.getName()+" as required, in xml file "+fileName,null);
 	}
 	
-	private Object parse(String pfileName) throws XMLLoadException {
-		try{
-			fileName=pfileName;
-			setupConfig();
-			DocumentBuilderFactory factory=DocumentBuilderFactory.newInstance();
-			DocumentBuilder builder=factory.newDocumentBuilder();
-			InputStream stream=openFile(pfileName);
-			if(stream ==null){
-				throw new FileNotFoundException(pfileName);
-			}
-			Document doc=builder.parse( stream);
-			NodeList nl=doc.getChildNodes();
-			Node rootNode=nl.item(0);
-			rootNode.normalize();
-			return parseElement(null,rootNode);
-
-		}catch(XMLLoadException e){
-			e.setFileName(pfileName);
-			throw e;
-		}catch(Exception e){
-			throw new XMLLoadException("Parsing "+pfileName+" failed",e,null);
-		}
-	}
+	
+	
+	
 
 	protected void afterCreate(Object parent) throws ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException 
 	{
@@ -457,7 +416,7 @@ public abstract class XMLParser {
 	{
 		return null;
 	}
-	protected abstract InputStream openFile(String fileName) throws FileNotFoundException;
+	
 	protected abstract XMLParser createParser();
 	protected abstract void setupConfig();
 	protected abstract String normalizeClassName(String pname) throws  NormalizeClassNameException ;

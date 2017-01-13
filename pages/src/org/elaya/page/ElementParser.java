@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.Map;
 
 import org.elaya.page.Errors.ReplaceVarException;
+import org.elaya.page.application.AliasData;
 import org.elaya.page.application.Application;
 import org.elaya.page.data.DataModel;
 import org.elaya.page.jsplug.JSPlug;
@@ -16,14 +17,14 @@ import org.elaya.page.xml.XMLConfig;
 import org.elaya.page.xml.XMLParser;
 import org.w3c.dom.Node;
 
-public class UiXmlParser extends XmlAppParser {
+public class ElementParser extends XmlAppParser {
 	
-	public UiXmlParser(Application papplication) {
+	public ElementParser(Application papplication) {
 		super(papplication);		
 
 	}
 
-	public UiXmlParser(Application papplication,Map<String, Object> pnameIndex) {
+	public ElementParser(Application papplication,Map<String, Object> pnameIndex) {
 		super(papplication,pnameIndex);		
 	}
 	
@@ -36,7 +37,7 @@ public class UiXmlParser extends XmlAppParser {
  
 	@Override
 	protected XMLParser createParser() {
-		return new UiXmlParser(getApplication(),getNameIndex());
+		return new ElementParser(getApplication(),getNameIndex());
 	}
 	
 	private void processOption(Node child,LinkedList<OptionItem> list) throws XMLLoadException 

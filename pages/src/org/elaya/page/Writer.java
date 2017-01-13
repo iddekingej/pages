@@ -14,7 +14,6 @@ public class Writer extends AbstractWriter{
 //TODO make in configuration.	
 	private String jsPath="resources/pages/js/";
 	private String cssPath="resources/pages/css/";
-	private String imgPath="resources/pages/images/";	
 
 	public Writer(Application papplication,HttpServletRequest prequest,HttpServletResponse presponse) throws IOException {
 		super(papplication,prequest,presponse);

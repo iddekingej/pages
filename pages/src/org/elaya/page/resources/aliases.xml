@@ -1,4 +1,4 @@
-<aliasses>
+<aliases>
 	<element alias="page" value="org.elaya.page.Page" />
 	<element alias='quickform' value="org.elaya.page.quickform.Form" />
 	<element alias="quick_static" value="org.elaya.page.quickform.StaticElement" />
@@ -42,4 +42,4 @@
 	<!-- Security  -->
 	<security alias="sec_compare_matcher" value="org.elaya.page.security.CompareMatcher" />
 	<security alias="sec_spring_authenticate" value="org.elaya.page.spring.SpringAuthenticateAction"/>
-</aliasses>
+</aliases>

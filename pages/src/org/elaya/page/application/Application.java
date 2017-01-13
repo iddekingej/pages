@@ -8,8 +8,6 @@ import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.elaya.page.AliasData;
-import org.elaya.page.AliasParser;
 import org.elaya.page.ElementVariant;
 import org.elaya.page.ElementVariantList;
 import org.elaya.page.ElementVariantParser;
@@ -19,7 +17,7 @@ import org.elaya.page.Errors.NormalizeClassNameException;
 import org.elaya.page.Page;
 import org.elaya.page.PageLoader;
 import org.elaya.page.data.Url;
-import org.elaya.page.xml.XMLParser.XMLLoadException;
+import org.elaya.page.xml.XMLParserBase.XMLLoadException;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.xml.sax.SAXException;
 
@@ -226,21 +224,13 @@ public abstract class Application{
  */
 	private void addAliases(String fileName) throws LoadingAliasFailed    
 	{
-		AliasParser parser=new AliasParser();
-		try{
-			InputStream input=getConfigStream(fileName);
-			parser.parseAliases(input, aliasses);
-		} catch(ParserConfigurationException|SAXException|IOException e){
+		AliasParser parser=new AliasParser(this,aliasses);
+		try{		
+			parser.parse(fileName);
+		} catch(Exception e){
 			throw new Errors.LoadingAliasFailed("Loading alias file "+fileName+" failed",e);
 		}
-		
-		if(!parser.getErrors().isEmpty()){
-			StringBuilder text=new StringBuilder();
-			for(String error:parser.getErrors()){
-				text.append("\n").append(error);
-			}
-			throw new Errors.LoadingAliasFailed("Loading alias file "+fileName+" failed, error:"+text);
-		}
+
 	}
 	
 	public void setAliasFiles(String paliasFiles) 

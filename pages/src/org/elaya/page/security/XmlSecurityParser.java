@@ -3,7 +3,8 @@ package org.elaya.page.security;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.Map;
-import org.elaya.page.AliasData;
+
+import org.elaya.page.application.AliasData;
 import org.elaya.page.application.Application;
 import org.elaya.page.xml.XmlAppParser;
 import org.elaya.page.xml.XMLConfig;

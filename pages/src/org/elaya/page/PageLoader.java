@@ -12,7 +12,7 @@ public class PageLoader {
  * 
  * @param pparser
  */
-	protected void initUiParser(UiXmlParser pparser)
+	protected void initUiParser(ElementParser pparser)
 	{
 		
 	}
@@ -36,7 +36,7 @@ public class PageLoader {
 		if(pcache && pageCache.containsKey(pfileName)){
 			return pageCache.get(pfileName);
 		}
-		UiXmlParser parser=new UiXmlParser(application);
+		ElementParser parser=new ElementParser(application);
 		initUiParser(parser);
 		Page page;
 		page=parser.parse(pfileName,Page.class);
