@@ -19,7 +19,7 @@ public class LinkElement extends BuildInElement {
 			Object value=getValueByName(data);		
 			if(value instanceof LinkData){
 				LinkData linkData=(LinkData)value;
-				themeItem.linkItem(pwriter,replaceVariables(data,linkData.getUrlText()), replaceVariables(data,linkData.getText()));
+				themeItem.linkItem(pwriter,pwriter.processUrl(data,linkData.getUrlText()), pwriter.replaceVariables(data,linkData.getText()));
 			} else {
 				throw new ValueNotLinkData();
 			}

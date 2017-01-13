@@ -18,6 +18,12 @@ public abstract class JSPlug extends DynamicMethod{
 		}
 	}
 	
+	public String toJsString(String pvalue){
+		if(pvalue==null){
+			return "\"\"";
+		}
+		return "\""+pvalue.replace("\"","\\\"")+"\"";
+	}
 	
 	protected boolean checkParent(Element<?> pelement)
 	{

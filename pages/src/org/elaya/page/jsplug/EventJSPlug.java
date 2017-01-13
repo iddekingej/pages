@@ -2,11 +2,9 @@ package org.elaya.page.jsplug;
 
 import org.elaya.page.JSWriter;
 
-public class EventJSPlug extends JSPlug {
-
+public abstract class EventJSPlug extends JSPlug {
 	private String event;
-	private String js;
-	
+
 	public void setEvent(String pevent)
 	{
 		event=pevent;
@@ -14,21 +12,13 @@ public class EventJSPlug extends JSPlug {
 	
 	public String getEvent(){
 		return event;
-	}
-
-	public void setJs(String pjs)
-	{
-		js=pjs;
-	}
+	}	
 	
-	public String getJs()
-	{
-		return js;
-	}
+	public abstract String getJs(); 
 	
 	@Override
 	public void display(JSWriter pwriter) 
 	{
-		pwriter.print("this.on("+pwriter.toJsString(event)+",function(){"+js+"});");
+		pwriter.print("this.on("+pwriter.toJsString(getEvent())+",function(){"+getJs()+"});");
 	}
 }

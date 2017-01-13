@@ -41,7 +41,7 @@ public class ListMenu extends PageElement<ListMenuThemeItem> {
 	@Override
 	public void displayElement(int id,Writer pwriter,Data data) throws org.elaya.page.Element.DisplayException{
 		try{			
-			themeItem.header(pwriter,replaceVariables(data,title));
+			themeItem.header(pwriter,pwriter.replaceVariables(data,title));
 		}catch(Exception e){
 			throw new DisplayException("",e);
 		}

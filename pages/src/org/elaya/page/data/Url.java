@@ -55,9 +55,14 @@ public class Url {
 		return newUrl;
 	}
 	
-	String getUrlText()
+	public String getUrlText()
 	{
 		return urlText+query;
 	}
 
+	@Override
+	public String toString()
+	{
+		return getUrlText();
+	}
 }

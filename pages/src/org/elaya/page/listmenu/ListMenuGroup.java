@@ -32,7 +32,7 @@ public class ListMenuGroup extends BuildinListMenuItem {
 	@Override
 	public void displayElement(int id,Writer pwriter,Data data) throws org.elaya.page.Element.DisplayException{
 		try{			
-			themeItem.groupHeader(pwriter,replaceVariables(data,title));
+			themeItem.groupHeader(pwriter,pwriter.replaceVariables(data,title));
 		}catch(Exception e){
 			throw new DisplayException("",e);
 		}

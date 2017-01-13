@@ -20,7 +20,7 @@ public class Menu extends PageElement<ElementThemeItem> {
 	@Override
 	public void displayElement(int id,Writer writer, Data data) throws org.elaya.page.Element.DisplayException {
 		try{
-			themeItem.menu(writer, getDomId(id), replaceVariables(data,title));
+			themeItem.menu(writer, getDomId(id),writer.replaceVariables(data,title));
 		}catch(Exception e){
 			throw new DisplayException("",e);
 		}

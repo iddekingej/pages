@@ -38,11 +38,11 @@ public class ImageElement extends PageElement<ElementThemeItem> {
 	
 	//TODO: add id to element andjs?
 	@Override
-	public void displayElement(int id,Writer pwriter,Data data) throws org.elaya.page.Element.DisplayException{
+	public void displayElement(int id,Writer writer,Data data) throws org.elaya.page.Element.DisplayException{
 		try{
-			themeItem.image(pwriter,replaceVariables(data,url),replaceVariables(data,className),replaceVariables(data,css));
+			themeItem.image(writer,writer.processUrl(data,url),writer.replaceVariables(data,className),writer.replaceVariables(data,css));
 		}catch(Exception e){
-			throw new DisplayException("",e);
+			throw new DisplayException(e);
 		}
 	}
 

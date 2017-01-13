@@ -12,23 +12,9 @@ import org.elaya.page.security.Session.InvalidSessionData;
 
 public class SecurityManager {
 	
-
-	
 	private String loginCheckUrl="";
 	private String loginPageUrl="";
 	private LinkedList<RequestMatcher> requestMatchers=new LinkedList<>();
-	private Authenticator authenticator;
-	
-	public void setAuthenticator(Authenticator pauthenticator)
-	{
-			authenticator=pauthenticator;
-	}
-	
-	public Authenticator getAuthenticator()
-	{
-		return authenticator;
-	}
-
 	
 
 	public void setLoginCheckUrl(String purl){

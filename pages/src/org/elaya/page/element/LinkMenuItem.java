@@ -55,9 +55,9 @@ public class LinkMenuItem extends BaseMenuItem<ElementThemeItem> {
 	protected void makeSetupJs(JSWriter writer,Data pdata)  throws ParserConfigurationException, SAXException, IOException, InvalidAliasType, AliasNotFound, LoadingAliasFailed, ReplaceVarException 
 	{
 		Data data=getData(pdata);
-		writer.objVar("text", replaceVariables(data,text));
-		writer.objVar("url", writer.procesUrl(replaceVariables(data,url)));
-		writer.objVar("iconUrl",writer.procesUrl(replaceVariables(data,iconUrl)));
+		writer.objVar("text", writer.replaceVariables(data,text));
+		writer.objVar("url", writer.processUrl(data,url));
+		writer.objVar("iconUrl",writer.processUrl(data,iconUrl));
 	}
 	
 

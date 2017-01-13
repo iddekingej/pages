@@ -179,38 +179,7 @@ public abstract class Element<T extends ThemeItemBase> extends DynamicMethod {
 	
 	
 	
-	protected String replaceVariables(Data pdata,String pstring) throws ReplaceVarException
-	{
-		int pos=0;
-		int newPos;
-		StringBuilder returnValue=new StringBuilder();
-		String varName;
-		Object value;
-		String string=pstring==null?"":pstring;
-		try{
-			while(true){
-				newPos=string.indexOf("${",pos);
-				if(newPos==-1){
-					returnValue.append(string.substring(pos));
-					break;
-				}
-				returnValue.append(string.substring(pos,newPos));
-				pos=string.indexOf('}',newPos);
-				if(pos==-1){
-					throw new InvalidVariableNameException("Missing '}' after position "+newPos); 				
-				}
-				varName=string.substring(newPos+2,pos);	
-				value=pdata.get(varName);				
-				if(value != null){
-					returnValue.append(value.toString());
-				}			
-				pos++;
-			}
-		}catch(Exception e){
-			throw new ReplaceVarException("In String "+pstring,e);
-		}
-		return returnValue.toString();
-	}
+
 	
 	public void setDataModel(DataModel pdataModel)
 	{

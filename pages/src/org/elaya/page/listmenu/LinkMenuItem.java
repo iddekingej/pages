@@ -5,6 +5,8 @@ public class LinkMenuItem extends BuildinListMenuItem{
 
 	private String text;
 	private String url;
+	private String delUrl;
+	private String editUrl;
 	
 	public void setText(String ptext)
 	{
@@ -26,11 +28,31 @@ public class LinkMenuItem extends BuildinListMenuItem{
 		return url;
 	}
 
+	public void setDelUrl(String url)
+	{
+		delUrl=url;
+	}
+	
+	public String getDelUrl()
+	{
+		return delUrl;
+	}
+	
+	public void setEditUrl(String url)
+	{
+		editUrl=url;
+	}
+	
+	public String getEditUrl()
+	{
+		return editUrl;
+	}	
+	
 	@Override
 	public void displayElement(int id,Writer pwriter,Data data) throws org.elaya.page.Element.DisplayException  {
 		try{
-			String 	resultUrl=pwriter.procesUrl(replaceVariables(data,url));
-			themeItem.linkItem(pwriter,getDomId(id),replaceVariables(data,text),resultUrl  );
+			String 	resultUrl=pwriter.processUrl(data,url);
+			themeItem.linkItem(pwriter,getDomId(id),pwriter.replaceVariables(data,text),resultUrl,delUrl,editUrl);
 		}catch(Exception e){
 			throw new DisplayException("",e);
 		}

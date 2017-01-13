@@ -97,7 +97,7 @@ public class Table extends PageElement<TableThemeItem> {
 			for(Element <?>element:getElements()){
 				String title;
 				if(element instanceof TableElement){
-					title=replaceVariables(data,((TableElement<?>)element).getTitle());
+					title=writer.replaceVariables(data,((TableElement<?>)element).getTitle());
 				} else {
 					title="";
 				}

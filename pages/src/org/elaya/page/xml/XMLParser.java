@@ -428,7 +428,7 @@ public abstract class XMLParser {
 	private Object parse(String pfileName) throws XMLLoadException {
 		try{
 			fileName=pfileName;
-			addConfig();
+			setupConfig();
 			DocumentBuilderFactory factory=DocumentBuilderFactory.newInstance();
 			DocumentBuilder builder=factory.newDocumentBuilder();
 			InputStream stream=openFile(pfileName);
@@ -459,7 +459,7 @@ public abstract class XMLParser {
 	}
 	protected abstract InputStream openFile(String fileName) throws FileNotFoundException;
 	protected abstract XMLParser createParser();
-	protected abstract void addConfig();
+	protected abstract void setupConfig();
 	protected abstract String normalizeClassName(String pname) throws  NormalizeClassNameException ;
 	protected abstract String getName(Object pobject);
 }

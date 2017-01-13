@@ -27,7 +27,7 @@ public class ApplicationXmlParser extends XMLParser {
 	}
 
 	@Override
-	protected void addConfig() {
+	protected void setupConfig() {
 		addConfig("application",new XMLConfig(Application.class,null,false,"",false));
 
 	}

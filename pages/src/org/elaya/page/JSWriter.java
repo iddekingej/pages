@@ -3,6 +3,7 @@ package org.elaya.page;
 import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.elaya.page.Errors.AliasNotFound;
@@ -11,15 +12,12 @@ import org.elaya.page.application.Application;
 import org.elaya.page.application.Application.InvalidAliasType;
 import org.xml.sax.SAXException;
 
-public class JSWriter {
+public class JSWriter extends AbstractWriter{
 	private StringBuilder buffer=new StringBuilder();
-	private Application application;
-	private HttpServletRequest request;
-	
-	public JSWriter(Application papplication,HttpServletRequest prequest)
+
+	public JSWriter(Application papplication,HttpServletRequest prequest,HttpServletResponse presponse)
 	{
-		application=papplication;
-		request=prequest;
+		super(papplication,prequest,presponse);
 	}
 	public String str(Object pvalue){
 		if(pvalue==null){
@@ -64,14 +62,14 @@ public class JSWriter {
 		return buffer.toString();
 	}
 	
-	public String procesUrl(String purl) throws ParserConfigurationException, SAXException, IOException, InvalidAliasType, AliasNotFound, LoadingAliasFailed 
+	public String processUrl(String purl) throws ParserConfigurationException, SAXException, IOException, InvalidAliasType, AliasNotFound, LoadingAliasFailed 
 	{
 		String url=purl;
 		if(url.startsWith("@")){
-			url=application.getAlias(url.substring(1),AliasData.ALIAS_URL,true);
+			url=getApplication().getAlias(url.substring(1),AliasData.ALIAS_URL,true);
 		}
 		if(url.startsWith("+")){
-			return request.getContextPath()+"/"+url.substring(1);
+			return getRequest().getContextPath()+"/"+url.substring(1);
 		} else {
 			return url;
 		}

@@ -4,20 +4,11 @@ import java.io.IOException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.elaya.page.Errors.AliasNotFound;
-import org.elaya.page.Errors.LoadingAliasFailed;
 import org.elaya.page.application.Application;
-import org.elaya.page.application.Application.InvalidAliasType;
 import org.springframework.web.util.HtmlUtils;
-import org.xml.sax.SAXException;
 
-public class Writer {
-	HttpServletRequest  request;
-	HttpServletResponse response;
+public class Writer extends AbstractWriter{
 	ServletOutputStream stream;
-	Application         application;
 	JSWriter            jswriter;
 	int idCnt=0;
 //TODO make in configuration.	
@@ -26,15 +17,15 @@ public class Writer {
 	private String imgPath="resources/pages/images/";	
 
 	public Writer(Application papplication,HttpServletRequest prequest,HttpServletResponse presponse) throws IOException {
-		application=papplication;
-		response=presponse;
-		request=prequest;
-		stream=response.getOutputStream();
-		jswriter=new JSWriter(papplication,request);
+		super(papplication,prequest,presponse);
+		stream=getResponse().getOutputStream();		
 	}	
 	
 	public JSWriter getJSWriter()
 	{
+		if(jswriter==null){
+			jswriter=new JSWriter(getApplication(),getRequest(),getResponse());
+		}
 		return jswriter;
 	}
 	
@@ -46,7 +37,7 @@ public class Writer {
 	
 	public void setContentType(String pstr)
 	{
-		response.setContentType(pstr);
+		getResponse().setContentType(pstr);
 	}
 	
 	public void print(String pstr) throws IOException
@@ -106,26 +97,7 @@ public class Writer {
 	{
 		stream.flush();
 	}
-	
-
-	
-	public String getBasePath(){
-		return request.getContextPath();
-	}
-	
-	public String procesUrl(String purl) throws ParserConfigurationException, SAXException, IOException, InvalidAliasType, AliasNotFound, LoadingAliasFailed 
-	{
-		String url=purl;
-		if(url.startsWith("@")){
-			url=application.getAlias(url.substring(1),AliasData.ALIAS_URL,true);
-		}
-		if(url.startsWith("+")){
-			return getBasePath()+"/"+url.substring(1);
-		} else {
-			return url;
-		}
-	}
-	
+		
 	public String getJsPath(String pfile)
 	{
 		return getBasePath()+"/"+jsPath+pfile;
@@ -136,15 +108,16 @@ public class Writer {
 		return getBasePath()+"/"+cssPath+pfile;
 	}
 	
-	public String getImgPath(String pfile)
+	public String getImgUrl(String pfile)
 	{
-		return getBasePath()+"/"+imgPath+pfile;
+		return getBasePath()+"/"+getApplication().getImageUrl()+pfile;
 	}
 		
+	
 	public void generateJs() throws IOException
 	{
 		jsBegin();
-		print(jswriter.toString());
+		print(getJSWriter().toString());
 		jsEnd();
 	}
 }

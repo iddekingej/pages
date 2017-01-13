@@ -34,6 +34,7 @@ public abstract class Application{
 	private String defaultDBConnection;
 	private String classBase="";
 	private PageLoader pageLoader;
+	private String imageURL="resources/pages/images/";
 	 
 	
 	
@@ -42,7 +43,7 @@ public abstract class Application{
 		private static final long serialVersionUID = 7128805697742441199L;
 		public DefaultDBConnectionNotSet()
 		{
-			super("Default DB connection(defaultDBConnection) not set application");
+			super("Default DB connection(defaultDBConnection) not set");
 		}
 	}
 	
@@ -55,6 +56,21 @@ public abstract class Application{
 		{
 			super("Invalid alias type, '"+ptypeReq+"' expected but '"+ptypeGot+"' found");
 		}
+	}
+	
+	/**
+	 * Base Url of iamges
+	 * 
+	 */
+	
+	public void setImageUrl(String url)
+	{
+		imageURL=url;		
+	}
+	
+	public String getImageUrl()
+	{
+		return imageURL;
 	}
 	
 

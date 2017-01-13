@@ -25,7 +25,13 @@ public class ListMenuThemeItem extends org.elaya.page.listmenu.ListMenuThemeItem
 
 	
 	@Override
-	public void linkItem(Writer pwriter,String pdomId, String ptext, String purl) throws IOException {
+	public void linkItem(Writer pwriter,String pdomId, String ptext, String purl,String delUrl,String editUrl) throws IOException {
+		if(delUrl!=null && !delUrl.isEmpty()){
+			pwriter.print("<a "+pwriter.property("href", delUrl)+"><img "+pwriter.property("src",pwriter.getImgUrl("del.png"))+" /></a>");
+		}
+		if(editUrl!=null && !editUrl.isEmpty()){
+			pwriter.print("<a href='"+editUrl+"'><img src='edit.png'></a>");
+		}
 		pwriter.print("<a class='listitem_link' "+property("id",pdomId)+property("href",purl)+">"+escape(ptext)+"</a>");
 	}
 

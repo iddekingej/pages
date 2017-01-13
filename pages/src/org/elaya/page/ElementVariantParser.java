@@ -67,7 +67,7 @@ public class ElementVariantParser extends XmlAppParser{
 
 
 	@Override
-	protected void addConfig() {
+	protected void setupConfig() {
 		addConfig("variants",new XMLConfig(ElementVariantList.class,ElementVariantList.class,false ,null,false));
 		addConfig("variant",new XMLConfig(ElementVariant.class,ElementVariant.class,false,"addVariant",true));
 		addConfig("content",new XMLConfig(Node.class,null,true,"",true));

@@ -2,7 +2,6 @@ package org.elaya.page.listmenu;
 
 import org.elaya.page.Writer;
 import org.elaya.page.data.Data;
-import org.elaya.page.data.LinkMenuData;
 
 
 public class DynamicLinkMenuItem extends BuildinListMenuItem {
@@ -30,7 +29,7 @@ public class DynamicLinkMenuItem extends BuildinListMenuItem {
 						} else {
 							themeItem.preItem(pwriter);
 						}
-						themeItem.linkItem(pwriter,getDomId(id),menuData.getText(),pwriter.procesUrl(menuData.getUrlText()));
+						themeItem.linkItem(pwriter,getDomId(id),menuData.getText(),pwriter.processUrl(data,menuData.getUrlText()),pwriter.processUrl(data,menuData.getDelUrl()),pwriter.processUrl(data,menuData.getEditUrl()));
 						themeItem.postItem(pwriter);
 					}
 

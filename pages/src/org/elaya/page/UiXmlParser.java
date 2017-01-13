@@ -92,7 +92,7 @@ public class UiXmlParser extends XmlAppParser {
 	}
 	
 	@Override
-	protected void addConfig() {
+	protected void setupConfig() {
 		addConfig("page",new XMLConfig(Page.class,Page.class,false,"",false));
 		addConfig("element",new XMLConfig(Element.class,null, false, "addElement",true));
 		addConfig("options",new XMLConfig(null,null,true,"",true));

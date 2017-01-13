@@ -50,7 +50,7 @@ public class StaticElement extends PageElement<ElementThemeItem> {
 	@Override
 	public void displayElement(int id,Writer pwriter,Data data) throws org.elaya.page.Element.DisplayException  {
 		try{
-			themeItem.staticElement(pwriter,replaceVariables(data,text), isHtml, replaceVariables(data,className), replaceVariables(data,css));
+			themeItem.staticElement(pwriter,pwriter.replaceVariables(data,text), isHtml, pwriter.replaceVariables(data,className), pwriter.replaceVariables(data,css));
 		}catch(Exception e){
 			throw new DisplayException("",e);
 		}

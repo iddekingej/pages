@@ -52,12 +52,12 @@ public class LinkElement extends PageElement<ElementThemeItem> {
 	@Override
 	public void displayElement(int id,Writer pwriter,Data data) throws org.elaya.page.Element.DisplayException {
 		try{			
-			String resultUrl=replaceVariables(data,url);
+			String resultUrl=pwriter.processUrl(data,url);
 
 			if(linkType==LinkType.LINK_APPLICATION){
 				resultUrl=pwriter.getBasePath()+resultUrl;
 			}
-			themeItem.link(pwriter,resultUrl, replaceVariables(data,text), replaceVariables(data,className), replaceVariables(data,css)); 
+			themeItem.link(pwriter,resultUrl, pwriter.replaceVariables(data,text), pwriter.replaceVariables(data,className), pwriter.replaceVariables(data,css)); 
 		}catch(Exception e){
 			throw new DisplayException("",e);
 		}

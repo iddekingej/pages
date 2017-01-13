@@ -168,7 +168,7 @@ public class Form extends PageElement<FormThemeItem>{
 			} else if(submitType.equals(SubmitType.POST)){
 				method="post";
 			}
-			themeItem.formHeader(pwriter,domId,replaceVariables(data,title),pwriter.getBasePath()+replaceVariables(data,url),method,getWidth());
+			themeItem.formHeader(pwriter,domId,pwriter.replaceVariables(data,title),pwriter.processUrl(data,url),method,getWidth());
 			if(hiddenElements!=null){
 				for(String name:hiddenElements){
 					themeItem.formHiddenElement(pwriter, domId+"_h_"+name, name, data.getString(name));
@@ -200,12 +200,12 @@ public class Form extends PageElement<FormThemeItem>{
 	@Override
 	protected void makeSetupJs(JSWriter writer,Data pdata) throws ParserConfigurationException, SAXException, IOException, InvalidAliasType, AliasNotFound, LoadingAliasFailed, ReplaceVarException 
 	{
-		String next=writer.procesUrl(replaceVariables(pdata,nextUrl));
-		writer.objVar("cmd",replaceVariables(pdata,cmd));
+		String next=writer.processUrl(pdata,nextUrl);
+		writer.objVar("cmd",writer.replaceVariables(pdata,cmd));
 		writer.objVar("nextUrl", next);
 				
 		if(this.cancelUrl.length()>0){
-			writer.objVar("cancelUrl",replaceVariables(pdata,cancelUrl));			
+			writer.objVar("cancelUrl",writer.processUrl(pdata,cancelUrl));			
 		}
 		writer.objVar("submitType",submitType.getValue());
 	}
