@@ -84,7 +84,7 @@ public class AliasParser extends XMLParserBase<Map<String,AliasData>>{
 	@Override
 	protected Map<String,AliasData> parseRootNode(Node node) throws XMLLoadException {
 		if(!"aliases".equals(node.getNodeName())){
-			throw new XMLLoadException("'aliasses' node expected",node);
+			throw new XMLLoadException("'aliases' node expected",node);
 		}
 		parseAlias(node);
 		return aliasList;

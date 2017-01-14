@@ -27,7 +27,7 @@ public abstract class Application{
 	private String aliasFiles;
 	private String elementVariantFiles;
 	private ElementVariantList elementVariants;
-	private HashMap<String,AliasData> aliasses;
+	private HashMap<String,AliasData> aliases;
 	private String xmlPath="../pages/"; 
 	private String defaultDBConnection;
 	private String classBase="";
@@ -50,10 +50,16 @@ public abstract class Application{
 
 		private static final long serialVersionUID = -7739276897593055425L;
 
-		public InvalidAliasType(String ptypeReq,String ptypeGot)
+		public InvalidAliasType(String pname,String ptypeReq,String ptypeGot)
 		{
-			super("Invalid alias type, '"+ptypeReq+"' expected but '"+ptypeGot+"' found");
+			super("Invalid alias '"+pname+" type, '"+ptypeReq+"' expected but '"+ptypeGot+"' found");
 		}
+	}
+	
+	public void setup() throws LoadingAliasFailed, XMLLoadException
+	{
+		loadAliasFiles();
+		processElementVariantFiles();
 	}
 	
 	/**
@@ -205,15 +211,12 @@ public abstract class Application{
 		String[] files=elementVariantFiles.split(",");
 		for(String variantFile:files){
 			ElementVariantParser variantParser=new ElementVariantParser(this);
-			 elementVariants=variantParser.parse(variantFile,ElementVariantList.class);
+			elementVariants=variantParser.parse(variantFile,ElementVariantList.class);
 		}
 	}
 	
 	public ElementVariant getVariantByName(String name) throws XMLLoadException
 	{
-		if(elementVariants==null){
-			processElementVariantFiles();
-		}
 		return elementVariants.getElementVariantByName(name);
 	}
 /**
@@ -222,9 +225,9 @@ public abstract class Application{
  * @param fileName add aliases in xml file
  * @throws LoadingAliasFailed 
  */
-	private void addAliases(String fileName) throws LoadingAliasFailed    
+	private void loadAliasFile(String fileName) throws LoadingAliasFailed    
 	{
-		AliasParser parser=new AliasParser(this,aliasses);
+		AliasParser parser=new AliasParser(this,aliases);
 		try{		
 			parser.parse(fileName);
 		} catch(Exception e){
@@ -238,29 +241,32 @@ public abstract class Application{
 		aliasFiles=paliasFiles;
 	}
 	
+	/**
+	 * aliasFiles is a comma delimited list of files to load.
+	 * This routine iterates through this list and loads each file.
+	 * 	
+	 * @throws LoadingAliasFailed
+	 */
 	private void loadAliasFiles() throws LoadingAliasFailed 
 	{
-		aliasses=new HashMap<>();
+		aliases=new HashMap<>();
 		String[] fileNames=aliasFiles.split(",");
 		for(String fileName:fileNames){
-			addAliases(fileName);
+			loadAliasFile(fileName);
 		}
 	}
 	
 	public Map<String,AliasData> getAliases() throws LoadingAliasFailed  
 	{
-		if(aliasses==null){
-			loadAliasFiles();
-		}
-		return aliasses;
+		return aliases;
 	}
 	 
 	public String getAlias(String pname,String ptype) throws LoadingAliasFailed, InvalidAliasType  
 	{
-		AliasData data=getAliases().get(pname);
+		AliasData data=aliases.get(pname);
 		if(data != null){			
 			if(data.getType() != ptype){
-				throw new InvalidAliasType(ptype,data.getType());
+				throw new InvalidAliasType(pname,ptype,data.getType());
 			}
 			return data.getValue();
 		}

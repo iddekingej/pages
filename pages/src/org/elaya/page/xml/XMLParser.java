@@ -11,6 +11,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.elaya.page.ElementVariant;
 import org.elaya.page.Errors;
+import org.elaya.page.Errors.LoadingAliasFailed;
 import org.elaya.page.Errors.NormalizeClassNameException;
 import org.elaya.page.Errors.ReplaceVarException;
 import org.elaya.page.Errors.SettingAttributeException;
@@ -323,9 +324,11 @@ public abstract class XMLParser extends XMLParserBase<Object> {
 	*  After an object is created from it's XML definition, the object is setup further with initializers 
 	*
 	*  @param object - object to be setup
+	 * @throws org.elaya.page.xml.XMLParserBase.XMLLoadException 
+	 * @throws LoadingAliasFailed 
 	*/
 	
-	protected void initializeObject(Object object) throws ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException{
+	protected void initializeObject(Object object) throws ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, LoadingAliasFailed, org.elaya.page.xml.XMLParserBase.XMLLoadException{
 		for(Initializer initializer:initializers){
 			initializer.processObject(object);
 		}
@@ -372,9 +375,8 @@ public abstract class XMLParser extends XMLParserBase<Object> {
 				object=createObjectByNode(pparent,pnode,info);
 			}
 			if(object!=null){
-				initializeObject(object);
-				
 				parseAttributes(object,pnode,variant);
+				initializeObject(object);
 				parseChildNodes(object,pnode);
 			}
 			if(variant !=null){
@@ -404,11 +406,8 @@ public abstract class XMLParser extends XMLParserBase<Object> {
 		throw new XMLLoadException("Object is of type "+object.getClass().getName()+" and is not inherited from "+type.getName()+" as required, in xml file "+fileName,null);
 	}
 	
-	
-	
-	
 
-	protected void afterCreate(Object parent) throws ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException 
+	protected void afterCreate(Object parent) throws ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, LoadingAliasFailed, org.elaya.page.xml.XMLParserBase.XMLLoadException 
 	{
 		
 	}

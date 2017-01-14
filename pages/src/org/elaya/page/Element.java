@@ -458,9 +458,20 @@ public abstract class Element<T extends ThemeItemBase> extends DynamicMethod {
 	
 	public abstract String getThemeName();
 	
+	/**
+	 * Setup theme handling object 
+	 * 
+	 * @param ptheme Theme object.
+	 * @throws ClassNotFoundException
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 * @throws InvocationTargetException
+	 * @throws NoSuchMethodException
+	 */
 	@SuppressWarnings("unchecked")
 	public final void setTheme(Theme ptheme) throws ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException 
 	{
+		Objects.requireNonNull(ptheme);
 		theme=ptheme;
 		ThemeItemBase newThemeItem=ptheme.getThemeItem(getThemeName());
 		Objects.requireNonNull(newThemeItem,"themeItem=>setTheme");
@@ -478,7 +489,7 @@ public abstract class Element<T extends ThemeItemBase> extends DynamicMethod {
 	}
 	public final void addElement(Element<?> pelement) throws InvalidElement, ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, DuplicateElementOnPage 
 	{
-	
+		Objects.requireNonNull(theme,"In element "+getClass().getName());
 		Objects.requireNonNull(pelement,"addElement(pelement)");
 		if(!checkElement(pelement)){
 			throw new Errors.InvalidElement(pelement,this);

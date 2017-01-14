@@ -2,6 +2,8 @@ package org.elaya.page.application;
 
 import java.io.InputStream;
 import java.util.Map;
+
+import org.elaya.page.Errors.LoadingAliasFailed;
 import org.elaya.page.xml.XMLConfig;
 import org.elaya.page.xml.XMLParser;
 
@@ -39,6 +41,14 @@ public class ApplicationXmlParser extends XMLParser {
 	@Override
 	protected String getName(Object pobject) {
 		return "";
+	}
+	
+	@Override
+	protected void afterCreate(Object object) throws LoadingAliasFailed, org.elaya.page.xml.XMLParserBase.XMLLoadException
+	{
+		if(object instanceof Application){
+			((Application) object).setup();
+		}
 	}
 
 
