@@ -24,8 +24,8 @@ public class ElementThemeItem extends org.elaya.page.element.ElementThemeItem {
 	}
 
 	@Override
-	public void panelHeader(Writer pwriter,String pclass, String pcss) throws IOException {
-		pwriter.print("<div "+propertyF("class",pclass)+propertyF("style",pcss)+">");
+	public void panelHeader(Writer pwriter,String pcss) throws IOException {
+		pwriter.print("<div "+propertyF("style",pcss)+">");
 
 	}
 
@@ -75,5 +75,10 @@ public class ElementThemeItem extends org.elaya.page.element.ElementThemeItem {
 	public void menu(Writer pwriter, String pid, String ptitle) throws IOException {
 		pwriter.print("<div class='menu' "+property("id",pid)+" >"+escape(ptitle)+"</div>");
 	}
-	
+	@Override
+	public void button(Writer writer,String id,String text) throws IOException
+	{
+		writer.print("\n<input type='button' "+classProperty("button")+property("id",id)+property("value",text)+"/>\n");
+	}
+
 }

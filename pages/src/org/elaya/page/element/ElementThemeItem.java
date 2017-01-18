@@ -15,7 +15,7 @@ public abstract class ElementThemeItem extends ThemeItemBase {
 	 * @param pcss     css of panel
 	 * @throws IOException
 	 */
-	public abstract void panelHeader(Writer pwriter,String pclass,String pcss) throws IOException;
+	public abstract void panelHeader(Writer pwriter,String pcss) throws IOException;
 	public abstract void panelFooter(Writer pwriter) throws IOException;
 	public abstract void link(Writer pwriter,String purl,String ptext,String pclass,String pcss) throws IOException;
 	public abstract void verticalSpacer(Writer pwriter) throws IOException;
@@ -25,4 +25,5 @@ public abstract class ElementThemeItem extends ThemeItemBase {
 	public abstract void menuBarItemFooter(Writer pwriter)throws IOException;
 	public abstract void menuBarFooter(Writer pwriter) throws IOException;
 	public abstract void menu(Writer pwriter,String pid,String ptitle) throws IOException;
+	public abstract void button(Writer writer,String id,String text) throws IOException;
 }

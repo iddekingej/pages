@@ -274,6 +274,31 @@ public abstract class XMLParser extends XMLParserBase<Object> {
 		return object;
 	}
 	
+	
+	/**
+	 * Add object to parent as defined in info object
+	 * This routine calls info.defaulSetMethod on parent to add object to parent 
+	 * if info.defaulSetMethod is empty that parent is not set.
+	 * 
+	 * @param parent  Object is added to this parent
+	 * @param object  Object to add to parent
+	 * @param node    Definition of 'Object'  only used for error messages
+	 * @param info    Info object about 'Object'
+	*/
+	private void setParent(Object parent,Object object,Node node,XMLConfig info) throws IllegalAccessException, InvocationTargetException, org.elaya.page.xml.XMLParserBase.XMLLoadException
+	{
+		if(object != null && parent != null){
+			String methodName=info.getDefaultSetMethod();
+			if(!methodName.isEmpty()){
+				try{
+					DynamicObject.call(parent, methodName,new Class<?>[]{info.getBaseClass()},new Object[]{object});
+				} catch(NoSuchMethodException e){
+					throw new XMLLoadException("Method "+methodName + " in object "+parent.getClass().getName()+" doesn't exists",e,node);
+				}							
+			}
+		}		
+	}
+	
 	private Object createObjectByNode(Object parent,Node node,XMLConfig info) throws XMLLoadException, SettingAttributeException, ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, MethodNotFound, ParserConfigurationException, SAXException, IOException, NormalizeClassNameException, DynamicException,  ReplaceVarException  
 	{
 		Object object;
@@ -306,15 +331,7 @@ public abstract class XMLParser extends XMLParserBase<Object> {
 			}	
 		}
 		
-		if(object != null && parent != null){
-			String methodName=info.getDefaultSetMethod();
-
-			try{
-				DynamicObject.call(parent, methodName,new Class<?>[]{info.getBaseClass()},new Object[]{object});
-			} catch(NoSuchMethodException e){
-				throw new XMLLoadException("Method "+methodName + " in object "+parent.getClass().getName()+" doesn't exists",e,node);
-			}										
-		}
+		setParent(parent,object,node,info);
 		
 		return object;
 	}
@@ -358,17 +375,23 @@ public abstract class XMLParser extends XMLParserBase<Object> {
 			if(info==null){
 				throw new XMLLoadException("Invalid element '"+pnode.getNodeName()+"'",pnode);
 			}	
-			if(pparent==null && info.getNeedParent()){
-				throw new XMLLoadException("Element "+pnode.getNodeName()+" needs a parent but=null",pnode);
+			if(pparent==null){
+				if(info.getParentClass()!=null){
+						throw new XMLLoadException("Element "+pnode.getNodeName()+" needs a parent but=null",pnode);
+				}
+			} else if(!info.getParentClass().isInstance(pparent)){
+				throw new XMLLoadException("Parent object is not inherited from '"+info.getParentClass().getName()+"'",pnode);				
 			}
 			
 			if(info.getCustom()){
-				return parseCustom(pparent,pnode);
+				object=parseCustom(pparent,pnode);
+				setParent(pparent,object,pnode,info);
+				initializeObject(object);
+				return object;
 			} 			
 		
 			variant=getVariant(pnode);
 			if(variant !=null){
-				
 				addValues(variant.getDataFromNode(pnode));
 				object=parseElement(pparent,variant.getContent());
 			} else {

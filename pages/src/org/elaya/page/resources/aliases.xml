@@ -10,11 +10,13 @@
 	
 	<element alias='spacer_vertical' value="org.elaya.page.element.VerticalSpacer" />
 	<element alias='spacer_horizontal' value="org.elaya.page.element.HorizontalSpacer" />
-
-	<element alias="link" value="org.elaya.page.element.LinkElement" />
+	<element alias="button" value='org.elaya.page.element.Button' />
+	<element alias="link" value="org.elaya.page.element.LinkElement" /> 
 	<element alias='static' value="org.elaya.page.element.StaticElement" />
 	<element alias="panel" value="org.elaya.page.element.PanelElement" />
 	<element alias="repeat" value="org.elaya.page.element.RepeatElement" />
+<!--  plugs  -->
+	<element alias="location_plug" value='org.elaya.page.jsplug.LocationJSPlug' />s
 <!--  Layout -->
 	<element alias="layout_grid" value="org.elaya.page.layout.GridLayout" />
 	<element alias="layout_vertical" value="org.elaya.page.layout.VerticalLayout" />

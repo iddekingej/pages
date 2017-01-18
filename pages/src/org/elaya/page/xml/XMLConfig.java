@@ -4,7 +4,7 @@ public class XMLConfig {
 	private Class<?>  baseClass;
 	private Class<?>  defaultClass;
 	private boolean   custom;
-	private boolean   needParent;
+	private Class<?>  parentClass;
 	private String    defaultSetMethod;    
 	/**
 	 * Creates a xml parser config node. This information determens how to parse
@@ -17,19 +17,23 @@ public class XMLConfig {
 	 * @param pneedParent           true: If object can needs a parent node
 	 */
 	
-	public XMLConfig(Class<?> pbaseClass,Class<?> pdefaultClass,boolean pcustom,String pdefaultSetMethod,boolean pneedParent) 
+	public XMLConfig(Class<?> pbaseClass,Class<?> pdefaultClass,String pdefaultSetMethod,Class<?> pparentClass) 
 	{
 		baseClass        = pbaseClass;
 		defaultClass     = pdefaultClass;
-		custom           = pcustom;
+		custom           = false;
 		defaultSetMethod = pdefaultSetMethod;
-		needParent       = pneedParent;
+		parentClass      = pparentClass;
 	}
 	public Class<?> getBaseClass(){ return baseClass;}
 	public Class<?> getDefaultClass(){ return defaultClass;}
+	
+	protected void  setCustom(boolean flag){
+		custom=flag;
+	}
 	public boolean  getCustom(){ return custom;}
 	public String   getDefaultSetMethod(){ return defaultSetMethod;}
-	public boolean  getNeedParent(){ return needParent;}
+	public Class<?>  getParentClass(){ return parentClass;}
 	
 
 

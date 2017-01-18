@@ -55,7 +55,11 @@ public class ThemeItemBase {
 	
 	protected String classProperty(String pclassName)
 	{
-		return property("class",classPrefix+pclassName);
+		String className=pclassName;
+		if(!classPrefix.isEmpty()){
+			className=classPrefix+"_"+pclassName;
+		}
+		return property("class",className);
 	}
 
 }

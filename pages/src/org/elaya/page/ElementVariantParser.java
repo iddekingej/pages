@@ -7,6 +7,7 @@ import java.util.Map;
 import org.elaya.page.application.Application;
 import org.elaya.page.xml.XmlAppParser;
 import org.elaya.page.xml.XMLConfig;
+import org.elaya.page.xml.XMLCustomConfig;
 import org.elaya.page.xml.XMLParser;
 import org.w3c.dom.Node;
 
@@ -68,10 +69,10 @@ public class ElementVariantParser extends XmlAppParser{
 
 	@Override
 	protected void setupConfig() {
-		addConfig("variants",new XMLConfig(ElementVariantList.class,ElementVariantList.class,false ,null,false));
-		addConfig("variant",new XMLConfig(ElementVariant.class,ElementVariant.class,false,"addVariant",true));
-		addConfig("content",new XMLConfig(Node.class,null,true,"",true));
-		addConfig("parameter",new XMLConfig(ElementVariantParameter.class,ElementVariantParameter.class,false,"addParameter",true));
+		addConfig("variants",new XMLConfig(ElementVariantList.class,ElementVariantList.class,null,null));
+		addConfig("variant",new XMLConfig(ElementVariant.class,ElementVariant.class,"addVariant",ElementVariantList.class));
+		addConfig("content",new XMLCustomConfig("",ElementVariant.class));
+		addConfig("parameter",new XMLConfig(ElementVariantParameter.class,ElementVariantParameter.class,"addParameter",ElementVariant.class));
 	}
 
 	@Override

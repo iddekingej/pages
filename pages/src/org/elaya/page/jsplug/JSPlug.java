@@ -2,7 +2,10 @@ package org.elaya.page.jsplug;
 
 import org.elaya.page.Element;
 import org.elaya.page.JSWriter;
+import org.elaya.page.data.Data;
+import org.elaya.page.data.Data.KeyNotFoundException;
 import org.elaya.page.data.DynamicMethod;
+import org.json.JSONException;
 
 public abstract class JSPlug extends DynamicMethod{
 	private Element<?> parent;
@@ -44,8 +47,9 @@ public abstract class JSPlug extends DynamicMethod{
 		return parent;
 	}
 	
-	public void display(JSWriter writer) 
+	public void display(JSWriter writer,Data data) throws JSONException, KeyNotFoundException 
 	{
 		
 	}
+
 }

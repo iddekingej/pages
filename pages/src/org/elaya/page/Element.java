@@ -21,6 +21,7 @@ import org.elaya.page.data.*;
 import org.elaya.page.data.Data.KeyNotFoundException;
 import org.elaya.page.jsplug.JSPlug;
 import org.elaya.page.jsplug.JSPlug.InvalidJsPlugType;
+import org.json.JSONException;
 import org.xml.sax.SAXException;
 
 
@@ -411,7 +412,7 @@ public abstract class Element<T extends ThemeItemBase> extends DynamicMethod {
 	}	
 	
 	//TODO:remove makeSetupJS =>inherit from generateElementJs
-	protected void generateElementJs(int id,JSWriter writer,Data data) throws ReplaceVarException, ParserConfigurationException, SAXException, IOException, InvalidAliasType, AliasNotFound, LoadingAliasFailed
+	protected void generateElementJs(int id,JSWriter writer,Data data) throws ReplaceVarException, ParserConfigurationException, SAXException, IOException, InvalidAliasType, AliasNotFound, LoadingAliasFailed, JSONException, KeyNotFoundException
 	{
 		writer.print("element=new "+getJsClassName()+"(widgetParent,"+writer.toJsString(getJsName(id))+","+writer.toJsString(name)+","+writer.toJsString(getDomId(id))+");\n");
 		if(this.isNamespace){
@@ -421,7 +422,7 @@ public abstract class Element<T extends ThemeItemBase> extends DynamicMethod {
 		writer.print("element.config=function(){");
 		makeSetupJs(writer,data); 
 		for(JSPlug plug:jsPlugs){
-			plug.display(writer);
+			plug.display(writer,data);
 		}		
 		writer.print("}\n");
 		if(!jsCondition.isEmpty()){

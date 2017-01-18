@@ -11,7 +11,7 @@ public class JSONResult implements Result{
 	public JSONResult() throws JSONException {
 		data=new JSONObject();
 		result=new JSONObject();
-		result.put("data", data);
+		result.put("data", data);		
 	}
 	@Override
 	public boolean hasErrors()

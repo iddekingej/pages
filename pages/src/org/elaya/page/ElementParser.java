@@ -3,6 +3,7 @@ package org.elaya.page;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
@@ -10,11 +11,14 @@ import org.elaya.page.Errors.ReplaceVarException;
 import org.elaya.page.application.AliasData;
 import org.elaya.page.application.Application;
 import org.elaya.page.data.DataModel;
+import org.elaya.page.data.Parameterized;
 import org.elaya.page.jsplug.JSPlug;
 import org.elaya.page.quickform.OptionItem;
 import org.elaya.page.xml.XmlAppParser;
 import org.elaya.page.xml.XMLConfig;
+import org.elaya.page.xml.XMLCustomConfig;
 import org.elaya.page.xml.XMLParser;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
 public class ElementParser extends XmlAppParser {
@@ -71,14 +75,29 @@ public class ElementParser extends XmlAppParser {
 			child=child.getNextSibling();
 		}
 		return list;
-}
+	}
+	
+	private Map<String,Object> parseData(Node pnode)
+	{
+		Map<String,Object> data=new HashMap<>();
+		NamedNodeMap attrs=pnode.getAttributes();
+		Node attr;
+		for(int cnt=0;cnt<attrs.getLength();cnt++){
+			attr=attrs.item(cnt);
+			data.put(attr.getNodeName(), attr.getNodeValue());
+		}
+		return data;
+	}
 	@Override
 	protected Object parseCustom(Object pparent,Node pnode) throws XMLLoadException 
 	{
 		if(pnode.getNodeName()=="options"){
 			return parseOptions(pnode);
+		} else if(pnode.getNodeName()=="data"){
+			return parseData(pnode);
+		} else {
+			throw new XMLLoadException("Custome node not handled",pnode);
 		}
-		return null;
 	}
 	
 	@Override
@@ -94,11 +113,12 @@ public class ElementParser extends XmlAppParser {
 	
 	@Override
 	protected void setupConfig() {
-		addConfig("page",new XMLConfig(Page.class,Page.class,false,"",false));
-		addConfig("element",new XMLConfig(Element.class,null, false, "addElement",true));
-		addConfig("options",new XMLConfig(null,null,true,"",true));
-		addConfig("jsplug",new XMLConfig(JSPlug.class,null,false,"addJsPlug",true));
-		addConfig("datamodel",new XMLConfig(DataModel.class,null,false,"setDataModel",true));
+		addConfig("page",new XMLConfig(Page.class,Page.class,"",null));
+		addConfig("element",new XMLConfig(Element.class,null,  "addElement",Element.class));
+		addConfig("options",new XMLCustomConfig("",Element.class));
+		addConfig("jsplug",new XMLConfig(JSPlug.class,null,"addJsPlug",Element.class));
+		addConfig("datamodel",new XMLConfig(DataModel.class,null,"setDataModel",Element.class));
+		addConfig("data",new XMLCustomConfig("setParameters",Parameterized.class));
 	}
 
 	@Override

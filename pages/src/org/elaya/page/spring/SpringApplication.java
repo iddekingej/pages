@@ -1,11 +1,7 @@
 package org.elaya.page.spring;
 
-import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;
-
-import org.elaya.page.Errors.LoadingAliasFailed;
 import org.elaya.page.application.Application;
-import org.elaya.page.xml.XMLParserBase.XMLLoadException;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;

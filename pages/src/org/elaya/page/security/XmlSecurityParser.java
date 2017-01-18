@@ -33,10 +33,10 @@ public class XmlSecurityParser extends XmlAppParser {
 
 	@Override
 	protected void setupConfig() {
-		addConfig("security",new XMLConfig(SecurityManager.class,SecurityManager.class,false,"",false));
-		addConfig("match",new XMLConfig(RequestMatcher.class,null,false,"addRequestMatcher",false));
-		addConfig("action",new XMLConfig(Action.class,null,false,"addAction",false));
-		addConfig("authenticator",new XMLConfig(Authenticator.class,null,false,"setAuthenticator",false));
+		addConfig("security",new XMLConfig(SecurityManager.class,SecurityManager.class,"",null));
+		addConfig("match",new XMLConfig(RequestMatcher.class,null,"addRequestMatcher",null));
+		addConfig("action",new XMLConfig(Action.class,null,"addAction",null));
+		addConfig("authenticator",new XMLConfig(Authenticator.class,null,"setAuthenticator",null));
 	}
 
 	@Override

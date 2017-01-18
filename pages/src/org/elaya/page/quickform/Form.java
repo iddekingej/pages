@@ -15,6 +15,8 @@ import org.elaya.page.SubmitType;
 import org.elaya.page.Writer;
 import org.elaya.page.application.Application.InvalidAliasType;
 import org.elaya.page.data.Data;
+import org.elaya.page.data.Data.KeyNotFoundException;
+import org.json.JSONException;
 import org.xml.sax.SAXException;
 
 
@@ -211,7 +213,7 @@ public class Form extends PageElement<FormThemeItem>{
 	}
 	
 	@Override
-	protected void generateElementJs(int id,JSWriter writer,Data data) throws ReplaceVarException, ParserConfigurationException, SAXException, IOException, InvalidAliasType, AliasNotFound, LoadingAliasFailed
+	protected void generateElementJs(int id,JSWriter writer,Data data) throws ReplaceVarException, ParserConfigurationException, SAXException, IOException, InvalidAliasType, AliasNotFound, LoadingAliasFailed, JSONException, KeyNotFoundException
 	{
 		super.generateElementJs(id, writer, data);
 		if(this.hiddenElements!= null){

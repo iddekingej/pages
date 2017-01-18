@@ -1,20 +1,27 @@
-"user strict";
+"use strict";
 function $$(p_id)
 {
 	return document.getElementById(p_id);
 }
 
 var core={
+/**
+ * Copy properties form p_data to p_element
+ * 
+ * @param p_element element
+ * @param p_data    properties from this object are copied to p_element
+ */
+		
 		set:function(p_element,p_data){
-				var l_value;
-				for(var l_key in p_data){
-					l_value=p_data[l_key];
-					if(l_value.constructor==Object){
-						this.set(p_element[l_key],l_value);
-					} else {
-						p_element[l_key]=l_value;
-					}
+			var l_value;
+			for(var l_key in p_data){
+				l_value=p_data[l_key];
+				if(l_value.constructor==Object){
+					this.set(p_element[l_key],l_value);
+				} else {
+					p_element[l_key]=l_value;
 				}
+			}
 		},
 
 		create:function(p_name,p_data,p_parent){
@@ -65,7 +72,25 @@ var core={
 			p_element.style.width=window.innerWidth+'px';
 			p_element.style.height=window.innerHeight+'px';			
 		},
-		ajax:function(p_method,p_url,p_data,p_config){
+		ajaxCompleet:function(p_req,p_config){
+			if(p_req.status==200){
+				if("success" in p_config){
+					p_config.success(p_req);
+				}
+			} else {
+				if("failed" in p_config){
+					p_config.failed(p_req);
+				}					
+			}		
+			if("compleet" in p_config){
+				p_config.compleet(p_req);
+			}
+			if((p_req.status==200) && ("nextUrl" in p_config)){
+				window.location=p_config;
+			}
+		},
+		makeHttpRequest:function()
+		{
 			var l_req;
 			if (window.ActiveXObject) {
 				l_req = new ActiveXObject("Microsoft.XMLHTTP");
@@ -86,8 +111,11 @@ var core={
 				}
 			} else if (window.XMLHttpRequest) {
 				l_req = new XMLHttpRequest();
-		    }
-			
+		    }	
+			return l_req;
+		},
+		ajax:function(p_method,p_url,p_data,p_config){
+			var l_req=this.makeHttpRequest();
 			var l_async=("async" in p_config)?p_config.async:false;			
 			if("username" in p_config){
 				l_req.open(p_method,p_url,l_async,p_data.username,p_data.password);
@@ -97,16 +125,7 @@ var core={
 			if(l_async){
 				l_req.onreadystatechange=function(){
 					if(readState=="DONE"){
-						if(l_req.status==200){
-							if("success" in p_config){
-								p_config.success(l_req);
-							}
-						} else {
-							if("failed" in p_config){
-								p_config.failed(l_req);
-							}					
-						}		
-						if("compleet" in p_config) p_config.compleet(l_req);
+						this.ajaxCompleet(l_req,p_config);
 					}
 				}
 			}
@@ -115,16 +134,7 @@ var core={
 			}
 			l_req.send(p_data);
 			if(!l_async){
-				if(l_req.status==200){
-					if("success" in p_config){
-						p_config.success(l_req);					
-					}
-				} else {
-					if("failed" in p_config){
-						p_config.failed(l_req);
-					}					
-				}
-				if("complete" in p_config) p_config.complete(l_req);
+				this.ajaxCompleet(l_req,p_config);
 				return l_req;
 			} else {
 				return false;
