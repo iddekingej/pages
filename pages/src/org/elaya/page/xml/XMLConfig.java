@@ -14,7 +14,7 @@ public class XMLConfig {
 	 * @param pdefaultClass         If no class is given use this as class to create an object
 	 * @param pcustom               Parsing of node and sub nodes is using a custom procedure
 	 * @param pdefaultSetMethod     Use this method to add object to its parent object
-	 * @param pneedParent           true: If object can needs a parent node
+	 * @param parentClass           Parent class must inherit from this class (extends,interface). Null when parent not neccesary
 	 */
 	
 	public XMLConfig(Class<?> pbaseClass,Class<?> pdefaultClass,String pdefaultSetMethod,Class<?> pparentClass) 

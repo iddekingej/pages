@@ -463,11 +463,6 @@ public abstract class Element<T extends ThemeItemBase> extends DynamicMethod {
 	 * Setup theme handling object 
 	 * 
 	 * @param ptheme Theme object.
-	 * @throws ClassNotFoundException
-	 * @throws InstantiationException
-	 * @throws IllegalAccessException
-	 * @throws InvocationTargetException
-	 * @throws NoSuchMethodException
 	 */
 	@SuppressWarnings("unchecked")
 	public final void setTheme(Theme ptheme) throws ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException 
