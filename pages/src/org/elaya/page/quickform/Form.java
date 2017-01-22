@@ -200,7 +200,7 @@ public class Form extends PageElement<FormThemeItem>{
 	}
 	
 	@Override
-	protected void makeSetupJs(JSWriter writer,Data pdata) throws ParserConfigurationException, SAXException, IOException, InvalidAliasType, AliasNotFound, LoadingAliasFailed, ReplaceVarException 
+	protected void makeSetupJs(JSWriter writer,Data pdata) throws ParserConfigurationException, SAXException, IOException, InvalidAliasType, AliasNotFound, LoadingAliasFailed, ReplaceVarException, JSONException 
 	{
 		String next=writer.processUrl(pdata,nextUrl);
 		writer.objVar("cmd",writer.replaceVariables(pdata,cmd));

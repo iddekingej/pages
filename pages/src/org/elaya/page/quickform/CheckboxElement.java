@@ -10,7 +10,6 @@ public class CheckboxElement extends BuildInFormElement {
 		super();
 	}
 
-	//TODO: getValueByName still working correctly because data is not parentData
 	@Override
 	public void  displayElement(int id,Writer writer,Data data) throws org.elaya.page.Element.DisplayException{
 		try{			

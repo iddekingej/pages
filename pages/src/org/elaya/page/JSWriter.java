@@ -11,6 +11,8 @@ import org.elaya.page.Errors.LoadingAliasFailed;
 import org.elaya.page.application.AliasData;
 import org.elaya.page.application.Application;
 import org.elaya.page.application.Application.InvalidAliasType;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.xml.sax.SAXException;
 
 public class JSWriter extends AbstractWriter{
@@ -37,19 +39,16 @@ public class JSWriter extends AbstractWriter{
 		buffer.append(text).append("\n");
 	}
 	
-	public String toJsString(Object pvalue){
-		if(pvalue==null){
-			return "\"\"";
-		}
-		return "\""+str(pvalue).replace("\"","\\\"")+"\"";
+	public String toJsString(Object pvalue) throws JSONException{
+		return JSONObject.valueToString(pvalue);
 	}
 	
-	public void objVar(String varName,String value) 
+	public void objVar(String varName,String value) throws JSONException 
 	{
 		setVar("this."+varName,value);
 	}
 
-	public void setVar(String varName,String value) {
+	public void setVar(String varName,String value) throws JSONException {
 		printNl(varName+"="+toJsString(value)+";");
 	}
 	

@@ -70,9 +70,33 @@ function TAbstractElement(p_parent,p_jsName,p_name)
 	this.jsName=p_jsName;
 	this.checkCondition=false;	
 	this.isNamespace=false;
+	this.customEvents={};
 }
 
+TAbstractElement.prototype.on=function(p_event,p_js)
+{
+	if(p_event in this.customEvents){
+		this.customEvents[p_event].push(p_js);
+	} else {		
+		this.customEvents[p_event]=[p_js];
+	}
+}
 
+TAbstractElement.prototype.isCustomEvent=function(p_event)
+{
+	return true;
+}
+
+TAbstractElement.prototype.customEvent=function(p_event,p_data)
+{
+	if(p_event in this.customEvents){
+		var l_events=this.customEvents[p_event];
+		var l_cnt;
+		for(l_cnt=0;l_cnt<l_events.length;l_cnt++){
+			l_events[l_cnt].call(this,p_data);
+		}
+	}
+}
 
 TAbstractElement.prototype.isInputElement=function()
 {
@@ -163,6 +187,45 @@ TAbstractElement.prototype.handleCheckCondition=function()
 	}
 }
 
+//------------( TCollectionElement )---------------------
+
+function TCollectionElement(p_parent,p_jsName,p_name,p_idBase)
+{
+	TAbstractElement.call(this,p_parent,p_jsName,p_name);
+	this.id=p_idBase;
+	this.elements=[];
+	var l_cnt=0;
+	var l_element;
+	while(true){
+		l_element=$$(p_idBase+"_"+l_cnt);
+		if(l_element==null){
+			break;
+		}
+		l_element._control=this;
+		this.elements.push(l_element);		
+		l_cnt++;
+	}
+}
+
+TCollectionElement.prototype=Object.create(TAbstractElement.prototype);
+
+
+TCollectionElement.prototype.isCustomEvent=function(p_event)
+{
+	return false;
+}
+
+TCollectionElement.prototype.on=function(p_event,p_js)
+{
+	if(this.isCustomEvent(p_event)){
+		TAbstractElement.prototype.on.call(this,p_event,p_js);
+	} else {
+		var l_cnt;
+		for(l_cnt=0;l_cnt<this.elements.length;l_cnt++){
+			core.ev(this.elements[l_cnt],p_event,p_js);
+		}
+	}
+}
 
 //------------( TElement )-------------------------------
 
@@ -171,6 +234,9 @@ function TElement(p_parent,p_jsName,p_name,p_id)
 	TAbstractElement.call(this,p_parent,p_jsName,p_name);
 	this.id=p_id;
 	this.element=$$(p_id);
+	if(this.element != null){
+		this.element._control=this;
+	}
 }
 
 TElement.prototype=Object.create(TAbstractElement.prototype);
@@ -187,16 +253,25 @@ TElement.prototype.display=function(p_flag)
 	core.display(this.element,p_flag);
 }
 
+TElement.prototype.isCustomEvent=function(p_event)
+{
+	return false;
+}
 
 TElement.prototype.on=function(p_event,p_js)
 {
-	core.ev(this.element,p_event,p_js);	
+	if(this.isCustomEvent(p_event)){
+		TAbstractElement.prototype.on.call(this,p_event,p_js);
+	} else {
+		core.ev(this.element,p_event,p_js);	
+	}
 }
 
+/*----( TMenuBar) ------------------------------------------*/
 
-function TMenuBar(p_form,p_jsName,p_name,p_id)
+function TMenuBar(p_parent,p_jsName,p_name,p_id)
 {
-	TElement.call(this,p_form,p_jsName,p_name,p_id);
+	TElement.call(this,p_parent,p_jsName,p_name,p_id);
 }
 
 TMenuBar.prototype=Object.create(TElement.prototype);
@@ -208,6 +283,68 @@ TMenuBar.prototype.setup=function()
 	this.element.puimenubar();
 }
 
+/*---( TListMenu )--------------------------------------------------*/
+
+function TListMenu(p_parent,p_jsName,p_name,p_id)
+{
+	TElement.call(this,p_parent,p_jsName,p_name,p_id);
+}
+
+TListMenu.prototype=Object.create(TElement.prototype);
+/*---(TDynamicLinkMenuItem )---------------------------------------*/
+
+function TDynamicLinkListMenuItem(p_parent,p_jsName,p_name,p_idBase)
+{
+	TCollectionElement.call(this,p_parent,p_jsName,p_name,p_idBase);
+}
+
+TDynamicLinkListMenuItem.prototype=Object.create(TCollectionElement.prototype);
+
+TDynamicLinkListMenuItem.prototype.isCustomEvent=function(p_event)
+{
+	if(p_event=="DelButtonPressed"){
+		return true;
+	}
+	return TElement.prototype.isCustomEvent.call(this,p_event);
+}
+
+TDynamicLinkListMenuItem.prototype.onDelButtonPressed=function(p_element)
+{
+	var l_data=null;
+	if("_data" in p_element){
+		l_data=p_element._data;
+	}
+	this.customEvent("DelButtonPressed",l_data);
+}
+
+
+/*---(TLinkMenuItem)------------------------------------------------*/
+
+function TLinkListMenuItem(p_parent,p_jsName,p_name,p_id)
+{
+	TElement.call(this,p_parent,p_jsName,p_name,p_id);
+}
+
+TLinkListMenuItem.prototype=Object.create(TElement.prototype);
+
+TLinkListMenuItem.prototype.isCustomEvent=function(p_event)
+{
+	if(p_event=="DelButtonPressed"){
+		return true;
+	}
+	return TElement.prototype.isCustomEvent.call(this,p_event);
+}
+
+TLinkListMenuItem.prototype.onDelButtonPressed=function(p_element)
+{
+	var l_data=null;
+	if("_data" in p_element){
+		l_data=p_element._data;
+	}
+	this.customEvents("DelButtonPressed",l_data);
+}
+
+/*---( TMenu )------------------------------------------------------*/
 
 function TMenu(p_parent,p_jsName,p_name,p_id)
 {

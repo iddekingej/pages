@@ -40,24 +40,25 @@ public class ListMenuGroup extends BuildinListMenuItem {
 	
 	
 	@Override
-	protected void preElement(Writer writer,Data data,Element<?> element) throws IOException, KeyNotFoundException 
+	protected void preElement(int id,Writer writer,Data data,Element<?> element) throws IOException, KeyNotFoundException 
 	{
+		String domId=getDomId(id);
 		if(element instanceof ListMenuItem && getParent() instanceof ListMenu){
 			String selectionVariable = ((ListMenu)getParent()).getSelectionVariable();
 			Object selectedValue=data.get(selectionVariable);
 			String value=((ListMenuItem<?>)element).getValue();
 			if( (value != null)? value.equals(selectedValue):false){
-				themeItem.preItemSelected(writer);
+				themeItem.preItemSelected(writer,domId);
 			} else {
-				themeItem.preItem(writer);
+				themeItem.preItem(writer,domId);
 			}
 		} else {
-			themeItem.preItem(writer);
+			themeItem.preItem(writer,domId);
 		}
 	}
 	
 	@Override
-	protected void postElement(Writer writer,Data data,Element<?> element) throws IOException
+	protected void postElement(int id,Writer writer,Data data,Element<?> element) throws IOException
 	{		
 		themeItem.postItem(writer);
 	}

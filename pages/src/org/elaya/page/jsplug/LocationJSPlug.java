@@ -1,5 +1,7 @@
 package org.elaya.page.jsplug;
 
+import org.json.JSONException;
+
 public class LocationJSPlug extends EventJSPlug {
 	private String url;
 	
@@ -9,7 +11,7 @@ public class LocationJSPlug extends EventJSPlug {
 	}
 
 	@Override
-	public String getJs() {
+	public String getJs() throws JSONException {
 		return "window.location="+toJsString(url);
 	}
 

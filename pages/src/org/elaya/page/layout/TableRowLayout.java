@@ -10,13 +10,13 @@ import org.elaya.page.data.Data.KeyNotFoundException;
 public class TableRowLayout extends Layout {
 
 	@Override
-	protected void preElement(Writer writer,Data data,Element<?> element) throws IOException, KeyNotFoundException 
+	protected void preElement(int id,Writer writer,Data data,Element<?> element) throws IOException, KeyNotFoundException 
 	{
 		themeItem.tableCellHeader(writer,this.getClassPrefix() ,element.getHorizontalAlign(),element.getVerticalAlign(),element.getLayoutWidth(),element.getLayoutHeight());		
 	}
 
 	@Override
-	protected void postElement(Writer writer,Data data,Element<?> element) throws IOException 
+	protected void postElement(int id,Writer writer,Data data,Element<?> element) throws IOException 
 	{
 		themeItem.tableCellFooter(writer);		
 	}

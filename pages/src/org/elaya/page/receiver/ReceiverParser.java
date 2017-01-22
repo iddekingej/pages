@@ -6,11 +6,11 @@ import java.util.Map;
 
 import org.elaya.page.application.AliasData;
 import org.elaya.page.application.Application;
-import org.elaya.page.xml.XmlAppParser;
+import org.elaya.page.xml.XMLAppParser;
 import org.elaya.page.xml.XMLConfig;
 import org.elaya.page.xml.XMLParser;
 
-public class ReceiverParser extends XmlAppParser {
+public class ReceiverParser extends XMLAppParser {
 
 	public ReceiverParser(Application application,Map<String, Object> nameIndex) {
 		super(application,nameIndex);

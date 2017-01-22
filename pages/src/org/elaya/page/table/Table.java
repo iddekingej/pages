@@ -44,20 +44,20 @@ public class Table extends PageElement<TableThemeItem> {
 	}
 	
 	@Override
-	public void preElement(Writer pwriter,Data data,Element<?> pelement) throws IOException
+	public void preElement(int id,Writer pwriter,Data data,Element<?> pelement) throws IOException
 	{
 		themeItem.itemHeader(pwriter);
 	}
 	
 	@Override
-	public void postElement(Writer pwriter,Data data,Element<?> pelement) throws IOException
+	public void postElement(int id,Writer pwriter,Data data,Element<?> pelement) throws IOException
 	{
 		themeItem.itemFooter(pwriter);
 	}
 	
 		
 	@Override
-	public void displaySubElements(Writer pwriter,Data data) throws DisplayException  
+	public void displaySubElements(int id,Writer pwriter,Data data) throws DisplayException  
 	{
 		try{
 			Object abstractList;
@@ -69,7 +69,7 @@ public class Table extends PageElement<TableThemeItem> {
 				for(Object abstractRow:dataList){
 					if(abstractRow instanceof Data){
 						themeItem.rowHeader(pwriter);
-						super.displaySubElements(pwriter,(Data)abstractRow);
+						super.displaySubElements(id,pwriter,(Data)abstractRow);
 						themeItem.rowFooter(pwriter);	
 
 					}

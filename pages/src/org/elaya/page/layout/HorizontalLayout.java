@@ -10,13 +10,13 @@ import org.elaya.page.data.Data;
 public class HorizontalLayout extends Layout{
 
 	@Override
-	public void preElement(Writer pwriter,Data data,Element<?> pelement) throws IOException
+	public void preElement(int id,Writer pwriter,Data data,Element<?> pelement) throws IOException
 	{
 			themeItem.horizontalItemHeader(pwriter,pelement.getHorizontalAlign(),pelement.getVerticalAlign(),pelement.getLayoutWidth(),pelement.getLayoutHeight());
 	}
 	
 	@Override
-	public void postElement(Writer pwriter,Data data,Element<?> pelement) throws IOException{
+	public void postElement(int id,Writer pwriter,Data data,Element<?> pelement) throws IOException{
 		themeItem.horizontalItemFooter(pwriter);
 	}
 	

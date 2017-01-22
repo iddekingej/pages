@@ -5,13 +5,13 @@ import java.io.InputStream;
 import java.util.Map;
 
 import org.elaya.page.application.Application;
-import org.elaya.page.xml.XmlAppParser;
+import org.elaya.page.xml.XMLAppParser;
 import org.elaya.page.xml.XMLConfig;
 import org.elaya.page.xml.XMLCustomConfig;
 import org.elaya.page.xml.XMLParser;
 import org.w3c.dom.Node;
 
-public class ElementVariantParser extends XmlAppParser{
+public class ElementVariantParser extends XMLAppParser{
 
 	public ElementVariantParser(Application papplication) {
 		super(papplication);

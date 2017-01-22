@@ -48,11 +48,17 @@ public class LinkMenuItem extends BuildinListMenuItem{
 		return editUrl;
 	}	
 	
+	
+	@Override
+	public String getJsClassName() {
+		return "TLinkListMenuItem";
+	}
+	
 	@Override
 	public void displayElement(int id,Writer pwriter,Data data) throws org.elaya.page.Element.DisplayException  {
 		try{
 			String 	resultUrl=pwriter.processUrl(data,url);
-			themeItem.linkItem(pwriter,getDomId(id),pwriter.replaceVariables(data,text),resultUrl,delUrl,editUrl);
+			themeItem.linkItem(pwriter,pwriter.replaceVariables(data,text),resultUrl,delUrl,editUrl,null);
 		}catch(Exception e){
 			throw new DisplayException("",e);
 		}

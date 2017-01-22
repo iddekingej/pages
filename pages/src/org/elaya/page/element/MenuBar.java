@@ -10,12 +10,12 @@ import org.elaya.page.data.Data;
 public class MenuBar extends PageElement<ElementThemeItem> {
 
 	@Override
-	protected void preElement(Writer pwriter,Data data,Element<?> pelement) throws IOException 
+	protected void preElement(int id,Writer pwriter,Data data,Element<?> pelement) throws IOException 
 	{
 		themeItem.menuBarItemHeader(pwriter);
 	}
 	@Override
-	protected void postElement(Writer pwriter,Data data,Element<?> pelement) throws IOException
+	protected void postElement(int id,Writer pwriter,Data data,Element<?> pelement) throws IOException
 	{		
 		themeItem.menuBarItemFooter(pwriter);
 	}

@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.elaya.page.JSWriter;
 import org.elaya.page.Writer;
 import org.elaya.page.data.Data;
+import org.json.JSONException;
 
 public class DateElement extends BuildInFormElement {
 	public enum ShowMode{
@@ -62,7 +63,7 @@ public class DateElement extends BuildInFormElement {
 	}
 
 	@Override
-	protected void makeSetupJs(JSWriter pwriter,Data pdata) throws IOException 
+	protected void makeSetupJs(JSWriter pwriter,Data pdata) throws IOException, JSONException 
 	{
 		pwriter.print("this.showOn='"+showMode.getValue()+"';\n");
 		if(buttonText != null && buttonText.length() >0){

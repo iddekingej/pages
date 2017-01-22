@@ -114,6 +114,9 @@ var core={
 		    }	
 			return l_req;
 		},
+		ajaxJSON:function(p_method,p_url,p_data,p_config){
+			return this.ajax(p_method,p_url,JSON.stringify(p_data),p_config);
+		},
 		ajax:function(p_method,p_url,p_data,p_config){
 			var l_req=this.makeHttpRequest();
 			var l_async=("async" in p_config)?p_config.async:false;			
@@ -124,7 +127,7 @@ var core={
 			}
 			if(l_async){
 				l_req.onreadystatechange=function(){
-					if(readState=="DONE"){
+					if(this.readyState=="DONE"){
 						this.ajaxCompleet(l_req,p_config);
 					}
 				}

@@ -16,7 +16,8 @@
 	<element alias="panel" value="org.elaya.page.element.PanelElement" />
 	<element alias="repeat" value="org.elaya.page.element.RepeatElement" />
 <!--  plugs  -->
-	<element alias="location_plug" value='org.elaya.page.jsplug.LocationJSPlug' />s
+	<element alias="location_plug" value='org.elaya.page.jsplug.LocationJSPlug' />
+	<element alias="json_plug" value='org.elaya.page.jsplug.JSONPlug' />
 <!--  Layout -->
 	<element alias="layout_grid" value="org.elaya.page.layout.GridLayout" />
 	<element alias="layout_vertical" value="org.elaya.page.layout.VerticalLayout" />

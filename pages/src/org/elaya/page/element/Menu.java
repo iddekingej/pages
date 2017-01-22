@@ -6,6 +6,7 @@ import org.elaya.page.JSWriter;
 import org.elaya.page.PageElement;
 import org.elaya.page.Writer;
 import org.elaya.page.data.Data;
+import org.json.JSONException;
 
 public class Menu extends PageElement<ElementThemeItem> {
 	private String title;
@@ -27,7 +28,7 @@ public class Menu extends PageElement<ElementThemeItem> {
 	}
 	
 	@Override
-	protected void makeSetupJs(JSWriter writer,Data data) throws IOException
+	protected void makeSetupJs(JSWriter writer,Data data) throws IOException, JSONException
 	{
 		writer.print("this.setState("+writer.toJsString(state.getJsState())+")\n");
 	}

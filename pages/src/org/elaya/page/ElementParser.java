@@ -14,14 +14,14 @@ import org.elaya.page.data.DataModel;
 import org.elaya.page.data.Parameterized;
 import org.elaya.page.jsplug.JSPlug;
 import org.elaya.page.quickform.OptionItem;
-import org.elaya.page.xml.XmlAppParser;
+import org.elaya.page.xml.XMLAppParser;
 import org.elaya.page.xml.XMLConfig;
 import org.elaya.page.xml.XMLCustomConfig;
 import org.elaya.page.xml.XMLParser;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
-public class ElementParser extends XmlAppParser {
+public class ElementParser extends XMLAppParser {
 	
 	public ElementParser(Application papplication) {
 		super(papplication);		
@@ -44,6 +44,14 @@ public class ElementParser extends XmlAppParser {
 		return new ElementParser(getApplication(),getNameIndex());
 	}
 	
+	/**
+	 * Handle \<option\> node inside an \<options\> block
+	 * An \<options\> block is a list of (value,text) pair.
+	 *  
+	 * @param child   the Option node
+	 * @param list	OptionItem (value,text) pair is added to this list
+	 */
+	
 	private void processOption(Node child,LinkedList<OptionItem> list) throws XMLLoadException 
 	{
 		Node valueNode;
@@ -52,18 +60,17 @@ public class ElementParser extends XmlAppParser {
 			valueNode=child.getAttributes().getNamedItem("value");
 			textNode=child.getAttributes().getNamedItem("text");
 			if(valueNode ==null){
-				addError("Missing 'value' attribute in tag ",child);				
+				throw new XMLLoadException("Missing 'value' attribute in tag ",child);				
 			}
 			if(textNode == null){
-				addError("Missing 'text' attribute in tag ",child);						
+				throw new XMLLoadException("Missing 'text' attribute in tag ",child);						
 			}
-			if(valueNode != null && textNode != null){
-				list.add(new OptionItem(valueNode.getNodeValue(),textNode.getNodeValue()));
-			}
+			list.add(new OptionItem(valueNode.getNodeValue(),textNode.getNodeValue()));
 		} else {
-			addError("Options list contain invalid tag ",child);
+			throw new XMLLoadException("Options list contain invalid tag ",child);
 		}
 	}
+	
 	private LinkedList<OptionItem> parseOptions(Node pparent) throws XMLLoadException {
 		LinkedList<OptionItem> list=new LinkedList<>();
 		Node child=pparent.getFirstChild();
@@ -96,7 +103,7 @@ public class ElementParser extends XmlAppParser {
 		} else if(pnode.getNodeName()=="data"){
 			return parseData(pnode);
 		} else {
-			throw new XMLLoadException("Custome node not handled",pnode);
+			throw new XMLLoadException("Custom node not handled",pnode);
 		}
 	}
 	

@@ -12,13 +12,13 @@ public class VerticalLayout extends Layout {
 	}
 
 	@Override
-	protected void preElement(Writer pwriter,Data data,Element<?> pelement) throws IOException
+	protected void preElement(int id,Writer pwriter,Data data,Element<?> pelement) throws IOException
 	{
 			themeItem.verticalItemHeader(pwriter,pelement.getHorizontalAlign(),pelement.getVerticalAlign(),pelement.getLayoutWidth(),pelement.getLayoutHeight());		
 	}
 	
 	@Override
-	protected void postElement(Writer pwriter,Data data,Element<?> pelement) throws IOException
+	protected void postElement(int id,Writer pwriter,Data data,Element<?> pelement) throws IOException
 	{
 		themeItem.verticalItemFooter(pwriter);
 	}

@@ -6,6 +6,7 @@ import org.elaya.page.data.Data;
 import org.elaya.page.data.Data.KeyNotFoundException;
 import org.elaya.page.data.DynamicMethod;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 public abstract class JSPlug extends DynamicMethod{
 	private Element<?> parent;
@@ -21,11 +22,8 @@ public abstract class JSPlug extends DynamicMethod{
 		}
 	}
 	
-	public String toJsString(String pvalue){
-		if(pvalue==null){
-			return "\"\"";
-		}
-		return "\""+pvalue.replace("\"","\\\"")+"\"";
+	public String toJsString(String pvalue) throws JSONException{
+		return JSONObject.valueToString(pvalue);
 	}
 	
 	protected boolean checkParent(Element<?> pelement)

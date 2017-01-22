@@ -23,7 +23,7 @@ public class GridLayout extends Layout {
 	}
 	
 	@Override
-	public void displaySubElements(Writer pwriter,Data data) throws DisplayException  
+	public void displaySubElements(int id,Writer pwriter,Data data) throws DisplayException  
 	{
 		try{
 			int col=0;

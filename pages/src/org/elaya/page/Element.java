@@ -348,23 +348,23 @@ public abstract class Element<T extends ThemeItemBase> extends DynamicMethod {
 	}
 	
 	
-	protected void preElement(Writer writer,Data data,Element<?> element) throws IOException, KeyNotFoundException 
+	protected void preElement(int id,Writer writer,Data data,Element<?> element) throws IOException, KeyNotFoundException 
 	{
 		
 	}
-	protected void postElement(Writer writer,Data data,Element<?> element) throws IOException
+	protected void postElement(int id,Writer writer,Data data,Element<?> element) throws IOException
 	{		
 	}
 	
-	public void displaySubElements(Writer pwriter,Data pdata) throws DisplayException  
+	public void displaySubElements(int id,Writer pwriter,Data pdata) throws DisplayException  
 	{
 		try{
 			for(Element<?> element:elements)
 			{
 				if(element.checkCondition(pdata)){
-					preElement(pwriter,pdata,element);
+					preElement(id,pwriter,pdata,element);
 					element.display(pwriter,pdata);
-					postElement(pwriter,pdata,element);
+					postElement(id,pwriter,pdata,element);
 				}
 			}
 		}catch(Exception e){
@@ -383,7 +383,7 @@ public abstract class Element<T extends ThemeItemBase> extends DynamicMethod {
 			Data data=getData(parentData);
 			displayElement(id,writer,data);
 			generateElementJs(id,writer.getJSWriter(),data);
-			displaySubElements(writer,data);
+			displaySubElements(id,writer,data);
 			displayElementFooter(id,writer,data);
 			generateElementFooterJs(id,writer.getJSWriter(),data);
 		} catch(Exception e){
@@ -396,7 +396,7 @@ public abstract class Element<T extends ThemeItemBase> extends DynamicMethod {
 		return "TElement";
 	}
 	
-	protected void makeSetupJs(JSWriter writer,Data data) throws ReplaceVarException, ParserConfigurationException, SAXException, IOException, InvalidAliasType, AliasNotFound, LoadingAliasFailed  
+	protected void makeSetupJs(JSWriter writer,Data data) throws ReplaceVarException, ParserConfigurationException, SAXException, IOException, InvalidAliasType, AliasNotFound, LoadingAliasFailed, JSONException  
 	{
 		
 	}
@@ -411,7 +411,6 @@ public abstract class Element<T extends ThemeItemBase> extends DynamicMethod {
 		
 	}	
 	
-	//TODO:remove makeSetupJS =>inherit from generateElementJs
 	protected void generateElementJs(int id,JSWriter writer,Data data) throws ReplaceVarException, ParserConfigurationException, SAXException, IOException, InvalidAliasType, AliasNotFound, LoadingAliasFailed, JSONException, KeyNotFoundException
 	{
 		writer.print("element=new "+getJsClassName()+"(widgetParent,"+writer.toJsString(getJsName(id))+","+writer.toJsString(name)+","+writer.toJsString(getDomId(id))+");\n");

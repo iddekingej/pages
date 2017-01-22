@@ -1,6 +1,5 @@
 function TForm(p_parent,p_jsName,p_name,p_id){
-	TElement.call(this,p_parent,p_jsName,p_name,p_id);
-	this.element._control=this;
+	TElement.call(this,p_parent,p_jsName,p_name,p_id);	
 	this.cmd="";
 	this.url="";	
 	this.submitType="";

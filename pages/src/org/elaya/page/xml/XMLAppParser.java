@@ -2,23 +2,22 @@ package org.elaya.page.xml;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
-
 import org.elaya.page.Errors.LoadingAliasFailed;
 import org.elaya.page.Errors.NormalizeClassNameException;
 import org.elaya.page.application.Application;
 import org.elaya.page.application.PageApplicationAware;
 
-public abstract  class XmlAppParser extends XMLParser {
+public abstract  class XMLAppParser extends XMLParser {
 	
 	private Application application;
 	
 	
-	public XmlAppParser(Application papplication, Map<String, Object> pnameIndex) {
+	public XMLAppParser(Application papplication, Map<String, Object> pnameIndex) {
 		super(pnameIndex);
 		application=papplication;
 	}
 
-	public XmlAppParser(Application papplication) {
+	public XMLAppParser(Application papplication) {
 		super();
 		application=papplication;
 	}

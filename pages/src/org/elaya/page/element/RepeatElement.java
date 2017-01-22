@@ -26,19 +26,19 @@ public class RepeatElement extends PageElement<ElementThemeItem> {
 	}
 	
 	@Override
-	protected void preElement(Writer writer,Data data,Element<?> element) throws IOException, KeyNotFoundException 
+	protected void preElement(int id,Writer writer,Data data,Element<?> element) throws IOException, KeyNotFoundException 
 	{
 		writer.getJSWriter().setFromOther("widgetParent", "widgetParent.newItem()");
 	}
 	
 	@Override
-	protected void postElement(Writer writer,Data data,Element<?> element) throws IOException
+	protected void postElement(int id,Writer writer,Data data,Element<?> element) throws IOException
 	{		
 		writer.getJSWriter().setFromOther("widgetParent","widgetParent.parent");
 	}
 	
 	@Override
-	public void displaySubElements(Writer pwriter,Data pdata) throws DisplayException  
+	public void displaySubElements(int id,Writer pwriter,Data pdata) throws DisplayException  
 	{
 		try{
 			Data data=getData(pdata);
@@ -47,7 +47,7 @@ public class RepeatElement extends PageElement<ElementThemeItem> {
 				Iterable<?> iter=(Iterable<?>)dataValue;
 				for(Object item:iter){
 					if(item instanceof Data){
-						super.displaySubElements(pwriter, (Data)item);
+						super.displaySubElements(id,pwriter, (Data)item);
 					}else {
 						throw new Errors.InvalidTypeException("element of dataVariable must be inherited from elaya.org.data.Data class");
 					}
