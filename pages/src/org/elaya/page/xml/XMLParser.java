@@ -148,7 +148,7 @@ public abstract class XMLParser extends XMLParserBase<Object> {
 		return nodeIter;
 	}
 	
-	private Object parseParameterValueNode(Object pparent,Node pnode) throws XMLLoadException, ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, MethodNotFound, ParserConfigurationException, SAXException, IOException, SettingAttributeException, NormalizeClassNameException 
+	private Object parseParameterValueNode(Object parent,Node pnode) throws XMLLoadException, ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, MethodNotFound, ParserConfigurationException, SAXException, IOException, SettingAttributeException, NormalizeClassNameException 
 	{
 		Node element=getNextFilledNode(pnode.getFirstChild());		
 		if(element==null){
@@ -160,46 +160,35 @@ public abstract class XMLParser extends XMLParserBase<Object> {
 			} else if(element.getNodeType() != Node.ELEMENT_NODE){
 				return element.getTextContent();
 			} else {
-				return parseElement(null,element);
+				return parseElement(parent,element);
 			}
 		}
 	}
 	
-	private void parseParameter(Object parent,Node child) throws XMLLoadException, ReplaceVarException  
+	private void parseValue(Object parent,Node child) throws XMLLoadException, ReplaceVarException  
 	{
-		if(!"value".equals(child.getNodeName())){
-			throw new XMLLoadException("'parameter' node expected, but "+child.getNodeName()+" found",child);
-		} else {
-			String name=getAttributeValue(child,"name");
-			if(name==null){
-				throw new XMLLoadException("Name attribute not found",child);
-			}
-			try{
-				Object value=parseParameterValueNode(parent,child);
-				DynamicObject.put(parent, name, value);
-			}	catch(Exception e){
-					throw new XMLLoadException(e,child);
-			}
+		if(parent==null){
+			throw new XMLLoadException("'value' node needs a parent node,but parent is null",child);
 		}
-	}
-	private void parseParameters(Object pparent,Node pnode) throws ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, XMLLoadException, MethodNotFound, ParserConfigurationException, SAXException, IOException, SettingAttributeException, NormalizeClassNameException,  ReplaceVarException {
-		Node child=pnode.getFirstChild();
-		while(child!=null){
-			if(child.getNodeType()==Node.ELEMENT_NODE){
-				parseParameter(pparent,child);
-			}
-			child=child.getNextSibling();
+		String name=getAttributeValue(child,"name");
+		if(name==null){
+			throw new XMLLoadException("Value node nees 'name' attribute not found",child);
 		}
+		try{
+			Object value=parseParameterValueNode(parent,child);
+			DynamicObject.put(parent, name, value);
+		}	catch(Exception e){
+				throw new XMLLoadException(e,child);
+		}		
 	}
-
 
 	private void parseChildNodes(Object pparent,Node pnode) throws ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, XMLLoadException, MethodNotFound, ParserConfigurationException, SAXException, IOException, SettingAttributeException, NormalizeClassNameException,  ReplaceVarException 
 	{
 		Node child=pnode.getFirstChild();
 		while(child!=null){
 			if(child.getNodeType()==Node.ELEMENT_NODE){
-				if("values".equals(child.getNodeName())){
-					parseParameters(pparent,child);
+				if("value".equals(child.getNodeName())){
+					parseValue(pparent,child);
 				} else {
 					parseElement(pparent,child);					
 				}				

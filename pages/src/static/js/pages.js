@@ -311,8 +311,9 @@ TDynamicLinkListMenuItem.prototype.isCustomEvent=function(p_event)
 TDynamicLinkListMenuItem.prototype.onDelButtonPressed=function(p_element)
 {
 	var l_data=null;
-	if("_data" in p_element){
-		l_data=p_element._data;
+	var l_attr=p_element.attributes.getNamedItem("_data");
+	if(l_attr != null){
+		l_data=l_attr.nodeValue;
 	}
 	this.customEvent("DelButtonPressed",l_data);
 }

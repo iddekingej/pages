@@ -15,7 +15,18 @@ public class JSONPlug extends JSPlug implements Parameterized{
 	private String parameterName;
 	private boolean async=true;
 	private String event="";
+	private String cmd="";
 
+	public void setCmd(String pcmd)
+	{
+		this.cmd=pcmd;
+	}
+	
+	public String getCmd()
+	{
+		return this.cmd;
+	}
+	
 	public void setEvent(String pevent)
 	{
 		event=pevent;
@@ -70,24 +81,26 @@ public class JSONPlug extends JSPlug implements Parameterized{
 	@Override
 	public void display(JSWriter pwriter,Data data)  throws JSONException, KeyNotFoundException 
 	{
-		JSONObject json=new JSONObject(parameters);
-		StringBuilder js=new StringBuilder();
-		js.append("core.ajaxJSON('post',");
-		js.append(pwriter.toJsString(postUrl));
-		js.append(",");
-		if(parameterName != null){
-			json.put(parameterName,data.get(parameterName));
-		}
-		js.append(json.toString());
+		JSONObject json=new JSONObject();
+		json.put("cmd",cmd);
+		json.put("data",new JSONObject(parameters));
 		JSONObject config=new JSONObject();
 		config.put("async", async);
 		if(postUrl!=null){
 			config.put("nextUrl",postUrl);
 		}
-		js.append(",");
+		
+		StringBuilder js=new StringBuilder();
+		js.append("var l_data=").append(json.toString()).append(";");
+		if(parameterName != null){
+			js.append("l_data.data['").append(parameterName).append("']=p_data;");
+		}
+		js.append("core.ajaxJSON('post',");
+		js.append(pwriter.toJsString(postUrl));
+		js.append(",l_data,");		
 		js.append(config.toString());
 		js.append(")");
-		pwriter.print("this.on("+pwriter.toJsString(getEvent())+",function(){"+js.toString()+"});");
+		pwriter.print("this.on("+pwriter.toJsString(getEvent())+",function(p_data){"+js.toString()+"});");
 	}
 	
 }

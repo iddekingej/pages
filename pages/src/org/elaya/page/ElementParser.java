@@ -125,7 +125,7 @@ public class ElementParser extends XMLAppParser {
 		addConfig("options",new XMLCustomConfig("",Element.class));
 		addConfig("jsplug",new XMLConfig(JSPlug.class,null,"addJsPlug",Element.class));
 		addConfig("datamodel",new XMLConfig(DataModel.class,null,"setDataModel",Element.class));
-		addConfig("data",new XMLCustomConfig("setParameters",Parameterized.class));
+		addConfig("data",new XMLCustomConfig("",null));
 	}
 
 	@Override
