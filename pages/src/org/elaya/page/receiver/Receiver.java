@@ -22,56 +22,26 @@ import org.elaya.page.data.DynamicObject;
 import org.json.JSONException;
 
 
-public abstract  class Receiver<T extends Dynamic> extends DynamicMethod implements PageApplicationAware {
+public abstract  class Receiver extends DynamicMethod implements PageApplicationAware {
 	
-	public static class FatalFailureException extends Exception{
+	public static class ReceiverException extends Exception{
 		private static final long serialVersionUID = -8412859746278588435L;
-		public FatalFailureException(Throwable cause){
+		public ReceiverException(String message){
+			super(message);
+		}
+		public ReceiverException(Throwable cause){
 			super(cause);
 		}
 	}
 	
-	public static class DuplicateParameter extends RuntimeException{
-		private static final long serialVersionUID = 103474339716771399L;
-		public DuplicateParameter(String name)
-		{
-			super("Duplicate parameter '"+name+"'");
-		}
-		
-	}
-	
-	private String dataClass;
-	private HashMap<String,Parameter> parameters=new HashMap<>();
-	private Application application;
-	private LinkedList<Validator<T>> validators=new LinkedList<>();
 
+	private Application application;
+	private LinkedList<Command> commands=new LinkedList<>();
+	
 	protected abstract void sendFailure(HttpServletResponse response,Exception e) throws JSONException, IOException;
-	protected abstract ReceiverData<T> convertRequestToData(HttpServletRequest request,HttpServletResponse response) throws NoSuchMethodException, ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, InvalidObjectType, DynamicException, JSONException, IOException ;
-	protected abstract void handleData(HttpServletResponse response,ReceiverData<T> data) throws JSONException, DynamicException, IOException, SQLException, DefaultDBConnectionNotSet ;
+	protected abstract void handleData(HttpServletRequest request,HttpServletResponse response) throws IOException, ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, DynamicException, JSONException, InstantiationException, InvalidObjectType, ReceiverException;
 	
-	public void addValidator(Validator<T> validator)
-	{
-		validators.add(validator);
-	}
 	
-	public List<Validator<T>> getValidators()
-	{
-		return validators;
-	}
-	
-	protected void validate(Result result,ReceiverData<T> data) throws DynamicException, JSONException
-	{
-		Object value;		
-		String name;
-		for(Map.Entry<String,Parameter> parEnt:parameters.entrySet()){
-			name=parEnt.getKey();
-			value=data.getData().get(name);
-			parEnt.getValue().validate(result, value);
-		}
-		for(Validator<T> validator:validators){
-			validator.validate(result, data);
-		}
-	}
 	@Override
 	public void setApplication(Application papplication)
 	{
@@ -84,57 +54,30 @@ public abstract  class Receiver<T extends Dynamic> extends DynamicMethod impleme
 			return application;
 	}
 	
-	@SuppressWarnings("unchecked")
-	protected T getObject() throws NoSuchMethodException, ClassNotFoundException, InstantiationException, IllegalAccessException,  InvocationTargetException, InvalidObjectType
-	{ 
-		Constructor<?> dataConstructor=DynamicObject.getConstructorByName(dataClass,new Class<?>[]{});
-		Object object=dataConstructor.newInstance();
-		if(object instanceof Dynamic){
-			return (T)object;
-		}
-		
-		throw new Errors.InvalidObjectType(object,"DynamicData");
-	}
 	
-	public void addParameter(Parameter parameter)
-	{
-		if(parameter.containsKey(parameter.getName())){
-			throw new DuplicateParameter(parameter.getName());
-		}
-		parameters.put(parameter.getName(),parameter);
-	}
-	
-	public Map<String,Parameter> getParameters()
-	{
-		return parameters;
-	}
-	
-	
-	public void setDataClass( String pdataClass)
-	{
-		dataClass=pdataClass;		
-	}
-	
-	public  String getDataClass()
-	{
-		return dataClass;
-	}
-	
-	public final void failure(HttpServletResponse response ,Exception e) throws FatalFailureException
+
+	public final void failure(HttpServletResponse response ,Exception e) throws ReceiverException
 	{
 		try{
 			sendFailure(response,e);
 		} catch(Exception f){
-			throw new FatalFailureException(f);
+			throw new ReceiverException(f);
 		}
 	}
 	
-	
+	protected Command getCommand(String cmdString)
+	{
+		for(Command cmd:commands){
+			if(cmd.isCmd(cmdString)){
+				return cmd;
+			}
+		}
+		return null;
+	}
 
-	public final void handleRequest(HttpServletRequest request,HttpServletResponse response) throws FatalFailureException{
+	public final void handleRequest(HttpServletRequest request,HttpServletResponse response) throws ReceiverException {
 		 try{
-			 ReceiverData<T> data=convertRequestToData(request,response);
-			 handleData(response,data);
+			 handleData(request,response);
 		 } catch(Exception e){
 			 failure(response,e);
 		 }

@@ -1,5 +1,6 @@
 package org.elaya.page.receiver;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
@@ -8,19 +9,38 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.elaya.page.Errors.InvalidObjectType;
 import org.elaya.page.data.Dynamic;
+import org.json.JSONException;
 
-public abstract class PostReceiver<T extends Dynamic> extends Receiver<T> {
+public abstract class PostReceiver extends Receiver {
+	
 	@Override
-	public ReceiverData<T> convertRequestToData(HttpServletRequest request,HttpServletResponse response) throws NoSuchMethodException, ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, InvalidObjectType, DynamicException    
+	protected final  void handleData(HttpServletRequest request,HttpServletResponse response) throws IOException, ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, DynamicException, JSONException, InstantiationException, InvalidObjectType, ReceiverException 
 	{
-		T object=getObject();
+		
+		String cmd=request.getParameter("cmd");
+		if(cmd==null){
+			cmd="";
+		}
+		Command command=getCommand(cmd);
+		if(command==null){
+			throw new ReceiverException("Invalid command '"+cmd+"'");
+		}
+		Dynamic data=convertRequestToData(command,request);
+		ReceiverData recieverData=new ReceiverData(data,cmd);
+		POSTResult result=new POSTResult();
+		command.handleRequest(this, request, response, recieverData, result);
+	}
+	
+	protected Dynamic convertRequestToData(Command command,HttpServletRequest request) throws InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, ClassNotFoundException, InvalidObjectType, DynamicException
+	{
+		Dynamic object=command.getObject();
 		String name;
-		for(Map.Entry<String,Parameter> paramEnt :getParameters().entrySet()){
+		for(Map.Entry<String,Parameter> paramEnt :command.getParameters()){
 			name=paramEnt.getKey();
 			object.put(name, request.getParameter(name));
 		}
 
-		return new ReceiverData<>(object,"");
+		return object;
 	}
 	
 }

@@ -160,7 +160,7 @@ public abstract class XMLParser extends XMLParserBase<Object> {
 			} else if(element.getNodeType() != Node.ELEMENT_NODE){
 				return element.getTextContent();
 			} else {
-				return parseElement(parent,element);
+				return parseElement(null,element);
 			}
 		}
 	}

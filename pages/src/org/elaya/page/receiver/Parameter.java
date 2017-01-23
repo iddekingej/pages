@@ -1,9 +1,10 @@
 package org.elaya.page.receiver;
 
+import org.elaya.page.NamedObject;
 import org.elaya.page.data.DynamicMethod;
 import org.json.JSONException;
 
-public class Parameter extends DynamicMethod {
+public class Parameter extends DynamicMethod implements NamedObject {
 	private String name;
 	private ParameterType type;
 	private boolean isMandatory=false;
@@ -59,5 +60,10 @@ public class Parameter extends DynamicMethod {
 	public ParameterType getType()
 	{
 		return type;
+	}
+
+	@Override
+	public String getFullName() {
+		return getName();
 	}
 }

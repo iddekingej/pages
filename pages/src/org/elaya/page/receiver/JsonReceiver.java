@@ -15,10 +15,10 @@ import org.elaya.page.data.Dynamic;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public abstract class JsonReceiver<T extends Dynamic> extends Receiver<T> {
+public abstract class JsonReceiver extends Receiver {
 
-	protected abstract void validateRequest(JSONResult presult,T pdata,String pcmd) throws JSONException;
-	protected abstract void handleJson(JSONResult presult,T pdata,String pcmd) throws SQLException, JSONException, DefaultDBConnectionNotSet ;
+	protected abstract void validateRequest(JSONResult presult,Dynamic pdata,String pcmd) throws JSONException;
+	protected abstract void handleJson(JSONResult presult,Dynamic pdata,String pcmd) throws SQLException, JSONException, DefaultDBConnectionNotSet ;
 	
 	private JSONObject getJson(HttpServletRequest prequest) throws IOException, JSONException
 	{
@@ -59,30 +59,30 @@ public abstract class JsonReceiver<T extends Dynamic> extends Receiver<T> {
 	}
 
 	@Override
-	protected final  void handleData(HttpServletResponse response,ReceiverData<T> data) throws DefaultDBConnectionNotSet, DynamicException, JSONException, SQLException, IOException 
+	protected final  void handleData(HttpServletRequest request,HttpServletResponse response) throws IOException, ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, DynamicException, JSONException, InstantiationException, InvalidObjectType, ReceiverException 
 	{
-		JSONResult result=new JSONResult();
-		validate(result,data);
-		validateRequest(result,data.getData(),data.getCmd());		
-		if(!result.hasErrors()){
-			handleJson(result,data.getData(),data.getCmd());
+		JSONObject json=getJson(request);
+		String cmd=json.getString("cmd");
+		Command command=getCommand(cmd);
+		if(command==null){
+			throw new ReceiverException("Invalid command '"+cmd+"'");
 		}
+		Dynamic data=convertRequestToData(command,json);
+		ReceiverData recieverData=new ReceiverData(data,cmd);
+		JSONResult result=new JSONResult();
+		command.handleRequest(this, request, response, recieverData, result);
+
 		response.setContentType("application/json");
 		response.getOutputStream().print(result.toString());		
 	}
-	
-	@Override
-	protected ReceiverData<T> convertRequestToData(HttpServletRequest request,HttpServletResponse response) throws JSONException, NoSuchMethodException, ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, InvalidObjectType, IOException, DynamicException    
+		
+	protected Dynamic convertRequestToData(Command command,JSONObject json) throws JSONException, NoSuchMethodException, ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, InvalidObjectType, IOException, DynamicException    
 	{
 			Object value;
-			T object=getObject();
-
-
-			JSONObject json=getJson(request);
-			String cmd=json.getString("cmd");
+			Dynamic object=command.getObject();
 			JSONObject data=json.getJSONObject("data");
 			String name;
-			for(Map.Entry<String,Parameter> paramEnt :getParameters().entrySet()){
+			for(Map.Entry<String,Parameter> paramEnt :command.getParameters()){
 				name=paramEnt.getKey();
 				if(data.has(name)){
 					value=data.get(name);	
@@ -93,7 +93,7 @@ public abstract class JsonReceiver<T extends Dynamic> extends Receiver<T> {
 				object.put(name,value);
 			}
 
-			return new ReceiverData<>(object,cmd);
+			return object;
 	}
 	
 }
