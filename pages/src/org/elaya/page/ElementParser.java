@@ -3,7 +3,6 @@ package org.elaya.page;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
@@ -11,14 +10,12 @@ import org.elaya.page.Errors.ReplaceVarException;
 import org.elaya.page.application.AliasData;
 import org.elaya.page.application.Application;
 import org.elaya.page.data.DataModel;
-import org.elaya.page.data.Parameterized;
 import org.elaya.page.jsplug.JSPlug;
 import org.elaya.page.quickform.OptionItem;
 import org.elaya.page.xml.XMLAppParser;
 import org.elaya.page.xml.XMLConfig;
 import org.elaya.page.xml.XMLCustomConfig;
 import org.elaya.page.xml.XMLParser;
-import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
 public class ElementParser extends XMLAppParser {
@@ -84,24 +81,12 @@ public class ElementParser extends XMLAppParser {
 		return list;
 	}
 	
-	private Map<String,Object> parseData(Node pnode)
-	{
-		Map<String,Object> data=new HashMap<>();
-		NamedNodeMap attrs=pnode.getAttributes();
-		Node attr;
-		for(int cnt=0;cnt<attrs.getLength();cnt++){
-			attr=attrs.item(cnt);
-			data.put(attr.getNodeName(), attr.getNodeValue());
-		}
-		return data;
-	}
+
 	@Override
 	protected Object parseCustom(Object pparent,Node pnode) throws XMLLoadException 
 	{
 		if(pnode.getNodeName()=="options"){
 			return parseOptions(pnode);
-		} else if(pnode.getNodeName()=="data"){
-			return parseData(pnode);
 		} else {
 			throw new XMLLoadException("Custom node not handled",pnode);
 		}

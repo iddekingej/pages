@@ -1,5 +1,4 @@
 package org.elaya.page.receiver;
-import org.elaya.page.data.Dynamic;
 import org.json.JSONException;
 
 public class NumberRangeValidator extends VarValidator {

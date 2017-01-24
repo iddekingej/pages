@@ -182,6 +182,18 @@ public abstract class XMLParser extends XMLParserBase<Object> {
 		}		
 	}
 
+	private Map<String,Object> parseData(Node pnode)
+	{
+		Map<String,Object> data=new HashMap<>();
+		NamedNodeMap attrs=pnode.getAttributes();
+		Node attr;
+		for(int cnt=0;cnt<attrs.getLength();cnt++){
+			attr=attrs.item(cnt);
+			data.put(attr.getNodeName(), attr.getNodeValue());
+		}
+		return data;
+	}
+	
 	private void parseChildNodes(Object pparent,Node pnode) throws ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, XMLLoadException, MethodNotFound, ParserConfigurationException, SAXException, IOException, SettingAttributeException, NormalizeClassNameException,  ReplaceVarException 
 	{
 		Node child=pnode.getFirstChild();
@@ -359,6 +371,10 @@ public abstract class XMLParser extends XMLParserBase<Object> {
 	{
 		ElementVariant variant=null;
 		try{
+			if("data".equals(pnode.getNodeName())){
+				//TODO ugly hack
+				return parseData(pnode);
+			}
 			Object object;
 			XMLConfig info=getConfig(pnode);
 			if(info==null){

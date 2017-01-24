@@ -36,7 +36,10 @@
 	<element alias="listmenu_group" value="org.elaya.page.listmenu.ListMenuGroup" />
 	<element alias="lm_dynamic" value="org.elaya.page.listmenu.DynamicLinkMenuItem" />
 	<element alias="elementcontainer" value="org.elaya.page.quickform.ElementContainer" />
-	<!-- Receiver -->
+<!-- Receiver action -->
+	<reciever alias="ra_call" value="org.elaya.page.receiver.MethodCallAction" />
+	<reciever alias="ra_crud" value="org.elaya.page.receiver.CRUDAction" />
+<!-- Receiver -->
 	<reciever alias="rec_parameter" value="org.elaya.page.receiver.Parameter" />
 	<!-- Js --> 
 	<jsfile alias="pagejs" value="core.js,pages.js" />

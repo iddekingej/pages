@@ -34,8 +34,9 @@ public class ReceiverParser extends XMLAppParser {
 	protected void setupConfig() {
 		addConfig("reciever",new XMLConfig(Receiver.class,null,"",null));
 		addConfig("command",new XMLConfig(Command.class,Command.class,"addCommand",Receiver.class));		
-		addConfig("data",new XMLConfig(Parameter.class,Parameter.class,"addParameter",Command.class));
+		addConfig("parameter",new XMLConfig(Parameter.class,Parameter.class,"addParameter",Command.class));
 		addConfig("validator",new XMLConfig(Validator.class,null,"addValidator",Command.class));
+		addConfig("action",new XMLConfig(Action.class,null,"addAction",Command.class));
 	}
 
 @Override

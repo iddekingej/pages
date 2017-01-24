@@ -5,10 +5,8 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.elaya.page.Errors.InvalidObjectType;
 import org.elaya.page.application.Application.DefaultDBConnectionNotSet;
 import org.elaya.page.data.Dynamic;
@@ -17,9 +15,7 @@ import org.json.JSONObject;
 
 public abstract class JsonReceiver extends Receiver {
 
-	protected abstract void validateRequest(JSONResult presult,Dynamic pdata,String pcmd) throws JSONException;
-	protected abstract void handleJson(JSONResult presult,Dynamic pdata,String pcmd) throws SQLException, JSONException, DefaultDBConnectionNotSet ;
-	
+
 	private JSONObject getJson(HttpServletRequest prequest) throws IOException, JSONException
 	{
 		StringBuilder data=new StringBuilder();
@@ -59,7 +55,7 @@ public abstract class JsonReceiver extends Receiver {
 	}
 
 	@Override
-	protected final  void handleData(HttpServletRequest request,HttpServletResponse response) throws IOException, ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, DynamicException, JSONException, InstantiationException, InvalidObjectType, ReceiverException 
+	protected final  void handleData(HttpServletRequest request,HttpServletResponse response) throws IOException, ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, DynamicException, JSONException, InstantiationException, InvalidObjectType, ReceiverException, DefaultDBConnectionNotSet, SQLException 
 	{
 		JSONObject json=getJson(request);
 		String cmd=json.getString("cmd");

@@ -1,6 +1,7 @@
 package org.elaya.page.receiver;
 
 import java.lang.reflect.InvocationTargetException;
+import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
@@ -15,6 +16,7 @@ import org.elaya.page.Errors;
 import org.elaya.page.Errors.InvalidObjectType;
 import org.elaya.page.UniqueNamedObjectList;
 import org.elaya.page.UniqueNamedObjectList.DuplicateItemName;
+import org.elaya.page.application.Application.DefaultDBConnectionNotSet;
 import org.elaya.page.data.Dynamic;
 import org.elaya.page.data.Dynamic.DynamicException;
 import org.elaya.page.data.DynamicObject;
@@ -22,10 +24,6 @@ import org.json.JSONException;
 
 public class Command {
 	private String cmd="";
-	/**
-	 * Method of the reciever class used to handle the request data
-	 */
-	private String handler;
 	private String validation;
 	/**
 	 * 
@@ -33,17 +31,18 @@ public class Command {
 	private String dataClass;
 	private boolean single;
 	private Set<String> cmdSet;
-	private UniqueNamedObjectList<Parameter> parameters;
+	private UniqueNamedObjectList<Parameter> parameters=new UniqueNamedObjectList<>();
 	private LinkedList<Validator> validators=new LinkedList<>();
-
-	public void setHandler(String phandler)
+	private LinkedList<Action>    actions=new LinkedList<>();
+	
+	public void addAction(Action action)
 	{
-		handler=phandler;
+		actions.add(action);
 	}
 	
-	public String getHandler()
+	public List<Action> getActions()
 	{
-		return handler;
+		return actions;
 	}
 	
 	public void setValidation(String pvalidation){
@@ -146,18 +145,22 @@ public class Command {
 		}
 	}
 	
-	protected void handleRequest(Object object,HttpServletRequest request,HttpServletResponse response,ReceiverData data,Result result) throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, DynamicException, JSONException{
-		Class<?> dataClassObject=Class.forName(dataClass);
+	protected void handleRequest(Object object,HttpServletRequest request,HttpServletResponse response,ReceiverData data,Result result) throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, DynamicException, JSONException, DefaultDBConnectionNotSet, SQLException{
 		validate(result,data);
 		if(result.hasErrors()){
 			return;
 		}
 		if(validation != null){
-			DynamicObject.call(object,validation,new Class<?>[]{String.class,dataClassObject,result.getClass()},new Object[]{data.getCmd(),data.getData(),result});
+			System.out.println(validation+"<"+data.getData().getClass()+"<"+result.getClass().getName());
+				
+			DynamicObject.call(object,validation,new Class<?>[]{String.class,data.getData().getClass(),result.getClass()},new Object[]{data.getCmd(),data.getData(),result});
+				
 			if(result.hasErrors()){
 				return;
 			}
 		}
-		DynamicObject.call(object, handler, new Class<?>[]{HttpServletRequest.class,HttpServletResponse.class,String.class,dataClassObject,result.getClass()}, new Object[]{request,response,data.getCmd(),data.getData(),result});
+		for(Action action:actions){
+			action.execute(object, request, response, data.getCmd(), data, result);
+		}
 	}
 }

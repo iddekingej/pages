@@ -1,24 +1,16 @@
 package org.elaya.page.receiver;
 
 import java.io.IOException;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.elaya.page.Errors;
 import org.elaya.page.Errors.InvalidObjectType;
 import org.elaya.page.application.Application;
 import org.elaya.page.application.Application.DefaultDBConnectionNotSet;
 import org.elaya.page.application.PageApplicationAware;
-import org.elaya.page.data.Dynamic;
 import org.elaya.page.data.DynamicMethod;
-import org.elaya.page.data.DynamicObject;
 import org.json.JSONException;
 
 
@@ -39,7 +31,7 @@ public abstract  class Receiver extends DynamicMethod implements PageApplication
 	private LinkedList<Command> commands=new LinkedList<>();
 	
 	protected abstract void sendFailure(HttpServletResponse response,Exception e) throws JSONException, IOException;
-	protected abstract void handleData(HttpServletRequest request,HttpServletResponse response) throws IOException, ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, DynamicException, JSONException, InstantiationException, InvalidObjectType, ReceiverException;
+	protected abstract void handleData(HttpServletRequest request,HttpServletResponse response) throws IOException, ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, DynamicException, JSONException, InstantiationException, InvalidObjectType, ReceiverException, DefaultDBConnectionNotSet, SQLException;
 	
 	
 	@Override
@@ -63,6 +55,11 @@ public abstract  class Receiver extends DynamicMethod implements PageApplication
 		} catch(Exception f){
 			throw new ReceiverException(f);
 		}
+	}
+	
+	public void addCommand(Command command)
+	{
+		commands.add(command);
 	}
 	
 	protected Command getCommand(String cmdString)
