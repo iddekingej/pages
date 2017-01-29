@@ -23,7 +23,7 @@ public class GridLayout extends Layout {
 	}
 	
 	@Override
-	public void displaySubElements(int id,Writer pwriter,Data data) throws DisplayException  
+	public void displayChildElements(int id,Writer pwriter,Data data) throws DisplayException  
 	{
 		try{
 			int col=0;
@@ -39,12 +39,10 @@ public class GridLayout extends Layout {
 					themeItem.gridItemFooter(pwriter);
 				}
 				col++;
-				System.out.println(col+" "+columns);
 				if(col>=columns){
 					col=0;
 				}
 				if(col==0){
-					System.out.println("Grid end");
 					themeItem.gridRowFooter(pwriter);
 					hasEnd=true;
 				}

@@ -6,7 +6,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.elaya.page.Element.InvalidVariableNameException;
 import org.elaya.page.Errors.AliasNotFound;
 import org.elaya.page.Errors.LoadingAliasFailed;
 import org.elaya.page.Errors.ReplaceVarException;
@@ -16,7 +15,7 @@ import org.elaya.page.application.Application.InvalidAliasType;
 import org.elaya.page.data.Data;
 import org.xml.sax.SAXException;
 
-public class AbstractWriter {
+public abstract class AbstractWriter {
 
 	private Application application;
 	private HttpServletRequest  request;
@@ -55,7 +54,7 @@ public class AbstractWriter {
 		String varName;
 		Object value;
 		String string=pstring==null?"":pstring;
-		try{
+		
 			while(true){
 				newPos=string.indexOf("${",pos);
 				if(newPos==-1){
@@ -63,20 +62,23 @@ public class AbstractWriter {
 					break;
 				}
 				returnValue.append(string.substring(pos,newPos));
-				pos=string.indexOf('}',newPos);
+				pos=string.indexOf('}',newPos+2);
 				if(pos==-1){
-					throw new InvalidVariableNameException("Missing '}' after position "+newPos); 				
+					throw new ReplaceVarException("Missing '}'"); 				
 				}
-				varName=string.substring(newPos+2,pos);	
-				value=pdata.get(varName);				
+				varName=string.substring(newPos+2,pos);
+				try{
+					value=pdata.get(varName);
+				}catch(Exception e){
+					throw new ReplaceVarException("In String "+pstring,e);
+				}
+							
 				if(value != null){
 					returnValue.append(value.toString());
 				}			
 				pos++;
 			}
-		}catch(Exception e){
-			throw new ReplaceVarException("In String "+pstring,e);
-		}
+		
 		return returnValue.toString();
 	}
 	
@@ -85,7 +87,7 @@ public class AbstractWriter {
 		String url=replaceVariables(data,purl);
 		if(url.startsWith("@")){
 			url=application.getAlias(url.substring(1),AliasData.ALIAS_URL,true);
-		}
+		} 
 		if(url.startsWith("+")){
 			return getBasePath()+"/"+url.substring(1);
 		} else {
@@ -93,5 +95,11 @@ public class AbstractWriter {
 		}
 	}
 	
+	public String str(Object pvalue){
+		if(pvalue==null){
+			return "";
+		}
+		return pvalue.toString();
+	}
 	
 }

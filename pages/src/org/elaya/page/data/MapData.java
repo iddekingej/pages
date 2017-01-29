@@ -7,14 +7,14 @@ public class MapData extends Data{
 		private Object id;
 		private MapData parent;
 		private HashMap<String,Object> attributes=new HashMap<>();
-		private HashMap<Object,Data> childeren=new HashMap<>();
+		private HashMap<Object,Data> children=new HashMap<>();
 		
 		public MapData(Object pid,MapData parentData) {
+			id=pid;
 			parent=parentData;
 			if(parent != null){
-				parent.addToChilderen(this);
+				parent.addToChildren(this);
 			}
-			id=pid;
 		}
 		
 		public MapData(){
@@ -38,15 +38,15 @@ public class MapData extends Data{
 			attributes.putAll(pdata);
 		}
 		
-		void addToChilderen(Data pitem)
-		{
-			childeren.put(pitem.getId(), pitem);
+		public void addToChildren(Data pitem)
+		{			
+			children.put(pitem.getId(), pitem);
 		}
 		
 		@Override
 		public Data getChild(Object pid)
 		{
-			return childeren.get(pid);
+			return children.get(pid);
 		}
 		
 		@Override
@@ -84,5 +84,10 @@ public class MapData extends Data{
 			attributes.put(pname, pvalue);
 		}
 		
+		@Override
+		public String toString()
+		{
+			return "[DataMap class="+getClass().getName()+" id="+((id==null)?"null":id.toString())+"]";
+		}
 
 }

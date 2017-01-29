@@ -29,26 +29,28 @@ public abstract class Data  {
 	public abstract Object  getId();
 	public abstract Data    getChild(Object pobject);
 	public abstract Data    getParent();
-	public abstract Object  get(String pname) throws KeyNotFoundException;
-	public abstract void    put(String pname,Object pvalue) ;
-	public abstract boolean containsKey(String pname);
+	public abstract Object  get(String key) throws KeyNotFoundException;
+	public abstract void    put(String key,Object value) ;
+	public abstract boolean containsKey(String key);
 	public abstract int     getSize();
 	
-	public String getString(String pname) throws KeyNotFoundException  {
-		Object value=get(pname);
+	public String getString(String key) throws KeyNotFoundException  {
+		Object value=get(key);
 		if(value != null){
 			return value.toString();
 		}
 		return null;
 	}
 	
-	public Integer getInteger(String pname) throws KeyNotFoundException  
+	public Integer getInteger(String key) throws KeyNotFoundException  
 	{
-		String value=getString(pname);
+		String value=getString(key);
 		if(value != null){
 			return Integer.valueOf(value);
 		}
 		return null;
 	}
+	
+	
 	
 }

@@ -11,9 +11,7 @@ public class Writer extends AbstractWriter{
 	ServletOutputStream stream;
 	JSWriter            jswriter;
 	int idCnt=0;
-//TODO make in configuration.	
-	private String jsPath="resources/pages/js/";
-	private String cssPath="resources/pages/css/";
+
 
 	public Writer(Application papplication,HttpServletRequest prequest,HttpServletResponse presponse) throws IOException {
 		super(papplication,prequest,presponse);
@@ -42,13 +40,6 @@ public class Writer extends AbstractWriter{
 	public void print(String pstr) throws IOException
 	{
 		stream.print(pstr);
-	}
-	
-	public String str(Object pvalue){
-		if(pvalue==null){
-			return "";
-		}
-		return pvalue.toString();
 	}
 	
 	public String escape(String pvalue)
@@ -97,16 +88,6 @@ public class Writer extends AbstractWriter{
 		stream.flush();
 	}
 		
-	public String getJsPath(String pfile)
-	{
-		return getBasePath()+"/"+jsPath+pfile;
-	}
-	
-	public String getCssPath(String pfile)
-	{
-		return getBasePath()+"/"+cssPath+pfile;
-	}
-	
 	public String getImgUrl(String pfile)
 	{
 		return getBasePath()+"/"+getApplication().getImageUrl()+pfile;
@@ -116,7 +97,20 @@ public class Writer extends AbstractWriter{
 	public void generateJs() throws IOException
 	{
 		jsBegin();
-		print(getJSWriter().toString());
+		print(jswriter.toString());
 		jsEnd();
 	}
+	
+	public String getJSPath(String pfile)
+	{
+		return getBasePath()+"/"+getApplication().getJSPath2() +pfile;
+	}
+	
+	public String getCSSPath(String pfile)
+	{
+		return getBasePath()+"/"+getApplication().getCSSPath2()+pfile;
+	}
+	
+	
+	
 }

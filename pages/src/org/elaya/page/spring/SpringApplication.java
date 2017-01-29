@@ -18,7 +18,7 @@ public class SpringApplication extends Application implements ServletContextAwar
 	@Override
 	protected void initPageLoader()
 	{
-		setPageLoader(new SpringPageLoader(applicationContext));
+		setPageLoader(new SpringPageLoader(this,applicationContext));
 	}
 	
 	public ApplicationContext getApplicationContext(){

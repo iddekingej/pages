@@ -38,7 +38,7 @@ public class RepeatElement extends PageElement<ElementThemeItem> {
 	}
 	
 	@Override
-	public void displaySubElements(int id,Writer pwriter,Data pdata) throws DisplayException  
+	public void displayChildElements(int id,Writer pwriter,Data pdata) throws DisplayException  
 	{
 		try{
 			Data data=getData(pdata);
@@ -47,7 +47,7 @@ public class RepeatElement extends PageElement<ElementThemeItem> {
 				Iterable<?> iter=(Iterable<?>)dataValue;
 				for(Object item:iter){
 					if(item instanceof Data){
-						super.displaySubElements(id,pwriter, (Data)item);
+						super.displayChildElements(id,pwriter, (Data)item);
 					}else {
 						throw new Errors.InvalidTypeException("element of dataVariable must be inherited from elaya.org.data.Data class");
 					}

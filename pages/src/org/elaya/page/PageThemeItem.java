@@ -5,6 +5,6 @@ import java.util.Set;
 
 
 public abstract class PageThemeItem extends ThemeItemBase {
-	public abstract void pageHeader(Writer pwriter,DocumentType pdocumentType,Set<String> pjs,Set<String> pcss) throws IOException;
-	public abstract void pageFooter(Writer pwriter) throws IOException ;
+	public abstract void pageHeader(Writer writer,DocumentType documentType,Set<String> js,Set<String> css) throws IOException;
+	public abstract void pageFooter(Writer writer) throws IOException ;
 }

@@ -23,7 +23,7 @@ import org.xml.sax.SAXException;
 
 public abstract class Application{
 
-	private String themeBase="org.elaya.page.defaultTheme";	
+	private String themeBase="org.elaya.page.defaultheme";	
 	private String aliasFiles;
 	private String elementVariantFiles;
 	private ElementVariantList elementVariants;
@@ -33,7 +33,8 @@ public abstract class Application{
 	private String classBase="";
 	private PageLoader pageLoader;
 	private String imageURL="resources/pages/images/";
-	 
+	private String jsPath="resources/pages/js/";
+	private String cssPath="resources/pages/css/"; 
 	
 	
 	public class DefaultDBConnectionNotSet extends Exception
@@ -60,6 +61,28 @@ public abstract class Application{
 	{
 		loadAliasFiles();
 		processElementVariantFiles();
+		initPageLoader();
+
+	}
+	
+	public void setJSPath(String pjsPath)
+	{
+		jsPath=pjsPath;
+	}
+	
+	public String getJSPath2()
+	{
+		return jsPath;
+	}
+	
+	public void setCSSPath(String pcssPath)
+	{
+		cssPath=pcssPath;
+	}
+	
+	public String getCSSPath2()
+	{
+		return cssPath;
 	}
 	
 	/**
@@ -140,6 +163,8 @@ public abstract class Application{
 		return getDB(defaultDBConnection);
 	}
 	
+	//--( PageLoader )-------------------------------------------
+	
 	protected void setPageLoader(PageLoader ppageLoader)
 	{
 		pageLoader=ppageLoader;
@@ -152,7 +177,7 @@ public abstract class Application{
 	
 	protected void initPageLoader()
 	{
-		pageLoader=new PageLoader();
+		pageLoader=new PageLoader(this);
 	}
 /**
  * Parse UI definition file in pfileName and returns the Page Object
@@ -163,17 +188,14 @@ public abstract class Application{
  * @param pfileName  XML describing the page
  * @param pcache     Cache Page object 
  * @return            Page object representing page
+ * @throws XMLLoadException 
  * @throws Exception  
  */
 	
 	
-	
-	public synchronized Page loadPage(String pfileName,boolean pcache) throws Exception
-	{		
-		if(pageLoader==null){
-			initPageLoader();
-		}
-		return pageLoader.loadPage(this, pfileName, pcache);
+	public synchronized Page loadPage(String pfileName,boolean pcache) throws XMLLoadException 
+	{	
+		return pageLoader.loadPage( pfileName, pcache);
 
 	}
 	

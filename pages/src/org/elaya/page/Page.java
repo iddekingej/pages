@@ -22,7 +22,7 @@ public class Page extends PageElement<PageThemeItem> implements PageApplicationA
 	Application application;
 	DocumentType documentType=DocumentType.DT_XHTML;
 	
-	public Page()
+	public Page() throws ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException
 	{		
 		setIsNamespace(true);
 	}
@@ -142,11 +142,17 @@ public class Page extends PageElement<PageThemeItem> implements PageApplicationA
 		return pelement instanceof PageElement;
 	}
 
-	public void initTheme() throws ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException  
+	@Override
+	public void afterSetup() throws ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException  
 	{
 		setTheme(new Theme(application.getThemeBase()));
 	}
 
+	@Override
+	public Page getPage()
+	{
+		return this;
+	}
 
 }
 

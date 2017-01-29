@@ -114,18 +114,9 @@ public class ElementParser extends XMLAppParser {
 	}
 
 	@Override
-	protected void afterCreate(Object object) throws ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException  
-	{
-		if(object instanceof Page){
-			((Page)object).initTheme();
-		}
-	}
-
-	@Override
-
 	protected String getName(Object object) {
 		if(object instanceof Element){
-			return ((Element<?>)object).getFullName(); 
+			return ((Element<?>)object).getRefName(); 
 		}
 		return null;
 	}

@@ -25,6 +25,12 @@ import org.xml.sax.SAXException;
 
 
 public abstract class XMLParser extends XMLParserBase<Object> {
+	/**
+	 * Configs define how tags are handled.  Configs is the 
+	 * list of those configs. The index of the array is the tag name
+	 * 
+	 * @var array
+	 */
 	
 	private HashMap<String,XMLConfig> configs=new HashMap<>();	
 	private Map<String,Object> nameIndex;
@@ -42,6 +48,11 @@ public abstract class XMLParser extends XMLParserBase<Object> {
 		this(new HashMap<String,Object>());
 	}
 
+	public Map<String,XMLConfig> getConfigs()
+	{
+		return configs;
+	}
+	
 	protected String replaceVariables(String pstring) throws ReplaceVarException
 	{
 		int pos=0;
@@ -271,7 +282,6 @@ public abstract class XMLParser extends XMLParserBase<Object> {
 			}
 
 		}
-		parseNamedObject(object,pnode);
 		return object;
 	}
 	
@@ -327,12 +337,12 @@ public abstract class XMLParser extends XMLParserBase<Object> {
 					throw new XMLLoadException("Internal error. Class name is empty, but defaultClass not set in config. Node name="+node.getNodeName(),node);					
 				} else {
 					object=info.getDefaultClass().newInstance();
-					parseNamedObject(object,node);
 				}	
 			}	
+			parseNamedObject(object,node);
+			setParent(parent,object,node,info);
 		}
 		
-		setParent(parent,object,node,info);
 		
 		return object;
 	}
@@ -349,6 +359,9 @@ public abstract class XMLParser extends XMLParserBase<Object> {
 	protected void initializeObject(Object object) throws ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, LoadingAliasFailed, org.elaya.page.xml.XMLParserBase.XMLLoadException{
 		for(Initializer initializer:initializers){
 			initializer.processObject(object);
+		}
+		if(object instanceof AfterSetup){
+			((AfterSetup)object).afterSetup();
 		}
 		afterCreate(object);		
 	}

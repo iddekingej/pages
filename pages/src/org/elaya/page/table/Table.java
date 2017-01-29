@@ -57,7 +57,7 @@ public class Table extends PageElement<TableThemeItem> {
 	
 		
 	@Override
-	public void displaySubElements(int id,Writer pwriter,Data data) throws DisplayException  
+	public void displayChildElements(int id,Writer pwriter,Data data) throws DisplayException  
 	{
 		try{
 			Object abstractList;
@@ -69,7 +69,7 @@ public class Table extends PageElement<TableThemeItem> {
 				for(Object abstractRow:dataList){
 					if(abstractRow instanceof Data){
 						themeItem.rowHeader(pwriter);
-						super.displaySubElements(id,pwriter,(Data)abstractRow);
+						super.displayChildElements(id,pwriter,(Data)abstractRow);
 						themeItem.rowFooter(pwriter);	
 
 					}

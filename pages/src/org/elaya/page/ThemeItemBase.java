@@ -22,7 +22,6 @@ public class ThemeItemBase {
 		/* This is an abstract class and doesn't have a css file*/
 	}
 
-	
 	public String str(Object value){
 		if(value==null){
 			return "";

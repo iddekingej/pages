@@ -2,11 +2,18 @@ package org.elaya.page;
 
 import java.util.HashMap;
 import org.elaya.page.application.Application;
+import org.elaya.page.xml.XMLParserBase.XMLLoadException;
 
 public class PageLoader {
 
+	private Application application;
 	private HashMap<String,Page> pageCache=new HashMap<>(); 
 
+	public PageLoader(Application papplication)
+	{
+		application=papplication;
+	}
+	
 /**
  * Called after parser is created. This routine can be used to set for example initializers
  * 
@@ -26,12 +33,13 @@ public class PageLoader {
  * @param pfileName  XML describing the page
  * @param pcache     Cache Page object 
  * @return            Page object representing page
+ * @throws XMLLoadException 
  * @throws Exception  
  */
 	
 	
 	
-	public synchronized Page loadPage(Application application,String pfileName,boolean pcache) throws Exception
+	public synchronized Page loadPage(String pfileName,boolean pcache) throws XMLLoadException 
 	{
 		if(pcache && pageCache.containsKey(pfileName)){
 			return pageCache.get(pfileName);

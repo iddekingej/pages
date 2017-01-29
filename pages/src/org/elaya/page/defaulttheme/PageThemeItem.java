@@ -2,9 +2,7 @@ package org.elaya.page.defaulttheme;
 
 
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.Set;
-
 import org.elaya.page.DocumentType;
 import org.elaya.page.Writer;
 
@@ -12,7 +10,6 @@ public class PageThemeItem extends org.elaya.page.PageThemeItem {
 
 	@Override
 	public void pageHeader(Writer pwriter,DocumentType pdocumentType,Set<String> pjs,Set<String> pcss) throws IOException{
-		Iterator<String> iter=pjs.iterator();
 		String header="";
 		String htmlTag="<html>";
 		String contentType="text/html";
@@ -37,12 +34,13 @@ public class PageThemeItem extends org.elaya.page.PageThemeItem {
 		}
 		pwriter.setContentType(contentType);
 		pwriter.print(header+"\n"+htmlTag+"\n<head>\n");
-		while(iter.hasNext()){
-			pwriter.jsInclude(pwriter.getJsPath(iter.next()));
+		
+		for(String l_file:pjs){
+			pwriter.jsInclude(pwriter.getJSPath(l_file));
 		}
-		iter=pcss.iterator();
-		while(iter.hasNext()){
-			pwriter.cssInclude(pwriter.getCssPath(iter.next()));
+		
+		for(String l_file:pcss){
+			pwriter.cssInclude(pwriter.getCSSPath(l_file));
 		}
 		pwriter.print("</head>\n<body><div id='pageContainer'>\n");
 	}

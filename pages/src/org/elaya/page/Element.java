@@ -2,7 +2,7 @@ package org.elaya.page;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
+import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
@@ -16,26 +16,28 @@ import org.elaya.page.Errors.DuplicateElementOnPage;
 import org.elaya.page.Errors.InvalidElement;
 import org.elaya.page.Errors.LoadingAliasFailed;
 import org.elaya.page.Errors.ReplaceVarException;
+import org.elaya.page.UniqueNamedObjectList.DuplicateItemName;
+import org.elaya.page.application.Application.DefaultDBConnectionNotSet;
 import org.elaya.page.application.Application.InvalidAliasType;
 import org.elaya.page.data.*;
 import org.elaya.page.data.Data.KeyNotFoundException;
 import org.elaya.page.jsplug.JSPlug;
 import org.elaya.page.jsplug.JSPlug.InvalidJsPlugType;
+import org.elaya.page.xml.AfterSetup;
 import org.json.JSONException;
 import org.xml.sax.SAXException;
 
 
 
-public abstract class Element<T extends ThemeItemBase> extends DynamicMethod {
+public abstract class Element<T extends ThemeItemBase> extends DynamicMethod implements NamedObject,AfterSetup{
+	
 	public static class InvalidVariableNameException extends Exception{
 		private static final long serialVersionUID = -5605663946752398380L;
 		public InvalidVariableNameException(String message){
 			super(message);
 		}
 	}
-	
-
-	
+		
 	public static class DisplayException extends Exception{
 		private static final long serialVersionUID=2L;
 		public DisplayException(String message,Throwable cause){
@@ -48,7 +50,7 @@ public abstract class Element<T extends ThemeItemBase> extends DynamicMethod {
 	
 	protected T themeItem;
 	protected Theme theme;
-	protected LinkedList<Element<?>> elements=new LinkedList<>();
+	private LinkedList<Element<?>> elements=new LinkedList<>();
 	private LinkedList<JSPlug> jsPlugs=new LinkedList<>();
 	private Element<?> parent=null;
 	private String name="";
@@ -60,12 +62,17 @@ public abstract class Element<T extends ThemeItemBase> extends DynamicMethod {
 	private String condition="";
 	private String jsCondition="";
 	private boolean isNamespace=false; 
-	private HashMap<String,Element<?>> byName=null;
+	private UniqueNamedObjectList<Element<?>> byName=null;
 	private Element<?> namespaceParent=null;
 	private boolean isWidgetParent=true;
 
 	public Element()
 	{
+	}
+	
+	public void afterSetup() throws ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException
+	{
+		
 	}
 	
 	public void setIsWidgetParent(boolean flag)
@@ -99,13 +106,13 @@ public abstract class Element<T extends ThemeItemBase> extends DynamicMethod {
 		return namespaceParent;
 	}
 	
-	public void addByName(Element<?> pelement)
+	public void addByName(Element<?> pelement) throws DuplicateItemName
 	{
 		if(byName==null){
-			byName=new HashMap<>();
+			byName=new UniqueNamedObjectList<>();
 		}
 		pelement.setNamespaceParent(this);
-		byName.put(pelement.getName(), pelement);
+		byName.put(pelement);
 	}
 	
 	
@@ -166,7 +173,7 @@ public abstract class Element<T extends ThemeItemBase> extends DynamicMethod {
 		return value.equals(true);
 	}
 	
-	public void calculateData(MapData pdata) throws Exception{
+	public void calculateData(MapData pdata) throws SQLException, DefaultDBConnectionNotSet, KeyNotFoundException, ParserConfigurationException, SAXException, IOException, InvalidAliasType, AliasNotFound, LoadingAliasFailed{
 		MapData data=pdata;
 		if(dataModel != null){
 			data=dataModel.processData(pdata);
@@ -177,10 +184,6 @@ public abstract class Element<T extends ThemeItemBase> extends DynamicMethod {
 			}
 		}
 	}
-	
-	
-	
-
 	
 	public void setDataModel(DataModel pdataModel)
 	{
@@ -196,7 +199,7 @@ public abstract class Element<T extends ThemeItemBase> extends DynamicMethod {
 	{
 		Data data=null;
 		if(dataModel != null){
-			data=pdata.getChild(dataModel);			
+			data=pdata.getChild(dataModel);				
 		}
 		if(data != null){
 			return data;
@@ -207,13 +210,6 @@ public abstract class Element<T extends ThemeItemBase> extends DynamicMethod {
 	public Object getValueByName(Data pdata) throws KeyNotFoundException  
 	{
 		return pdata.get(name);
-	}
-	
-	public void process()
-	{		
-		for(Element<?> element:elements){
-			element.process();
-		}
 	}
 	
 	public void setLayoutWidth(String pwidth)
@@ -262,15 +258,20 @@ public abstract class Element<T extends ThemeItemBase> extends DynamicMethod {
 	{
 		return "element_"+id;
 	}
-	
-
-	
+		
 	public void setName(String pname)
 	{
 		name=pname;
 	}
 	
+	@Override
 	public String getName()
+	{
+		return name;
+	}
+	
+	@Override
+	public String getFullName()
 	{
 		return name;
 	}
@@ -283,12 +284,12 @@ public abstract class Element<T extends ThemeItemBase> extends DynamicMethod {
 		return name;
 	}
 
-	public String getFullName()
+	public String getRefName()
 	{
 		if(parent==null){
 			return name;
 		} else{
-			return parent.getName()+"."+name;
+			return parent.getRefName()+"."+name;
 		}
 	}
 	
@@ -337,12 +338,8 @@ public abstract class Element<T extends ThemeItemBase> extends DynamicMethod {
 	
 	public Page getPage()
 	{
-		Element<?> current=this;
-		while(current != null){
-			if(current instanceof Page){
-				return (Page)current;
-			}
-			current=current.getParent();
+		if(parent !=null){
+			return parent.getPage();
 		}
 		return null;
 	}
@@ -355,8 +352,15 @@ public abstract class Element<T extends ThemeItemBase> extends DynamicMethod {
 	protected void postElement(int id,Writer writer,Data data,Element<?> element) throws IOException
 	{		
 	}
-	
-	public void displaySubElements(int id,Writer pwriter,Data pdata) throws DisplayException  
+	/**
+	 * Display all child elements from this element.
+	 * 
+	 * @param id        Element unique ID
+	 * @param pwriter   Output writer
+	 * @param pdata     Data from data model
+	 * 
+	 */
+	public void displayChildElements(int id,Writer pwriter,Data pdata) throws DisplayException  
 	{
 		try{
 			for(Element<?> element:elements)
@@ -372,7 +376,9 @@ public abstract class Element<T extends ThemeItemBase> extends DynamicMethod {
 		}
 	}
 	
-	/** Displays element and JS. JS is not displayed directly, but buffered in jswriter
+	/** 
+	 * Generate the element HTML and JS. JS is not displayed directly, 
+	 * but buffered in jswriter. Javascript is displayed at the end of the page.
 	 * 
 	 * @param writer output writer for displaying html
 	 * @param parentData data container from the parent
@@ -380,10 +386,10 @@ public abstract class Element<T extends ThemeItemBase> extends DynamicMethod {
 	public final void display(Writer writer,Data parentData) throws DisplayException{
 		try{
 			int id=writer.newId();
-			Data data=getData(parentData);
+			Data data=getData(parentData);			
 			displayElement(id,writer,data);
 			generateElementJs(id,writer.getJSWriter(),data);
-			displaySubElements(id,writer,data);
+			displayChildElements(id,writer,data);
 			displayElementFooter(id,writer,data);
 			generateElementFooterJs(id,writer.getJSWriter(),data);
 		} catch(Exception e){
@@ -414,7 +420,7 @@ public abstract class Element<T extends ThemeItemBase> extends DynamicMethod {
 	protected void generateElementJs(int id,JSWriter writer,Data data) throws ReplaceVarException, ParserConfigurationException, SAXException, IOException, InvalidAliasType, AliasNotFound, LoadingAliasFailed, JSONException, KeyNotFoundException
 	{
 		writer.print("element=new "+getJsClassName()+"(widgetParent,"+writer.toJsString(getJsName(id))+","+writer.toJsString(name)+","+writer.toJsString(getDomId(id))+");\n");
-		if(this.isNamespace){
+		if(isNamespace){
 			writer.setVar("element.isNamespace","true");			
 		}
 
@@ -450,8 +456,8 @@ public abstract class Element<T extends ThemeItemBase> extends DynamicMethod {
 	}
 	
 	
-	public abstract void displayElement(int id,Writer stream,Data data) throws DisplayException;
-	public void displayElementFooter(int id,Writer stream,Data data) throws DisplayException
+	public abstract void displayElement(int id,Writer writer,Data data) throws DisplayException;
+	public void displayElementFooter(int id,Writer writer,Data data) throws DisplayException
 	{
 		
 	}
@@ -482,7 +488,7 @@ public abstract class Element<T extends ThemeItemBase> extends DynamicMethod {
 		pplug.setParent(this);
 		jsPlugs.add(pplug);
 	}
-	public final void addElement(Element<?> pelement) throws InvalidElement, ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, DuplicateElementOnPage 
+	public final void addElement(Element<?> pelement) throws InvalidElement, ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, DuplicateElementOnPage, DuplicateItemName 
 	{
 		Objects.requireNonNull(theme,"In element "+getClass().getName());
 		Objects.requireNonNull(pelement,"addElement(pelement)");
@@ -501,11 +507,7 @@ public abstract class Element<T extends ThemeItemBase> extends DynamicMethod {
 			namespace=namespaceParent;			
 		}
 		pelement.setNamespaceParent(namespace);
-		if(!pelement.getName().isEmpty()){
-		
-			if(namespace.hasByName(pelement)){
-				throw new Errors.DuplicateElementOnPage(pelement.getName());
-			}			
+		if(!pelement.getName().isEmpty()){	
 			namespace.addByName(pelement);
 		}
 	} 
