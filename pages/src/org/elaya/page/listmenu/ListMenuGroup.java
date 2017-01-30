@@ -3,7 +3,7 @@ package org.elaya.page.listmenu;
 import java.io.IOException;
 
 import org.elaya.page.Element;
-import org.elaya.page.Writer;
+import org.elaya.page.core.Writer;
 import org.elaya.page.data.Data;
 import org.elaya.page.data.Data.KeyNotFoundException;
 

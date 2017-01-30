@@ -3,6 +3,8 @@ package org.elaya.page;
 import java.io.IOException;
 import java.util.Set;
 
+import org.elaya.page.core.Writer;
+
 
 public abstract class PageThemeItem extends ThemeItemBase {
 	public abstract void pageHeader(Writer writer,DocumentType documentType,Set<String> js,Set<String> css) throws IOException;

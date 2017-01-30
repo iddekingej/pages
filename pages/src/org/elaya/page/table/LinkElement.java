@@ -1,6 +1,6 @@
 package org.elaya.page.table;
 
-import org.elaya.page.Writer;
+import org.elaya.page.core.Writer;
 import org.elaya.page.data.Data;
 import org.elaya.page.data.LinkData;
 

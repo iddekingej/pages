@@ -2,7 +2,8 @@ package org.elaya.page.quickform;
 
 
 import java.util.List;
-import org.elaya.page.Writer;
+
+import org.elaya.page.core.Writer;
 import org.elaya.page.data.Data;
 
 

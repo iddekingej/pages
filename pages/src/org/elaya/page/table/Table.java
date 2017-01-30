@@ -5,7 +5,7 @@ import java.io.IOException;
 import org.elaya.page.Element;
 import org.elaya.page.Errors;
 import org.elaya.page.PageElement;
-import org.elaya.page.Writer;
+import org.elaya.page.core.Writer;
 import org.elaya.page.data.Data;
 
 public class Table extends PageElement<TableThemeItem> {

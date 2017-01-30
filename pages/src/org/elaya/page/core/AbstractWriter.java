@@ -1,11 +1,8 @@
-package org.elaya.page;
+package org.elaya.page.core;
 
 import java.io.IOException;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.ParserConfigurationException;
-
 import org.elaya.page.Errors.AliasNotFound;
 import org.elaya.page.Errors.LoadingAliasFailed;
 import org.elaya.page.Errors.ReplaceVarException;
@@ -18,31 +15,26 @@ import org.xml.sax.SAXException;
 public abstract class AbstractWriter {
 
 	private Application application;
-	private HttpServletRequest  request;
-	private HttpServletResponse response;
+	private PageSession session;
 	
-	public AbstractWriter(Application papplication,HttpServletRequest   prequest,HttpServletResponse presponse) {
+	public AbstractWriter(Application papplication,PageSession psession) {
 		application=papplication;
-		request=prequest;
-		response=presponse;
+		session=psession;
 	}
 
 	public Application getApplication()
 	{
 		return application;
 	}
-	
-	public HttpServletRequest  getRequest(){
-		return request;
-	}
-	
-	public HttpServletResponse getResponse(){
-		return response;
+
+	public PageSession getSession()
+	{
+		return session;
 	}
 	
 	
 	public String getBasePath(){
-		return request.getContextPath();
+		return session.getBasePath();
 	}
 	
 	

@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.elaya.page.PageMode;
 import org.elaya.page.application.Application;
+import org.elaya.page.core.PageSession;
 import org.elaya.page.data.MapData;
 import org.elaya.page.view.PageView;
 import org.springframework.web.servlet.view.AbstractView;
@@ -20,11 +21,12 @@ public class SpringPageView extends AbstractView {
 	}
 
 	@Override
-	protected void renderMergedOutputModel(Map<String, Object> map, HttpServletRequest request, HttpServletResponse response)
+	protected void renderMergedOutputModel(Map<String, Object> pmap, HttpServletRequest prequest, HttpServletResponse presponse)
 			throws Exception {
 		MapData md=new MapData("___TOP",null);
-		md.setByMap(map);
-		pageView.render(md,request,response);	
+		md.setByMap(pmap);
+		
+		pageView.render(md,new PageSession(prequest,presponse));	
 	}
 
 }

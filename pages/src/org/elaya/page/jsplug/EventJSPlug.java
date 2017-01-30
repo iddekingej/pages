@@ -1,5 +1,5 @@
 package org.elaya.page.jsplug;
-import org.elaya.page.JSWriter;
+import org.elaya.page.core.JSWriter;
 import org.elaya.page.data.Data;
 import org.json.JSONException;
 

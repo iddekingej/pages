@@ -2,7 +2,7 @@ package org.elaya.page.element;
 
 import java.io.IOException;
 import org.elaya.page.ThemeItemBase;
-import org.elaya.page.Writer;
+import org.elaya.page.core.Writer;
 
 public abstract class ElementThemeItem extends ThemeItemBase {
 

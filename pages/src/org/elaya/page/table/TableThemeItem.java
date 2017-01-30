@@ -3,7 +3,7 @@ package org.elaya.page.table;
 import java.io.IOException;
 
 import org.elaya.page.ThemeItemBase;
-import org.elaya.page.Writer;
+import org.elaya.page.core.Writer;
 
 public abstract class TableThemeItem extends ThemeItemBase {
 	public abstract void tableHeader(Writer pwriter,String pdomId) throws IOException;

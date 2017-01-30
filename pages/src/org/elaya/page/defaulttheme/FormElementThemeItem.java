@@ -4,8 +4,7 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-
-import org.elaya.page.*;
+import org.elaya.page.core.Writer;
 import org.elaya.page.quickform.OptionItem;
 
 public class FormElementThemeItem extends org.elaya.page.quickform.FormElementThemeItem {

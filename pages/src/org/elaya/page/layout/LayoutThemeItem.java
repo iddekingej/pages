@@ -5,7 +5,7 @@ import java.io.IOException;
 import org.elaya.page.HorizontalAlign;
 import org.elaya.page.ThemeItemBase;
 import org.elaya.page.VerticalAlign;
-import org.elaya.page.Writer;
+import org.elaya.page.core.Writer;
 
 public abstract  class LayoutThemeItem extends ThemeItemBase {
 

@@ -1,7 +1,7 @@
 package org.elaya.page.layout;
 
 import org.elaya.page.Element;
-import org.elaya.page.Writer;
+import org.elaya.page.core.Writer;
 import org.elaya.page.data.Data;
 
 public class TableLayout extends Layout {

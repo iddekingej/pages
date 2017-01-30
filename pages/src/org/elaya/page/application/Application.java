@@ -1,5 +1,6 @@
 package org.elaya.page.application;
 
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,7 +36,11 @@ public abstract class Application{
 	private String imageURL="resources/pages/images/";
 	private String jsPath="resources/pages/js/";
 	private String cssPath="resources/pages/css/"; 
-	
+	/**
+	 *  If XML files are inside the WAR or on a extenral path 
+	 *  true=internal false=external
+	 */
+	private boolean externalXML=false;
 	
 	public class DefaultDBConnectionNotSet extends Exception
 	{
@@ -57,6 +62,17 @@ public abstract class Application{
 		}
 	}
 	
+	
+	public void setExternalXML(Boolean pexternalXML)
+	{
+		externalXML=pexternalXML;
+	}
+	
+	public Boolean getExternalXML()
+	{
+		return externalXML;
+	}
+	
 	public void setup() throws LoadingAliasFailed, XMLLoadException
 	{
 		loadAliasFiles();
@@ -70,7 +86,7 @@ public abstract class Application{
 		jsPath=pjsPath;
 	}
 	
-	public String getJSPath2()
+	public String getJSPath()
 	{
 		return jsPath;
 	}
@@ -80,7 +96,7 @@ public abstract class Application{
 		cssPath=pcssPath;
 	}
 	
-	public String getCSSPath2()
+	public String getCSSPath()
 	{
 		return cssPath;
 	}
@@ -208,7 +224,7 @@ public abstract class Application{
 		return fileName;
 	}
 	
-	public InputStream getConfigStream(String pfileName) throws FileNotFoundException
+	private InputStream getInternalConfigStream(String pfileName) throws FileNotFoundException
 	{
 		String fileName=getRealConfigPath(pfileName);
 		InputStream stream=getClass().getResourceAsStream(fileName);
@@ -216,6 +232,21 @@ public abstract class Application{
 			throw new FileNotFoundException(pfileName+"("+fileName+")");
 		}
 		return stream;
+	}
+	
+	private InputStream getExternalConfigStream(String pfileName) throws FileNotFoundException
+	{
+		return new FileInputStream(getRealConfigPath(pfileName));
+	}
+	
+	public InputStream getConfigStream(String pfileName) throws FileNotFoundException
+	{
+		if(!externalXML){
+			return getInternalConfigStream(pfileName);
+		} else if(pfileName.startsWith("internal:")){
+			return getInternalConfigStream(pfileName.substring(9));
+		}
+		return getExternalConfigStream(pfileName);
 	}
 	
 	public void setElementVariantFiles(String files)

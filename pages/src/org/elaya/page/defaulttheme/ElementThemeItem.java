@@ -1,7 +1,8 @@
 package org.elaya.page.defaulttheme;
 
 import java.io.IOException;
-import org.elaya.page.Writer;
+
+import org.elaya.page.core.Writer;
 
 public class ElementThemeItem extends org.elaya.page.element.ElementThemeItem {
 

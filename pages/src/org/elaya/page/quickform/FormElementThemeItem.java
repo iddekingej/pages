@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import org.elaya.page.ThemeItemBase;
-import org.elaya.page.Writer;
+import org.elaya.page.core.Writer;
 
 public abstract class FormElementThemeItem extends ThemeItemBase {
 

@@ -2,7 +2,8 @@ package org.elaya.page.defaulttheme;
 
 import java.io.IOException;
 import java.util.Set;
-import org.elaya.page.Writer;
+
+import org.elaya.page.core.Writer;
 
 public class ListMenuThemeItem extends org.elaya.page.listmenu.ListMenuThemeItem {
 

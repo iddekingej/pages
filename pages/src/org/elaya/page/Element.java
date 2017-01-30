@@ -19,6 +19,8 @@ import org.elaya.page.Errors.ReplaceVarException;
 import org.elaya.page.UniqueNamedObjectList.DuplicateItemName;
 import org.elaya.page.application.Application.DefaultDBConnectionNotSet;
 import org.elaya.page.application.Application.InvalidAliasType;
+import org.elaya.page.core.JSWriter;
+import org.elaya.page.core.Writer;
 import org.elaya.page.data.*;
 import org.elaya.page.data.Data.KeyNotFoundException;
 import org.elaya.page.jsplug.JSPlug;

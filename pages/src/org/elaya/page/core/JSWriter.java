@@ -1,7 +1,5 @@
-package org.elaya.page;
+package org.elaya.page.core;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import org.elaya.page.application.Application;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -9,9 +7,9 @@ import org.json.JSONObject;
 public class JSWriter extends AbstractWriter{
 	private StringBuilder buffer=new StringBuilder();
 
-	public JSWriter(Application papplication,HttpServletRequest prequest,HttpServletResponse presponse)
+	public JSWriter(Application papplication,PageSession psession)
 	{
-		super(papplication,prequest,presponse);
+		super(papplication,psession);
 	}
 
 

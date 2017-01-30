@@ -1,9 +1,7 @@
-package org.elaya.page;
+package org.elaya.page.core;
 
 import java.io.IOException;
 import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import org.elaya.page.application.Application;
 import org.springframework.web.util.HtmlUtils;
 
@@ -13,15 +11,15 @@ public class Writer extends AbstractWriter{
 	int idCnt=0;
 
 
-	public Writer(Application papplication,HttpServletRequest prequest,HttpServletResponse presponse) throws IOException {
-		super(papplication,prequest,presponse);
-		stream=getResponse().getOutputStream();		
+	public Writer(Application papplication,PageSession psession) throws IOException {
+		super(papplication,psession);
+		stream=psession.getOutputStream();		
 	}	
 	
 	public JSWriter getJSWriter()
 	{
 		if(jswriter==null){
-			jswriter=new JSWriter(getApplication(),getRequest(),getResponse());
+			jswriter=new JSWriter(getApplication(),getSession());
 		}
 		return jswriter;
 	}
@@ -34,7 +32,7 @@ public class Writer extends AbstractWriter{
 	
 	public void setContentType(String pstr)
 	{
-		getResponse().setContentType(pstr);
+		getSession().setContentType(pstr);
 	}
 	
 	public void print(String pstr) throws IOException
@@ -103,12 +101,12 @@ public class Writer extends AbstractWriter{
 	
 	public String getJSPath(String pfile)
 	{
-		return getBasePath()+"/"+getApplication().getJSPath2() +pfile;
+		return getBasePath()+"/"+getApplication().getJSPath() +pfile;
 	}
 	
 	public String getCSSPath(String pfile)
 	{
-		return getBasePath()+"/"+getApplication().getCSSPath2()+pfile;
+		return getBasePath()+"/"+getApplication().getCSSPath()+pfile;
 	}
 	
 	

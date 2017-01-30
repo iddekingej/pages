@@ -1,7 +1,7 @@
 package org.elaya.page.jsplug;
 
 import org.elaya.page.Element;
-import org.elaya.page.JSWriter;
+import org.elaya.page.core.JSWriter;
 import org.elaya.page.data.Data;
 import org.elaya.page.data.Data.KeyNotFoundException;
 import org.elaya.page.data.DynamicMethod;

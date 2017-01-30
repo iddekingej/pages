@@ -2,7 +2,7 @@ package org.elaya.page.element;
 
 import org.elaya.page.LinkType;
 import org.elaya.page.PageElement;
-import org.elaya.page.Writer;
+import org.elaya.page.core.Writer;
 import org.elaya.page.data.Data;
 
 public class LinkElement extends PageElement<ElementThemeItem> {

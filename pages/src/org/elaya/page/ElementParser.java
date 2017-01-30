@@ -2,7 +2,6 @@ package org.elaya.page;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedList;
 import java.util.Map;
 

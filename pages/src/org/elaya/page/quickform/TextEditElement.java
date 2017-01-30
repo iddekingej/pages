@@ -1,7 +1,8 @@
 package org.elaya.page.quickform;
 
 import java.util.Objects;
-import org.elaya.page.Writer;
+
+import org.elaya.page.core.Writer;
 import org.elaya.page.data.Data;
 
 public  class TextEditElement extends BuildInFormElement {

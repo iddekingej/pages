@@ -1,6 +1,6 @@
 package org.elaya.page.element;
 
-import org.elaya.page.Writer;
+import org.elaya.page.core.Writer;
 import org.elaya.page.data.Data;
 
 public class SeperatorMenuItem extends BaseMenuItem<ElementThemeItem> {

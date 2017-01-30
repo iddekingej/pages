@@ -1,7 +1,7 @@
 package org.elaya.page.element;
 
 import org.elaya.page.PageElement;
-import org.elaya.page.Writer;
+import org.elaya.page.core.Writer;
 import org.elaya.page.data.Data;
 
 public class TreeMenu extends PageElement<ElementThemeItem> {
