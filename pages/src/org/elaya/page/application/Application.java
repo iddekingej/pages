@@ -1,9 +1,11 @@
 package org.elaya.page.application;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -205,11 +207,12 @@ public abstract class Application{
  * @param pcache     Cache Page object 
  * @return            Page object representing page
  * @throws XMLLoadException 
+ * @throws IOException 
  * @throws Exception  
  */
 	
 	
-	public synchronized Page loadPage(String pfileName,boolean pcache) throws XMLLoadException 
+	public synchronized Page loadPage(String pfileName,boolean pcache) throws XMLLoadException, IOException 
 	{	
 		return pageLoader.loadPage( pfileName, pcache);
 
@@ -224,6 +227,28 @@ public abstract class Application{
 		return fileName;
 	}
 	
+	private long getInternalModificationTime(String pfileName) throws IOException
+	{
+		URL url=getClass().getResource(getRealConfigPath(pfileName));
+		return url.openConnection().getLastModified();
+	}
+	
+	private long getExternalModificationTime(String pfileName)
+	{
+		
+		return new File(getRealConfigPath(pfileName)).lastModified();
+	}
+	
+	public long getConfigLastModified(String pfileName) throws IOException
+	{
+		if(!externalXML){
+			return getInternalModificationTime(pfileName);
+		} else if(pfileName.startsWith("internal:")){
+			return getInternalModificationTime(pfileName.substring(9));
+		}
+		return getExternalModificationTime(pfileName);
+	}
+
 	private InputStream getInternalConfigStream(String pfileName) throws FileNotFoundException
 	{
 		String fileName=getRealConfigPath(pfileName);

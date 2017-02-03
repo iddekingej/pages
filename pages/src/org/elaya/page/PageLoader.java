@@ -1,13 +1,16 @@
 package org.elaya.page;
 
 import java.util.HashMap;
+import java.io.IOException;
+import java.io.InputStream;
 import org.elaya.page.application.Application;
 import org.elaya.page.xml.XMLParserBase.XMLLoadException;
 
 public class PageLoader {
 
+	private static final String InputStream = null;
 	private Application application;
-	private HashMap<String,Page> pageCache=new HashMap<>(); 
+	private HashMap<String,PageCacheEntry> pageCache=new HashMap<>(); 
 
 	public PageLoader(Application papplication)
 	{
@@ -34,22 +37,28 @@ public class PageLoader {
  * @param pcache     Cache Page object 
  * @return            Page object representing page
  * @throws XMLLoadException 
+ * @throws IOException 
  * @throws Exception  
  */
 	
 	
 	
-	public synchronized Page loadPage(String pfileName,boolean pcache) throws XMLLoadException 
+	public synchronized Page loadPage(String pfileName,boolean pcache) throws XMLLoadException, IOException 
 	{
+		long lastModificationTime=application.getConfigLastModified(pfileName);
 		if(pcache && pageCache.containsKey(pfileName)){
-			return pageCache.get(pfileName);
+			PageCacheEntry cacheItem=pageCache.get(pfileName);
+			if(cacheItem.getLastModificationTime()>=lastModificationTime){
+				return cacheItem.getPage();
+			}
+			
 		}
 		ElementParser parser=new ElementParser(application);
 		initUiParser(parser);
 		Page page;
 		page=parser.parse(pfileName,Page.class);
 		if(pcache){
-			pageCache.put(pfileName, page);
+			pageCache.put(pfileName, new PageCacheEntry(page,lastModificationTime));
 		}
 		return page;
 	}
