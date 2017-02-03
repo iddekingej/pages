@@ -11,14 +11,12 @@ import org.elaya.page.receiver.ReceiverParser;
 import org.springframework.web.servlet.view.AbstractView;
 
 public class JsonHandlerView extends AbstractView {
-	PageMode mode;
 	String file;
 	Application application;
 		
-	public JsonHandlerView(PageMode pmode,String pfile,Application papplication) 
+	public JsonHandlerView(String pfile,Application papplication) 
 	{
 		super(); 
-		mode=pmode;
 		file=pfile;	
 		application=papplication;
 	}

@@ -14,8 +14,7 @@ public class SecurityManager {
 	
 	private String loginCheckUrl="";
 	private String loginPageUrl="";
-	private LinkedList<RequestMatcher> requestMatchers=new LinkedList<>();
-	
+	private LinkedList<RequestMatcherGroup> requestMatcherGroups=new LinkedList<>();
 
 	public void setLoginCheckUrl(String purl){
 		loginCheckUrl=purl;
@@ -33,17 +32,6 @@ public class SecurityManager {
 		return loginPageUrl;
 	}
 	
-	protected RequestMatcher matchRequest(Session session)
-	{
-		RequestMatcher found=null;
-		for(RequestMatcher requestMatcher:requestMatchers){
-			found=requestMatcher.matchRequest(session);			
-			if(found != null){
-				return found;
-			}
-		}
-		return found;
-	}
 	
 	protected Session createSession(ServletRequest servletRequest,ServletResponse servletResponse) throws NoSuchMethodException, ClassNotFoundException, InstantiationException, IllegalAccessException,  InvocationTargetException, NotSerializableException, InvalidSessionData
 	{
@@ -56,26 +44,23 @@ public class SecurityManager {
 	public boolean execute(ServletRequest request,ServletResponse response) throws NoSuchMethodException, ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, InvalidSessionData, IOException, AuthenticationException 
 	{
 		Session session=createSession(request,response);
-		RequestMatcher requestMatcher=matchRequest(session);
-		if(requestMatcher==null){			
-			session.redirect(loginPageUrl);			
-			return false;
-		}
-		
-		MatchActionResult result=requestMatcher.execute(session);		
-		switch(result){
-			case NEXTFILTER: return true;
-			case NONEXTFILTER: return false;
-			case NOTAUTHORIZED:				
-			case SECURITYFAILED:
+		MatchActionResult result;
+		boolean nextFilter=true;
+		for(RequestMatcherGroup rmGroup:requestMatcherGroups){
+			result=rmGroup.execute(session);
+			if(result==MatchActionResult.NONEXTFILTER){
+				nextFilter=false;
+			} else if((result==MatchActionResult.NOTAUTHORIZED) ||
+			   (result==MatchActionResult.SECURITYFAILED)){
 				session.redirect(loginPageUrl);
 				return false;
+			}
 		}
-		return false;
+		return nextFilter;
 		
 	}
 	
-	public void addRequestMatcher(RequestMatcher prequestMatcher){
-		requestMatchers.add(prequestMatcher);
+	public void addRequestMatcherGroup(RequestMatcherGroup prequestMatcherGroup){
+		requestMatcherGroups.add(prequestMatcherGroup);
 	}
 }

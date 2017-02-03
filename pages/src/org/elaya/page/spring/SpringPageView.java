@@ -15,11 +15,21 @@ public class SpringPageView extends AbstractView {
 
 	private PageView pageView;
 	
-	public SpringPageView(PageMode mode,String file,Application application) {
+	public SpringPageView(String file,Application application) {
 		super(); 
-		pageView=new PageView(mode,file,application);
+		pageView=new PageView(file,application);
 	}
 
+	public void setCache(Boolean pcache)
+	{
+		pageView.setCache(pcache);
+	}
+	
+	public Boolean getCache()
+	{
+		return pageView.getCache();
+	}
+	
 	@Override
 	protected void renderMergedOutputModel(Map<String, Object> pmap, HttpServletRequest prequest, HttpServletResponse presponse)
 			throws Exception {

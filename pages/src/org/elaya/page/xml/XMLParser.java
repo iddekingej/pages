@@ -397,7 +397,7 @@ public abstract class XMLParser extends XMLParserBase<Object> {
 				if(pparent==null){
 					throw new XMLLoadException("Element "+pnode.getNodeName()+" needs a parent but=null",pnode);				
 				} else if(!info.getParentClass().isInstance(pparent)){
-					throw new XMLLoadException("Parent object is not inherited from '"+info.getParentClass().getName()+"'",pnode);				
+					throw new XMLLoadException("Parent object is not inherited from '"+info.getParentClass().getName()+"'"+" but from '"+pparent.getClass().getName()+"'",pnode);				
 				}
 			}
 			

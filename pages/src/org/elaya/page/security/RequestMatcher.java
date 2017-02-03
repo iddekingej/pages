@@ -7,7 +7,7 @@ import javax.servlet.ServletRequest;
 
 import org.elaya.page.security.Errors.AuthenticationException;
 
-public abstract class RequestMatcher {
+public abstract class RequestMatcher implements HasRequestMatchers{
 	private LinkedList<Action> actions=new  LinkedList<>();
 	private LinkedList<RequestMatcher> subMatcher=new LinkedList<>(); 
 

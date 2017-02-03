@@ -22,26 +22,27 @@ import org.xml.sax.SAXException;
 public class PageView implements AbstractView{
 
 	private String path;	
-	private PageMode mode;	
 	private Application application;
+	private boolean cache=true;
 	
-	public PageView(PageMode pmode,String pfile,Application papplication) {
-		mode=pmode;
+	public PageView(String pfile,Application papplication) {		
 		path=pfile;
 		application=papplication;
 	}
+	
+	public void setCache(Boolean pcache)
+	{
+		cache=pcache;
+	}
 
+	public Boolean getCache()
+	{
+		return cache;
+	}
+	
 	public void render(MapData mapData, PageSession psession) throws IOException, DisplayException, SQLException, DefaultDBConnectionNotSet, KeyNotFoundException, ParserConfigurationException, SAXException, InvalidAliasType, AliasNotFound, LoadingAliasFailed, XMLLoadException {
 
-		String fileName="";
-				
-		if(mode.equals(PageMode.PATH)){
-			fileName=path+psession.getURIPath()+".xml";
-		} else if(mode.equals(PageMode.FILENAME)) {
-			fileName=path;
-		}
-
-		Page page=application.loadPage(fileName,true);
+		Page page=application.loadPage(path,cache);
 		Writer writer=new Writer(application,psession);
 
 		page.calculateData(mapData);

@@ -23,7 +23,8 @@ public class SecurityFilter implements Filter {
 			} catch (Exception e) {				
 				throw new ServletException("doFilter failed",e);
 			} 
-		}	}
+		}	
+	}
 
 	public void initParser(XmlSecurityParser pparser)
 	{
