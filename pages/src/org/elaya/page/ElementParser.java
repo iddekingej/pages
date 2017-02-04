@@ -3,8 +3,6 @@ package org.elaya.page;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.LinkedList;
-import java.util.Map;
-
 import org.elaya.page.Errors.ReplaceVarException;
 import org.elaya.page.application.AliasData;
 import org.elaya.page.application.Application;
@@ -14,7 +12,6 @@ import org.elaya.page.quickform.OptionItem;
 import org.elaya.page.xml.XMLAppParser;
 import org.elaya.page.xml.XMLConfig;
 import org.elaya.page.xml.XMLCustomConfig;
-import org.elaya.page.xml.XMLParser;
 import org.w3c.dom.Node;
 
 public class ElementParser extends XMLAppParser {
@@ -24,22 +21,12 @@ public class ElementParser extends XMLAppParser {
 
 	}
 
-	public ElementParser(Application papplication,Map<String, Object> pnameIndex) {
-		super(papplication,pnameIndex);		
-	}
-	
-	
-	
 	@Override
 	protected InputStream openFile(String pfileName) throws FileNotFoundException {		
 		return getApplication().getConfigStream(pfileName);		
 	}
  
-	@Override
-	protected XMLParser createParser() {
-		return new ElementParser(getApplication(),getNameIndex());
-	}
-	
+
 	/**
 	 * Handle \<option\> node inside an \<options\> block
 	 * An \<options\> block is a list of (value,text) pair.

@@ -5,10 +5,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import javax.xml.parsers.ParserConfigurationException;
-
 import org.elaya.page.ElementVariant;
 import org.elaya.page.Errors;
 import org.elaya.page.Errors.LoadingAliasFailed;
@@ -26,10 +26,10 @@ import org.xml.sax.SAXException;
 
 public abstract class XMLParser extends XMLParserBase<Object> {
 	/**
-	 * Configs define how tags are handled.  Configs is the 
-	 * list of those configs. The index of the array is the tag name
+	 * XMLConfig object define how tags are handled.  this list
+	 * contains all valid tags. The index of the list is the tag name
+	 * and the value is a XMLConfig object.
 	 * 
-	 * @var array
 	 */
 	
 	private HashMap<String,XMLConfig> configs=new HashMap<>();	
@@ -37,17 +37,23 @@ public abstract class XMLParser extends XMLParserBase<Object> {
 	private LinkedList<Initializer> initializers=new LinkedList<>();
 	private LinkedList<Map<String,String>> values=new LinkedList<>();
 	
-	
-	public XMLParser(Map<String,Object> pnameIndex) {
-		setupConfig();
-		nameIndex=pnameIndex;
-	}
-		
+	/**
+	 * List of used files, this is later used 
+	 * for cache management
+	 */
+	private LinkedList<String> files= new LinkedList<>();
+
 	public XMLParser()
 	{
-		this(new HashMap<String,Object>());
+		nameIndex=new HashMap<>();		
+		setupConfig();
 	}
 
+	public List<String> getFiles()
+	{
+		return files;
+	}
+	
 	public Map<String,XMLConfig> getConfigs()
 	{
 		return configs;
@@ -125,8 +131,7 @@ public abstract class XMLParser extends XMLParserBase<Object> {
 	}
 			
 	protected void addError(String perror,Node node) throws XMLLoadException 
-	{
-		
+	{		
 		throw new XMLLoadException(perror,node);
 	}
 
@@ -171,7 +176,7 @@ public abstract class XMLParser extends XMLParserBase<Object> {
 			} else if(element.getNodeType() != Node.ELEMENT_NODE){
 				return element.getTextContent();
 			} else {
-				return parseElement(null,element);
+				return parseNode(null,element);
 			}
 		}
 	}
@@ -213,7 +218,7 @@ public abstract class XMLParser extends XMLParserBase<Object> {
 				if("value".equals(child.getNodeName())){
 					parseValue(pparent,child);
 				} else {
-					parseElement(pparent,child);					
+					parseNode(pparent,child);					
 				}				
 			}
 			child=child.getNextSibling();
@@ -315,8 +320,7 @@ public abstract class XMLParser extends XMLParserBase<Object> {
 		Object object;
 		String fileNameAttr=getAttributeValue(node,"file");
 		if(fileNameAttr != null){
-			XMLParser parser=createParser();
-			object=parser.parse(fileNameAttr);
+			object=subParse(fileNameAttr);
 		} else {			
 			String ref=getAttributeValue(node,"ref");
 			if(ref != null){
@@ -379,8 +383,14 @@ public abstract class XMLParser extends XMLParserBase<Object> {
 		return null;
 	}
 	
-	
-	protected Object parseElement(Object pparent,Node pnode) throws XMLLoadException 
+/**
+ * Parse a single node to object and add it to the parent
+ * 
+ * @param pparent Resulting object is added to this pparent. Can be null
+ * @param pnode   Node to parse
+ * @return        Resulting object;
+ */
+	protected Object parseNode(Object pparent,Node pnode) throws XMLLoadException 
 	{
 		ElementVariant variant=null;
 		try{
@@ -411,7 +421,7 @@ public abstract class XMLParser extends XMLParserBase<Object> {
 			variant=getVariant(pnode);
 			if(variant !=null){
 				addValues(variant.getDataFromNode(pnode));
-				object=parseElement(pparent,variant.getContent());
+				object=parseNode(pparent,variant.getContent());
 			} else {
 				object=createObjectByNode(pparent,pnode,info);
 			}
@@ -432,9 +442,18 @@ public abstract class XMLParser extends XMLParserBase<Object> {
 	}
 
 	@Override
+
 	protected Object parseRootNode(Node node) throws XMLLoadException
 	{
-		return parseElement(null,node);
+		return parseNode(null,node);
+	}
+	
+
+	@Override
+	protected Node loadFromFile(String pfileName) throws XMLLoadException 
+	{
+		files.add(pfileName);
+		return super.loadFromFile(pfileName);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -457,7 +476,6 @@ public abstract class XMLParser extends XMLParserBase<Object> {
 		return null;
 	}
 	
-	protected abstract XMLParser createParser();
 	protected abstract void setupConfig();
 	protected abstract String normalizeClassName(String pname) throws  NormalizeClassNameException ;
 	protected abstract String getName(Object pobject);

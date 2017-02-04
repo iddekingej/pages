@@ -8,7 +8,6 @@ import org.elaya.page.Element.DisplayException;
 import org.elaya.page.Errors.AliasNotFound;
 import org.elaya.page.Errors.LoadingAliasFailed;
 import org.elaya.page.Page;
-import org.elaya.page.PageMode;
 import org.elaya.page.application.Application;
 import org.elaya.page.application.Application.DefaultDBConnectionNotSet;
 import org.elaya.page.application.Application.InvalidAliasType;
@@ -35,11 +34,18 @@ public class PageView implements AbstractView{
 		cache=pcache;
 	}
 
+	/**
+	 * Get if page needs te be cached
+	 * 
+	 * @return true  - page needs to be cached
+	 *         false - page is allways read from the xml file
+	 */
 	public Boolean getCache()
 	{
 		return cache;
 	}
 	
+	@Override
 	public void render(MapData mapData, PageSession psession) throws IOException, DisplayException, SQLException, DefaultDBConnectionNotSet, KeyNotFoundException, ParserConfigurationException, SAXException, InvalidAliasType, AliasNotFound, LoadingAliasFailed, XMLLoadException {
 
 		Page page=application.loadPage(path,cache);

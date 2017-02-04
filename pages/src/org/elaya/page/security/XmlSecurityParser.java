@@ -2,13 +2,10 @@ package org.elaya.page.security;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.util.Map;
-
 import org.elaya.page.application.AliasData;
 import org.elaya.page.application.Application;
 import org.elaya.page.xml.XMLAppParser;
 import org.elaya.page.xml.XMLConfig;
-import org.elaya.page.xml.XMLParser;
 
 public class XmlSecurityParser extends XMLAppParser {
 
@@ -17,18 +14,9 @@ public class XmlSecurityParser extends XMLAppParser {
 		super(papplication);
 	}
 
-	public XmlSecurityParser(Application papplication,Map<String, Object> pnameIndex) {
-		super(papplication,pnameIndex);
-	}
-
 	@Override
 	protected InputStream openFile(String pfileName) throws FileNotFoundException {
 		return getApplication().getConfigStream(pfileName);
-	}
-
-	@Override
-	protected XMLParser createParser() {
-		return new XmlSecurityParser(getApplication(),getNameIndex());
 	}
 
 	@Override

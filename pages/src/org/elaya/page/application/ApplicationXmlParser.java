@@ -1,8 +1,6 @@
 package org.elaya.page.application;
 
 import java.io.InputStream;
-import java.util.Map;
-
 import org.elaya.page.Errors.LoadingAliasFailed;
 import org.elaya.page.xml.XMLConfig;
 import org.elaya.page.xml.XMLParser;
@@ -13,18 +11,11 @@ public class ApplicationXmlParser extends XMLParser {
 		super();
 	}
 
-	public ApplicationXmlParser(Map<String, Object> pnameIndex) {
-		super(pnameIndex);	
-	}
+
 
 	@Override
 	protected InputStream openFile(String pfileName) {
 		return getClass().getClassLoader().getResourceAsStream("../pages/"+pfileName);
-	}
-
-	@Override
-	protected XMLParser createParser() {
-		return new ApplicationXmlParser(getNameIndex());
 	}
 
 	@Override

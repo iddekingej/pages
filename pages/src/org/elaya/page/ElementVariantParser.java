@@ -2,13 +2,10 @@ package org.elaya.page;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.util.Map;
-
 import org.elaya.page.application.Application;
 import org.elaya.page.xml.XMLAppParser;
 import org.elaya.page.xml.XMLConfig;
 import org.elaya.page.xml.XMLCustomConfig;
-import org.elaya.page.xml.XMLParser;
 import org.w3c.dom.Node;
 
 public class ElementVariantParser extends XMLAppParser{
@@ -16,11 +13,6 @@ public class ElementVariantParser extends XMLAppParser{
 	public ElementVariantParser(Application papplication) {
 		super(papplication);
 	}
-
-	public ElementVariantParser(Application papplication,Map<String, Object> pnameIndex) {
-		super(papplication,pnameIndex);		
-	}
-	
 	
 	private Node getNextElementNode(Node node)
 	{
@@ -50,11 +42,7 @@ public class ElementVariantParser extends XMLAppParser{
 		return node;
 	}
 	
-	@Override
-	protected XMLParser createParser() {
-		return new ElementVariantParser(getApplication(),getNameIndex());
-	}
-	
+
 	@Override
 	public String getAliasNamespace() {
 		return null;

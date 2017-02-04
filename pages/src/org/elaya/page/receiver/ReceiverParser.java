@@ -2,19 +2,12 @@ package org.elaya.page.receiver;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.util.Map;
-
 import org.elaya.page.application.AliasData;
 import org.elaya.page.application.Application;
 import org.elaya.page.xml.XMLAppParser;
 import org.elaya.page.xml.XMLConfig;
-import org.elaya.page.xml.XMLParser;
 
 public class ReceiverParser extends XMLAppParser {
-
-	public ReceiverParser(Application application,Map<String, Object> nameIndex) {
-		super(application,nameIndex);
-	}
 
 	public ReceiverParser(Application application) {
 		super(application);
@@ -23,11 +16,6 @@ public class ReceiverParser extends XMLAppParser {
 	@Override
 	protected InputStream openFile(String pfileName) throws FileNotFoundException {
 		return getApplication().getConfigStream(pfileName);
-	}
-
-	@Override
-	protected XMLParser createParser() {
-		return new ReceiverParser(getApplication(),getNameIndex());
 	}
 
 	@Override

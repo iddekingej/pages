@@ -41,9 +41,9 @@ public abstract class XMLParserBase<T> {
 			return super.toString()+" while parsing '"+exceptionFileName+"'";
 		}
 	}
+	
 	private String fileName;
 
-	
 	public String getFileName()
 	{
 		return fileName;
@@ -52,9 +52,19 @@ public abstract class XMLParserBase<T> {
 	protected abstract T parseRootNode(Node node) throws XMLLoadException;
 	protected abstract InputStream openFile(String fileName) throws FileNotFoundException;
 
-	public T parse(String pfileName) throws XMLLoadException {
+	protected Object subParse(String pfileName) throws XMLLoadException
+	{
+		String prvFileName=fileName;
+		fileName=pfileName;
+		Node node=loadFromFile(pfileName);
+		Object object=parseRootNode(node);
+		fileName=prvFileName;
+		return object;
+	}
+	
+	protected Node loadFromFile(String pfileName) throws XMLLoadException 
+	{
 		try{
-			fileName=pfileName;
 			DocumentBuilderFactory factory=DocumentBuilderFactory.newInstance();
 			DocumentBuilder builder=factory.newDocumentBuilder();
 			InputStream stream=openFile(pfileName);
@@ -65,7 +75,16 @@ public abstract class XMLParserBase<T> {
 			NodeList nl=doc.getChildNodes();
 			Node rootNode=nl.item(0);
 			rootNode.normalize();
-			return parseRootNode(rootNode);
+			return rootNode;
+		}catch(Exception e){
+			throw new XMLLoadException("Parsing "+pfileName+" failed",e,null);
+		}
+	}
+	
+	public T parse(String pfileName) throws XMLLoadException {
+		try{
+			Node node=loadFromFile(pfileName);
+			return parseRootNode(node);
 
 		}catch(XMLLoadException e){
 			e.setFileName(pfileName);
@@ -74,5 +93,7 @@ public abstract class XMLParserBase<T> {
 			throw new XMLLoadException("Parsing "+pfileName+" failed",e,null);
 		}
 	}
+	
+	
 	
 }

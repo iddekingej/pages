@@ -2,15 +2,13 @@ package org.elaya.page;
 
 import java.util.HashMap;
 import java.io.IOException;
-import java.io.InputStream;
 import org.elaya.page.application.Application;
 import org.elaya.page.xml.XMLParserBase.XMLLoadException;
 
 public class PageLoader {
 
-	private static final String InputStream = null;
 	private Application application;
-	private HashMap<String,PageCacheEntry> pageCache=new HashMap<>(); 
+	private HashMap<String,CacheEntry<Page>> pageCache=new HashMap<>(); 
 
 	public PageLoader(Application papplication)
 	{
@@ -27,6 +25,47 @@ public class PageLoader {
 		
 	}
 	
+	
+	private Page getPageFromCache(String pfileName) throws IOException
+	{
+		long modificationTime;
+		if(pageCache.containsKey(pfileName)){
+			CacheEntry<Page> cacheItem=pageCache.get(pfileName);
+			for(FileModification depFil:cacheItem.getFiles()){
+				modificationTime=application.getConfigLastModified(depFil.getFileName());				
+				if(modificationTime>depFil.getModificationTime()){
+					return null;
+				}
+			}
+			return cacheItem.getItem();
+		}
+		return null;
+	}
+	
+/**
+ * Load new page from xml definition.
+ * When page needs to be cached create new cache entry 
+ * 	
+ * @param pfileName
+ * @param pcache
+ * @return Loaded page from xml ui file
+ */
+	private Page loadNewPage(String pfileName,boolean pcache) throws XMLLoadException, IOException
+	{
+		Page page;
+		ElementParser parser=new ElementParser(application);
+		initUiParser(parser);		
+		page=parser.parse(pfileName,Page.class);	
+		if(pcache){
+			CacheEntry<Page> entry=new CacheEntry<>(page);
+			for(String depFile:parser.getFiles()){
+				entry.addFile(depFile,application.getConfigLastModified(depFile));
+			}
+			pageCache.put(pfileName, entry);
+		}
+		return page;
+	}
+	
 /**
  * Parse UI definition file in pfileName and returns the Page Object
  * The XML ui definition must describe a page.
@@ -41,26 +80,21 @@ public class PageLoader {
  * @throws Exception  
  */
 	
-	
+
 	
 	public synchronized Page loadPage(String pfileName,boolean pcache) throws XMLLoadException, IOException 
 	{
-		long lastModificationTime=application.getConfigLastModified(pfileName);
-		if(pcache && pageCache.containsKey(pfileName)){
-			PageCacheEntry cacheItem=pageCache.get(pfileName);
-			if(cacheItem.getLastModificationTime()>=lastModificationTime){
-				return cacheItem.getPage();
-			}
-			
-		}
-		ElementParser parser=new ElementParser(application);
-		initUiParser(parser);
 		Page page;
-		page=parser.parse(pfileName,Page.class);
-		if(pcache){
-			pageCache.put(pfileName, new PageCacheEntry(page,lastModificationTime));
+		
+		if(pcache && pageCache.containsKey(pfileName)){
+			page=getPageFromCache(pfileName);
+			if(page != null){
+				return page;
+			}
+		
 		}
-		return page;
+	
+		return loadNewPage(pfileName,pcache);
 	}
 
 }

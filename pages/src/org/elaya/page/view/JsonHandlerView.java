@@ -4,7 +4,6 @@ package org.elaya.page.view;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.elaya.page.PageMode;
 import org.elaya.page.application.Application;
 import org.elaya.page.receiver.Receiver;
 import org.elaya.page.receiver.ReceiverParser;
