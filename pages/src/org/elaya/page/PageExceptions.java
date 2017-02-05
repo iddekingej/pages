@@ -1,5 +1,7 @@
 package org.elaya.page;
 
+import org.elaya.page.widget.Element;
+
 public class PageExceptions {
 
 	public static  class InvalidElement extends Exception{

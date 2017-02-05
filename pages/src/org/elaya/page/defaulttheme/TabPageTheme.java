@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import org.elaya.page.core.Writer;
 
-public class TabPageTheme extends org.elaya.page.element.TabPageTheme {
+public class TabPageTheme extends org.elaya.page.widget.element.TabPageTheme {
 
 	@Override
 	public void pageHeader(Writer pwriter, String pdomId) throws IOException {

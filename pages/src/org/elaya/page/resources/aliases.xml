@@ -1,41 +1,41 @@
 <aliases>
-	<element alias="page" value="org.elaya.page.Page" />
-	<element alias='quickform' value="org.elaya.page.quickform.Form" />
-	<element alias="quick_static" value="org.elaya.page.quickform.StaticElement" />
-	<element alias="quick_text" value="org.elaya.page.quickform.TextEditElement" />
-	<element alias="quick_radio" value="org.elaya.page.quickform.RadioElement" />
-	<element alias="quick_textarea" value="org.elaya.page.quickform.TextAreaElement" />
-	<element alias="quick_date" value="org.elaya.page.quickform.DateElement" />
-	<element alias="quick_checkbox" value="org.elaya.page.quickform.CheckboxElement" />
+	<element alias="page" value="org.elaya.page.widget.Page" />
+	<element alias='quickform' value="org.elaya.page.widget.quickform.Form" />
+	<element alias="quick_static" value="org.elaya.page.widget.quickform.StaticElement" />
+	<element alias="quick_text" value="org.elaya.page.widget.quickform.TextEditElement" />
+	<element alias="quick_radio" value="org.elaya.page.widget.quickform.RadioElement" />
+	<element alias="quick_textarea" value="org.elaya.page.widget.quickform.TextAreaElement" />
+	<element alias="quick_date" value="org.elaya.page.widget.quickform.DateElement" />
+	<element alias="quick_checkbox" value="org.elaya.page.widget.quickform.CheckboxElement" />
 	
-	<element alias='spacer_vertical' value="org.elaya.page.element.VerticalSpacer" />
-	<element alias='spacer_horizontal' value="org.elaya.page.element.HorizontalSpacer" />
-	<element alias="button" value='org.elaya.page.element.Button' />
-	<element alias="link" value="org.elaya.page.element.LinkElement" /> 
-	<element alias='static' value="org.elaya.page.element.StaticElement" />
-	<element alias="panel" value="org.elaya.page.element.PanelElement" />
-	<element alias="repeat" value="org.elaya.page.element.RepeatElement" />
+	<element alias='spacer_vertical' value="org.elaya.page.widget.element.VerticalSpacer" />
+	<element alias='spacer_horizontal' value="org.elaya.page.widget.element.HorizontalSpacer" />
+	<element alias="button" value='org.elaya.page.widget.element.Button' />
+	<element alias="link" value="org.elaya.page.widget.element.LinkElement" /> 
+	<element alias='static' value="org.elaya.page.widget.element.StaticElement" />
+	<element alias="panel" value="org.elaya.page.widget.element.PanelElement" />
+	<element alias="repeat" value="org.elaya.page.widget.element.RepeatElement" />
 <!--  plugs  -->
-	<element alias="location_plug" value='org.elaya.page.jsplug.LocationJSPlug' />
-	<element alias="json_plug" value='org.elaya.page.jsplug.JSONPlug' />
+	<element alias="location_plug" value='org.elaya.page.widget.jsplug.LocationJSPlug' />
+	<element alias="json_plug" value='org.elaya.page.widget.jsplug.JSONPlug' />
 <!--  Layout -->
-	<element alias="layout_grid" value="org.elaya.page.layout.GridLayout" />
-	<element alias="layout_vertical" value="org.elaya.page.layout.VerticalLayout" />
-	<element alias="layout_horizontal" value="org.elaya.page.layout.HorizontalLayout" />
-	<element alias='layout_table' value='org.elaya.page.layout.TableLayout'/>
-	<element alias='layout_row'   value='org.elaya.page.layout.TableRowLayout' />	
+	<element alias="layout_grid" value="org.elaya.page.widget.layout.GridLayout" />
+	<element alias="layout_vertical" value="org.elaya.page.widget.layout.VerticalLayout" />
+	<element alias="layout_horizontal" value="org.elaya.page.widget.layout.HorizontalLayout" />
+	<element alias='layout_table' value='org.elaya.page.widget.layout.TableLayout'/>
+	<element alias='layout_row'   value='org.elaya.page.widget.layout.TableRowLayout' />	
 <!--  Menu  -->	
-	<element alias="menubar" value="org.elaya.page.element.MenuBar" />
-	<element alias="menu" value="org.elaya.page.element.Menu" />
-	<element alias="basemenuitem" value="org.elaya.page.element.BaseMenuItem" />
-	<element alias="linkmenuitem" value="org.elaya.page.element.LinkMenuItem" />
-	<element alias="seperatormenuitem" value="org.elaya.page.element.SeperatorMenuItem"/>
+	<element alias="menubar" value="org.elaya.page.widget.element.MenuBar" />
+	<element alias="menu" value="org.elaya.page.widget.element.Menu" />
+	<element alias="basemenuitem" value="org.elaya.page.widget.element.BaseMenuItem" />
+	<element alias="linkmenuitem" value="org.elaya.page.widget.element.LinkMenuItem" />
+	<element alias="seperatormenuitem" value="org.elaya.page.widget.element.SeperatorMenuItem"/>
 <!--  Listmenu -->
-	<element alias="listmenu" value="org.elaya.page.listmenu.ListMenu" />
-	<element alias="listmenu_link" value="org.elaya.page.listmenu.LinkMenuItem" />
-	<element alias="listmenu_group" value="org.elaya.page.listmenu.ListMenuGroup" />
-	<element alias="lm_dynamic" value="org.elaya.page.listmenu.DynamicLinkMenuItem" />
-	<element alias="elementcontainer" value="org.elaya.page.quickform.ElementContainer" />
+	<element alias="listmenu" value="org.elaya.page.widget.listmenu.ListMenu" />
+	<element alias="listmenu_link" value="org.elaya.page.widget.listmenu.LinkMenuItem" />
+	<element alias="listmenu_group" value="org.elaya.page.widget.listmenu.ListMenuGroup" />
+	<element alias="lm_dynamic" value="org.elaya.page.widget.listmenu.DynamicLinkMenuItem" />
+	<element alias="elementcontainer" value="org.elaya.page.widget.quickform.ElementContainer" />
 <!-- Receiver action -->
 	<reciever alias="ra_call" value="org.elaya.page.receiver.MethodCallAction" />
 	<reciever alias="ra_crud" value="org.elaya.page.receiver.CRUDAction" />

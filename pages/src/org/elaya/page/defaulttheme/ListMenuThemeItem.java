@@ -5,7 +5,7 @@ import java.util.Set;
 
 import org.elaya.page.core.Writer;
 
-public class ListMenuThemeItem extends org.elaya.page.listmenu.ListMenuThemeItem {
+public class ListMenuThemeItem extends org.elaya.page.widget.listmenu.ListMenuThemeItem {
 
 	@Override
 	public void header(Writer pwriter,String ptitle) throws IOException {

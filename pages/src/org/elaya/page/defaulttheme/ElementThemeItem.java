@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import org.elaya.page.core.Writer;
 
-public class ElementThemeItem extends org.elaya.page.element.ElementThemeItem {
+public class ElementThemeItem extends org.elaya.page.widget.element.ElementThemeItem {
 
 	@Override
 	public void staticElement(Writer pwriter,String ptext, boolean pisHtml, String pclass, String pcss) throws IOException {

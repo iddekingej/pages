@@ -1,5 +1,6 @@
 package org.elaya.page;
 
+import org.elaya.page.widget.Element;
 
 public class Errors {
 	private Errors()

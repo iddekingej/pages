@@ -3,6 +3,7 @@ package org.elaya.page;
 import java.util.HashMap;
 import java.io.IOException;
 import org.elaya.page.application.Application;
+import org.elaya.page.widget.Page;
 import org.elaya.page.xml.XMLParserBase.XMLLoadException;
 
 public class PageLoader {

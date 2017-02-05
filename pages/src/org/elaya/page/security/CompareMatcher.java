@@ -1,6 +1,7 @@
 package org.elaya.page.security;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -9,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 
 public class CompareMatcher extends RequestMatcher {
 	
-	private CompareMatchType matchType;
+	private CompareMatchType matchType=CompareMatchType.EXACT;
 	private String matchUrl="";
 	private Pattern urlPattern ;
 	private HashSet<String> methodFilter;
@@ -20,6 +21,7 @@ public class CompareMatcher extends RequestMatcher {
 			methodFilter=null;
 		} else {
 			String[] methodList=pmethod.split(",");
+			methodFilter=new HashSet<>();
 			for(String methodName:methodList){
 				methodFilter.add(methodName);
 			}
@@ -32,6 +34,7 @@ public class CompareMatcher extends RequestMatcher {
 	}
 	
 	public void setType(CompareMatchType pmatchType){
+		Objects.requireNonNull(pmatchType);
 		matchType=pmatchType;
 	}
 	

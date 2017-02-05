@@ -5,7 +5,7 @@ import java.util.Set;
 
 import org.elaya.page.core.Writer;
 
-public class TableThemeItem extends org.elaya.page.table.TableThemeItem {
+public class TableThemeItem extends org.elaya.page.widget.table.TableThemeItem {
 
 	@Override
 	public void getCssFiles(Set<String> pfiles)

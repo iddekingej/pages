@@ -5,9 +5,9 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import org.elaya.page.core.Writer;
-import org.elaya.page.quickform.OptionItem;
+import org.elaya.page.widget.quickform.OptionItem;
 
-public class FormElementThemeItem extends org.elaya.page.quickform.FormElementThemeItem {
+public class FormElementThemeItem extends org.elaya.page.widget.quickform.FormElementThemeItem {
 
 	@Override
 	public void textElement(Writer pwriter,String pidDom,String pname,Object pvalue,int pmaxLength) throws IOException
