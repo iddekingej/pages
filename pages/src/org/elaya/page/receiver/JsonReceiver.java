@@ -58,7 +58,7 @@ public abstract class JsonReceiver extends Receiver {
 	protected final  void handleData(HttpServletRequest request,HttpServletResponse response) throws IOException, ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, DynamicException, JSONException, InstantiationException, InvalidObjectType, ReceiverException, DefaultDBConnectionNotSet, SQLException 
 	{
 		JSONObject json=getJson(request);
-		String cmd=json.getString("cmd");
+		String cmd=json.getString(getCmdField());
 		Command command=getCommand(cmd);
 		if(command==null){
 			throw new ReceiverException("Invalid command '"+cmd+"'");
@@ -76,17 +76,19 @@ public abstract class JsonReceiver extends Receiver {
 	{
 			Object value;
 			Dynamic object=command.getObject();
-			JSONObject data=json.getJSONObject("data");
+			JSONObject data=json;
 			String name;
 			for(Map.Entry<String,Parameter> paramEnt :command.getParameters()){
 				name=paramEnt.getKey();
-				if(data.has(name)){
-					value=data.get(name);	
-				} else {
-					value=null; //TODO When parameter is mandatory
+				if(!name.equals(getCmdField())){
+					if(data.has(name)){
+						value=data.get(name);	
+					} else {
+						value=null; //TODO When parameter is mandatory
+					}
+					value=convertValue(value,paramEnt.getValue());
+					object.put(name,value);
 				}
-				value=convertValue(value,paramEnt.getValue());
-				object.put(name,value);
 			}
 
 			return object;

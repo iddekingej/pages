@@ -25,6 +25,7 @@ public class Form extends PageElement<FormThemeItem>{
 	private String title;
 	private String url="";
 	private String cmd;
+	private String cmdField="cmd";
 	private String width="300px";
 	private String submitText="save";
 	private String cancelText="cancel";
@@ -39,7 +40,16 @@ public class Form extends PageElement<FormThemeItem>{
 		setIsNamespace(true);
 	}
 
-
+	public void setCmdField(String pcmdField)
+	{
+		cmdField=pcmdField;
+	}
+	
+	public String getCmdField()
+	{
+		return cmdField;
+	}
+	
 	public void setHiddenElements(String phiddenElements)
 	{
 		hiddenElements=phiddenElements.split(",");
@@ -205,7 +215,7 @@ public class Form extends PageElement<FormThemeItem>{
 		String next=writer.processUrl(pdata,nextUrl);
 		writer.objVar("cmd",writer.replaceVariables(pdata,cmd));
 		writer.objVar("nextUrl", next);
-				
+		writer.objVar("cmdField",cmdField);		
 		if(this.cancelUrl.length()>0){
 			writer.objVar("cancelUrl",writer.processUrl(pdata,cancelUrl));			
 		}

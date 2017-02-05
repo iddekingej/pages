@@ -29,10 +29,18 @@ public abstract  class Receiver extends DynamicMethod implements PageApplication
 
 	private Application application;
 	private LinkedList<Command> commands=new LinkedList<>();
+	private String cmdField="cmd";
 	
 	protected abstract void sendFailure(HttpServletResponse response,Exception e) throws JSONException, IOException;
 	protected abstract void handleData(HttpServletRequest request,HttpServletResponse response) throws IOException, ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, DynamicException, JSONException, InstantiationException, InvalidObjectType, ReceiverException, DefaultDBConnectionNotSet, SQLException;
 	
+	public String getCmdField(){
+		return cmdField;
+	}
+	
+	public void setCmdField(String pcmdField){
+		cmdField=pcmdField;
+	}
 	
 	@Override
 	public void setApplication(Application papplication)

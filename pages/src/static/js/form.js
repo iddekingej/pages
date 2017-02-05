@@ -1,6 +1,7 @@
 function TForm(p_parent,p_jsName,p_name,p_id){
 	TElement.call(this,p_parent,p_jsName,p_name,p_id);	
 	this.cmd="";
+	this.cmdField="cmd";
 	this.url="";	
 	this.submitType="";
 	this.nextUrl="";
@@ -96,15 +97,13 @@ TForm.prototype.sendData=function()
 				this.names[l_key].fillData(l_data);
 			}
 		}
-
-		var l_message={
-				    cmd:this.cmd
-				,	form:this.name
-				,	data:l_data
-		};
+		
+		if(this.cmdField !=""){
+			l_data[this.cmdField]=this.cmd;
+		}
 		var l_this=this;
 	try{
-		core.ajax("post",this.url,JSON.stringify(l_message),
+		core.ajax("post",this.url,JSON.stringify(l_data),
 			{
 				contentType:'application/json'
 			,	async:false						
