@@ -5,7 +5,9 @@ import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.elaya.page.receiver.Receiver.ReceiverException;
 import org.elaya.page.security.Errors.AuthenticationException;
+import org.elaya.page.xml.XMLParserBase.XMLLoadException;
 
 
 public abstract class Action {
@@ -25,6 +27,6 @@ public abstract class Action {
 		return null;
 	}
 	
-	public abstract ActionResult execute(Session session) throws AuthenticationException, IOException ;
+	public abstract ActionResult execute(Session session) throws AuthenticationException, IOException, ReceiverException, XMLLoadException ;
 	
 }

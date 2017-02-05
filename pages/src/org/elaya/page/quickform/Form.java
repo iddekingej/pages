@@ -215,6 +215,9 @@ public class Form extends PageElement<FormThemeItem>{
 		String next=writer.processUrl(pdata,nextUrl);
 		writer.objVar("cmd",writer.replaceVariables(pdata,cmd));
 		writer.objVar("nextUrl", next);
+		if(url != ""){
+			writer.objVar("url",writer.processUrl(pdata,url));
+		}
 		writer.objVar("cmdField",cmdField);		
 		if(this.cancelUrl.length()>0){
 			writer.objVar("cancelUrl",writer.processUrl(pdata,cancelUrl));			

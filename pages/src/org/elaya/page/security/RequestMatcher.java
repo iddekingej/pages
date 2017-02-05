@@ -5,7 +5,9 @@ import java.util.LinkedList;
 
 import javax.servlet.ServletRequest;
 
+import org.elaya.page.receiver.Receiver.ReceiverException;
 import org.elaya.page.security.Errors.AuthenticationException;
+import org.elaya.page.xml.XMLParserBase.XMLLoadException;
 
 public abstract class RequestMatcher implements HasRequestMatchers{
 	private LinkedList<Action> actions=new  LinkedList<>();
@@ -38,7 +40,7 @@ public abstract class RequestMatcher implements HasRequestMatchers{
 	}
 	abstract boolean matchOwnRequest(Session session);
 	
-	public MatchActionResult execute(Session session) throws AuthenticationException, IOException {
+	public MatchActionResult execute(Session session) throws AuthenticationException, IOException, ReceiverException, XMLLoadException {
 		ActionResult result;
 		boolean nextFilter=true;
 		for(Action action:actions){

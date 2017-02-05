@@ -2,7 +2,10 @@ package org.elaya.page.security;
 
 import java.io.IOException;
 import java.util.LinkedList;
+
+import org.elaya.page.receiver.Receiver.ReceiverException;
 import org.elaya.page.security.Errors.AuthenticationException;
+import org.elaya.page.xml.XMLParserBase.XMLLoadException;
 
 public class RequestMatcherGroup implements HasRequestMatchers{
 	private LinkedList<RequestMatcher> requestMatchers=new LinkedList<>();
@@ -19,9 +22,12 @@ public class RequestMatcherGroup implements HasRequestMatchers{
 		return found;
 	}	
 	
-	public MatchActionResult execute(Session psession) throws AuthenticationException, IOException 
+	public MatchActionResult execute(Session psession) throws AuthenticationException, IOException, ReceiverException, XMLLoadException 
 	{
-		RequestMatcher requestMatcher=matchRequest(psession);			
+		RequestMatcher requestMatcher=matchRequest(psession);	
+		if(requestMatcher==null){
+			return MatchActionResult.NEXTFILTER;
+		}
 		return requestMatcher.execute(psession);				
 	}
 	

@@ -7,13 +7,17 @@ import java.util.LinkedList;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
+import org.elaya.page.application.Application;
+import org.elaya.page.application.PageApplicationAware;
+import org.elaya.page.receiver.Receiver.ReceiverException;
 import org.elaya.page.security.Errors.AuthenticationException;
 import org.elaya.page.security.Session.InvalidSessionData;
+import org.elaya.page.xml.XMLParserBase.XMLLoadException;
 
-public class SecurityManager {
+public class SecurityManager  {
 	
 	private String loginCheckUrl="";
-	private String loginPageUrl="";
+	private String loginPageUrl="";	
 	private LinkedList<RequestMatcherGroup> requestMatcherGroups=new LinkedList<>();
 
 	public void setLoginCheckUrl(String purl){
@@ -41,7 +45,7 @@ public class SecurityManager {
 	}
 	
 	
-	public boolean execute(ServletRequest request,ServletResponse response) throws NoSuchMethodException, ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, InvalidSessionData, IOException, AuthenticationException 
+	public boolean execute(ServletRequest request,ServletResponse response) throws NoSuchMethodException, ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, InvalidSessionData, IOException, AuthenticationException, ReceiverException, XMLLoadException 
 	{
 		Session session=createSession(request,response);
 		MatchActionResult result;
@@ -63,4 +67,5 @@ public class SecurityManager {
 	public void addRequestMatcherGroup(RequestMatcherGroup prequestMatcherGroup){
 		requestMatcherGroups.add(prequestMatcherGroup);
 	}
+
 }
