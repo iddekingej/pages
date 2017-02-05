@@ -9,7 +9,7 @@ public abstract class PageElement<T extends ThemeItemBase> extends Element<T> {
 	}
 	
 	@Override
-	public boolean checkElement(Element<?> pelement){
+	protected boolean checkElement(Element<?> pelement){
 		return true;
 	}
 

@@ -64,3 +64,34 @@ div[class="listmenu_item_selected"]>a {
 .menu_seperator{
 	border-top:solid 1px #eee;
 }
+
+.tabpage{
+	border-collapse:collapse;
+}
+
+.tabpage_item{
+	background-color:#ccc;
+	padding:3px;
+	margin:0px;
+}
+
+.tabpage_tab{
+	background-color:#eee;
+	cursor:pointer;
+	padding:3px;
+	margin:0px;
+	border-radius:4px 4px 0px 0px	
+}
+
+.tabpage_tabSelected{
+	background-color:#ccc;
+	cursor:pointer;
+	padding:3px;
+	margin:0px;	
+	border-radius:4px 4px 0px 0px
+}
+
+.tabpage_pagecontainer{
+	padding:0px;
+	margin:0px;
+}

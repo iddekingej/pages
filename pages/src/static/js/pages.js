@@ -176,6 +176,10 @@ TAbstractElement.prototype.setup=function()
 	}	
 }
 
+TAbstractElement.prototype.afterSetup=function()
+{
+}
+
 TAbstractElement.prototype.handleCheckCondition=function()
 {
 	var l_namespaceParent=this.getNamespaceParent();
@@ -482,4 +486,78 @@ function TRepeatElementItem(p_parent,p_jsName,p_name)
 
 TRepeatElementItem.prototype=Object.create(TAbstractElement.prototype);
 
+/**
+ * Tab pages handler
+ * 
+ * @param p_parent Parent of element
+ * @param p_jsName Javascript name of element
+ * @param p_name   Name of element
+ * @param p_id     Element id
+ * @returns        this
+ */
+
+function TTabPages(p_parent,p_jsName,p_name,p_id)
+{
+	this.currentTab=null;
+	this.currentForm=null;
+	this.defaultTab=0;
+	TElement.call(this,p_parent,p_jsName,p_name,p_id);	
+}
+
+TTabPages.prototype=Object.create(TElement.prototype);
+
+TTabPages.prototype.afterSetup=function()
+{
+	TElement.prototype.setup.call(this);
+	var l_cnt=0;
+	var l_element;
+	var l_this=this;
+	var l_ev=function(){l_this.clickTab(this);}
+	for(var l_key in this.elements){
+		l_element=$$(this.id+"_t_"+l_cnt)
+		if(l_element==null){
+			break;
+		}
+		core.ev(l_element,"click",l_ev);
+		this.elements[l_key].display(false);		
+		l_cnt++;
+	}
+	this.displayTab(this.defaultTab);
+	
+}
+
+TTabPages.prototype.getTabByNo=function(p_no)
+{
+	var l_cnt=0;
+	for(var l_key in this.elements){
+		if(l_cnt==p_no){
+			return this.elements[l_key];
+		}
+		l_cnt++;
+	}
+	return null;
+}
+
+TTabPages.prototype.displayTab=function(p_no)
+{
+	var l_tab=$$(this.id+"_t_"+p_no);
+	var l_page=this.getTabByNo(p_no);
+	if((this.currentTab != l_tab) && (l_tab != null) && (l_page != null)){
+		if(this.currentTab != null){
+			this.currentTab.className="tabpage_tab";
+			this.currentPage.display(false);
+		}
+		l_tab.className="tabpage_tabSelected";
+		l_page.display(true);
+		this.currentTab=l_tab;
+		this.currentPage=l_page;
+	}
+}
+
+TTabPages.prototype.clickTab=function(p_element)
+{
+	var l_no=p_element.id.indexOf("_t_");
+	var l_id=p_element.id.substr(l_no+3);
+	this.displayTab(l_id);
+}
 var widgetParent=null;

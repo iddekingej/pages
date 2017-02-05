@@ -36,6 +36,10 @@ public class JSWriter extends AbstractWriter{
 		setVar("this."+varName,value);
 	}
 
+	public void objVar(String varName,int value) throws JSONException{
+		objVar(varName,String.valueOf(value));
+	}
+	
 	public void setFromOther(String varName,String other){
 		printNl(varName+"="+other+";");
 	}

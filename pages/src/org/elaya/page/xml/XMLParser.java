@@ -331,20 +331,13 @@ public abstract class XMLParser extends XMLParserBase<Object> {
 				} else {
 					throw new XMLLoadException("Referenced item '"+ref+"' does not exists",node);					
 				}
-			} else if(info.getBaseClass() != null){
-				object=createByClass(node,info.getDefaultClass());
-				if(object==null){
-					return null;
-				}
 			} else {
-				if(info.getDefaultClass() ==null){
-					throw new XMLLoadException("Internal error. Class name is empty, but defaultClass not set in config. Node name="+node.getNodeName(),node);					
-				} else {
-					object=info.getDefaultClass().newInstance();
-				}	
-			}	
-			parseNamedObject(object,node);
-			setParent(parent,object,node,info);
+				object=createByClass(node,info.getDefaultClass());
+				if(object != null){
+					parseNamedObject(object,node);
+					setParent(parent,object,node,info);
+				}
+			}
 		}
 		
 		

@@ -452,6 +452,7 @@ public abstract class Element<T extends ThemeItemBase> extends DynamicMethod imp
 		if(!elements.isEmpty()){
 			writer.printNl("}");
 			if(isWidgetParent){
+				writer.printNl("element.afterSetup();\n");
 				writer.setFromOther("widgetParent","widgetParent.parent");
 			}
 		}
@@ -519,7 +520,7 @@ public abstract class Element<T extends ThemeItemBase> extends DynamicMethod imp
 		return elements;
 	} 
 	
-	public boolean checkElement(Element<?> element){
+	protected boolean checkElement(Element<?> element){
 		return false;
 	}
 }
