@@ -4,4 +4,5 @@ public enum CompareMatchType {
 		EXACT
 	,	STARTSWITH
 	,	ENDSWITH
+	,   REGEX
 }

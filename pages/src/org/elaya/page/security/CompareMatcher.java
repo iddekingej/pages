@@ -1,11 +1,35 @@
 package org.elaya.page.security;
 
+import java.util.HashSet;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import javax.servlet.http.HttpServletRequest;
 
 public class CompareMatcher extends RequestMatcher {
 	
 	private CompareMatchType matchType;
 	private String matchUrl="";
+	private Pattern urlPattern ;
+	private HashSet<String> methodFilter;
+	
+	public void setMethod(String pmethod)
+	{
+		if("".equals(pmethod)){
+			methodFilter=null;
+		} else {
+			String[] methodList=pmethod.split(",");
+			for(String methodName:methodList){
+				methodFilter.add(methodName);
+			}
+		}
+	}
+	
+	public Set<String> getMethod()
+	{
+		return methodFilter;
+	}
 	
 	public void setType(CompareMatchType pmatchType){
 		matchType=pmatchType;
@@ -17,6 +41,7 @@ public class CompareMatcher extends RequestMatcher {
 	
 	public void setMatchUrl(String pmatchUrl)
 	{
+		urlPattern=null;
 		matchUrl=pmatchUrl;
 	}
 	
@@ -24,20 +49,40 @@ public class CompareMatcher extends RequestMatcher {
 		return matchUrl;
 	}
 	
+	private boolean matchRegex(String purl)
+	{
+		if(matchUrl==null || matchUrl==""){
+			return true;
+		}
+		if(urlPattern==null){
+			urlPattern=Pattern.compile(matchUrl);
+		}			
+	
+		Matcher matcher=urlPattern.matcher(purl);
+		return matcher.matches();
+	}
+	
 	@Override
-	boolean matchOwnRequest(Session session) {
+	public boolean matchOwnRequest(Session session) {
 		HttpServletRequest request=session.getHttpRequest(); 
 		if(request != null){
+			if(methodFilter != null && !methodFilter.contains(request.getMethod())){
+				return false;
+			}
+			
 			String query=request.getPathInfo();
 			if(query==null){
 				query="";
 			}
- 			if(matchType==CompareMatchType.EXACT){
-				return query.equals(matchUrl);
-			} else if(matchType==CompareMatchType.STARTSWITH){
-				return query.startsWith(matchUrl);
-			} else if(matchType==CompareMatchType.ENDSWITH){
-				return query.endsWith(matchUrl);
+			switch(matchType){
+				case EXACT:
+					return query.equals(matchUrl);
+				case STARTSWITH:
+					return query.startsWith(matchUrl);
+				case ENDSWITH:
+					return query.endsWith(matchUrl);
+				case REGEX:
+					return matchRegex(query);
 			}
 		}
 		return false;
