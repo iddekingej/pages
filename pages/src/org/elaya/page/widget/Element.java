@@ -344,15 +344,6 @@ public abstract class Element<T extends ThemeItemBase> extends DynamicMethod imp
 		return null;
 	}
 	
-	public Page getPage()
-	{
-		if(parent !=null){
-			return parent.getPage();
-		}
-		return null;
-	}
-	
-	
 	protected void preElement(int id,Writer writer,Data data,Element<?> element) throws IOException, KeyNotFoundException 
 	{
 		

@@ -153,11 +153,7 @@ public class Page extends PageElement<PageThemeItem> implements PageApplicationA
 		setTheme(new Theme(application.getThemeBase()));
 	}
 
-	@Override
-	public Page getPage()
-	{
-		return this;
-	}
+
 
 }
 
