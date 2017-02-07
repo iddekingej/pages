@@ -3,13 +3,23 @@ package org.elaya.page.security;
 import java.io.IOException;
 import java.io.NotSerializableException;
 import java.lang.reflect.InvocationTargetException;
+import java.sql.SQLException;
 import java.util.LinkedList;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.elaya.page.Errors.AliasNotFound;
+import org.elaya.page.Errors.LoadingAliasFailed;
+import org.elaya.page.application.Application.DefaultDBConnectionNotSet;
+import org.elaya.page.application.Application.InvalidAliasType;
+import org.elaya.page.data.Data.KeyNotFoundException;
 import org.elaya.page.receiver.Receiver.ReceiverException;
 import org.elaya.page.security.Errors.AuthenticationException;
 import org.elaya.page.security.Session.InvalidSessionData;
+import org.elaya.page.widget.Element.DisplayException;
 import org.elaya.page.xml.XMLParserBase.XMLLoadException;
+import org.xml.sax.SAXException;
 
 public class SecurityManager  {
 	
@@ -42,7 +52,7 @@ public class SecurityManager  {
 	}
 	
 	
-	public boolean execute(ServletRequest request,ServletResponse response) throws NoSuchMethodException, ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, InvalidSessionData, IOException, AuthenticationException, ReceiverException, XMLLoadException 
+	public boolean execute(ServletRequest request,ServletResponse response) throws NoSuchMethodException, ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, InvalidSessionData, IOException, AuthenticationException, ReceiverException, XMLLoadException, SQLException, DefaultDBConnectionNotSet, KeyNotFoundException, ParserConfigurationException, SAXException, InvalidAliasType, AliasNotFound, LoadingAliasFailed, DisplayException 
 	{
 		Session session=createSession(request,response);
 		MatchActionResult result;
