@@ -6,9 +6,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedList;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-
-import org.elaya.page.application.Application;
-import org.elaya.page.application.PageApplicationAware;
 import org.elaya.page.receiver.Receiver.ReceiverException;
 import org.elaya.page.security.Errors.AuthenticationException;
 import org.elaya.page.security.Session.InvalidSessionData;

@@ -7,7 +7,6 @@ import java.util.LinkedHashSet;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.elaya.page.DocumentType;
-import org.elaya.page.Errors;
 import org.elaya.page.PageThemeItem;
 import org.elaya.page.Theme;
 import org.elaya.page.Errors.AliasNotFound;

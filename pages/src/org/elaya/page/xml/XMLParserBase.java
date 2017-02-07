@@ -5,6 +5,8 @@ import java.io.InputStream;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.elaya.page.Errors.ReplaceVarException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -15,7 +17,6 @@ public abstract class XMLParserBase<T> {
 		private static final long serialVersionUID = 4450324776754322884L;
 		private final transient Node node;
 		private String exceptionFileName="";
-		
 		
 		public XMLLoadException(String message,Throwable cause,Node exNode){
 			super(message,cause);
@@ -44,6 +45,16 @@ public abstract class XMLParserBase<T> {
 	
 	private String fileName;
 
+	protected String getAttributeValue(Node pnode,String pname) throws ReplaceVarException
+	{
+		Node valueNode=pnode.getAttributes().getNamedItem(pname);
+		if(valueNode !=null){
+			return valueNode.getNodeValue();
+		} else {
+			return null;
+		}		
+	}
+	
 	public String getFileName()
 	{
 		return fileName;

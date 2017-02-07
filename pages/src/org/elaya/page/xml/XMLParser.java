@@ -120,11 +120,13 @@ public abstract class XMLParser extends XMLParserBase<Object> {
 	}
 		public Map<String,Object> getNameIndex(){ return nameIndex;}
 	
-	protected String getAttributeValue(Node pnode,String pname) throws  ReplaceVarException
+	@Override
+	protected String getAttributeValue(Node pnode,String pname) throws ReplaceVarException
 	{
-		Node valueNode=pnode.getAttributes().getNamedItem(pname);
-		if(valueNode !=null){
-			return replaceVariables( valueNode.getNodeValue());
+		String value=super.getAttributeValue(pnode,pname);
+		
+		if(value !=null){
+			return replaceVariables( value);
 		} else {
 			return null;
 		}		
@@ -309,7 +311,7 @@ public abstract class XMLParser extends XMLParserBase<Object> {
 				try{
 					DynamicObject.call(parent, methodName,new Class<?>[]{info.getBaseClass()},new Object[]{object});
 				} catch(NoSuchMethodException e){
-					throw new XMLLoadException("Method "+methodName + " in object "+parent.getClass().getName()+" doesn't exists",e,node);
+					throw new XMLLoadException("Method "+methodName + "("+info.getBaseClass().getName()+") in object "+parent.getClass().getName()+" doesn't exists",e,node);
 				}							
 			}
 		}		

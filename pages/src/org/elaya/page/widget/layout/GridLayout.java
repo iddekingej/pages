@@ -10,10 +10,6 @@ public class GridLayout extends Layout {
 
 	private Integer columns;
 	
-	public GridLayout() {
-		super();
-	}
-
 	public int getColumns(){
 		return columns;
 	}
@@ -33,16 +29,14 @@ public class GridLayout extends Layout {
 					themeItem.gridRowHeader(pwriter);
 					hasEnd=false;
 				}
+				themeItem.gridItemHeader(pwriter,getClassPrefix(),element.getHorizontalAlign(),element.getVerticalAlign(),element.getLayoutWidth(),element.getLayoutHeight());
 				if(element.checkCondition(data)){
-					themeItem.gridItemHeader(pwriter,getClassPrefix(),element.getHorizontalAlign(),element.getVerticalAlign(),element.getLayoutWidth(),element.getLayoutHeight());
 					element.display(pwriter,data);
-					themeItem.gridItemFooter(pwriter);
 				}
+				themeItem.gridItemFooter(pwriter);
 				col++;
 				if(col>=columns){
 					col=0;
-				}
-				if(col==0){
 					themeItem.gridRowFooter(pwriter);
 					hasEnd=true;
 				}

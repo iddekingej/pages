@@ -4,7 +4,7 @@ import java.util.Map;
 
 import org.w3c.dom.Node;
 
-public class ElementVariant {
+public class ElementVariant implements NamedObject{
 	public static class PropertyNotFoundException extends Exception{
 		private static final long serialVersionUID = 4382532741034742320L;
 		public PropertyNotFoundException(String name)
@@ -67,5 +67,10 @@ public class ElementVariant {
 			}
 		}
 		return dataMap;
+	}
+
+	@Override
+	public String getFullName() {
+		return getName();
 	}
 }

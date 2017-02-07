@@ -1,13 +1,22 @@
 <aliases>
-	<element alias="page" value="org.elaya.page.widget.Page" />
-	<element alias='quickform' value="org.elaya.page.widget.quickform.Form" />
-	<element alias="quick_static" value="org.elaya.page.widget.quickform.StaticElement" />
-	<element alias="quick_text" value="org.elaya.page.widget.quickform.TextEditElement" />
-	<element alias="quick_radio" value="org.elaya.page.widget.quickform.RadioElement" />
-	<element alias="quick_textarea" value="org.elaya.page.widget.quickform.TextAreaElement" />
-	<element alias="quick_date" value="org.elaya.page.widget.quickform.DateElement" />
-	<element alias="quick_checkbox" value="org.elaya.page.widget.quickform.CheckboxElement" />
-	
+	<prefix prefix="org.elaya.page.">
+		<prefix prefix="widget.">
+			<element alias="page" value="Page" />
+			<prefix prefix="quickform.">
+				<element alias='quickform' value="Form" />
+				<element alias="quick_static" value="StaticElement" />
+				<element alias="quick_text" value="TextEditElement" />
+				<element alias="quick_radio" value="RadioElement" />
+				<element alias="quick_textarea" value="TextAreaElement" />
+				<element alias="quick_date" value="DateElement" />
+				<element alias="quick_checkbox" value="CheckboxElement" />
+			</prefix>
+			<prefix prefix="element.">
+				<element alias="tabPages" value="TabPages" />
+				<element alias="tabPage" value="TabPage" />
+			</prefix>
+ 		</prefix>
+	</prefix>
 	<element alias='spacer_vertical' value="org.elaya.page.widget.element.VerticalSpacer" />
 	<element alias='spacer_horizontal' value="org.elaya.page.widget.element.HorizontalSpacer" />
 	<element alias="button" value='org.elaya.page.widget.element.Button' />

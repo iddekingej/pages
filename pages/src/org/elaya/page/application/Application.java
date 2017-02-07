@@ -295,7 +295,7 @@ public abstract class Application{
 	
 	public ElementVariant getVariantByName(String name) throws XMLLoadException
 	{
-		return elementVariants.getElementVariantByName(name);
+		return elementVariants.get(name,null);
 	}
 /**
  * Load aliases in fileName and add them to global alias list
