@@ -1,6 +1,6 @@
 package org.elaya.page.spring;
 
-import org.elaya.page.security.AuthorizationData;
+import org.elaya.page.core.AuthorizationData;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 

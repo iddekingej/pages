@@ -10,6 +10,7 @@ import org.elaya.page.Errors.AliasNotFound;
 import org.elaya.page.Errors.LoadingAliasFailed;
 import org.elaya.page.application.Application.DefaultDBConnectionNotSet;
 import org.elaya.page.application.Application.InvalidAliasType;
+import org.elaya.page.core.PageSession;
 import org.elaya.page.data.Data.KeyNotFoundException;
 import org.elaya.page.receiver.Receiver.ReceiverException;
 import org.elaya.page.security.Errors.AuthenticationException;
@@ -20,7 +21,7 @@ import org.xml.sax.SAXException;
 public class RequestMatcherGroup implements HasRequestMatchers{
 	private LinkedList<RequestMatcher> requestMatchers=new LinkedList<>();
 	
-	protected RequestMatcher matchRequest(Session session)
+	protected RequestMatcher matchRequest(PageSession session)
 	{
 		RequestMatcher found=null;
 		for(RequestMatcher requestMatcher:requestMatchers){
@@ -32,7 +33,7 @@ public class RequestMatcherGroup implements HasRequestMatchers{
 		return found;
 	}	
 	
-	public MatchActionResult execute(Session psession) throws AuthenticationException, IOException, ReceiverException, XMLLoadException, SQLException, DefaultDBConnectionNotSet, KeyNotFoundException, ParserConfigurationException, SAXException, InvalidAliasType, AliasNotFound, LoadingAliasFailed, DisplayException 
+	public MatchActionResult execute(PageSession psession) throws AuthenticationException, IOException, ReceiverException, XMLLoadException, SQLException, DefaultDBConnectionNotSet, KeyNotFoundException, ParserConfigurationException, SAXException, InvalidAliasType, AliasNotFound, LoadingAliasFailed, DisplayException 
 	{
 		RequestMatcher requestMatcher=matchRequest(psession);	
 		if(requestMatcher==null){

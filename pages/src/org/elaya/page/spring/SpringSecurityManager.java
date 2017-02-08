@@ -2,20 +2,21 @@ package org.elaya.page.spring;
 
 import java.io.NotSerializableException;
 import java.lang.reflect.InvocationTargetException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import org.elaya.page.security.SecurityManager;
-import org.elaya.page.security.Session;
-import org.elaya.page.security.Session.InvalidSessionData;
+import org.elaya.page.core.PageSession;
+import org.elaya.page.core.PageSession.InvalidSessionData;
+import org.elaya.page.security.FilterManager;
+
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
-public class SpringSecurityManager extends SecurityManager implements ApplicationContextAware {
+public class SpringSecurityManager extends FilterManager implements ApplicationContextAware {
 	private ApplicationContext applicationContext;
 
 	@Override
-	protected Session createSession(ServletRequest servletRequest,ServletResponse servletResponse) throws NoSuchMethodException, ClassNotFoundException, InstantiationException, IllegalAccessException,  InvocationTargetException, NotSerializableException, InvalidSessionData
+	protected PageSession createSession(HttpServletRequest servletRequest,HttpServletResponse servletResponse) throws NoSuchMethodException, ClassNotFoundException, InstantiationException, IllegalAccessException,  InvocationTargetException, NotSerializableException, InvalidSessionData
 	{
 		SpringSession session=new SpringSession(servletRequest,servletResponse,applicationContext);
 		session.initSession();

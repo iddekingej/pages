@@ -2,16 +2,16 @@ package org.elaya.page.security;
 
 import java.io.IOException;
 import java.sql.SQLException;
-
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.ParserConfigurationException;
-
 import org.elaya.page.Errors.AliasNotFound;
 import org.elaya.page.Errors.LoadingAliasFailed;
 import org.elaya.page.application.Application.DefaultDBConnectionNotSet;
 import org.elaya.page.application.Application.InvalidAliasType;
+import org.elaya.page.core.AuthorizationData;
+import org.elaya.page.core.PageSession;
 import org.elaya.page.data.Data.KeyNotFoundException;
 import org.elaya.page.receiver.Receiver.ReceiverException;
 import org.elaya.page.security.Errors.AuthenticationException;
@@ -37,6 +37,6 @@ public abstract class Action {
 		return null;
 	}
 	
-	public abstract ActionResult execute(Session session) throws AuthenticationException, IOException, ReceiverException, XMLLoadException, SQLException, DefaultDBConnectionNotSet, KeyNotFoundException, ParserConfigurationException, SAXException, InvalidAliasType, AliasNotFound, LoadingAliasFailed, DisplayException ;
+	public abstract ActionResult execute(PageSession session) throws AuthenticationException, IOException, ReceiverException, XMLLoadException, SQLException, DefaultDBConnectionNotSet, KeyNotFoundException, ParserConfigurationException, SAXException, InvalidAliasType, AliasNotFound, LoadingAliasFailed, DisplayException ;
 	
 }

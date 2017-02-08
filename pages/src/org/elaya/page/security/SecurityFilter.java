@@ -10,7 +10,7 @@ import javax.servlet.ServletResponse;
 import org.elaya.page.application.Application;
 
 public class SecurityFilter implements Filter {
-	private SecurityManager securityManager;
+	private FilterManager securityManager;
 
 	@Override
 	public void doFilter(ServletRequest prequest, ServletResponse presponse, FilterChain chain)
@@ -44,7 +44,7 @@ public class SecurityFilter implements Filter {
 		XmlSecurityParser parser=new XmlSecurityParser(application);
 		initParser(parser);		
 		try {			
-			securityManager=parser.parse(filterFileName,SecurityManager.class);
+			securityManager=parser.parse(filterFileName,FilterManager.class);
 		} catch (Exception e) {
 			throw new ServletException("Filter initalisation failed",e);
 		}	

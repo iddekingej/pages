@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.elaya.page.application.Application.DefaultDBConnectionNotSet;
+import org.elaya.page.core.PageSession;
 import org.elaya.page.data.Dynamic.DynamicException;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
@@ -108,7 +109,7 @@ public class CRUDAction extends Action {
 	
 	
 	@Override	
-	public void execute(Object object, HttpServletRequest request, HttpServletResponse response, String cmd,ReceiverData data, Result result)
+	public void execute(Object object, PageSession psession, String cmd,ReceiverData data, Result result)
 			throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, DefaultDBConnectionNotSet, SQLException, DynamicException {
 		System.out.println("Cmd="+cmd);
 		if("add".equals(cmd)){			

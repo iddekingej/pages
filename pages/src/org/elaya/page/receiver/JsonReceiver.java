@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.elaya.page.Errors.InvalidObjectType;
 import org.elaya.page.application.Application.DefaultDBConnectionNotSet;
+import org.elaya.page.core.PageSession;
 import org.elaya.page.data.Dynamic;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -16,11 +17,11 @@ import org.json.JSONObject;
 public abstract class JsonReceiver extends Receiver {
 
 
-	private JSONObject getJson(HttpServletRequest prequest) throws IOException, JSONException
+	private JSONObject getJson(PageSession psession) throws IOException, JSONException
 	{
 		StringBuilder data=new StringBuilder();
 		String part;
-		BufferedReader reader=prequest.getReader(); 
+		BufferedReader reader=psession.getReader(); 
 		while((part=reader.readLine())!= null){
 			data.append(part);
 		}
@@ -29,13 +30,13 @@ public abstract class JsonReceiver extends Receiver {
 	
 	
 	@Override
-	protected void sendFailure(HttpServletResponse response,Exception e) throws JSONException, IOException
+	protected void sendFailure(PageSession psession,Exception e) throws JSONException, IOException
 	{
 		JSONResult result=new JSONResult();
 		result.addError("", "Internal error:"+e.toString());
 		e.printStackTrace();
-		response.setContentType("application/json");
-		response.getOutputStream().print(result.toString());
+		psession.setContentType("application/json");
+		psession.getOutputStream().print(result.toString());
 	}
 	
 	
@@ -55,9 +56,9 @@ public abstract class JsonReceiver extends Receiver {
 	}
 
 	@Override
-	protected final  void handleData(HttpServletRequest request,HttpServletResponse response) throws IOException, ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, DynamicException, JSONException, InstantiationException, InvalidObjectType, ReceiverException, DefaultDBConnectionNotSet, SQLException 
+	protected final  void handleData(PageSession psession) throws IOException, ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, DynamicException, JSONException, InstantiationException, InvalidObjectType, ReceiverException, DefaultDBConnectionNotSet, SQLException 
 	{
-		JSONObject json=getJson(request);
+		JSONObject json=getJson(psession);
 		String cmd=json.getString(getCmdField());
 		Command command=getCommand(cmd);
 		if(command==null){
@@ -66,10 +67,10 @@ public abstract class JsonReceiver extends Receiver {
 		Dynamic data=convertRequestToData(command,json);
 		ReceiverData recieverData=new ReceiverData(data,cmd);
 		JSONResult result=new JSONResult();
-		command.handleRequest(this, request, response, recieverData, result);
+		command.handleRequest(this, psession, recieverData, result);
 
-		response.setContentType("application/json");
-		response.getOutputStream().print(result.toString());		
+		psession.setContentType("application/json");
+		psession.getOutputStream().print(result.toString());		
 	}
 		
 	protected Dynamic convertRequestToData(Command command,JSONObject json) throws JSONException, NoSuchMethodException, ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, InvalidObjectType, IOException, DynamicException    

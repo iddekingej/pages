@@ -4,6 +4,8 @@ import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.elaya.page.core.PageSession;
+
 public class LogoutAction extends Action {
 
 	private String redirectUrl;
@@ -18,18 +20,14 @@ public class LogoutAction extends Action {
 		return redirectUrl;
 	}
 	@Override
-	public ActionResult execute(Session session) throws IOException{
-		HttpServletRequest request=session.getHttpRequest();		
-		if(request != null){			
-			request.setAttribute("org.elaya.page.security.SessionData", null);
-			session.setAuthorisationData(null);
-			request.getSession().invalidate();
-			if(redirectUrl != null){				
-				session.redirect(redirectUrl);
-			}
-			return ActionResult.NONEXTFILTER;
+	public ActionResult execute(PageSession session) throws IOException{
+		session.setAttribute("org.elaya.page.security.SessionData", null);
+		session.setAuthorisationData(null);
+		session.getHttpSession(true).invalidate();
+		if(redirectUrl != null){				
+			session.redirect(redirectUrl);
 		}
-		return ActionResult.NEXTFILTER;
+		return ActionResult.NONEXTFILTER;
 	}
 
 }

@@ -3,7 +3,9 @@ package org.elaya.page.security;
 import java.sql.SQLException;
 import java.util.Map;
 
+import org.elaya.page.core.PageSession;
+
 @FunctionalInterface
-public abstract interface Authenticator {
-	public abstract Map<String,Object> getAuthenicate(Session session) throws SQLException, ClassNotFoundException;
+public interface Authenticator {
+	public Map<String,Object> getAuthenicate(PageSession session) throws SQLException, ClassNotFoundException;
 }

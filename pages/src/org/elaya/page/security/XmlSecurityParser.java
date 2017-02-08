@@ -21,7 +21,7 @@ public class XmlSecurityParser extends XMLAppParser {
 
 	@Override
 	protected void setupConfig() {
-		addConfig("security",new XMLConfig(SecurityManager.class,SecurityManager.class,"",null));
+		addConfig("filters",new XMLConfig(FilterManager.class,FilterManager.class,"",null));
 		addConfig("group",new XMLConfig(RequestMatcherGroup.class,RequestMatcherGroup.class,"addRequestMatcherGroup",null));
 		addConfig("match",new XMLConfig(RequestMatcher.class,null,"addRequestMatcher",HasRequestMatchers.class));
 		addConfig("action",new XMLConfig(Action.class,null,"addAction",null));

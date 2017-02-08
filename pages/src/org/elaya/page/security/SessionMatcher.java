@@ -1,5 +1,8 @@
 package org.elaya.page.security;
 
+import org.elaya.page.core.AuthorizationData;
+import org.elaya.page.core.PageSession;
+
 public class SessionMatcher extends RequestMatcher {
 
 	public SessionMatcher() {
@@ -7,7 +10,7 @@ public class SessionMatcher extends RequestMatcher {
 	}
 
 	@Override
-	boolean matchOwnRequest(Session session) {
+	boolean matchOwnRequest(PageSession session) {
 		AuthorizationData sessionData=session.getAuthorisationData();
 		return sessionData != null;
 	}

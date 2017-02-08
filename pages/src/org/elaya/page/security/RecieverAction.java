@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import org.elaya.page.application.Application;
 import org.elaya.page.application.PageApplicationAware;
+import org.elaya.page.core.PageSession;
 import org.elaya.page.receiver.Receiver;
 import org.elaya.page.receiver.Receiver.ReceiverException;
 import org.elaya.page.receiver.ReceiverParser;
@@ -25,13 +26,11 @@ public class RecieverAction extends Action implements PageApplicationAware {
 	}
 	
 	@Override
-	public ActionResult execute(Session session) throws AuthenticationException, IOException, ReceiverException, XMLLoadException {
-		if(session.getHttpRequest() != null && session.getHttpResponse() != null){
-			ReceiverParser parser=new ReceiverParser(getApplication());
-			Receiver rec=parser.parse(reciever,Receiver.class);
-			rec.handleRequest(session.getHttpRequest(), session.getHttpResponse());
-			System.out.println("Reciever found !!");
-		}
+	public ActionResult execute(PageSession session) throws AuthenticationException, IOException, ReceiverException, XMLLoadException {
+		ReceiverParser parser=new ReceiverParser(getApplication());
+		Receiver rec=parser.parse(reciever,Receiver.class);
+		rec.handleRequest(session);
+		System.out.println("Reciever found !!");
 		return ActionResult.NONEXTFILTER;
 	}
 

@@ -1,4 +1,4 @@
-package org.elaya.page.security;
+package org.elaya.page.core;
 
 import java.io.NotSerializableException;
 import java.io.Serializable;

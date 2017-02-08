@@ -4,6 +4,8 @@ import java.lang.reflect.InvocationTargetException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.elaya.page.core.PageSession;
 import org.elaya.page.data.DynamicObject;
 
 public class MethodCallAction extends Action {
@@ -18,8 +20,8 @@ public class MethodCallAction extends Action {
 	}
 	
 	@Override
-	public void execute(Object object, HttpServletRequest request, HttpServletResponse response, String cmd, ReceiverData data,Result result) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-		DynamicObject.call(object, method, new Class<?>[]{HttpServletRequest.class,HttpServletResponse.class,String.class,data.getData().getClass(),result.getClass()}, new Object[]{request,response,data.getCmd(),data.getData(),result});
+	public void execute(Object object, PageSession psession, String cmd, ReceiverData data,Result result) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+		DynamicObject.call(object, method, new Class<?>[]{HttpServletRequest.class,HttpServletResponse.class,String.class,data.getData().getClass(),result.getClass()}, new Object[]{psession,data.getCmd(),data.getData(),result});
 	}
 
 }

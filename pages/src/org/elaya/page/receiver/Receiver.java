@@ -10,6 +10,7 @@ import org.elaya.page.Errors.InvalidObjectType;
 import org.elaya.page.application.Application;
 import org.elaya.page.application.Application.DefaultDBConnectionNotSet;
 import org.elaya.page.application.PageApplicationAware;
+import org.elaya.page.core.PageSession;
 import org.elaya.page.data.DynamicMethod;
 import org.json.JSONException;
 
@@ -31,8 +32,8 @@ public abstract  class Receiver extends DynamicMethod implements PageApplication
 	private LinkedList<Command> commands=new LinkedList<>();
 	private String cmdField="cmd";
 	
-	protected abstract void sendFailure(HttpServletResponse response,Exception e) throws JSONException, IOException;
-	protected abstract void handleData(HttpServletRequest request,HttpServletResponse response) throws IOException, ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, DynamicException, JSONException, InstantiationException, InvalidObjectType, ReceiverException, DefaultDBConnectionNotSet, SQLException;
+	protected abstract void sendFailure(PageSession psession,Exception e) throws JSONException, IOException;
+	protected abstract void handleData(PageSession psession) throws IOException, ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, DynamicException, JSONException, InstantiationException, InvalidObjectType, ReceiverException, DefaultDBConnectionNotSet, SQLException;
 	
 	public String getCmdField(){
 		return cmdField;
@@ -56,10 +57,10 @@ public abstract  class Receiver extends DynamicMethod implements PageApplication
 	
 	
 
-	public final void failure(HttpServletResponse response ,Exception e) throws ReceiverException
+	public final void failure(PageSession psession ,Exception e) throws ReceiverException
 	{
 		try{
-			sendFailure(response,e);
+			sendFailure(psession,e);
 		} catch(Exception f){
 			throw new ReceiverException(f);
 		}
@@ -80,11 +81,11 @@ public abstract  class Receiver extends DynamicMethod implements PageApplication
 		return null;
 	}
 
-	public final void handleRequest(HttpServletRequest request,HttpServletResponse response) throws ReceiverException {
+	public final void handleRequest(PageSession psession) throws ReceiverException {
 		 try{
-			 handleData(request,response);
+			 handleData(psession);
 		 } catch(Exception e){
-			 failure(response,e);
+			 failure(psession,e);
 		 }
 	 }
 		

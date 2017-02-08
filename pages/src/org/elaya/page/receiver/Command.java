@@ -17,6 +17,7 @@ import org.elaya.page.Errors.InvalidObjectType;
 import org.elaya.page.UniqueNamedObjectList;
 import org.elaya.page.UniqueNamedObjectList.DuplicateItemName;
 import org.elaya.page.application.Application.DefaultDBConnectionNotSet;
+import org.elaya.page.core.PageSession;
 import org.elaya.page.data.Dynamic;
 import org.elaya.page.data.Dynamic.DynamicException;
 import org.elaya.page.data.DynamicObject;
@@ -145,7 +146,7 @@ public class Command {
 		}
 	}
 	
-	protected void handleRequest(Object object,HttpServletRequest request,HttpServletResponse response,ReceiverData data,Result result) throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, DynamicException, JSONException, DefaultDBConnectionNotSet, SQLException{
+	protected void handleRequest(Object object,PageSession psession,ReceiverData data,Result result) throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, DynamicException, JSONException, DefaultDBConnectionNotSet, SQLException{
 		validate(result,data);
 		if(result.hasErrors()){
 			return;
@@ -160,7 +161,7 @@ public class Command {
 			}
 		}
 		for(Action action:actions){
-			action.execute(object, request, response, data.getCmd(), data, result);
+			action.execute(object, psession, data.getCmd(), data, result);
 		}
 	}
 }

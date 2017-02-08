@@ -8,6 +8,8 @@ import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.elaya.page.core.PageSession;
+
 public class CompareMatcher extends RequestMatcher {
 	
 	private CompareMatchType matchType=CompareMatchType.EXACT;
@@ -66,14 +68,12 @@ public class CompareMatcher extends RequestMatcher {
 	}
 	
 	@Override
-	public boolean matchOwnRequest(Session session) {
-		HttpServletRequest request=session.getHttpRequest(); 
-		if(request != null){
-			if(methodFilter != null && !methodFilter.contains(request.getMethod())){
+	public boolean matchOwnRequest(PageSession session) {
+			if(methodFilter != null && !methodFilter.contains(session.getMethod())){
 				return false;
 			}
 			
-			String query=request.getPathInfo();
+			String query=session.getPathInfo();
 			if(query==null){
 				query="";
 			}
@@ -86,9 +86,10 @@ public class CompareMatcher extends RequestMatcher {
 					return query.endsWith(matchUrl);
 				case REGEX:
 					return matchRegex(query);
+				default:
+					return false;
 			}
-		}
-		return false;
+	
 	}
 
 }

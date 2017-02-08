@@ -7,6 +7,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.elaya.page.core.AuthorizationData;
+import org.elaya.page.core.PageSession;
 import org.elaya.page.data.DynamicObject;
 import org.elaya.page.security.Errors.AuthenticationException;
 
@@ -78,11 +80,11 @@ public class AuthenticateAction extends Action {
 		/*By default no setup us necessary */
 	}
 	
-	private AuthorizationData createSessionDataGen(Session session,Map<String,Object>pdata) throws InvalidSessionData, NoSuchMethodException, ClassNotFoundException, InstantiationException, IllegalAccessException,  InvocationTargetException, NotSerializableException{
+	private AuthorizationData createSessionDataGen(PageSession session,Map<String,Object>pdata) throws InvalidSessionData, NoSuchMethodException, ClassNotFoundException, InstantiationException, IllegalAccessException,  InvocationTargetException, NotSerializableException{
 		Object object=DynamicObject.createObjectFromName(sessionDataClass);
 		if(object instanceof AuthorizationData){
 			AuthorizationData authorisationData=(AuthorizationData)object;
-			session.getRequest().setAttribute("org.elaya.page.security.SessionData", object);
+			session.setAttribute("org.elaya.page.security.SessionData", object);
 			afterCreateSession(authorisationData);
 			authorisationData.initSessionData(pdata);
 			
@@ -95,13 +97,12 @@ public class AuthenticateAction extends Action {
 	
 
 	
-	protected AuthorizationData createSessionData(Session session,Map<String,Object> pdata) throws NoSuchMethodException, ClassNotFoundException, InstantiationException, IllegalAccessException,  InvocationTargetException, InvalidSessionData, NotSerializableException{
+	protected AuthorizationData createSessionData(PageSession session,Map<String,Object> pdata) throws NoSuchMethodException, ClassNotFoundException, InstantiationException, IllegalAccessException,  InvocationTargetException, InvalidSessionData, NotSerializableException{
 		return createSessionDataGen(session,pdata);
 	}
-	private  ActionResult checkAuthentication(Session session) throws AuthenticationException
+	private  ActionResult checkAuthentication(PageSession session) throws AuthenticationException
 	{
 		try{
-			HttpServletRequest request=session.getHttpRequest();
 			AuthorizationData sessionData;
 			if(authenticator != null){
 				Map<String,Object> auth=authenticator.getAuthenicate(session);
@@ -109,7 +110,7 @@ public class AuthenticateAction extends Action {
 					return ActionResult.SECURITYFAILED;
 				}else {
 					sessionData=createSessionData(session,auth);
-					HttpSession httpSession=request.getSession();
+					HttpSession httpSession=session.getHttpSession(true);
 					httpSession.setAttribute("id", sessionData.getId());
 					httpSession.setAttribute("type",sessionData.getClass().getName());
 					session.redirect(sessionData.getAfterLoginPath());
@@ -129,13 +130,9 @@ public class AuthenticateAction extends Action {
 	}
 	
 	@Override
-	public ActionResult execute(Session session) throws AuthenticationException 
+	public ActionResult execute(PageSession session) throws AuthenticationException 
 	{
-			if(session.getRequest() instanceof HttpServletRequest ){
 				return checkAuthentication(session);
-			} 
-
-			return ActionResult.SECURITYFAILED;//TODO: Raise exception?
 		
 	}
 

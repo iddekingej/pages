@@ -56,20 +56,15 @@ public class ViewAction extends Action implements PageApplicationAware {
 		return cache;
 	}
 	@Override
-	public ActionResult execute(Session psession) throws XMLLoadException, IOException, SQLException, DefaultDBConnectionNotSet, KeyNotFoundException, ParserConfigurationException, SAXException, InvalidAliasType, AliasNotFound, LoadingAliasFailed, DisplayException{
-		if(psession.getHttpRequest() !=null && psession.getHttpResponse() != null){
-			PageSession pageSession=new PageSession(psession.getHttpRequest(),psession.getHttpResponse());
-			Page page=getApplication().loadPage(pageFile,cache);
-			Writer writer=new Writer(application,pageSession);
-			MapData data=new MapData();
-			data.put("pageSession",pageSession);
-			page.calculateData(data);
-			page.setUrl(pageSession.getRequestURI());
-			page.display(writer,data);
-			writer.flush();
-		} else{
-			//todo exception
-		}
+	public ActionResult execute(PageSession psession) throws XMLLoadException, IOException, SQLException, DefaultDBConnectionNotSet, KeyNotFoundException, ParserConfigurationException, SAXException, InvalidAliasType, AliasNotFound, LoadingAliasFailed, DisplayException{
+		Page page=getApplication().loadPage(pageFile,cache);
+		Writer writer=new Writer(application,psession);
+		MapData data=new MapData();
+		data.put("pageSession",psession);
+		page.calculateData(data);
+		page.setUrl(psession.getRequestURI());
+		page.display(writer,data);
+		writer.flush();
 		return ActionResult.NONEXTFILTER;
 
 	}
