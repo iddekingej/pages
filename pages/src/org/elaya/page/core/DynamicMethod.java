@@ -1,5 +1,4 @@
-package org.elaya.page.data;
-
+package org.elaya.page.core;
 
 public class DynamicMethod implements Dynamic{
 	public static class MethodNotFound extends Exception{

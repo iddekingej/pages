@@ -12,7 +12,7 @@ import org.elaya.page.Errors.LoadingAliasFailed;
 import org.elaya.page.application.Application.DefaultDBConnectionNotSet;
 import org.elaya.page.application.Application.InvalidAliasType;
 import org.elaya.page.core.PageSession;
-import org.elaya.page.data.Data.KeyNotFoundException;
+import org.elaya.page.core.Data.KeyNotFoundException;
 import org.elaya.page.receiver.Receiver;
 import org.elaya.page.receiver.Receiver.ReceiverException;
 import org.elaya.page.receiver.ReceiverParser;

@@ -2,8 +2,8 @@ package org.elaya.page.widget.quickform;
 
 import java.util.List;
 
+import org.elaya.page.core.Data;
 import org.elaya.page.core.Writer;
-import org.elaya.page.data.Data;
 
 
 public class SelectListElement extends OptionsElement {

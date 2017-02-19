@@ -2,7 +2,7 @@ package org.elaya.page.receiver;
 
 import org.elaya.page.Errors;
 import org.elaya.page.Errors.InvalidTypeException;
-import org.elaya.page.data.Dynamic;
+import org.elaya.page.core.Dynamic;
 
 public class ReceiverData{
 	private final Dynamic data;

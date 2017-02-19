@@ -1,4 +1,4 @@
-package org.elaya.page.data;
+package org.elaya.page.core;
 
 
 public abstract class Data  {

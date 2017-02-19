@@ -1,13 +1,11 @@
-package org.elaya.page.data;
+package org.elaya.page.core;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Objects;
-
-import org.elaya.page.data.Dynamic.DynamicException;
-import org.elaya.page.data.DynamicMethod.MethodNotFound;
-
+import org.elaya.page.core.DynamicMethod.MethodNotFound;
+import org.elaya.page.core.Dynamic.DynamicException;
 public class DynamicObject {
 
 	private DynamicObject()

@@ -8,8 +8,8 @@ import org.elaya.page.Errors.AliasNotFound;
 import org.elaya.page.Errors.LoadingAliasFailed;
 import org.elaya.page.Errors.ReplaceVarException;
 import org.elaya.page.application.Application.InvalidAliasType;
+import org.elaya.page.core.Data;
 import org.elaya.page.core.Writer;
-import org.elaya.page.data.Data;
 import org.xml.sax.SAXException;
 
 

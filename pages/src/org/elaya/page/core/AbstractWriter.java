@@ -9,7 +9,6 @@ import org.elaya.page.Errors.ReplaceVarException;
 import org.elaya.page.application.AliasData;
 import org.elaya.page.application.Application;
 import org.elaya.page.application.Application.InvalidAliasType;
-import org.elaya.page.data.Data;
 import org.xml.sax.SAXException;
 
 public abstract class AbstractWriter {

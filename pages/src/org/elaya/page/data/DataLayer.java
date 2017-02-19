@@ -8,13 +8,19 @@ import org.elaya.page.Errors.LoadingAliasFailed;
 import org.elaya.page.application.Application;
 import org.elaya.page.application.Application.DefaultDBConnectionNotSet;
 import org.elaya.page.application.Application.InvalidAliasType;
+import org.elaya.page.core.Data.KeyNotFoundException;
 import org.elaya.page.application.PageApplicationAware;
-import org.elaya.page.data.Data.KeyNotFoundException;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.xml.sax.SAXException;
-
-public abstract  class DataModel implements PageApplicationAware {
-
+/**
+ * Interface page request, page widget and other data components
+ *  (like models, database etc)
+ *
+ */
+public abstract  class DataLayer implements PageApplicationAware {
+/**
+ * Central application object
+ */
 	private Application application;
 	
 	@Override
@@ -28,6 +34,15 @@ public abstract  class DataModel implements PageApplicationAware {
 		return application;
 	}
 	
+	/**
+	 * The method is used to  process data used in page widgets
+	 * pdata is a data container used in the page widget. It contains
+	 * Already data from the upper layer. It can be used or changed by 
+	 * this method. New data must als added to this data container.
+	 * 
+	 * @param pdata Data used in the page widget 
+	 */
+	
 	protected abstract  void processOwnData(MapData pdata) throws SQLException, DefaultDBConnectionNotSet, ParserConfigurationException, SAXException, IOException, InvalidAliasType, AliasNotFound, LoadingAliasFailed, KeyNotFoundException ;
 	
 	public final MapData processData(MapData pdata) throws SQLException, DefaultDBConnectionNotSet, ParserConfigurationException, SAXException, IOException, InvalidAliasType, AliasNotFound, LoadingAliasFailed, KeyNotFoundException
@@ -37,10 +52,23 @@ public abstract  class DataModel implements PageApplicationAware {
 		return data;
 	}
 	
+	/**
+	 * Get an database connection by name
+	 * 
+	 * @param pname
+	 * @return 
+	 */
 	public DriverManagerDataSource getDB(String pname)
 	{
 		return application.getDB(pname); 
 	}
+	
+	/**
+	 * Get the default database connection
+	 * 
+	 * @return
+	 * @throws DefaultDBConnectionNotSet
+	 */
 	
 	public DriverManagerDataSource getDefaultDB() throws DefaultDBConnectionNotSet 
 	{

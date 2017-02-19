@@ -3,6 +3,8 @@ package org.elaya.page.data;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.elaya.page.core.Data;
+
 public class MapData extends Data{	
 		private Object id;
 		private MapData parent;

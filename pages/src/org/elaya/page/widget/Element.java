@@ -25,10 +25,12 @@ import org.elaya.page.Errors.ReplaceVarException;
 import org.elaya.page.UniqueNamedObjectList.DuplicateItemName;
 import org.elaya.page.application.Application.DefaultDBConnectionNotSet;
 import org.elaya.page.application.Application.InvalidAliasType;
+import org.elaya.page.core.Data;
+import org.elaya.page.core.DynamicMethod;
 import org.elaya.page.core.JSWriter;
 import org.elaya.page.core.Writer;
+import org.elaya.page.core.Data.KeyNotFoundException;
 import org.elaya.page.data.*;
-import org.elaya.page.data.Data.KeyNotFoundException;
 import org.elaya.page.widget.jsplug.JSPlug;
 import org.elaya.page.widget.jsplug.JSPlug.InvalidJsPlugType;
 import org.elaya.page.xml.AfterSetup;
@@ -66,7 +68,7 @@ public abstract class Element<T extends ThemeItemBase> extends DynamicMethod imp
 	private VerticalAlign  verticalAlign=VerticalAlign.TOP;
 	private String layoutWidth;
 	private String layoutHeight;
-	private DataModel dataModel;
+	private DataLayer dataModel;
 	private String condition="";
 	private String jsCondition="";
 	private boolean isNamespace=false; 
@@ -193,12 +195,12 @@ public abstract class Element<T extends ThemeItemBase> extends DynamicMethod imp
 		}
 	}
 	
-	public void setDataModel(DataModel pdataModel)
+	public void setDataModel(DataLayer pdataModel)
 	{
 		dataModel=pdataModel;
 	}
 	
-	public DataModel getDataModel()
+	public DataLayer getDataModel()
 	{
 		return dataModel;
 	}

@@ -1,4 +1,4 @@
-package org.elaya.page.data;
+package org.elaya.page.core;
 
 public interface Dynamic {
 	public static class DynamicException extends Exception

@@ -1,6 +1,6 @@
 package org.elaya.page.widget.listmenu;
+import org.elaya.page.core.Data;
 import org.elaya.page.core.Writer;
-import org.elaya.page.data.Data;
 public class LinkMenuItem extends BuildinListMenuItem{
 
 	private String text;

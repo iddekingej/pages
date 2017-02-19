@@ -8,8 +8,8 @@ import org.elaya.page.Errors.InvalidObjectType;
 import org.elaya.page.application.Application;
 import org.elaya.page.application.Application.DefaultDBConnectionNotSet;
 import org.elaya.page.application.PageApplicationAware;
+import org.elaya.page.core.DynamicMethod;
 import org.elaya.page.core.PageSession;
-import org.elaya.page.data.DynamicMethod;
 import org.json.JSONException;
 
 

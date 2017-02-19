@@ -1,8 +1,8 @@
 package org.elaya.page.widget.table;
 
+import org.elaya.page.core.Data;
+import org.elaya.page.core.LinkData;
 import org.elaya.page.core.Writer;
-import org.elaya.page.data.Data;
-import org.elaya.page.data.LinkData;
 
 public class LinkElement extends BuildInElement {
 	public static class ValueNotLinkData extends Exception{

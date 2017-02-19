@@ -5,8 +5,8 @@ import java.lang.reflect.InvocationTargetException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.elaya.page.core.DynamicObject;
 import org.elaya.page.core.PageSession;
-import org.elaya.page.data.DynamicObject;
 
 public class MethodCallAction extends Action {
 	private String method;

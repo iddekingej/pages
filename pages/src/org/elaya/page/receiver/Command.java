@@ -12,10 +12,10 @@ import org.elaya.page.Errors.InvalidObjectType;
 import org.elaya.page.UniqueNamedObjectList;
 import org.elaya.page.UniqueNamedObjectList.DuplicateItemName;
 import org.elaya.page.application.Application.DefaultDBConnectionNotSet;
+import org.elaya.page.core.Dynamic;
+import org.elaya.page.core.DynamicObject;
 import org.elaya.page.core.PageSession;
-import org.elaya.page.data.Dynamic;
-import org.elaya.page.data.Dynamic.DynamicException;
-import org.elaya.page.data.DynamicObject;
+import org.elaya.page.core.Dynamic.DynamicException;
 import org.json.JSONException;
 
 public class Command {

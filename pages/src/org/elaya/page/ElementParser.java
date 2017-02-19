@@ -6,7 +6,7 @@ import java.util.LinkedList;
 import org.elaya.page.Errors.ReplaceVarException;
 import org.elaya.page.application.AliasData;
 import org.elaya.page.application.Application;
-import org.elaya.page.data.DataModel;
+import org.elaya.page.data.DataLayer;
 import org.elaya.page.widget.Element;
 import org.elaya.page.widget.Page;
 import org.elaya.page.widget.jsplug.JSPlug;
@@ -122,7 +122,7 @@ public class ElementParser extends XMLAppParser {
 		addConfig("element",new XMLConfig(Element.class,null,  "addElement",Element.class));
 		addConfig("options",new XMLCustomConfig("",Element.class));
 		addConfig("jsplug",new XMLConfig(JSPlug.class,null,"addJsPlug",Element.class));
-		addConfig("datamodel",new XMLConfig(DataModel.class,null,"setDataModel",Element.class));
+		addConfig("datamodel",new XMLConfig(DataLayer.class,null,"setDataModel",Element.class));
 		addConfig("data",new XMLCustomConfig("",null));
 	}
 

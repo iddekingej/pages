@@ -5,8 +5,8 @@ import java.util.List;
 
 import org.elaya.page.Errors;
 import org.elaya.page.Errors.InvalidObjectType;
-import org.elaya.page.data.Data;
-import org.elaya.page.data.Data.KeyNotFoundException;
+import org.elaya.page.core.Data;
+import org.elaya.page.core.Data.KeyNotFoundException;
 
 public abstract class OptionsElement extends BuildInFormElement {
 	private String optionVar;

@@ -2,8 +2,8 @@ package org.elaya.page.widget.element;
 
 import java.io.IOException;
 
+import org.elaya.page.core.Data;
 import org.elaya.page.core.Writer;
-import org.elaya.page.data.Data;
 import org.elaya.page.widget.Element;
 import org.elaya.page.widget.PageElement;
 

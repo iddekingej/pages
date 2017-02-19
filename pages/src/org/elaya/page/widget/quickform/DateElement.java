@@ -2,9 +2,9 @@ package org.elaya.page.widget.quickform;
 
 import java.io.IOException;
 
+import org.elaya.page.core.Data;
 import org.elaya.page.core.JSWriter;
 import org.elaya.page.core.Writer;
-import org.elaya.page.data.Data;
 import org.json.JSONException;
 
 public class DateElement extends BuildInFormElement {

@@ -8,7 +8,7 @@ import java.util.Set;
 import org.apache.commons.lang3.StringUtils;
 import org.elaya.page.application.Application.DefaultDBConnectionNotSet;
 import org.elaya.page.core.PageSession;
-import org.elaya.page.data.Dynamic.DynamicException;
+import org.elaya.page.core.Dynamic.DynamicException;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 

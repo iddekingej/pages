@@ -1,7 +1,7 @@
 package org.elaya.page.widget.listmenu;
 
-import org.elaya.page.data.LinkData;
-import org.elaya.page.data.Url;
+import org.elaya.page.core.LinkData;
+import org.elaya.page.core.Url;
 
 public class LinkMenuData extends LinkData {
 	private Object id;

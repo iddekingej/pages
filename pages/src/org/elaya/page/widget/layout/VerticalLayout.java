@@ -2,8 +2,8 @@ package org.elaya.page.widget.layout;
 
 import java.io.IOException;
 
+import org.elaya.page.core.Data;
 import org.elaya.page.core.Writer;
-import org.elaya.page.data.Data;
 import org.elaya.page.widget.Element;
 
 public class VerticalLayout extends Layout {

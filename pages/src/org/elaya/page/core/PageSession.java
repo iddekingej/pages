@@ -11,8 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.elaya.page.data.DynamicObject;
-
 public class PageSession {
 	private HttpServletRequest request;
 	private HttpServletResponse response;

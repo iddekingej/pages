@@ -6,8 +6,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 import javax.servlet.http.HttpSession;
 import org.elaya.page.core.AuthorizationData;
+import org.elaya.page.core.DynamicObject;
 import org.elaya.page.core.PageSession;
-import org.elaya.page.data.DynamicObject;
 import org.elaya.page.filter.Errors.AuthenticationException;
 
 /**

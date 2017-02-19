@@ -7,8 +7,8 @@ import java.sql.SQLException;
 import java.util.Map;
 import org.elaya.page.Errors.InvalidObjectType;
 import org.elaya.page.application.Application.DefaultDBConnectionNotSet;
+import org.elaya.page.core.Dynamic;
 import org.elaya.page.core.PageSession;
-import org.elaya.page.data.Dynamic;
 import org.json.JSONException;
 import org.json.JSONObject;
 

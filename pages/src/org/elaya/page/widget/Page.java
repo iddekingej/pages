@@ -14,10 +14,10 @@ import org.elaya.page.Errors.LoadingAliasFailed;
 import org.elaya.page.application.AliasData;
 import org.elaya.page.application.Application;
 import org.elaya.page.application.Application.InvalidAliasType;
+import org.elaya.page.core.Data;
 import org.elaya.page.core.JSWriter;
 import org.elaya.page.core.Writer;
 import org.elaya.page.application.PageApplicationAware;
-import org.elaya.page.data.Data;
 import org.xml.sax.SAXException;
 
 public class Page extends PageElement<PageThemeItem> implements PageApplicationAware {

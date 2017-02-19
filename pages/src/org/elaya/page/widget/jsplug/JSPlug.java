@@ -1,10 +1,10 @@
 package org.elaya.page.widget.jsplug;
 
+import org.elaya.page.core.Data;
+import org.elaya.page.core.DynamicMethod;
 import org.elaya.page.core.JSWriter;
-import org.elaya.page.data.Data;
-import org.elaya.page.data.Data.KeyNotFoundException;
+import org.elaya.page.core.Data.KeyNotFoundException;
 import org.elaya.page.widget.Element;
-import org.elaya.page.data.DynamicMethod;
 import org.json.JSONException;
 import org.json.JSONObject;
 

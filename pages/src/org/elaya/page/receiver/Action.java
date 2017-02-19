@@ -5,8 +5,8 @@ import java.sql.SQLException;
 import org.elaya.page.application.Application;
 import org.elaya.page.application.Application.DefaultDBConnectionNotSet;
 import org.elaya.page.core.PageSession;
+import org.elaya.page.core.Dynamic.DynamicException;
 import org.elaya.page.application.PageApplicationAware;
-import org.elaya.page.data.Dynamic.DynamicException;
 
 public abstract class Action implements PageApplicationAware {
 	private Application application;

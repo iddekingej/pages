@@ -1,6 +1,6 @@
 package org.elaya.page.widget.jsplug;
+import org.elaya.page.core.Data;
 import org.elaya.page.core.JSWriter;
-import org.elaya.page.data.Data;
 import org.json.JSONException;
 
 public abstract class EventJSPlug extends JSPlug {

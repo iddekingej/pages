@@ -2,8 +2,8 @@ package org.elaya.page.widget.layout;
 
 import org.elaya.page.HorizontalAlign;
 import org.elaya.page.VerticalAlign;
+import org.elaya.page.core.Data;
 import org.elaya.page.core.Writer;
-import org.elaya.page.data.Data;
 import org.elaya.page.widget.Element;
 
 public class GridLayout extends Layout {

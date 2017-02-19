@@ -2,7 +2,7 @@ package org.elaya.page;
 
 import java.lang.reflect.InvocationTargetException;
 
-import org.elaya.page.data.DynamicObject;
+import org.elaya.page.core.DynamicObject;
 
 public class Theme {
 	private String baseName;
