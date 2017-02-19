@@ -55,6 +55,8 @@
 	<cssfile alias="pagecss"
 		value="page.css" />
 	<!-- Security  -->
-	<security alias="sec_compare_matcher" value="org.elaya.page.security.CompareMatcher" />
+	<security alias="sec_compare_matcher" value="org.elaya.page.filter.CompareMatcher" />
 	<security alias="sec_spring_authenticate" value="org.elaya.page.spring.SpringAuthenticateAction"/>
+	<security alias="fil_router" value="org.elaya.page.filter.RouterAction"/>
+	 
 </aliases>

@@ -1,13 +1,10 @@
-package org.elaya.page.security;
+package org.elaya.page.filter;
 
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.elaya.page.core.PageSession;
 
 public class CompareMatcher extends RequestMatcher {

@@ -75,7 +75,7 @@ public abstract class Application{
 		return externalXML;
 	}
 	
-	public void setup() throws LoadingAliasFailed, XMLLoadException
+	public void setup() throws LoadingAliasFailed, XMLLoadException, IllegalArgumentException, IllegalAccessException
 	{
 		loadAliasFiles();
 		processElementVariantFiles();
@@ -302,8 +302,10 @@ public abstract class Application{
  * 
  * @param fileName add aliases in xml file
  * @throws LoadingAliasFailed 
+ * @throws IllegalAccessException 
+ * @throws IllegalArgumentException 
  */
-	private void loadAliasFile(String fileName) throws LoadingAliasFailed    
+	private void loadAliasFile(String fileName) throws LoadingAliasFailed, IllegalArgumentException, IllegalAccessException    
 	{
 		AliasParser parser=new AliasParser(this,aliases);
 		try{		
@@ -324,8 +326,10 @@ public abstract class Application{
 	 * This routine iterates through this list and loads each file.
 	 * 	
 	 * @throws LoadingAliasFailed
+	 * @throws IllegalAccessException 
+	 * @throws IllegalArgumentException 
 	 */
-	private void loadAliasFiles() throws LoadingAliasFailed 
+	private void loadAliasFiles() throws LoadingAliasFailed, IllegalArgumentException, IllegalAccessException 
 	{
 		aliases=new HashMap<>();
 		String[] fileNames=aliasFiles.split(",");

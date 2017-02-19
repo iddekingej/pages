@@ -5,10 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Map;
 import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.lang3.StringUtils;
 import org.elaya.page.application.Application.DefaultDBConnectionNotSet;
 import org.elaya.page.core.PageSession;

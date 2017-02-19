@@ -1,24 +1,10 @@
-package org.elaya.page.security;
+package org.elaya.page.filter;
 
-import java.io.IOException;
-import java.sql.SQLException;
 import java.util.LinkedList;
-
 import javax.servlet.ServletRequest;
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.elaya.page.Errors.AliasNotFound;
-import org.elaya.page.Errors.LoadingAliasFailed;
-import org.elaya.page.application.Application.DefaultDBConnectionNotSet;
-import org.elaya.page.application.Application.InvalidAliasType;
 import org.elaya.page.core.AuthorizationData;
 import org.elaya.page.core.PageSession;
-import org.elaya.page.data.Data.KeyNotFoundException;
-import org.elaya.page.receiver.Receiver.ReceiverException;
-import org.elaya.page.security.Errors.AuthenticationException;
-import org.elaya.page.widget.Element.DisplayException;
-import org.elaya.page.xml.XMLParserBase.XMLLoadException;
-import org.xml.sax.SAXException;
+
 
 public abstract class RequestMatcher implements HasRequestMatchers{
 	private LinkedList<Action> actions=new  LinkedList<>();
@@ -51,7 +37,7 @@ public abstract class RequestMatcher implements HasRequestMatchers{
 	}
 	abstract boolean matchOwnRequest(PageSession session);
 	
-	public MatchActionResult execute(PageSession session) throws AuthenticationException, IOException, ReceiverException, XMLLoadException, SQLException, DefaultDBConnectionNotSet, KeyNotFoundException, ParserConfigurationException, SAXException, InvalidAliasType, AliasNotFound, LoadingAliasFailed, DisplayException {
+	public MatchActionResult execute(PageSession session) throws ActionException {
 		ActionResult result;
 		boolean nextFilter=true;
 		for(Action action:actions){
@@ -76,6 +62,7 @@ public abstract class RequestMatcher implements HasRequestMatchers{
 		actions.add(paction);
 	}
 	
+	@Override
 	public void addRequestMatcher(RequestMatcher prequestMatcher){
 		subMatcher.add(prequestMatcher);
 	}

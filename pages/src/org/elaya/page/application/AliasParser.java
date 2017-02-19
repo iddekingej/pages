@@ -2,6 +2,7 @@ package org.elaya.page.application;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -21,16 +22,16 @@ public class AliasParser extends XMLParserBase<Map<String,AliasData>>{
 	private Set<String> elements=new HashSet<>();
 	private Map<String,AliasData> aliasList;
 	
-	public AliasParser(Application papplication,Map<String,AliasData> paliasList)
+	public AliasParser(Application papplication,Map<String,AliasData> paliasList) throws IllegalArgumentException, IllegalAccessException
 	{
 		aliasList=paliasList;
 		application=papplication;
-		elements.add(AliasData.ALIAS_ELEMENT);
-		elements.add(AliasData.ALIAS_JSFILE);
-		elements.add(AliasData.ALIAS_CSSFILE);
-		elements.add(AliasData.ALIAS_URL);
-		elements.add(AliasData.ALIAS_RECIEVER);
-		elements.add(AliasData.ALIAS_SECURITY);
+		Field[] fields=AliasData.class.getDeclaredFields();
+		for(Field field:fields){
+			if(field.getName().startsWith("ALIAS_")){
+				elements.add(field.get(null).toString());
+			}
+		}
 	}
 	
 	/**

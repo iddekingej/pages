@@ -1,7 +1,7 @@
 package org.elaya.page.spring;
 
 import org.elaya.page.core.AuthorizationData;
-import org.elaya.page.security.AuthenticateAction;
+import org.elaya.page.filter.AuthenticateAction;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;

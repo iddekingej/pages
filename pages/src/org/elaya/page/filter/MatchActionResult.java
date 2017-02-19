@@ -1,4 +1,4 @@
-package org.elaya.page.security;
+package org.elaya.page.filter;
 
 public enum MatchActionResult {
 	SECURITYFAILED

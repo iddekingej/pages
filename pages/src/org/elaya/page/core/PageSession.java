@@ -32,6 +32,11 @@ public class PageSession {
 		response=presponse;
 	}
 	
+	public String getRequestMethod()
+	{
+		return request.getMethod();
+	}
+	
 	public String getURIPath()
 	{
 		return request.getRequestURI().substring(request.getContextPath().length());
@@ -79,7 +84,7 @@ public class PageSession {
 		/*Setup authorization data */
 	}
 	
-	private AuthorizationData initAuthorisationData(Object objectId,Object typeObject,HttpServletRequest request) throws InvalidSessionData, NotSerializableException, InstantiationException, IllegalAccessException,  InvocationTargetException, NoSuchMethodException,  ClassNotFoundException
+	private AuthorizationData initAuthorisationData(Object objectId,Object typeObject) throws InvalidSessionData, NotSerializableException, InstantiationException, IllegalAccessException,  InvocationTargetException, NoSuchMethodException,  ClassNotFoundException
 	{
 		Serializable id;
 		authorisationData=null;
@@ -107,7 +112,7 @@ public class PageSession {
 				Object typeObject=httpSession.getAttribute("type");
 				Object objectId=httpSession.getAttribute("id");
 				if(objectId != null && typeObject != null){
-					initAuthorisationData(objectId,typeObject,request);					
+					initAuthorisationData(objectId,typeObject);					
 				}
 			}
 		

@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 import java.util.LinkedList;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import org.elaya.page.Errors.InvalidObjectType;
 import org.elaya.page.application.Application;
 import org.elaya.page.application.Application.DefaultDBConnectionNotSet;

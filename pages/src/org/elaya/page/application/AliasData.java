@@ -13,6 +13,7 @@ public class AliasData {
 	public static final String ALIAS_URL="url";
 	public static final String ALIAS_RECIEVER="reciever";
 	public static final String ALIAS_SECURITY="security";
+	public static final String ALIAS_ROUTER="router";
 	
 	/**
 	 *  Alias value.  

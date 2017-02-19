@@ -1,7 +1,7 @@
 package org.elaya.page.spring;
 
-import org.elaya.page.security.SecurityFilter;
-import org.elaya.page.security.XmlSecurityParser;
+import org.elaya.page.filter.SecurityFilter;
+import org.elaya.page.filter.XmlSecurityParser;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 

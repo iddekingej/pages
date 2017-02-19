@@ -1,4 +1,4 @@
-package org.elaya.page.security;
+package org.elaya.page.filter;
  
 import java.io.IOException;
 import javax.servlet.Filter;

@@ -5,4 +5,4 @@
  * @author jeroen
  *
  */
-package org.elaya.page.security;
+package org.elaya.page.widget;

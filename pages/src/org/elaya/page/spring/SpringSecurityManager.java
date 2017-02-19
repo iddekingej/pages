@@ -7,8 +7,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.elaya.page.core.PageSession;
 import org.elaya.page.core.PageSession.InvalidSessionData;
-import org.elaya.page.security.FilterManager;
-
+import org.elaya.page.filter.FilterManager;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 

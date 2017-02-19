@@ -15,7 +15,10 @@ import org.elaya.page.xml.XMLAppParser;
 import org.elaya.page.xml.XMLConfig;
 import org.elaya.page.xml.XMLCustomConfig;
 import org.w3c.dom.Node;
-
+/**
+ * Parses a page XML definition to objects
+ *
+ */
 public class ElementParser extends XMLAppParser {
 	
 	public ElementParser(Application papplication) {
@@ -23,6 +26,10 @@ public class ElementParser extends XMLAppParser {
 
 	}
 
+	/**
+	 * Getting stream to input file. This can be an internal (inside jar)
+	 * or an external file
+	 */
 	@Override
 	protected InputStream openFile(String pfileName) throws FileNotFoundException {		
 		return getApplication().getConfigStream(pfileName);		
@@ -55,7 +62,14 @@ public class ElementParser extends XMLAppParser {
 			throw new XMLLoadException("Options list contain invalid tag ",child);
 		}
 	}
-	
+	/**
+	 * Handle options tag definition oelection list 
+	 * , radion buttons, checkboxes or selection lists
+	 * 
+	 * @param parent  Parent Node
+	 * @return        A linkedlist with defined options
+	 * 
+	 */
 	private LinkedList<OptionItem> parseOptions(Node pparent) throws XMLLoadException {
 		LinkedList<OptionItem> list=new LinkedList<>();
 		Node child=pparent.getFirstChild();
@@ -69,6 +83,10 @@ public class ElementParser extends XMLAppParser {
 		return list;
 	}
 	
+	/**
+	 * Parse custome tags.
+	 * On this moment only used for "options" tags
+	 */
 
 	@Override
 	protected Object parseCustom(Object pparent,Node pnode) throws XMLLoadException 
@@ -79,6 +97,13 @@ public class ElementParser extends XMLAppParser {
 			throw new XMLLoadException("Custom node not handled",pnode);
 		}
 	}
+	
+	/**
+	 * Check if node refers a "ElementVariant". 
+	 * 
+	 * return If the node refers to a element vairant, the ElementVariant object is return
+	 *        Otherwise a "null" value is returned 
+	 */
 	
 	@Override
 	protected ElementVariant getVariant(Node node) throws XMLLoadException, ReplaceVarException   

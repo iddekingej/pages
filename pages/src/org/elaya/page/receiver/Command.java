@@ -5,13 +5,8 @@ import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import java.util.List;
 import java.util.Map;
-
 import org.elaya.page.Errors;
 import org.elaya.page.Errors.InvalidObjectType;
 import org.elaya.page.UniqueNamedObjectList;

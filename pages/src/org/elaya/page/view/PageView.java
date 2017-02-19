@@ -51,7 +51,7 @@ public class PageView implements AbstractView{
 
 		Page page=application.loadPage(path,cache);
 		Writer writer=new Writer(application,psession);
-
+		mapData.put("pageSession", psession);
 		page.calculateData(mapData);
 		page.setUrl(psession.getRequestURI());
 		page.display(writer,mapData);

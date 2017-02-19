@@ -3,7 +3,7 @@ package org.elaya.page.spring;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import org.elaya.page.security.AbstractDBAuthenticator;
+import org.elaya.page.filter.AbstractDBAuthenticator;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;

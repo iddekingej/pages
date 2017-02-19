@@ -34,7 +34,7 @@ public class ApplicationXmlParser extends XMLParser {
 	}
 	
 	@Override
-	protected void afterCreate(Object object) throws LoadingAliasFailed, org.elaya.page.xml.XMLParserBase.XMLLoadException
+	protected void afterCreate(Object object) throws LoadingAliasFailed, org.elaya.page.xml.XMLParserBase.XMLLoadException, IllegalArgumentException, IllegalAccessException
 	{
 		if(object instanceof Application){
 			((Application) object).setup();

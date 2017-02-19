@@ -1,16 +1,14 @@
-package org.elaya.page.security;
+package org.elaya.page.filter;
 
 
 import java.io.NotSerializableException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-
 import org.elaya.page.core.AuthorizationData;
 import org.elaya.page.core.PageSession;
 import org.elaya.page.data.DynamicObject;
-import org.elaya.page.security.Errors.AuthenticationException;
+import org.elaya.page.filter.Errors.AuthenticationException;
 
 /**
  * Handle authentication. A authentication token(username/password for example) is posted to a url
@@ -130,9 +128,13 @@ public class AuthenticateAction extends Action {
 	}
 	
 	@Override
-	public ActionResult execute(PageSession session) throws AuthenticationException 
+	public ActionResult execute(PageSession session) throws ActionException  
 	{
-				return checkAuthentication(session);
+		try{
+			return checkAuthentication(session);
+		}catch(Exception e){
+			throw new ActionException(e);
+		}
 		
 	}
 
