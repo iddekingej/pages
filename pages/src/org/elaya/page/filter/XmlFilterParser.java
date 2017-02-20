@@ -6,7 +6,7 @@ import org.elaya.page.application.AliasNamespace;
 import org.elaya.page.xml.XMLAppParser;
 import org.elaya.page.xml.XMLConfig;
 
-public class XmlSecurityParser extends XMLAppParser {
+public class XmlFilterParser extends XMLAppParser {
 
 	@Override
 	protected InputStream openFile(String pfileName) throws FileNotFoundException {

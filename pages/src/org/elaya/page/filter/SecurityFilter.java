@@ -26,7 +26,7 @@ public class SecurityFilter implements Filter {
 		}	
 	}
 
-	public void initParser(XmlSecurityParser pparser)
+	public void initParser(XmlFilterParser pparser)
 	{
 		/* Can be used to initialized parser further */
 	}
@@ -41,7 +41,7 @@ public class SecurityFilter implements Filter {
 		} else {
 			throw new ServletException("Application not set");
 		}
-		XmlSecurityParser parser=new XmlSecurityParser();
+		XmlFilterParser parser=new XmlFilterParser();
 		parser.setApplication(application);
 		initParser(parser);		
 		try {			

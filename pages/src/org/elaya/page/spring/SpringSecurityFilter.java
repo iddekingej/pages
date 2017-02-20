@@ -1,7 +1,7 @@
 package org.elaya.page.spring;
 
 import org.elaya.page.filter.SecurityFilter;
-import org.elaya.page.filter.XmlSecurityParser;
+import org.elaya.page.filter.XmlFilterParser;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
@@ -16,7 +16,7 @@ public class SpringSecurityFilter extends SecurityFilter implements ApplicationC
 	}
 	
 	@Override
-	public void initParser(XmlSecurityParser pparser)
+	public void initParser(XmlFilterParser pparser)
 	{
 		pparser.addInitializer(new ApplicationContextInitializer(applicationContext));
 	}
