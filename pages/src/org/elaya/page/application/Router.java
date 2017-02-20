@@ -61,7 +61,6 @@ public class Router implements PageApplicationAware {
 			route.handleRoute(psession, application);
 			return true;
 		}
-		System.out.println(psession.getMethod()+"-"+psession.getURIPath()+" unhandled");
 		return false;
 	}
 

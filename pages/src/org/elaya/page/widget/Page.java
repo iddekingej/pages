@@ -11,7 +11,7 @@ import org.elaya.page.PageThemeItem;
 import org.elaya.page.Theme;
 import org.elaya.page.Errors.AliasNotFound;
 import org.elaya.page.Errors.LoadingAliasFailed;
-import org.elaya.page.application.AliasData;
+import org.elaya.page.application.AliasNamespace;
 import org.elaya.page.application.Application;
 import org.elaya.page.application.Application.InvalidAliasType;
 import org.elaya.page.core.Data;
@@ -77,7 +77,7 @@ public class Page extends PageElement<PageThemeItem> implements PageApplicationA
 		return "pages.page";
 	}
 
-	private LinkedHashSet<String> processSetList(LinkedHashSet<String> pin,String ptype) throws ParserConfigurationException, SAXException, IOException, InvalidAliasType, AliasNotFound, LoadingAliasFailed 
+	private LinkedHashSet<String> processSetList(LinkedHashSet<String> pin,AliasNamespace ptype) throws ParserConfigurationException, SAXException, IOException, InvalidAliasType, AliasNotFound, LoadingAliasFailed 
 	{
 		LinkedHashSet<String> returnValue=new LinkedHashSet<>();
 		for(String value:pin){
@@ -106,8 +106,8 @@ public class Page extends PageElement<PageThemeItem> implements PageApplicationA
 			getAllCssFiles(css);
 			getAllJsFiles(js);
 
-			LinkedHashSet<String> procCss=processSetList(css,AliasData.ALIAS_CSSFILE);
-			LinkedHashSet<String> procJs=processSetList(js,AliasData.ALIAS_JSFILE);
+			LinkedHashSet<String> procCss=processSetList(css,AliasNamespace.CSSFILE);
+			LinkedHashSet<String> procJs=processSetList(js,AliasNamespace.JSFILE);
 
 			themeItem.pageHeader(pwriter,documentType,procJs,procCss);	
 		}catch(Exception e){

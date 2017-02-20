@@ -6,6 +6,7 @@ public class XMLConfig {
 	private boolean   custom;
 	private Class<?>  parentClass;
 	private String    defaultSetMethod;    
+	private Class<?>    xmlParser=null;
 	/**
 	 * Creates a xml parser config node. This information determens how to parse
 	 * a xml expression to an object
@@ -25,6 +26,16 @@ public class XMLConfig {
 		defaultSetMethod = pdefaultSetMethod;
 		parentClass      = pparentClass;
 	}
+	public void setXMLParser(Class<?> pparser)
+	{
+		xmlParser=pparser;
+	}
+	
+	public Class<?> getXMLParser()
+	{
+		return xmlParser;
+	}
+	
 	public Class<?> getBaseClass(){ return baseClass;}
 	public Class<?> getDefaultClass(){ return defaultClass;}
 	

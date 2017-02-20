@@ -6,7 +6,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.elaya.page.Errors.AliasNotFound;
 import org.elaya.page.Errors.LoadingAliasFailed;
 import org.elaya.page.Errors.ReplaceVarException;
-import org.elaya.page.application.AliasData;
+import org.elaya.page.application.AliasNamespace;
 import org.elaya.page.application.Application;
 import org.elaya.page.application.Application.InvalidAliasType;
 import org.xml.sax.SAXException;
@@ -77,7 +77,7 @@ public abstract class AbstractWriter {
 	{
 		String url=replaceVariables(data,purl);
 		if(url.startsWith("@")){
-			url=application.getAlias(url.substring(1),AliasData.ALIAS_URL,true);
+			url=application.getAlias(url.substring(1),AliasNamespace.URL,true);
 		} 
 		if(url.startsWith("+")){
 			return getBasePath()+"/"+url.substring(1);

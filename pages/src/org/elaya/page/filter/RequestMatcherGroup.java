@@ -13,7 +13,7 @@ public class RequestMatcherGroup implements HasRequestMatchers{
 		for(RequestMatcher requestMatcher:requestMatchers){
 			found=requestMatcher.matchRequest(session);			
 			if(found != null){
-				return found;
+				break;
 			}
 		}
 		return found;

@@ -24,7 +24,8 @@ public class JsonHandlerView extends AbstractView {
 	@Override
 	protected void renderMergedOutputModel(Map<String, Object> model, HttpServletRequest prequest,
 			HttpServletResponse presponse) throws Exception {		
-		ReceiverParser parser=new ReceiverParser(application);
+		ReceiverParser parser=new ReceiverParser();
+		parser.setApplication(application);
 		Receiver rec=parser.parse(file,Receiver.class);
 		rec.handleRequest(new PageSession(prequest, presponse));
 	}

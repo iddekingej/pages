@@ -41,7 +41,8 @@ public class SecurityFilter implements Filter {
 		} else {
 			throw new ServletException("Application not set");
 		}
-		XmlSecurityParser parser=new XmlSecurityParser(application);
+		XmlSecurityParser parser=new XmlSecurityParser();
+		parser.setApplication(application);
 		initParser(parser);		
 		try {			
 			securityManager=parser.parse(filterFileName,FilterManager.class);

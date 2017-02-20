@@ -6,17 +6,23 @@ import java.io.InputStream;
 import org.elaya.page.xml.XMLAppParser;
 import org.elaya.page.xml.XMLConfig;
 
+/**
+ * This class is a parser,that parses a xml router definition
+ * to a router object
+ */
+
 public class RouterParser extends XMLAppParser {
 
-	public RouterParser(Application papplication) {
-		super(papplication);
-	}
-
 	@Override
-	public String getAliasNamespace() {
-		return null;
+	public AliasNamespace getAliasNamespace() {
+		return AliasNamespace.ROUTER;
 	}
 
+	/**
+	 * Define how the xml is parsed
+	 * There are 2 element :routes and route
+	 */
+	
 	@Override
 	protected void setupConfig() {
 		addConfig("routes",new XMLConfig(Router.class,Router.class,"",null));
@@ -25,7 +31,6 @@ public class RouterParser extends XMLAppParser {
 
 	@Override
 	protected String getName(Object pobject) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

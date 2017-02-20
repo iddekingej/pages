@@ -2,7 +2,8 @@ package org.elaya.page;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import org.elaya.page.application.Application;
+
+import org.elaya.page.application.AliasNamespace;
 import org.elaya.page.xml.XMLAppParser;
 import org.elaya.page.xml.XMLConfig;
 import org.elaya.page.xml.XMLCustomConfig;
@@ -10,9 +11,6 @@ import org.w3c.dom.Node;
 
 public class ElementVariantParser extends XMLAppParser{
 
-	public ElementVariantParser(Application papplication) {
-		super(papplication);
-	}
 	
 	/**
 	 * Get the next element node ignore other types of node.
@@ -61,8 +59,8 @@ public class ElementVariantParser extends XMLAppParser{
 	 */
 
 	@Override
-	public String getAliasNamespace() {
-		return "element";
+	public AliasNamespace getAliasNamespace() {
+		return AliasNamespace.ELEMENT;
 	}
 
 	@Override

@@ -54,7 +54,8 @@ public class PageLoader {
 	private Page loadNewPage(String pfileName,boolean pcache) throws XMLLoadException, IOException
 	{
 		Page page;
-		ElementParser parser=new ElementParser(application);
+		ElementParser parser=new ElementParser();
+		parser.setApplication(application);
 		initUiParser(parser);		
 		page=parser.parse(pfileName,Page.class);	
 		if(pcache){

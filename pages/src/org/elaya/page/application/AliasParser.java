@@ -2,10 +2,8 @@ package org.elaya.page.application;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.lang.reflect.Field;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 import org.elaya.page.Errors.ReplaceVarException;
 import org.elaya.page.xml.XMLParserBase;
@@ -19,18 +17,16 @@ public class AliasParser extends XMLParserBase<Map<String,AliasData>>{
 	 */
 	private String prefix="";
 	private Application application;
-	private Set<String> elements=new HashSet<>();
+	private HashMap<String,AliasNamespace> elements=new HashMap<>();
 	private Map<String,AliasData> aliasList;
 	
-	public AliasParser(Application papplication,Map<String,AliasData> paliasList) throws IllegalArgumentException, IllegalAccessException
+	public AliasParser(Application papplication,Map<String,AliasData> paliasList) throws IllegalAccessException
 	{
 		aliasList=paliasList;
 		application=papplication;
-		Field[] fields=AliasData.class.getDeclaredFields();
-		for(Field field:fields){
-			if(field.getName().startsWith("ALIAS_")){
-				elements.add(field.get(null).toString());
-			}
+		AliasNamespace[] items=AliasNamespace.class.getEnumConstants();
+		for(AliasNamespace item:items){
+			elements.put(item.getTag(), item);			
 		}
 	}
 	
@@ -46,7 +42,7 @@ public class AliasParser extends XMLParserBase<Map<String,AliasData>>{
 		Node alias;
 		String aliasValue; 
 		Node className;
-		if(elements.contains(node.getNodeName())){
+		if(elements.containsKey(node.getNodeName())){
 			alias=node.getAttributes().getNamedItem("alias");
 			className=node.getAttributes().getNamedItem("value");
 			if(alias==null){
@@ -61,7 +57,7 @@ public class AliasParser extends XMLParserBase<Map<String,AliasData>>{
 				throw new XMLLoadException("Alias '"+aliasValue+"' allready exists",node);
 			} 		
 			
-			aliasList.put(aliasValue,new AliasData(node.getNodeName(),prefix.toString()+className.getNodeValue()));
+			aliasList.put(aliasValue,new AliasData(elements.get(node.getNodeName()),prefix+className.getNodeValue()));
 						
 		} else {
 			throw new XMLLoadException("Wrong type of alias tag  found:"+node.getNodeName(),node);
@@ -84,7 +80,7 @@ public class AliasParser extends XMLParserBase<Map<String,AliasData>>{
 		 
 		while(currentDef!=null){
 			if(currentDef.getNodeType()==Node.ELEMENT_NODE){
-				if(elements.contains(currentDef.getNodeName())){
+				if(elements.containsKey(currentDef.getNodeName())){
 					parseAliasNode(currentDef);
 				} else if("prefix".equals(currentDef.getNodeName())){
 					String prvPrefix=prefix;

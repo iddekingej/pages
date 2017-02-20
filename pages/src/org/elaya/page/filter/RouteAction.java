@@ -44,12 +44,15 @@ public class RouteAction extends Action implements PageApplicationAware{
 	{
 		try{
 			if(router==null){
-				RouterParser parser=new RouterParser(getApplication());
+				RouterParser parser=new RouterParser();
+				parser.setApplication(application);
 				router=parser.parse(xmlFile,Router.class);
 			}
-			router.handleRoute(psession);
-			
-			return ActionResult.NONEXTFILTER;
+			if(router.handleRoute(psession)){
+				return ActionResult.NONEXTFILTER;
+			} else {
+				return ActionResult.NEXTFILTER;
+			}
 		}catch(Exception e){
 			throw new ActionException(e);
 		}

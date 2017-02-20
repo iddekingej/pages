@@ -23,7 +23,8 @@ public class RecieverAction extends Action implements PageApplicationAware {
 	@Override
 	public ActionResult execute(PageSession session) throws ActionException  {
 		try{
-			ReceiverParser parser=new ReceiverParser(getApplication());
+			ReceiverParser parser=new ReceiverParser();
+			parser.setApplication(application);
 			Receiver rec=parser.parse(reciever,Receiver.class);
 			rec.handleRequest(session);
 			return ActionResult.NONEXTFILTER;

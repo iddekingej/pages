@@ -7,14 +7,6 @@ package org.elaya.page.application;
  *   Alias are managed in the Application object 
  */
 public class AliasData {
-	public static final String ALIAS_ELEMENT="element";
-	public static final String ALIAS_JSFILE="jsfile";
-	public static final String ALIAS_CSSFILE="cssfile";
-	public static final String ALIAS_URL="url";
-	public static final String ALIAS_RECIEVER="reciever";
-	public static final String ALIAS_SECURITY="security";
-	public static final String ALIAS_ROUTER="router";
-	
 	/**
 	 *  Alias value.  
 	 */
@@ -23,7 +15,7 @@ public class AliasData {
 	 *  Alias type. Used for checking if the alias is the correct type
 	 */
 	
-	private String type;
+	private AliasNamespace type;
 	
 	/**
 	 * Constructor of alias data
@@ -31,14 +23,14 @@ public class AliasData {
 	 * @param ptype    Type of alias
 	 * @param pvalue   value of alias
 	 */
-	public AliasData(String ptype,String pvalue) {
+	public AliasData(AliasNamespace ptype,String pvalue) {
 		value=pvalue;
 		type=ptype;
 	}
 
 
 	public String getValue(){ return value;}
-	public String getType(){ return type;}
+	public AliasNamespace getType(){ return type;}
 
 
 }

@@ -143,7 +143,7 @@ public abstract class XMLParser extends XMLParserBase<Object> {
 	}
 
 
-	private XMLConfig getConfig(Node node){
+	protected XMLConfig getConfig(Node node){
 		String nodeName=node.getNodeName();
 		if(! configs.containsKey(nodeName)){
 			new XMLLoadException("Unknown node type :'"+nodeName+"'",node);
@@ -268,14 +268,24 @@ public abstract class XMLParser extends XMLParserBase<Object> {
 		}
 	}
 	
+	/**
+	 * Create object by the "class" attribute.
+	 * If there is not class attribute, the default class defined in the
+	 * parse config is used.
+	 * When there is not default class an exception is raide 
+	 * 
+	 * @param pnode
+	 * @param pdefault
+	 * @return create object based on information in pnode is created
+	 */
 	private Object createByClass(Node pnode,Class<?> pdefault) throws XMLLoadException, InstantiationException, IllegalAccessException, DynamicException, NormalizeClassNameException, InvocationTargetException, NoSuchMethodException, ClassNotFoundException,  ReplaceVarException  
 	{
-		String className=getAttributeValue(pnode,"class");
+		String className=getAttributeValue(pnode,"class");		
 		Object object;
 		if(className == null){
 			if(pdefault ==null){
 				throw new XMLLoadException("Node "+pnode.getNodeName()+" requires 'class' property ",pnode);		
-			} else {
+			} else {				
 				object=pdefault.newInstance();			
 			}
 		} else {
@@ -322,7 +332,9 @@ public abstract class XMLParser extends XMLParserBase<Object> {
 		Object object;
 		String fileNameAttr=getAttributeValue(node,"file");
 		if(fileNameAttr != null){
-			object=subParse(fileNameAttr);
+			object=subParse(node,fileNameAttr);
+			setParent(parent,object,node,info);
+
 		} else {			
 			String ref=getAttributeValue(node,"ref");
 			if(ref != null){
@@ -334,6 +346,7 @@ public abstract class XMLParser extends XMLParserBase<Object> {
 					throw new XMLLoadException("Referenced item '"+ref+"' does not exists",node);					
 				}
 			} else {
+				
 				object=createByClass(node,info.getDefaultClass());
 				if(object != null){
 					parseNamedObject(object,node);

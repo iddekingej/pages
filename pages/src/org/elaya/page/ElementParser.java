@@ -4,9 +4,9 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.LinkedList;
 import org.elaya.page.Errors.ReplaceVarException;
-import org.elaya.page.application.AliasData;
-import org.elaya.page.application.Application;
+import org.elaya.page.application.AliasNamespace;
 import org.elaya.page.data.DataLayer;
+import org.elaya.page.data.XMLDataLayerParser;
 import org.elaya.page.widget.Element;
 import org.elaya.page.widget.Page;
 import org.elaya.page.widget.jsplug.JSPlug;
@@ -21,11 +21,6 @@ import org.w3c.dom.Node;
  */
 public class ElementParser extends XMLAppParser {
 	
-	public ElementParser(Application papplication) {
-		super(papplication);		
-
-	}
-
 	/**
 	 * Getting stream to input file. This can be an internal (inside jar)
 	 * or an external file
@@ -122,7 +117,9 @@ public class ElementParser extends XMLAppParser {
 		addConfig("element",new XMLConfig(Element.class,null,  "addElement",Element.class));
 		addConfig("options",new XMLCustomConfig("",Element.class));
 		addConfig("jsplug",new XMLConfig(JSPlug.class,null,"addJsPlug",Element.class));
-		addConfig("datamodel",new XMLConfig(DataLayer.class,null,"setDataModel",Element.class));
+		XMLConfig config=new XMLConfig(DataLayer.class,null,"setDataModel",Element.class);
+		config.setXMLParser(XMLDataLayerParser.class);
+		addConfig("datamodel",config);
 		addConfig("data",new XMLCustomConfig("",null));
 	}
 
@@ -135,8 +132,8 @@ public class ElementParser extends XMLAppParser {
 	}
 
 	@Override
-	public String getAliasNamespace() {
-		return AliasData.ALIAS_ELEMENT;
+	public AliasNamespace getAliasNamespace() {
+		return AliasNamespace.ELEMENT;
 	}
 
 }

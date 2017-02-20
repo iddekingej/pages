@@ -58,7 +58,7 @@ public abstract class Application{
 
 		private static final long serialVersionUID = -7739276897593055425L;
 
-		public InvalidAliasType(String pname,String ptypeReq,String ptypeGot)
+		public InvalidAliasType(String pname,AliasNamespace ptypeReq,AliasNamespace ptypeGot)
 		{
 			super("Invalid alias '"+pname+" type, '"+ptypeReq+"' expected but '"+ptypeGot+"' found");
 		}
@@ -75,7 +75,7 @@ public abstract class Application{
 		return externalXML;
 	}
 	
-	public void setup() throws LoadingAliasFailed, XMLLoadException, IllegalArgumentException, IllegalAccessException
+	public void setup() throws LoadingAliasFailed, XMLLoadException, IllegalAccessException
 	{
 		loadAliasFiles();
 		processElementVariantFiles();
@@ -155,7 +155,7 @@ public abstract class Application{
 	}
 	//--(xml parsing )-------------------
 	
-	public String normalizeClassName(String name,String ptype) throws NormalizeClassNameException 
+	public String normalizeClassName(String name,AliasNamespace ptype) throws NormalizeClassNameException 
 	{
 		if(name.charAt(0)=='.'){
 			return classBase+name;
@@ -288,7 +288,8 @@ public abstract class Application{
 		//elementVariants=new ElementVariantList();
 		String[] files=elementVariantFiles.split(",");
 		for(String variantFile:files){
-			ElementVariantParser variantParser=new ElementVariantParser(this);
+			ElementVariantParser variantParser=new ElementVariantParser();
+			variantParser.setApplication(this);
 			elementVariants=variantParser.parse(variantFile,ElementVariantList.class);
 		}
 	}
@@ -305,7 +306,7 @@ public abstract class Application{
  * @throws IllegalAccessException 
  * @throws IllegalArgumentException 
  */
-	private void loadAliasFile(String fileName) throws LoadingAliasFailed, IllegalArgumentException, IllegalAccessException    
+	private void loadAliasFile(String fileName) throws LoadingAliasFailed,  IllegalAccessException    
 	{
 		AliasParser parser=new AliasParser(this,aliases);
 		try{		
@@ -329,7 +330,7 @@ public abstract class Application{
 	 * @throws IllegalAccessException 
 	 * @throws IllegalArgumentException 
 	 */
-	private void loadAliasFiles() throws LoadingAliasFailed, IllegalArgumentException, IllegalAccessException 
+	private void loadAliasFiles() throws LoadingAliasFailed,  IllegalAccessException 
 	{
 		aliases=new HashMap<>();
 		String[] fileNames=aliasFiles.split(",");
@@ -343,7 +344,7 @@ public abstract class Application{
 		return aliases;
 	}
 	 
-	public String getAlias(String pname,String ptype) throws LoadingAliasFailed, InvalidAliasType  
+	public String getAlias(String pname,AliasNamespace ptype) throws LoadingAliasFailed, InvalidAliasType  
 	{
 		AliasData data=aliases.get(pname);
 		if(data != null){			
@@ -355,7 +356,7 @@ public abstract class Application{
 		return null;
 	}
 	
-	public String getAlias(String pname,String ptype,boolean pmandatory) throws ParserConfigurationException, SAXException, IOException, InvalidAliasType, Errors.AliasNotFound, LoadingAliasFailed 
+	public String getAlias(String pname,AliasNamespace ptype,boolean pmandatory) throws ParserConfigurationException, SAXException, IOException, InvalidAliasType, Errors.AliasNotFound, LoadingAliasFailed 
 	{
 		String returnValue=getAlias(pname,ptype);
 		if((returnValue==null) && pmandatory){
@@ -366,7 +367,7 @@ public abstract class Application{
 
 	public Url getUrlByAlias(String pname) throws ParserConfigurationException, SAXException, IOException,  InvalidAliasType, Errors.AliasNotFound, LoadingAliasFailed 
 	{
-		return new Url(getAlias(pname,AliasData.ALIAS_URL,true));
+		return new Url(getAlias(pname,AliasNamespace.URL,true));
 	}
 	
 	public String getThemeBase(){

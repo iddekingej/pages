@@ -2,16 +2,11 @@ package org.elaya.page.receiver;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import org.elaya.page.application.AliasData;
-import org.elaya.page.application.Application;
+import org.elaya.page.application.AliasNamespace;
 import org.elaya.page.xml.XMLAppParser;
 import org.elaya.page.xml.XMLConfig;
 
 public class ReceiverParser extends XMLAppParser {
-
-	public ReceiverParser(Application application) {
-		super(application);
-	}
 
 	@Override
 	protected InputStream openFile(String pfileName) throws FileNotFoundException {
@@ -33,9 +28,9 @@ public class ReceiverParser extends XMLAppParser {
 	}
 
 @Override
-public String getAliasNamespace() {
+public AliasNamespace getAliasNamespace() {
 
-	return AliasData.ALIAS_RECIEVER;
+	return AliasNamespace.RECIEVER;
 }
 
 }

@@ -2,6 +2,7 @@ package org.elaya.page.xml;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -63,7 +64,7 @@ public abstract class XMLParserBase<T> {
 	protected abstract T parseRootNode(Node node) throws XMLLoadException;
 	protected abstract InputStream openFile(String fileName) throws FileNotFoundException;
 
-	protected Object subParse(String pfileName) throws XMLLoadException
+	protected Object subParse(Node pnode,String pfileName) throws XMLLoadException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException
 	{
 		String prvFileName=fileName;
 		fileName=pfileName;

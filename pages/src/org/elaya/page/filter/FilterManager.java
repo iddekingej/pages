@@ -45,11 +45,13 @@ public class FilterManager  {
 		MatchActionResult result;
 		boolean nextFilter=true;
 		for(RequestMatcherGroup rmGroup:requestMatcherGroups){
+			
 			result=rmGroup.execute(session);
 			if(result==MatchActionResult.NONEXTFILTER){
+				
 				nextFilter=false;
 			} else if((result==MatchActionResult.NOTAUTHORIZED) ||
-			   (result==MatchActionResult.SECURITYFAILED)){
+			   (result==MatchActionResult.SECURITYFAILED)){				
 				session.redirect(loginPageUrl);
 				return false;
 			}

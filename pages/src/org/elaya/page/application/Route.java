@@ -108,7 +108,8 @@ public class Route {
 	
 	private void handleReciever(PageSession psession,Application papplication) throws XMLLoadException, ReceiverException
 	{
-		ReceiverParser parser=new ReceiverParser(papplication);
+		ReceiverParser parser=new ReceiverParser();
+		parser.setApplication(papplication);
 		Receiver rec=parser.parse(xmlFile,Receiver.class);
 		rec.handleRequest(psession);
 	}
