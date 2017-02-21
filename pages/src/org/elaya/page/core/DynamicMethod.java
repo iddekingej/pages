@@ -9,7 +9,6 @@ public class DynamicMethod implements Dynamic{
 		}
 	}
 	
-
 	@Override
 	public Object get(String pname) throws DynamicException  
 	{			

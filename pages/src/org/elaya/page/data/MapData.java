@@ -3,6 +3,8 @@ package org.elaya.page.data;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.elaya.page.Errors;
+import org.elaya.page.Errors.InvalidTypeException;
 import org.elaya.page.core.Data;
 
 public class MapData extends Data{	
@@ -69,7 +71,16 @@ public class MapData extends Data{
 			
 		}
 		
-
+		@SuppressWarnings("unchecked")
+		public <T> T get(String pname,Class<T> ptype) throws InvalidTypeException, KeyNotFoundException
+		{
+			Object object=get(pname);
+			if(ptype.isInstance(object)){
+				return (T)object;
+			}
+			throw new Errors.InvalidTypeException("Expect "+ptype.getName()+" but "+object.getClass().getName());
+		}
+		
 		@Override
 		public boolean containsKey(String pname){
 			if(attributes.containsKey(pname)){

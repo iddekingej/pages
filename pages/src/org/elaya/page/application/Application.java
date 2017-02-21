@@ -157,7 +157,9 @@ public abstract class Application{
 	
 	public String normalizeClassName(String name,AliasNamespace ptype) throws NormalizeClassNameException 
 	{
-		if(name.charAt(0)=='.'){
+		if(name.isEmpty()){
+			return name;
+		}else if(name.charAt(0)=='.'){
 			return classBase+name;
 		} else if(name.charAt(0)=='@'){
 			try{

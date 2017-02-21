@@ -8,6 +8,7 @@ import java.util.Set;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.elaya.page.Errors.AliasNotFound;
+import org.elaya.page.Errors.InvalidTypeException;
 import org.elaya.page.Errors.LoadingAliasFailed;
 import org.elaya.page.application.Application.DefaultDBConnectionNotSet;
 import org.elaya.page.application.Application.InvalidAliasType;
@@ -98,7 +99,7 @@ public class Route {
 		xmlFile=pxmlFile;
 	}
 	
-	private void handlePage(PageSession psession,Application papplication) throws IOException, DisplayException, SQLException, DefaultDBConnectionNotSet, KeyNotFoundException, ParserConfigurationException, SAXException, InvalidAliasType, AliasNotFound, LoadingAliasFailed, XMLLoadException
+	private void handlePage(PageSession psession,Application papplication) throws IOException, DisplayException, SQLException, DefaultDBConnectionNotSet, KeyNotFoundException, ParserConfigurationException, SAXException, InvalidAliasType, AliasNotFound, LoadingAliasFailed, XMLLoadException, InvalidTypeException
 	{
 		PageView view=new PageView(xmlFile,papplication);
 		view.setCache(cache);
@@ -114,7 +115,7 @@ public class Route {
 		rec.handleRequest(psession);
 	}
 	
-	public void handleRoute(PageSession psession,Application papplication) throws IOException, DisplayException, SQLException, DefaultDBConnectionNotSet, KeyNotFoundException, ParserConfigurationException, SAXException, InvalidAliasType, AliasNotFound, LoadingAliasFailed, XMLLoadException, ReceiverException, InvalidRouteTypeException
+	public void handleRoute(PageSession psession,Application papplication) throws IOException, DisplayException, SQLException, DefaultDBConnectionNotSet, KeyNotFoundException, ParserConfigurationException, SAXException, InvalidAliasType, AliasNotFound, LoadingAliasFailed, XMLLoadException, ReceiverException, InvalidRouteTypeException, InvalidTypeException
 	{
 		if(routeType==RouteType.PAGE){
 			handlePage(psession,papplication);

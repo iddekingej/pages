@@ -20,6 +20,7 @@ import org.elaya.page.VerticalAlign;
 import org.elaya.page.Errors.AliasNotFound;
 import org.elaya.page.Errors.DuplicateElementOnPage;
 import org.elaya.page.Errors.InvalidElement;
+import org.elaya.page.Errors.InvalidTypeException;
 import org.elaya.page.Errors.LoadingAliasFailed;
 import org.elaya.page.Errors.ReplaceVarException;
 import org.elaya.page.UniqueNamedObjectList.DuplicateItemName;
@@ -183,7 +184,7 @@ public abstract class Element<T extends ThemeItemBase> extends DynamicMethod imp
 		return value.equals(true);
 	}
 	
-	public void calculateData(MapData pdata) throws SQLException, DefaultDBConnectionNotSet, KeyNotFoundException, ParserConfigurationException, SAXException, IOException, InvalidAliasType, AliasNotFound, LoadingAliasFailed{
+	public void calculateData(MapData pdata) throws SQLException, DefaultDBConnectionNotSet, KeyNotFoundException, ParserConfigurationException, SAXException, IOException, InvalidAliasType, AliasNotFound, LoadingAliasFailed, InvalidTypeException{
 		MapData data=pdata;
 		if(dataModel != null){
 			data=dataModel.processData(pdata);

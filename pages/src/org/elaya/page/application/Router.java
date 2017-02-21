@@ -8,6 +8,7 @@ import java.util.List;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.elaya.page.Errors.AliasNotFound;
+import org.elaya.page.Errors.InvalidTypeException;
 import org.elaya.page.Errors.LoadingAliasFailed;
 import org.elaya.page.application.Application.DefaultDBConnectionNotSet;
 import org.elaya.page.application.Application.InvalidAliasType;
@@ -55,7 +56,7 @@ public class Router implements PageApplicationAware {
 		return null;
 	}
 	
-	public boolean handleRoute(PageSession psession) throws IOException, DisplayException, SQLException, DefaultDBConnectionNotSet, KeyNotFoundException, ParserConfigurationException, SAXException, InvalidAliasType, AliasNotFound, LoadingAliasFailed, XMLLoadException, ReceiverException, InvalidRouteTypeException{		
+	public boolean handleRoute(PageSession psession) throws IOException, DisplayException, SQLException, DefaultDBConnectionNotSet, KeyNotFoundException, ParserConfigurationException, SAXException, InvalidAliasType, AliasNotFound, LoadingAliasFailed, XMLLoadException, ReceiverException, InvalidRouteTypeException, InvalidTypeException{		
 		Route route=getRoute(psession.getMethod(),psession.getURIPath());
 		if(route != null){
 			route.handleRoute(psession, application);

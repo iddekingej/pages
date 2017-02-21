@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.elaya.page.Errors.AliasNotFound;
+import org.elaya.page.Errors.InvalidTypeException;
 import org.elaya.page.Errors.LoadingAliasFailed;
 import org.elaya.page.application.Application;
 import org.elaya.page.application.Application.DefaultDBConnectionNotSet;
@@ -47,7 +48,7 @@ public class PageView implements AbstractView{
 	}
 	
 	@Override
-	public void render(MapData mapData, PageSession psession) throws IOException, DisplayException, SQLException, DefaultDBConnectionNotSet, KeyNotFoundException, ParserConfigurationException, SAXException, InvalidAliasType, AliasNotFound, LoadingAliasFailed, XMLLoadException {
+	public void render(MapData mapData, PageSession psession) throws IOException, DisplayException, SQLException, DefaultDBConnectionNotSet, KeyNotFoundException, ParserConfigurationException, SAXException, InvalidAliasType, AliasNotFound, LoadingAliasFailed, XMLLoadException, InvalidTypeException {
 
 		Page page=application.loadPage(path,cache);
 		Writer writer=new Writer(application,psession);

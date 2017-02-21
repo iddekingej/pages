@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.elaya.page.Errors.AliasNotFound;
+import org.elaya.page.Errors.InvalidTypeException;
 import org.elaya.page.Errors.LoadingAliasFailed;
 import org.elaya.page.application.Application.DefaultDBConnectionNotSet;
 import org.elaya.page.application.Application.InvalidAliasType;
@@ -17,5 +18,5 @@ import org.xml.sax.SAXException;
 
 @FunctionalInterface
 public interface AbstractView {
-	public void render(MapData mapData, PageSession pageSession) throws IOException, DisplayException, SQLException, DefaultDBConnectionNotSet, KeyNotFoundException, ParserConfigurationException, SAXException, InvalidAliasType, AliasNotFound, LoadingAliasFailed, XMLLoadException ;
+	public void render(MapData mapData, PageSession pageSession) throws IOException, DisplayException, SQLException, DefaultDBConnectionNotSet, KeyNotFoundException, ParserConfigurationException, SAXException, InvalidAliasType, AliasNotFound, LoadingAliasFailed, XMLLoadException, InvalidTypeException ;
 }

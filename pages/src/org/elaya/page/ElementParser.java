@@ -111,6 +111,10 @@ public class ElementParser extends XMLAppParser {
 		return variant;
 	}
 	
+	/**
+	 * Parser configuration,how to handle every element.
+	 */
+	
 	@Override
 	protected void setupConfig() {
 		addConfig("page",new XMLConfig(Page.class,Page.class,"",null));

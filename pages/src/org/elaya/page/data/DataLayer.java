@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import javax.xml.parsers.ParserConfigurationException;
 import org.elaya.page.Errors.AliasNotFound;
+import org.elaya.page.Errors.InvalidTypeException;
 import org.elaya.page.Errors.LoadingAliasFailed;
 import org.elaya.page.application.Application;
 import org.elaya.page.application.Application.DefaultDBConnectionNotSet;
@@ -38,14 +39,15 @@ public abstract  class DataLayer implements PageApplicationAware {
 	 * The method is used to  process data used in page widgets
 	 * pdata is a data container used in the page widget. It contains
 	 * Already data from the upper layer. It can be used or changed by 
-	 * this method. New data must als added to this data container.
+	 * this method. New data must be added to this data container.
 	 * 
 	 * @param pdata Data used in the page widget 
+	 * @throws InvalidTypeException 
 	 */
 	
-	protected abstract  void processOwnData(MapData pdata) throws SQLException, DefaultDBConnectionNotSet, ParserConfigurationException, SAXException, IOException, InvalidAliasType, AliasNotFound, LoadingAliasFailed, KeyNotFoundException ;
+	protected abstract  void processOwnData(MapData pdata) throws SQLException, DefaultDBConnectionNotSet, ParserConfigurationException, SAXException, IOException, InvalidAliasType, AliasNotFound, LoadingAliasFailed, KeyNotFoundException, InvalidTypeException ;
 	
-	public final MapData processData(MapData pdata) throws SQLException, DefaultDBConnectionNotSet, ParserConfigurationException, SAXException, IOException, InvalidAliasType, AliasNotFound, LoadingAliasFailed, KeyNotFoundException
+	public final MapData processData(MapData pdata) throws SQLException, DefaultDBConnectionNotSet, ParserConfigurationException, SAXException, IOException, InvalidAliasType, AliasNotFound, LoadingAliasFailed, KeyNotFoundException, InvalidTypeException
 	{
 		MapData data=new MapData(this,pdata);
 		processOwnData(data);
