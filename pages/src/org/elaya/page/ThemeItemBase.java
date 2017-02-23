@@ -2,7 +2,8 @@ package org.elaya.page;
 
 import java.util.Set;
 
-import org.springframework.web.util.HtmlUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
+
 /**
  * The HTML for a widget is generated inside a theme item object
  * "ThemeItembase" is the base class for such object
@@ -51,17 +52,6 @@ public class ThemeItemBase {
 		return value.toString();
 	}
 	
-	/**
-	 * HTML escape string 
-	 * 
-	 * @param pvalue
-	 * @return Html escaped string
-	 */
-	
-	public String escape(String pvalue)
-	{
-		return HtmlUtils.htmlEscape(str(pvalue));
-	}
 	
 	/**
 	 * Convert object to string and html escape string 
@@ -71,7 +61,7 @@ public class ThemeItemBase {
 	 */
 	
 	public String escape(Object pvalue){
-		return escape(str(pvalue));
+		return  StringEscapeUtils.escapeHtml4(str(pvalue));
 	}
 	
 	/**

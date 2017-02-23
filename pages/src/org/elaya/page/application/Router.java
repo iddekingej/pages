@@ -49,6 +49,7 @@ public class Router implements PageApplicationAware {
 	{
 		for(Route route:routes)
 		{
+			System.out.println(purl+" "+route.getUrl()); 
 			if(route.getMethod().contains(pmethod) && route.getUrl().equals(purl)){
 				return route;
 			}

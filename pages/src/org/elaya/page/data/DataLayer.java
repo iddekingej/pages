@@ -1,6 +1,7 @@
 package org.elaya.page.data;
 
 import java.io.IOException;
+import java.sql.Connection;
 import java.sql.SQLException;
 import javax.xml.parsers.ParserConfigurationException;
 import org.elaya.page.Errors.AliasNotFound;
@@ -11,7 +12,6 @@ import org.elaya.page.application.Application.DefaultDBConnectionNotSet;
 import org.elaya.page.application.Application.InvalidAliasType;
 import org.elaya.page.core.Data.KeyNotFoundException;
 import org.elaya.page.application.PageApplicationAware;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.xml.sax.SAXException;
 /**
  * Interface page request, page widget and other data components
@@ -59,22 +59,23 @@ public abstract  class DataLayer implements PageApplicationAware {
 	 * 
 	 * @param pname
 	 * @return 
+	 * @throws SQLException 
+	 * @throws ClassNotFoundException 
 	 */
-	public DriverManagerDataSource getDB(String pname)
+	public Connection getConnection(String pname) throws ClassNotFoundException, SQLException
 	{
-		return application.getDB(pname); 
+		return application.connectToDB(pname); 
 	}
 	
 	/**
 	 * Get the default database connection
 	 * 
-	 * @return
-	 * @throws DefaultDBConnectionNotSet
+	 * @return JDBC Connection
 	 */
 	
-	public DriverManagerDataSource getDefaultDB() throws DefaultDBConnectionNotSet 
+	public Connection getDefaultDB() throws ClassNotFoundException, SQLException  
 	{
-		return application.getDefaultDB();
+		return application.connectToDefaultDB();
 	}
 
 }

@@ -8,9 +8,8 @@ import org.elaya.page.application.Application;
 import org.elaya.page.core.PageSession;
 import org.elaya.page.receiver.Receiver;
 import org.elaya.page.receiver.ReceiverParser;
-import org.springframework.web.servlet.view.AbstractView;
 
-public class JsonHandlerView extends AbstractView {
+public class JsonHandlerView{
 	String file;
 	Application application;
 		
@@ -21,7 +20,6 @@ public class JsonHandlerView extends AbstractView {
 		application=papplication;
 	}
  
-	@Override
 	protected void renderMergedOutputModel(Map<String, Object> model, HttpServletRequest prequest,
 			HttpServletResponse presponse) throws Exception {		
 		ReceiverParser parser=new ReceiverParser();

@@ -15,12 +15,13 @@ public class ApplicationXmlParser extends XMLParser {
 
 	@Override
 	protected InputStream openFile(String pfileName) {
-		return getClass().getClassLoader().getResourceAsStream("../pages/"+pfileName);
+		return getClass().getClassLoader().getResourceAsStream(pfileName);
 	}
 
 	@Override
 	protected void setupConfig() {
-		addConfig("application",new XMLConfig(Application.class,null,"",null));
+		addConfig("application",new XMLConfig(Application.class,Application.class,"",null));
+		addConfig("databaseconnection",new XMLConfig(DatabaseConnection.class,DatabaseConnection.class,"addDatabaseConnection",Application.class));
 	}
 
 	@Override

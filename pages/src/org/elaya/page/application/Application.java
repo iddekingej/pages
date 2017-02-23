@@ -6,30 +6,45 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.elaya.page.ElementVariant;
 import org.elaya.page.ElementVariantList;
 import org.elaya.page.ElementVariantParser;
 import org.elaya.page.Errors;
+import org.elaya.page.Errors.AliasNotFound;
+import org.elaya.page.Errors.InvalidTypeException;
 import org.elaya.page.Errors.LoadingAliasFailed;
 import org.elaya.page.Errors.NormalizeClassNameException;
+import org.elaya.page.core.Data.KeyNotFoundException;
+import org.elaya.page.core.PageSession;
 import org.elaya.page.core.Url;
+import org.elaya.page.receiver.Receiver.ReceiverException;
 import org.elaya.page.PageLoader;
+import org.elaya.page.UniqueNamedObjectList.DuplicateItemName;
+import org.elaya.page.application.Route.InvalidRouteTypeException;
+import org.elaya.page.widget.Element.DisplayException;
 import org.elaya.page.widget.Page;
 import org.elaya.page.xml.XMLParserBase.XMLLoadException;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.xml.sax.SAXException;
 
-public abstract class Application{
+public class Application{
 
 	private String themeBase="org.elaya.page.defaultheme";	
 	private String aliasFiles;
 	private String elementVariantFiles;
+	private String routerFiles;
+	private LinkedList<Router> routers=new LinkedList<>();
 	private ElementVariantList elementVariants;
+	private DatabaseConnections databaseConnections=new DatabaseConnections(); 
 	private HashMap<String,AliasData> aliases;
 	private String xmlPath="../pages/"; 
 	private String defaultDBConnection;
@@ -80,7 +95,81 @@ public abstract class Application{
 		loadAliasFiles();
 		processElementVariantFiles();
 		initPageLoader();
-
+		loadRouter();
+	}
+	
+	public void setRouterFiles(String prouterFiles)
+	{
+		routerFiles=prouterFiles;
+	}
+	
+	public String getRouterFiles()
+	{
+		return routerFiles;
+	}
+	
+	//--(JDBC DB )-----------------------------------//
+	
+	/**
+	 * Add JDBC connection to list.
+	 * List is indexed by the name, and name must be unique.
+	 * Connections can be configured in the application xml file  with
+	 * the "databaseconnection"  node.
+	 * 
+	 * @param pconnection
+	 * @throws DuplicateItemName
+	 */
+	public void addDatabaseConnection(DatabaseConnection pconnection) throws DuplicateItemName
+	{
+		databaseConnections.addConnection(pconnection);
+	}
+	
+	
+	//TODO Exception when key not found.
+	/**
+	 * Connect to a named jdbc connection. Connection are
+	 * 
+	 * @param pname
+	 * @return JDBC connection 
+	 */
+	
+	public Connection connectToDB(String pname) throws SQLException, ClassNotFoundException
+	{
+		DatabaseConnection db=databaseConnections.getConnection(pname);
+		if(db==null){
+			return null;
+		} 
+		return db.connect();
+	}
+	
+	//TODO Check if defaultDBConnection is set
+	
+	public Connection connectToDefaultDB() throws ClassNotFoundException, SQLException
+	{
+		return connectToDB(this.defaultDBConnection);
+	}
+	
+	//--(Router )-------------------------------//
+	
+	public void loadRouter() throws XMLLoadException
+	{
+		if(routerFiles != null){
+			String[] files=routerFiles.split(",");
+			for(String file:files){
+				RouterParser routerParser=new RouterParser();
+				routerParser.setApplication(this);
+				routers.add(routerParser.parse(file,Router.class));			
+			}
+		}
+	}
+	
+	public void routeRequest(HttpServletRequest prequest,HttpServletResponse presponse) throws InvalidRouteTypeException, IOException, DisplayException, SQLException, DefaultDBConnectionNotSet, KeyNotFoundException, ParserConfigurationException, SAXException, InvalidAliasType, AliasNotFound, LoadingAliasFailed, XMLLoadException, ReceiverException, InvalidTypeException
+	{
+		for(Router router:routers){
+			if(router.handleRoute(new PageSession(prequest,presponse))){
+				return;
+			}
+		}
 	}
 	
 	public void setJSPath(String pjsPath)
@@ -169,18 +258,6 @@ public abstract class Application{
 			}
 		} 
 		return name;
-	}
-	
-	//--(db)------------------------------------------------------------------------
-	
-	public abstract DriverManagerDataSource getDB(String pname);
-	
-	public DriverManagerDataSource getDefaultDB() throws DefaultDBConnectionNotSet 
-	{
-		if(defaultDBConnection == null ||defaultDBConnection==""){
-			throw new DefaultDBConnectionNotSet();
-		}
-		return getDB(defaultDBConnection);
 	}
 	
 	//--( PageLoader )-------------------------------------------
@@ -288,17 +365,22 @@ public abstract class Application{
 	
 	private void processElementVariantFiles() throws XMLLoadException{
 		//elementVariants=new ElementVariantList();
-		String[] files=elementVariantFiles.split(",");
-		for(String variantFile:files){
-			ElementVariantParser variantParser=new ElementVariantParser();
-			variantParser.setApplication(this);
-			elementVariants=variantParser.parse(variantFile,ElementVariantList.class);
+		if(elementVariantFiles != null){
+			String[] files=elementVariantFiles.split(",");
+			for(String variantFile:files){
+				ElementVariantParser variantParser=new ElementVariantParser();
+				variantParser.setApplication(this);
+				elementVariants=variantParser.parse(variantFile,ElementVariantList.class);
+			}
 		}
 	}
 	
 	public ElementVariant getVariantByName(String name) throws XMLLoadException
 	{
-		return elementVariants.get(name,null);
+		if(elementVariants != null){
+			return elementVariants.get(name,null);
+		}
+		return null;
 	}
 /**
  * Load aliases in fileName and add them to global alias list

@@ -23,5 +23,5 @@ public abstract class Action implements PageApplicationAware {
 		return application;
 	}
 	
-	public abstract void execute(Object object,PageSession psession,String cmd,ReceiverData data,Result result) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, DefaultDBConnectionNotSet, SQLException, DynamicException;
+	public abstract void execute(Object object,PageSession psession,String cmd,ReceiverData data,Result result) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, DefaultDBConnectionNotSet, SQLException, DynamicException, ClassNotFoundException;
 }

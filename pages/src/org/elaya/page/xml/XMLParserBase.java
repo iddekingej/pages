@@ -3,6 +3,7 @@ package org.elaya.page.xml;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Objects;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -76,6 +77,7 @@ public abstract class XMLParserBase<T> {
 	
 	protected Node loadFromFile(String pfileName) throws XMLLoadException 
 	{
+		Objects.requireNonNull(pfileName);
 		try{
 			DocumentBuilderFactory factory=DocumentBuilderFactory.newInstance();
 			DocumentBuilder builder=factory.newDocumentBuilder();

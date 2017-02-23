@@ -2,8 +2,9 @@ package org.elaya.page.core;
 
 import java.io.IOException;
 import javax.servlet.ServletOutputStream;
+
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.elaya.page.application.Application;
-import org.springframework.web.util.HtmlUtils;
 
 public class Writer extends AbstractWriter{
 	ServletOutputStream stream;
@@ -42,7 +43,7 @@ public class Writer extends AbstractWriter{
 	
 	public String escape(String pvalue)
 	{
-		return HtmlUtils.htmlEscape(str(pvalue));
+		return StringEscapeUtils.escapeHtml4(str(pvalue));
 	}
 	
 	public String escape(Object pvalue){

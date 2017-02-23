@@ -1,6 +1,7 @@
 package org.elaya.page.receiver;
 
 import java.lang.reflect.InvocationTargetException;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Map;
@@ -9,7 +10,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.elaya.page.application.Application.DefaultDBConnectionNotSet;
 import org.elaya.page.core.PageSession;
 import org.elaya.page.core.Dynamic.DynamicException;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 
 public class CRUDAction extends Action {
@@ -47,11 +47,14 @@ public class CRUDAction extends Action {
 	 * build insert data and execute it.
 	 * 
 	 *  @param data  Data used in insert statement
+	 * @throws DynamicException 
+	 * @throws SQLException 
+	 * @throws ClassNotFoundException 
 	 */
 	
-	private void insert(ReceiverData data) throws DefaultDBConnectionNotSet, SQLException, DynamicException
+	private void insert(ReceiverData data) throws SQLException, DynamicException, ClassNotFoundException
 	{
-		DriverManagerDataSource driver=getApplication().getDefaultDB();
+		Connection connection=getApplication().connectToDefaultDB();
 		Set<String> fields=fieldsMap.keySet();
 		fields.remove(pkField);
 		String fieldList=StringUtils.join(fields,',');
@@ -59,16 +62,20 @@ public class CRUDAction extends Action {
 		StringBuilder sqlCmd=new StringBuilder();
 		sqlCmd.append("insert into ").append(tableName).append("(").append(fieldList);
 		sqlCmd.append(") values(").append(buildlist).append(")");
-		PreparedStatement stmt=driver.getConnection().prepareStatement(sqlCmd.toString());
-		int bindPos=1;
-		for(String field:fields){
-			stmt.setObject(bindPos, data.getData().get(fieldsMap.get(field)));
-			bindPos++;
+		PreparedStatement stmt=connection.prepareStatement(sqlCmd.toString());
+		try{
+			int bindPos=1;
+			for(String field:fields){
+				stmt.setObject(bindPos, data.getData().get(fieldsMap.get(field)));
+				bindPos++;
+			}
+			stmt.execute();
+		} finally{
+			stmt.close();
 		}
-		stmt.execute();
 	}
 	
-	private void edit(ReceiverData data) throws DefaultDBConnectionNotSet, SQLException, DynamicException
+	private void edit(ReceiverData data) throws ClassNotFoundException, SQLException, DynamicException
 	{
 		Set<String> fields=fieldsMap.keySet();
 		fields.remove(pkField);
@@ -83,37 +90,42 @@ public class CRUDAction extends Action {
 			upd.append(field).append("=?");
 		}
 		upd.append(" where ").append(pkField).append("=?");
-		DriverManagerDataSource driver=getApplication().getDefaultDB();
-		System.out.println(upd.toString());
-		PreparedStatement stmt=driver.getConnection().prepareStatement(upd.toString());
-		int bindPos=1;
-		for(String field:fields){
-			stmt.setObject(bindPos, data.getData().get(fieldsMap.get(field)));
-			bindPos++;
+		Connection connection=getApplication().connectToDefaultDB();
+
+		PreparedStatement stmt=connection.prepareStatement(upd.toString());
+		try{
+			int bindPos=1;
+			for(String field:fields){
+				stmt.setObject(bindPos, data.getData().get(fieldsMap.get(field)));
+				bindPos++;
+			}
+			stmt.setObject(bindPos,data.getData().get(pkField));
+			stmt.execute();
+		} finally{
+			stmt.close();
 		}
-		stmt.setObject(bindPos,data.getData().get(pkField));
-		stmt.execute();
 	}
 	
-	private void delete(ReceiverData data) throws DefaultDBConnectionNotSet, SQLException, DynamicException
+	private void delete(ReceiverData data) throws ClassNotFoundException, SQLException, DynamicException 
 	{
-		DriverManagerDataSource driver=getApplication().getDefaultDB();
-		PreparedStatement stmt=driver.getConnection().prepareStatement("delete from "+tableName+" where "+pkField+"=?");
-		stmt.setObject(1,data.getData().get(pkField));
-		stmt.execute();
+		Connection connection=getApplication().connectToDefaultDB();
+		PreparedStatement stmt=connection.prepareStatement("delete from "+tableName+" where "+pkField+"=?");
+		try{	
+			stmt.setObject(1,data.getData().get(pkField));
+			stmt.execute();
+		} finally{
+			stmt.close();
+		}
 	}
 	
 	
 	@Override	
-	public void execute(Object object, PageSession psession, String cmd,ReceiverData data, Result result)
-			throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, DefaultDBConnectionNotSet, SQLException, DynamicException {
-		System.out.println("Cmd="+cmd);
+	public void execute(Object object, PageSession psession, String cmd,ReceiverData data, Result result) throws ClassNotFoundException, SQLException, DynamicException{		
 		if("add".equals(cmd)){			
 			insert(data);
 		} else 	if("delete".equals(cmd)){
 			delete(data);
 		} else if("edit".equals(cmd)){
-			System.out.println("CRUD-edit");
 			edit(data);
 		}
 	}
