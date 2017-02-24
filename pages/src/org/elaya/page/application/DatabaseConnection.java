@@ -73,7 +73,9 @@ public class DatabaseConnection implements NamedObject {
 		getClass().forName(driverClassName);
 	    Properties connectionProps = new Properties();
 	    connectionProps.put("user",username);
-	    connectionProps.put("password",password);
+	    if(password != null && !"".equals(password)){
+	    	connectionProps.put("password",password);
+	    }
 	    return DriverManager.getConnection(url, connectionProps);
 	}
 }

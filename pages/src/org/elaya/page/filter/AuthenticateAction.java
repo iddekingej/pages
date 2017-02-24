@@ -31,9 +31,22 @@ public class AuthenticateAction extends Action {
 	private String sessionDataClass;
 	private String failedLoginUrl="";
 	private Authenticator authenticator=null;
+	private String nextUrl;
 	
-	public AuthenticateAction() {
-		super();
+	/**
+	 * After successful authentication, first the next URL from sessionDataClass
+	 * is used. When this value is null, nextUrl from this object is used.
+	 * 
+	 * @return
+	 */
+	public String getNextUrl()
+	{
+		return nextUrl;
+	}
+	
+	public void setNextUrl(String pnextUrl)
+	{
+		nextUrl=pnextUrl;
 	}
 	
 	public void setAuthenticator(Authenticator pauthenticator)
@@ -111,7 +124,11 @@ public class AuthenticateAction extends Action {
 					HttpSession httpSession=session.getHttpSession(true);
 					httpSession.setAttribute("id", sessionData.getId());
 					httpSession.setAttribute("type",sessionData.getClass().getName());
-					session.redirect(sessionData.getAfterLoginPath());
+					String url=sessionData.getAfterLoginPath();
+					if(url==null){
+						url=nextUrl;
+					}
+					session.redirect(url);
 					return ActionResult.NONEXTFILTER;
 				}
 			} else {

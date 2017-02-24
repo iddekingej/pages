@@ -78,6 +78,7 @@ public class CompareMatcher extends RequestMatcher {
 				case EXACT:
 					return query.equals(matchUrl);
 				case STARTSWITH:
+					System.out.println(query+" ** "+matchUrl);
 					return query.startsWith(matchUrl);
 				case ENDSWITH:
 					return query.endsWith(matchUrl);

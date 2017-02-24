@@ -50,9 +50,9 @@ public class Application{
 	private String defaultDBConnection;
 	private String classBase="";
 	private PageLoader pageLoader;
-	private String imageURL="resources/pages/images/";
-	private String jsPath="resources/pages/js/";
-	private String cssPath="resources/pages/css/"; 
+	private String imageURL="resources/images/";
+	private String jsPath="resources/js/";
+	private String cssPath="resources/css/"; 
 	/**
 	 *  If XML files are inside the WAR or on a extenral path 
 	 *  true=internal false=external
@@ -90,6 +90,10 @@ public class Application{
 		return externalXML;
 	}
 	
+	/**
+	 * Setup Application after the application object is created
+	 * In this method the alias, router, element variant and router files are read.
+	 */
 	public void setup() throws LoadingAliasFailed, XMLLoadException, IllegalAccessException
 	{
 		loadAliasFiles();
@@ -317,6 +321,13 @@ public class Application{
 		
 		return new File(getRealConfigPath(pfileName)).lastModified();
 	}
+	
+	/**
+	 * Get last modification date of a application xml configuration file
+	 *  
+	 * @param pfileName name of file
+	 * @return Time (unix time stamp)
+	 */
 	
 	public long getConfigLastModified(String pfileName) throws IOException
 	{

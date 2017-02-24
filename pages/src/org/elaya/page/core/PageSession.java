@@ -60,6 +60,15 @@ public class PageSession {
 		response.setContentType(ptype);
 	}
 	
+	public void setNotFound()
+	{
+		setStatus(HttpServletResponse.SC_NOT_FOUND);
+	}
+	
+	public void setStatus(int status){
+		response.setStatus(status);
+	}
+	
 	public void redirect(String url) throws IOException
 	{
 		if(request != null && response != null){
