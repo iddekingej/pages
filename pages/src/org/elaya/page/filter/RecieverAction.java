@@ -6,9 +6,8 @@ import org.elaya.page.core.PageSession;
 import org.elaya.page.receiver.Receiver;
 import org.elaya.page.receiver.ReceiverParser;
 
-public class RecieverAction extends Action implements PageApplicationAware {
+public class RecieverAction extends Action{
 	private String reciever;
-	private Application application;
 	
 	public void setReciever(String preciever)
 	{
@@ -24,23 +23,13 @@ public class RecieverAction extends Action implements PageApplicationAware {
 	public ActionResult execute(PageSession session) throws ActionException  {
 		try{
 			ReceiverParser parser=new ReceiverParser();
-			parser.setApplication(application);
+			parser.setApplication(getApplication());
 			Receiver rec=parser.parse(reciever,Receiver.class);
 			rec.handleRequest(session);
 			return ActionResult.NONEXTFILTER;
 		}catch(Exception e){
 			throw new ActionException(e);
 		}
-	}
-
-	@Override
-	public Application getApplication() {
-		return application;
-	}
-
-	@Override
-	public void setApplication(Application papplication) {
-		application=papplication;		
 	}
 
 }

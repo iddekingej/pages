@@ -7,23 +7,12 @@ import org.elaya.page.data.MapData;
 import org.elaya.page.view.PageView;
 
 
-public class ViewAction extends Action implements PageApplicationAware {
+public class ViewAction extends Action {
 
-	private Application application;
+	
 	private String pageFile;
 	private boolean cache=true;
 
-	@Override
-	public void setApplication(Application papplication)
-	{
-		application=papplication;
-	}
-	
-	@Override
-	public Application getApplication() {
-		return application;
-	}
-	
 	public void setPageFile(String ppageFile)
 	{
 		pageFile=ppageFile;
@@ -45,7 +34,7 @@ public class ViewAction extends Action implements PageApplicationAware {
 	@Override
 	public ActionResult execute(PageSession psession) throws ActionException{
 		try{
-			PageView view=new PageView(pageFile,application);
+			PageView view=new PageView(pageFile,getApplication());
 			view.setCache(cache);
 			MapData data=new MapData();
 			view.render(data, psession);		

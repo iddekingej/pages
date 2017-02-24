@@ -12,17 +12,14 @@ public class PageServlet extends HttpServlet {
 	
 
 	private static final long serialVersionUID = 1L;
-	Application application;
+	transient Application application;
 	
 	@Override
 	public void init(ServletConfig config) throws ServletException
 	{
-		ApplicationXmlParser parser=new ApplicationXmlParser();
-		try{
-			application=parser.parse(config.getInitParameter("applicationSetup"),Application.class);
-			application.setup();
-		}catch(Exception e){
-			throw new ServletException(e);
+		Object objApp=config.getServletContext().getAttribute("application");
+		if(objApp instanceof Application){
+			application=(Application)objApp;
 		}
 	}
 	

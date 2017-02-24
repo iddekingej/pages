@@ -54,9 +54,12 @@
 	<jsfile alias="pagejs" value="core.js,pages.js" />
 	<cssfile alias="pagecss"
 		value="page.css" />
+	<!--  Filter  -->
+	<security alias="filtermanager" value="org.elaya.page.filter.FilterManager"/>
+	<security alias="fil_compare" value="org.elaya.page.filter.CompareMatcher" />
 	<!-- Security  -->
-	<security alias="sec_compare_matcher" value="org.elaya.page.filter.CompareMatcher" />
-	<security alias="sec_spring_authenticate" value="org.elaya.page.spring.SpringAuthenticateAction"/>
+	<security alias="sec_allowed" value="org.elaya.page.filter.AllowedAction" />
+	<security alias="sec_authenticate" value="org.elaya.page.filter.AuthenticateAction"/>
 	<security alias="fil_router" value="org.elaya.page.filter.RouterAction"/>
 	 
 </aliases>

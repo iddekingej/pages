@@ -9,7 +9,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import org.elaya.page.application.Application;
 
-public class SecurityFilter implements Filter {
+public class PageFilter implements Filter {
 	private FilterManager securityManager;
 
 	@Override
@@ -34,7 +34,7 @@ public class SecurityFilter implements Filter {
 	public void init(FilterConfig pconfig) throws ServletException {
 		Application application;
 		System.out.println("Security filter init start");
-		String filterFileName=pconfig.getInitParameter("securityConfigFile");
+		String filterFileName=pconfig.getInitParameter("filterConfigFile");
 		Object appObject=pconfig.getServletContext().getAttribute("application");		
 		if(appObject instanceof Application){
 			application=(Application)appObject;

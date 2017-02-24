@@ -4,53 +4,42 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+import org.elaya.page.application.Application;
+import org.elaya.page.application.PageApplicationAware;
 
-public class DBAuthenticator extends AbstractDBAuthenticator {
 
-	private String driverClass;
-	private String url;
-	private String password; 
-	private String username;
+public class DBAuthenticator extends AbstractDBAuthenticator implements PageApplicationAware {
 
+	private String connectionName;
+	private Application application;
 	
-	public void setDriverClass(String pdriverClass){
-		driverClass=pdriverClass;
+	@Override
+	public Application getApplication() {
+		return application;
+	}
+
+	@Override
+	public void setApplication(Application papplication) {
+		application=papplication;
 	}
 	
-	public String getDriverClass(){
-		return driverClass;
-	}
-	
-	public void setUrl(String purl){
-		url=purl;
-	}
-	
-	public String getUrl(){
-		return url;
-	}
-	
-	public void setPassword(String ppassword){
-		password=ppassword;
-	}
-	
-	public String getPassword(){
-		return password;
-	}
-	
-	public void setUsername(String pusername)
+	public String getConnectionName()
 	{
-		username=pusername;
+		return connectionName;
 	}
-	public String getUsername(){
-		return username;
+	
+	public void setConnectionName(String pconnectionName)
+	{
+		connectionName=pconnectionName;
 	}
 	
 	@Override	
 	protected Connection getConnection() throws ClassNotFoundException, SQLException
 	{
-		Class.forName(driverClass);
-		return DriverManager.getConnection(url,username,password);	
+		return application.connectToDB(connectionName);
 	}
+
+
 	
 	
 
