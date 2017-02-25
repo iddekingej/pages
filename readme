@@ -1,4 +1,6 @@
-With pages framework it's possible to create an application by writing
-XML files and as little as possible java classes.
-Its very alpha and not yet very usable (please wait for version 0.1)
+Pages is a web application framework written in java. 
+With this framework an application can be build by writing XML 
+files and as little as possible java code
+
+This framework is very alpha and not yet very usable (please wait for version 0.1)
 For planning please look at the Doc folder
