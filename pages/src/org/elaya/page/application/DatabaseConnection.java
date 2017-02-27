@@ -68,6 +68,7 @@ public class DatabaseConnection implements NamedObject {
 		driverClassName=pdriverClassName;
 	}
 	
+	@SuppressWarnings("static-access")
 	public Connection connect() throws SQLException, ClassNotFoundException
 	{
 		getClass().forName(driverClassName);

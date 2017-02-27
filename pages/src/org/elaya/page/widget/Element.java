@@ -2,14 +2,11 @@ package org.elaya.page.widget;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-
 import javax.xml.parsers.ParserConfigurationException;
-
 import org.elaya.page.Errors;
 import org.elaya.page.HorizontalAlign;
 import org.elaya.page.NamedObject;
@@ -20,18 +17,20 @@ import org.elaya.page.VerticalAlign;
 import org.elaya.page.Errors.AliasNotFound;
 import org.elaya.page.Errors.DuplicateElementOnPage;
 import org.elaya.page.Errors.InvalidElement;
-import org.elaya.page.Errors.InvalidTypeException;
 import org.elaya.page.Errors.LoadingAliasFailed;
 import org.elaya.page.Errors.ReplaceVarException;
 import org.elaya.page.UniqueNamedObjectList.DuplicateItemName;
-import org.elaya.page.application.Application.DefaultDBConnectionNotSet;
 import org.elaya.page.application.Application.InvalidAliasType;
 import org.elaya.page.core.Data;
 import org.elaya.page.core.DynamicMethod;
 import org.elaya.page.core.JSWriter;
+import org.elaya.page.core.KeyNotFoundException;
 import org.elaya.page.core.Writer;
-import org.elaya.page.core.Data.KeyNotFoundException;
 import org.elaya.page.data.*;
+import org.elaya.page.data.XMLBaseDataItem.XMLDataException;
+import org.elaya.page.formula.FormulaException;
+import org.elaya.page.formula.FormulaNode;
+import org.elaya.page.formula.FormulaParser;
 import org.elaya.page.widget.jsplug.JSPlug;
 import org.elaya.page.widget.jsplug.JSPlug.InvalidJsPlugType;
 import org.elaya.page.xml.AfterSetup;
@@ -71,6 +70,7 @@ public abstract class Element<T extends ThemeItemBase> extends DynamicMethod imp
 	private String layoutHeight;
 	private DataLayer dataModel;
 	private String condition="";
+	private FormulaNode conditionNode;
 	private String jsCondition="";
 	private boolean isNamespace=false; 
 	private UniqueNamedObjectList<Element<?>> byName=null;
@@ -168,6 +168,7 @@ public abstract class Element<T extends ThemeItemBase> extends DynamicMethod imp
 	public void setCondition(String pcondition)
 	{
 		condition=pcondition;
+		conditionNode=null;
 	}
 	
 	public String getConidition()
@@ -175,16 +176,20 @@ public abstract class Element<T extends ThemeItemBase> extends DynamicMethod imp
 		return condition;
 	}
 	
-	public boolean checkCondition(Data pdata) throws KeyNotFoundException 
+	public boolean checkCondition(Data pdata) throws KeyNotFoundException, FormulaException 
 	{ 
 		if(condition.length()==0){
 			return true;
 		}
-		Object value=pdata.get(condition);
-		return value.equals(true);
+		if(conditionNode == null){
+			FormulaParser parser=new FormulaParser(condition);
+			conditionNode=parser.parseFormula();
+		}
+		Object value=conditionNode.calculate(pdata);
+		return value != null && value.equals(true);
 	}
 	
-	public void calculateData(MapData pdata) throws SQLException, DefaultDBConnectionNotSet, KeyNotFoundException, ParserConfigurationException, SAXException, IOException, InvalidAliasType, AliasNotFound, LoadingAliasFailed, InvalidTypeException{
+	public void calculateData(MapData pdata) throws XMLDataException, KeyNotFoundException, FormulaException {
 		MapData data=pdata;
 		if(dataModel != null){
 			data=dataModel.processData(pdata);

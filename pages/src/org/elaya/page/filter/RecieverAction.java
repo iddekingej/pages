@@ -1,7 +1,5 @@
 package org.elaya.page.filter;
 
-import org.elaya.page.application.Application;
-import org.elaya.page.application.PageApplicationAware;
 import org.elaya.page.core.PageSession;
 import org.elaya.page.receiver.Receiver;
 import org.elaya.page.receiver.ReceiverParser;

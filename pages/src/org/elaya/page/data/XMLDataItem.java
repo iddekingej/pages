@@ -1,9 +1,8 @@
 package org.elaya.page.data;
 
-import org.elaya.page.Errors.InvalidTypeException;
-import org.elaya.page.core.Data.KeyNotFoundException;
+import org.elaya.page.data.XMLBaseDataItem.XMLDataException;
 
-@FunctionalInterface
 public interface XMLDataItem {
-	void processData(MapData pdata) throws InvalidTypeException, KeyNotFoundException;
+	public boolean executeThis(MapData pdata) throws XMLDataException;
+	public void processData(MapData pdata) throws XMLDataException;
 }

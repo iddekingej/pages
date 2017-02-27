@@ -104,15 +104,7 @@ public class Errors {
 		}
 	}
 
-	public static class InvalidTypeException extends Exception{
-		private static final long serialVersionUID = -3007635928476602360L;
 
-		public InvalidTypeException(String message){
-			super(message);
-		}
-	}
-	
-	
 	public static class ReplaceVarException extends Exception{
 		private static final long serialVersionUID = 1L;
 		public ReplaceVarException(String message,Throwable cause){

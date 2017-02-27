@@ -32,7 +32,7 @@ public class CompareMatcher extends RequestMatcher {
 		return methodFilter;
 	}
 	
-	public void setType(CompareMatchType pmatchType){
+	public void setMatchType(CompareMatchType pmatchType){
 		Objects.requireNonNull(pmatchType);
 		matchType=pmatchType;
 	}

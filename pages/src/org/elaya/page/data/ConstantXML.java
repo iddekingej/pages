@@ -1,6 +1,6 @@
 package org.elaya.page.data;
 
-public class ConstantDataItem extends XMLBaseDataItem {
+public class ConstantXML extends XMLBaseDataItem {
 	private String variable;
 	private Object value;
 	

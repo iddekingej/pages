@@ -3,9 +3,10 @@ package org.elaya.page.data;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.elaya.page.Errors;
-import org.elaya.page.Errors.InvalidTypeException;
 import org.elaya.page.core.Data;
+import org.elaya.page.core.DataException;
+import org.elaya.page.core.InvalidTypeException;
+import org.elaya.page.core.KeyNotFoundException;
 
 public class MapData extends Data{	
 		private Object id;
@@ -72,13 +73,13 @@ public class MapData extends Data{
 		}
 		
 		@SuppressWarnings("unchecked")
-		public <T> T get(String pname,Class<T> ptype) throws InvalidTypeException, KeyNotFoundException
+		public <T> T get(String pname,Class<T> ptype) throws DataException
 		{
 			Object object=get(pname);
 			if(ptype.isInstance(object)){
 				return (T)object;
 			}
-			throw new Errors.InvalidTypeException("Expect "+ptype.getName()+" but "+object.getClass().getName());
+			throw new InvalidTypeException(ptype,object);
 		}
 		
 		@Override

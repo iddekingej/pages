@@ -17,20 +17,11 @@ public abstract class Data  {
 		}
 	}
 	
-	public static class KeyNotFoundException extends Exception{
-		private static final long serialVersionUID = 8614663798348780748L;
-		
-		public KeyNotFoundException(String message){
-			super(message);
-		}
-	}
-	
-	
 	public abstract Object  getId();
 	public abstract Data    getChild(Object pobject);
 	public abstract Data    getParent();
 	public abstract Object  get(String key) throws KeyNotFoundException;
-	public abstract void    put(String key,Object value) ;
+	public abstract void    put(String key,Object value) throws KeyNotFoundException ;
 	public abstract boolean containsKey(String key);
 	public abstract int     getSize();
 	

@@ -232,7 +232,7 @@ public abstract class XMLParser extends XMLParserBase<Object> {
 		String attributeName;
 		attributeName=attribute.getNodeName();
 		if(variant == null || !variant.containsParameter(attributeName)){
-			if(!"name".equals(attributeName) && !"ref".equals(attributeName) && !"class".equals(attributeName) && !"file".equals(attributeName)){
+			if(!"name".equals(attributeName) && !"ref".equals(attributeName) && !"type".equals(attributeName) && !"file".equals(attributeName)){
 				try{
 					DynamicObject.put(object,attributeName,replaceVariables(attribute.getNodeValue()));
 				} catch(Exception e){
@@ -269,7 +269,7 @@ public abstract class XMLParser extends XMLParserBase<Object> {
 	}
 	
 	/**
-	 * Create object by the "class" attribute.
+	 * Create object by the "type" attribute.
 	 * If there is not class attribute, the default class defined in the
 	 * parse config is used.
 	 * When there is not default class an exception is raide 
@@ -280,7 +280,7 @@ public abstract class XMLParser extends XMLParserBase<Object> {
 	 */
 	private Object createByClass(Node pnode,Class<?> pdefault) throws XMLLoadException, InstantiationException, IllegalAccessException, DynamicException, NormalizeClassNameException, InvocationTargetException, NoSuchMethodException, ClassNotFoundException,  ReplaceVarException  
 	{
-		String className=getAttributeValue(pnode,"class");		
+		String className=getAttributeValue(pnode,"type");		
 		Object object;
 		if(className == null){
 			if(pdefault ==null){

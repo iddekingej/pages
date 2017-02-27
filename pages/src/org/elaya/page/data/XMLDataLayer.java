@@ -1,20 +1,10 @@
 package org.elaya.page.data;
 
-import java.io.IOException;
-import java.sql.SQLException;
+
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.elaya.page.Errors.AliasNotFound;
-import org.elaya.page.Errors.InvalidTypeException;
-import org.elaya.page.Errors.LoadingAliasFailed;
-import org.elaya.page.application.Application.DefaultDBConnectionNotSet;
-import org.elaya.page.application.Application.InvalidAliasType;
-import org.elaya.page.core.Data.KeyNotFoundException;
-import org.xml.sax.SAXException;
-
+import org.elaya.page.data.XMLBaseDataItem.XMLDataException;
 
 public class XMLDataLayer extends DataLayer {
 	private LinkedList<XMLDataItem> definition=new LinkedList<>();
@@ -35,20 +25,27 @@ public class XMLDataLayer extends DataLayer {
 	 * 
 	 * @param pdata Data Container, source and destination of data.
 	 */
-	protected void processDataAfter(MapData pdata) throws SQLException, DefaultDBConnectionNotSet, ParserConfigurationException, SAXException, IOException, InvalidAliasType, AliasNotFound, LoadingAliasFailed, KeyNotFoundException
+	protected void processDataAfter(MapData pdata) throws XMLDataException
 	{
 	//This is a dummy method
 	}
 	
 	/**
 	 * Process data by the xml definition
+	 * @param pdata Data used for processing.
+	 * @throws XMLDataException 
 	 */
 	@Override
-	protected void processOwnData(MapData pdata) throws InvalidTypeException, KeyNotFoundException, SQLException, DefaultDBConnectionNotSet, ParserConfigurationException, SAXException, IOException, InvalidAliasType, AliasNotFound, LoadingAliasFailed{
+	protected void processOwnData(MapData pdata) throws XMLDataException {
+		
 		for(XMLDataItem dataItem:definition){
-			dataItem.processData(pdata);
+			if(dataItem.executeThis(pdata)){
+				dataItem.processData(pdata);
+			}
 		}
+		
 		processDataAfter(pdata);
+		
 	}
 
 	

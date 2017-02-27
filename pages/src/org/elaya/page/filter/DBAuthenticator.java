@@ -1,9 +1,7 @@
 package org.elaya.page.filter;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
-
 import org.elaya.page.application.Application;
 import org.elaya.page.application.PageApplicationAware;
 

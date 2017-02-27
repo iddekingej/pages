@@ -12,7 +12,7 @@ public class PageThemeItem extends org.elaya.page.PageThemeItem {
 	public void pageHeader(Writer pwriter,DocumentType pdocumentType,Set<String> pjs,Set<String> pcss) throws IOException{
 		String header="";
 		String htmlTag="<html>";
-		String contentType="text/html";
+		String contentType="text/html; charset=UTF-8";
 		switch(pdocumentType){
 			case DT_HTML4_STRICT:
 					header="<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01//EN\" \"http://www.w3.org/TR/html4/strict.dtd\">";
@@ -25,11 +25,11 @@ public class PageThemeItem extends org.elaya.page.PageThemeItem {
 				break;
 			case DT_XHTML:
 				header=
-					"<?xml version=\"1.0\" encoding=\"UTF-8\"?> \n"+
+					"<?xml version=\"1.0\" encoding=\"utf-8\"?> \n"+
 					"<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\""+
 					" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">";
 			 		htmlTag="<html xmlns=\"http://www.w3.org/1999/xhtml\">";
-			 		contentType="application/xhtml+xml";
+			 		contentType="application/xhtml+xml; charset=utf-8";
 			 	break;
 		}
 		pwriter.setContentType(contentType);

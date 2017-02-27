@@ -1,6 +1,6 @@
 package org.elaya.page;
 /**
- * Type of producted HTML page
+ * Type of HTML page
  *
  */
 public enum DocumentType {

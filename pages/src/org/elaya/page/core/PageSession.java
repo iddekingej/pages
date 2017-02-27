@@ -3,6 +3,7 @@ package org.elaya.page.core;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.NotSerializableException;
+import java.io.PrintWriter;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 
@@ -28,6 +29,7 @@ public class PageSession {
 	public PageSession(HttpServletRequest prequest,HttpServletResponse presponse){
 		request=prequest;
 		response=presponse;
+		response.setCharacterEncoding("utf-8");
 	}
 	
 	public String getRequestMethod()
@@ -52,7 +54,13 @@ public class PageSession {
 	
 	public ServletOutputStream getOutputStream() throws IOException
 	{
+		response.setCharacterEncoding("utf-8");
 		return response.getOutputStream();
+	}
+	
+	public PrintWriter getWriter() throws IOException
+	{
+		return response.getWriter();
 	}
 	
 	public void setContentType(String ptype)

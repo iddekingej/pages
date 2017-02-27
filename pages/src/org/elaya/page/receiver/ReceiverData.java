@@ -1,8 +1,7 @@
 package org.elaya.page.receiver;
 
-import org.elaya.page.Errors;
-import org.elaya.page.Errors.InvalidTypeException;
 import org.elaya.page.core.Dynamic;
+import org.elaya.page.core.InvalidTypeException;
 
 public class ReceiverData{
 	private final Dynamic data;
@@ -24,7 +23,7 @@ public class ReceiverData{
 		if(type.isInstance(data)){
 			return (T)data;
 		} else {
-			throw new Errors.InvalidTypeException("data element");
+			throw new InvalidTypeException(type,data);
 		}
 	}
 	public String getCmd(){ return cmd;}

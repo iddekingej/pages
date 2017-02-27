@@ -1,7 +1,5 @@
 package org.elaya.page.filter;
 
-import org.elaya.page.application.Application;
-import org.elaya.page.application.PageApplicationAware;
 import org.elaya.page.core.PageSession;
 import org.elaya.page.data.MapData;
 import org.elaya.page.view.PageView;

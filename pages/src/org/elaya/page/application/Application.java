@@ -11,22 +11,21 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.ParserConfigurationException;
-
 import org.elaya.page.ElementVariant;
 import org.elaya.page.ElementVariantList;
 import org.elaya.page.ElementVariantParser;
 import org.elaya.page.Errors;
 import org.elaya.page.Errors.AliasNotFound;
-import org.elaya.page.Errors.InvalidTypeException;
 import org.elaya.page.Errors.LoadingAliasFailed;
 import org.elaya.page.Errors.NormalizeClassNameException;
-import org.elaya.page.core.Data.KeyNotFoundException;
+import org.elaya.page.core.DataException;
 import org.elaya.page.core.PageSession;
 import org.elaya.page.core.Url;
+import org.elaya.page.data.XMLBaseDataItem.XMLDataException;
+import org.elaya.page.formula.FormulaException;
 import org.elaya.page.receiver.Receiver.ReceiverException;
 import org.elaya.page.PageLoader;
 import org.elaya.page.UniqueNamedObjectList.DuplicateItemName;
@@ -35,7 +34,11 @@ import org.elaya.page.widget.Element.DisplayException;
 import org.elaya.page.widget.Page;
 import org.elaya.page.xml.XMLParserBase.XMLLoadException;
 import org.xml.sax.SAXException;
-
+/**
+ * Application object
+ * 
+ * This object is the glue of the system
+ */
 public class Application{
 
 	private String themeBase="org.elaya.page.defaultheme";	
@@ -50,11 +53,11 @@ public class Application{
 	private String defaultDBConnection;
 	private String classBase="";
 	private PageLoader pageLoader;
-	private String imageURL="resources/images/";
-	private String jsPath="resources/js/";
-	private String cssPath="resources/css/"; 
+	private String imageBaseURL="resources/images/";
+	private String jsBaseUrl="resources/js/";
+	private String cssBaseUrl="resources/css/"; 
 	/**
-	 *  If XML files are inside the WAR or on a extenral path 
+	 *  If XML files are inside the WAR or on a external path 
 	 *  true=internal false=external
 	 */
 	private boolean externalXML=false;
@@ -167,8 +170,9 @@ public class Application{
 		}
 	}
 	
-	public void routeRequest(HttpServletRequest prequest,HttpServletResponse presponse) throws InvalidRouteTypeException, IOException, DisplayException, SQLException, DefaultDBConnectionNotSet, KeyNotFoundException, ParserConfigurationException, SAXException, InvalidAliasType, AliasNotFound, LoadingAliasFailed, XMLLoadException, ReceiverException, InvalidTypeException
+	public void routeRequest(HttpServletRequest prequest,HttpServletResponse presponse) throws InvalidRouteTypeException, IOException, DisplayException, SQLException, DefaultDBConnectionNotSet, ParserConfigurationException, SAXException, InvalidAliasType, AliasNotFound, LoadingAliasFailed, XMLLoadException, ReceiverException, DataException, ClassNotFoundException, FormulaException, XMLDataException 
 	{
+		presponse.setCharacterEncoding("utf-8");
 		for(Router router:routers){
 			if(router.handleRoute(new PageSession(prequest,presponse))){
 				return;
@@ -176,39 +180,40 @@ public class Application{
 		}
 	}
 	
-	public void setJSPath(String pjsPath)
+	public void setJSBaseUrl(String pjsPath)
 	{
-		jsPath=pjsPath;
+		jsBaseUrl=pjsPath;
 	}
 	
-	public String getJSPath()
+	public String getJSBaseUrl()
 	{
-		return jsPath;
+		return jsBaseUrl;
 	}
 	
-	public void setCSSPath(String pcssPath)
+	public void setCSSBaseUrl(String pcssPath)
 	{
-		cssPath=pcssPath;
+		cssBaseUrl=pcssPath;
+		
 	}
 	
-	public String getCSSPath()
+	public String getCSSBaseUrl()
 	{
-		return cssPath;
+		return cssBaseUrl;
 	}
 	
 	/**
-	 * Base Url of iamges
+	 * Base Url of images
 	 * 
 	 */
 	
-	public void setImageUrl(String url)
+	public void setImageBaseUrl(String url)
 	{
-		imageURL=url;		
+		imageBaseURL=url;		
 	}
 	
-	public String getImageUrl()
+	public String getImageBaseUrl()
 	{
-		return imageURL;
+		return imageBaseURL;
 	}
 	
 
@@ -289,9 +294,6 @@ public class Application{
  * @param pfileName  XML describing the page
  * @param pcache     Cache Page object 
  * @return            Page object representing page
- * @throws XMLLoadException 
- * @throws IOException 
- * @throws Exception  
  */
 	
 	

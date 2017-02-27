@@ -61,5 +61,9 @@
 	<security alias="sec_allowed" value="org.elaya.page.filter.AllowedAction" />
 	<security alias="sec_authenticate" value="org.elaya.page.filter.AuthenticateAction"/>
 	<security alias="fil_router" value="org.elaya.page.filter.RouterAction"/>
-	 
+	<!--  DataLayer -->
+	<datalayer alias="dl_query" value="org.elaya.page.data.QueryXML" />
+	<datalayer alias="dl_parameter" value="org.elaya.data.ParameterXML"/>
+	<datalayer alias="dl_formula" value="org.elaya.data.FormulaXML" />
+	<datalayer alias="dl_constant" value="org.elaya.data.ConstantXML" />
 </aliases>

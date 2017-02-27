@@ -16,14 +16,14 @@ import org.elaya.page.xml.XMLConfig;
 import org.elaya.page.xml.XMLCustomConfig;
 import org.w3c.dom.Node;
 /**
- * Parses a page XML definition to objects
+ * Parses a page XML definition to objects representing the page.
  *
  */
 public class ElementParser extends XMLAppParser {
 	
 	/**
-	 * Getting stream to input file. This can be an internal (inside jar)
-	 * or an external file
+	 * Getting stream to input file. This can be an internal (inside the jar)
+	 * or an external file.
 	 */
 	@Override
 	protected InputStream openFile(String pfileName) throws FileNotFoundException {		
@@ -33,7 +33,7 @@ public class ElementParser extends XMLAppParser {
 
 	/**
 	 * Handle \<option\> node inside an \<options\> block
-	 * An \<options\> block is a list of (value,text) pair.
+	 * An \<options\> block is a list of (value,text) pairs.
 	 *  
 	 * @param child   the Option node
 	 * @param list	OptionItem (value,text) pair is added to this list
@@ -58,8 +58,8 @@ public class ElementParser extends XMLAppParser {
 		}
 	}
 	/**
-	 * Handle options tag definition oelection list 
-	 * , radion buttons, checkboxes or selection lists
+	 * Handle a "options" tag. The options tag is used for defining the 
+	 * values in a selection list, radio buttons and check boxes 
 	 * 
 	 * @param parent  Parent Node
 	 * @return        A linkedlist with defined options
@@ -79,8 +79,9 @@ public class ElementParser extends XMLAppParser {
 	}
 	
 	/**
-	 * Parse custome tags.
-	 * On this moment only used for "options" tags
+	 * Parse custom tags.
+	 * On this moment only used for the "options" tags
+	 * 
 	 */
 
 	@Override
@@ -94,16 +95,16 @@ public class ElementParser extends XMLAppParser {
 	}
 	
 	/**
-	 * Check if node refers a "ElementVariant". 
+	 * This method determines if node refers a "ElementVariant". 
 	 * 
-	 * return If the node refers to a element vairant, the ElementVariant object is return
-	 *        Otherwise a "null" value is returned 
+	 * return If the node refers to a element variant, the ElementVariant object is returned
+	 *        Otherwise a "null" value is returned. 
 	 */
 	
 	@Override
 	protected ElementVariant getVariant(Node node) throws XMLLoadException, ReplaceVarException   
 	{
-		String className=this.getAttributeValue(node, "class");
+		String className=this.getAttributeValue(node, "type");
 		ElementVariant variant=null;
 		if((className != null) && (className.charAt(0)=='@')){
 			variant=getApplication().getVariantByName(className.substring(1));

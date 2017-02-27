@@ -1,12 +1,10 @@
 package org.elaya.page.widget.element;
 
 import org.elaya.page.core.Data;
+import org.elaya.page.core.InvalidTypeException;
+import org.elaya.page.core.KeyNotFoundException;
 import org.elaya.page.core.Writer;
-import org.elaya.page.core.Data.KeyNotFoundException;
-
 import java.io.IOException;
-
-import org.elaya.page.Errors;
 import org.elaya.page.widget.Element;
 import org.elaya.page.widget.PageElement;
 
@@ -49,11 +47,11 @@ public class RepeatElement extends PageElement<ElementThemeItem> {
 					if(item instanceof Data){
 						super.displayChildElements(id,pwriter, (Data)item);
 					}else {
-						throw new Errors.InvalidTypeException("element of dataVariable must be inherited from elaya.org.data.Data class");
+						throw new InvalidTypeException(Data.class,item);
 					}
 				}
 			} else {
-				throw new Errors.InvalidTypeException("dataVariable in repeat element must point to a iterator variable or null");
+				throw new InvalidTypeException(Iterable.class,dataValue);
 			}
 		}catch(Exception e){
 			throw new DisplayException("",e);

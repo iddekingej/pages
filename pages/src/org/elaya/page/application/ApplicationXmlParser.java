@@ -12,12 +12,18 @@ public class ApplicationXmlParser extends XMLParser {
 	}
 
 
-
+	/**
+	 * Open the file.
+	 * The application configuration XML must always places in the jar file.
+	 */
 	@Override
 	protected InputStream openFile(String pfileName) {
 		return getClass().getClassLoader().getResourceAsStream(pfileName);
 	}
 
+	/**
+	 * Setup the parser
+	 */
 	@Override
 	protected void setupConfig() {
 		addConfig("application",new XMLConfig(Application.class,Application.class,"",null));
@@ -34,6 +40,9 @@ public class ApplicationXmlParser extends XMLParser {
 		return "";
 	}
 	
+	/**
+	 * After the application is created call Application.setup
+	 */
 	@Override
 	protected void afterCreate(Object object) throws LoadingAliasFailed, org.elaya.page.xml.XMLParserBase.XMLLoadException, IllegalArgumentException, IllegalAccessException
 	{

@@ -1,20 +1,19 @@
 package org.elaya.page.core;
 
 import java.io.IOException;
-import javax.servlet.ServletOutputStream;
-
+import java.io.PrintWriter;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.elaya.page.application.Application;
 
 public class Writer extends AbstractWriter{
-	ServletOutputStream stream;
+	PrintWriter stream;
 	JSWriter            jswriter;
 	int idCnt=0;
 
 
 	public Writer(Application papplication,PageSession psession) throws IOException {
 		super(papplication,psession);
-		stream=psession.getOutputStream();		
+		stream=psession.getWriter();			
 	}	
 	
 	public JSWriter getJSWriter()
@@ -89,7 +88,7 @@ public class Writer extends AbstractWriter{
 		
 	public String getImgUrl(String pfile)
 	{
-		return getBasePath()+"/"+getApplication().getImageUrl()+pfile;
+		return getBasePath()+"/"+getApplication().getImageBaseUrl()+pfile;
 	}
 		
 	
@@ -102,12 +101,12 @@ public class Writer extends AbstractWriter{
 	
 	public String getJSPath(String pfile)
 	{
-		return getBasePath()+"/"+getApplication().getJSPath() +pfile;
+		return getBasePath()+"/"+getApplication().getJSBaseUrl() +pfile;
 	}
 	
 	public String getCSSPath(String pfile)
 	{
-		return getBasePath()+"/"+getApplication().getCSSPath()+pfile;
+		return getBasePath()+"/"+getApplication().getCSSBaseUrl()+pfile;
 	}
 	
 	
