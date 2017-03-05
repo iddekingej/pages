@@ -10,7 +10,6 @@ public class LinkElement extends PageElement<ElementThemeItem> {
 	private String text;
 	private String className;
 	private String css;
-	private LinkType linkType=LinkType.LINK_APPLICATION;
 	
 	public void setUrl(String purl){
 		url=purl;
@@ -53,10 +52,6 @@ public class LinkElement extends PageElement<ElementThemeItem> {
 	public void displayElement(int id,Writer pwriter,Data data) throws org.elaya.page.widget.Element.DisplayException {
 		try{			
 			String resultUrl=pwriter.processUrl(data,url);
-
-			if(linkType==LinkType.LINK_APPLICATION){
-				resultUrl=pwriter.getBasePath()+resultUrl;
-			}
 			themeItem.link(pwriter,resultUrl, pwriter.replaceVariables(data,text), pwriter.replaceVariables(data,className), pwriter.replaceVariables(data,css)); 
 		}catch(Exception e){
 			throw new DisplayException("",e);
