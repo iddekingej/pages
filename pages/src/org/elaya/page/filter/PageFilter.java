@@ -8,11 +8,18 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import org.elaya.page.application.Application;
-
+/**
+ * The JavaEE filter is an interface with the Page filters. 
+ *
+ */
 public class PageFilter implements Filter {
 	private FilterManager securityManager;
 
+
 	@Override
+	/**
+	 * Execute the page filters
+	 */
 	public void doFilter(ServletRequest prequest, ServletResponse presponse, FilterChain chain)
 			throws IOException, ServletException {
 		if(securityManager != null){
@@ -31,6 +38,11 @@ public class PageFilter implements Filter {
 		/* Can be used to initialized parser further */
 	}
 	@Override
+	/**
+	 * Initialize the FilterManager
+	 * 
+	 * @param pconfig filter configuration
+	 */
 	public void init(FilterConfig pconfig) throws ServletException {
 		Application application;
 		System.out.println("Security filter init start");

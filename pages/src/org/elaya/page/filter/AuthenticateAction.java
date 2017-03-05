@@ -91,7 +91,15 @@ public class AuthenticateAction extends Action {
 		/*By default no setup us necessary */
 	}
 	
-	private AuthorizationData createSessionDataGen(PageSession session,Map<String,Object>pdata) throws InvalidSessionData, NoSuchMethodException, ClassNotFoundException, InstantiationException, IllegalAccessException,  InvocationTargetException, NotSerializableException{
+	/**
+	 * When authentication is successful the session is created in this method.
+	 *  
+	 * @param session  Current session
+	 * @param pdata    Data used to setup session    
+	 * 
+	 * @return A AuthorizationData object.
+	 */
+	private AuthorizationData createSessionData(PageSession session,Map<String,Object>pdata) throws InvalidSessionData, NoSuchMethodException, ClassNotFoundException, InstantiationException, IllegalAccessException,  InvocationTargetException, NotSerializableException{
 		Object object=DynamicObject.createObjectFromName(sessionDataClass);
 		if(object instanceof AuthorizationData){
 			AuthorizationData authorisationData=(AuthorizationData)object;
@@ -105,12 +113,12 @@ public class AuthenticateAction extends Action {
 		}	
 	}
 	
-	
-
-	
-	protected AuthorizationData createSessionData(PageSession session,Map<String,Object> pdata) throws NoSuchMethodException, ClassNotFoundException, InstantiationException, IllegalAccessException,  InvocationTargetException, InvalidSessionData, NotSerializableException{
-		return createSessionDataGen(session,pdata);
-	}
+	/**
+	 * Checks the authentication and setup the authentication and session object
+	 * 
+	 * @param session
+	 * @return 
+	 */
 	private  ActionResult checkAuthentication(PageSession session) throws AuthenticationException
 	{
 		try{

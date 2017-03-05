@@ -10,10 +10,16 @@ import org.elaya.page.application.PageApplicationAware;
 import org.elaya.page.core.AuthorizationData;
 import org.elaya.page.core.PageSession;
 
-
+/**
+ * A filter consist of a matcher(condition) and a action
+ * When a request matches the condition of a matcher the action is executed. 
+ *
+ */
 
 public abstract class Action implements PageApplicationAware{
-	
+	/**
+	 * Object representing the web application
+	 */
 	private Application application;
 	
 	@Override
@@ -28,10 +34,12 @@ public abstract class Action implements PageApplicationAware{
 		application=papplication;
 	}
 	
-	protected void redirect(HttpServletRequest prequest,HttpServletResponse presponse,String purl) throws IOException{
-		presponse.sendRedirect(prequest.getContextPath()+purl);
-	}
-	
+	/**
+	 * Get the session object from a request.
+	 * 
+	 * @param prequest
+	 * @return
+	 */
 	protected AuthorizationData getSessionFromRequest(ServletRequest prequest)
 	{
 		Object object=prequest.getAttribute("org.elaya.page.security.SessionData");

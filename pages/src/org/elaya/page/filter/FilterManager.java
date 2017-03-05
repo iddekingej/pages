@@ -11,10 +11,20 @@ import javax.servlet.http.HttpServletResponse;
 import org.elaya.page.core.PageSession;
 import org.elaya.page.core.PageSession.InvalidSessionData;
 
-
+/**
+ * Manage the filters
+ *
+ */
 public class FilterManager  {
 	
+	/**
+	 * Url to which login data must be submitted
+	 */
 	private String loginPageUrl="";	
+	/**
+	 * The request filter consists of a matcher and a action. 
+	 * The matchers are grouped in a requestMatchterGroup. 
+	 */
 	private LinkedList<RequestMatcherGroup> requestMatcherGroups=new LinkedList<>();
 
 
@@ -26,7 +36,13 @@ public class FilterManager  {
 		return loginPageUrl;
 	}
 	
-	
+	/**
+	 * Create a pageSession from a request and response object
+	 *  
+	 * @param servletRequest
+	 * @param servletResponse
+	 * @return
+	 */
 	protected PageSession createSession(HttpServletRequest servletRequest,HttpServletResponse servletResponse) throws NotSerializableException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, ClassNotFoundException, InvalidSessionData  
 	{
 		PageSession session=new PageSession(servletRequest,servletResponse);
@@ -34,7 +50,13 @@ public class FilterManager  {
 		return session;
 	}
 	
-	
+	/**
+	 * Execute the defined filters
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 */
 	
 	public boolean execute(ServletRequest request,ServletResponse response) throws InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, ClassNotFoundException, InvalidSessionData, ActionException, IOException 
 	{
@@ -60,6 +82,10 @@ public class FilterManager  {
 		
 	}
 	
+	/**
+	 * Add a requestMatcherGroup to the Filter manager
+	 * @param prequestMatcherGroup
+	 */
 	public void addRequestMatcherGroup(RequestMatcherGroup prequestMatcherGroup){
 		requestMatcherGroups.add(prequestMatcherGroup);
 	}
