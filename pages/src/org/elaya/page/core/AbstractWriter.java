@@ -11,16 +11,37 @@ import org.elaya.page.application.Application;
 import org.elaya.page.application.Application.InvalidAliasType;
 import org.xml.sax.SAXException;
 
-public abstract class AbstractWriter {
+/**
+ *  Base object for output writer.
+ *  Used of Writer (html) and JSWriter (Js outputting)
+ *
+ */
 
+public abstract class AbstractWriter {
+/**
+ * Application object 
+ */
 	private Application application;
+/**
+ * Session object belonging to the request/response
+ */
 	private PageSession session;
 	
+/**
+ * Set  Writer
+ * 
+ * @param papplication
+ * @param psession
+ */
 	public AbstractWriter(Application papplication,PageSession psession) {
 		application=papplication;
 		session=psession;
 	}
-
+/**
+ * Get the application object 
+ * 
+ * @return Application object
+ */
 	public Application getApplication()
 	{
 		return application;
@@ -31,6 +52,11 @@ public abstract class AbstractWriter {
 		return session;
 	}
 	
+/**
+ * Base/Root  path of the application
+ * 
+ * @return Base path (without the host name) of the site
+ */
 	
 	public String getBasePath(){
 		return session.getBasePath();
@@ -72,6 +98,17 @@ public abstract class AbstractWriter {
 		
 		return returnValue.toString();
 	}
+    /**
+     * Convert an url expression o the real path:
+     * -Replace variables is string
+     * -Replace alias value is the value starts with a "@"
+     * -If url start with a "+" than the url is a application relative url. The
+     *  root path is added to the url.
+     *  
+     * @param data  Current data set used for replacing variables
+     * @param purl  The url to parse
+     * @return The url string
+     */
 	
 	public String processUrl(Data data,String purl) throws ParserConfigurationException, SAXException, IOException, InvalidAliasType, AliasNotFound, LoadingAliasFailed, ReplaceVarException 
 	{
@@ -85,6 +122,15 @@ public abstract class AbstractWriter {
 			return url;
 		}
 	}
+	
+	/**
+	 * Convert java object:
+	 * - when null , return an empty string
+	 * - otherwise call object.toString()
+	 * 
+	 * @param pvalue
+	 * @return
+	 */
 	
 	public String str(Object pvalue){
 		if(pvalue==null){
