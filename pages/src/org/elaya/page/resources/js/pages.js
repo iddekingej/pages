@@ -1,4 +1,3 @@
-"use strict"
 var pages={		
 		page:{
 			elements:{},
@@ -561,3 +560,126 @@ TTabPages.prototype.clickTab=function(p_element)
 	this.displayTab(l_id);
 }
 var widgetParent=null;
+
+function TOLMap(p_parent,p_jsName,p_name,p_id)
+{
+	TElement.call(this,p_parent,p_jsName,p_name,p_id);	
+	this.minLon=false;
+	this.maxLon=false;
+	this.minLat=false;
+	this.maxLat=false;
+	this.centerLon=false;
+	this.centerLat=false;
+	this.gpxFile="";
+	this.style=false;
+	this.lineColor="#0F0";
+}
+
+TOLMap.prototype=Object.create(TElement.prototype);
+
+/**
+ * Create route view:
+ * Set projection,center and size of the map.
+ */
+
+TOLMap.prototype.createView=function()
+{
+	var l_viewConfig={
+			 center:ol.proj.transform([this.centerLon,this.centerLat], 'EPSG:4326', 'EPSG:3857'),					
+	}
+	if(this.minLat !== false){
+		var l_top=ol.proj.transform([this.minLon,this.minLat], 'EPSG:4326', 'EPSG:3857');
+		var l_bottom=ol.proj.transform([this.maxLon,this.maxLat], 'EPSG:4326', 'EPSG:3857');
+		var l_resolution=Math.max((l_bottom[0]-l_top[0])/this.element.offsetWidth,(l_bottom[1]-l_top[1])/this.element.offsetHeight);
+		l_viewConfig.resolution=l_resolution;
+		l_viewConfig.zoom=20;
+	} else {
+		l_viewConfig.center=[]
+		l_viewConfig.zoom=20;
+	}
+	return new ol.View(l_viewConfig);
+}
+
+TOLMap.prototype.setup=function()
+{
+	TElement.prototype.setup.call(this);
+	var l_layer=new ol.layer.Tile({source: new ol.source.OSM()});	
+	this.layers=[l_layer];
+	this.style = {
+	        'Point': new ol.style.Style({
+	          image: new ol.style.Circle({
+	            fill: new ol.style.Fill({
+	              color: 'rgba(255,255,0,0.4)'
+	            }),
+	            radius: 5,
+	            stroke: new ol.style.Stroke({
+	              color: '#ff0',
+	              width: 1
+	            })
+	          })
+	        }),
+	        'LineString': new ol.style.Style({
+	          stroke: new ol.style.Stroke({
+	            color: '#f00',
+	            width: 3
+	          })
+	        }),
+	        'MultiLineString': new ol.style.Style({
+	          stroke: new ol.style.Stroke({
+	            color: this.lineColor,
+	            width: 3
+	          })
+	        })
+	      };
+
+	var l_controls=ol.control.defaults({
+		attributeOptions:({
+			collapsible:false
+		})
+	});
+		
+	var l_view=this.createView();
+	
+	var l_mapConfig={
+		 layers:this.layers
+		,target:this.element
+		,controls:l_controls
+		,view:l_view
+	}
+	var l_map=new ol.Map(l_mapConfig);
+	return l_map;
+}
+
+/**
+ * Set the area (in latitude/longitude) to display on the map. 
+ */
+
+TOLMap.prototype.setSize=function(p_minLat,p_maxLat,p_minLon,p_maxLon)
+{
+	this.minLon=p_minLon;
+	this.maxLon=p_maxLon;
+	this.minLat=p_minLat;
+	this.maxLat=p_maxLat;	
+	this.centerLon=(p_minLon+p_maxLon)/2;
+	this.centerLat=(p_minLat+p_maxLat)/2;
+}
+
+/**
+ * Set the url to the GPX route
+ */
+
+TOLMap.prototype.setGpxRoute=function(p_url)
+{
+	var l_sourceConfig={
+			url:p_url,
+			format: new ol.format.GPX()
+	}
+	var l_this=this;
+    var  l_vector = new ol.layer.Vector({
+        source: new ol.source.Vector(l_sourceConfig),
+        style: function(feature) {
+          return l_this.style[feature.getGeometry().getType()];
+        }
+      });
+	this.layers.push(l_vector);
+}

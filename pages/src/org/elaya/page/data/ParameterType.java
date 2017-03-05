@@ -1,4 +1,4 @@
-package org.elaya.page.receiver;
+package org.elaya.page.data;
 
 public enum ParameterType {
 	STRING,

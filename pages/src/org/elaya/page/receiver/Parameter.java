@@ -2,6 +2,7 @@ package org.elaya.page.receiver;
 
 import org.elaya.page.NamedObject;
 import org.elaya.page.core.DynamicMethod;
+import org.elaya.page.data.ParameterType;
 import org.json.JSONException;
 
 public class Parameter extends DynamicMethod implements NamedObject {

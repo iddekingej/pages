@@ -134,14 +134,17 @@ public class Application{
 	
 	//TODO Exception when key not found.
 	/**
-	 * Connect to a named jdbc connection. Connection are
+	 * Connect to a named jdbc connection.
 	 * 
-	 * @param pname
+	 * @param pname Name of conenction. Null for default connection.
 	 * @return JDBC connection 
 	 */
 	
 	public Connection connectToDB(String pname) throws SQLException, ClassNotFoundException
 	{
+		if(pname==null){
+			return connectToDefaultDB();
+		}  
 		DatabaseConnection db=databaseConnections.getConnection(pname);
 		if(db==null){
 			return null;

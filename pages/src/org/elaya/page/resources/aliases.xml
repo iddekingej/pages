@@ -62,8 +62,11 @@
 	<security alias="sec_authenticate" value="org.elaya.page.filter.AuthenticateAction"/>
 	<security alias="fil_router" value="org.elaya.page.filter.RouterAction"/>
 	<!--  DataLayer -->
-	<datalayer alias="dl_query" value="org.elaya.page.data.QueryXML" />
-	<datalayer alias="dl_parameter" value="org.elaya.data.ParameterXML"/>
-	<datalayer alias="dl_formula" value="org.elaya.data.FormulaXML" />
-	<datalayer alias="dl_constant" value="org.elaya.data.ConstantXML" />
+	<prefix prefix="org.elaya.page.data.">
+		<datalayer alias="dl_query" value="QueryXML" />
+		<datalayer alias="dl_queryrow" value="QueryRowXML" />
+		<datalayer alias="dl_parameter" value="ParameterXML"/>
+		<datalayer alias="dl_formula" value="FormulaXML" />
+		<datalayer alias="dl_constant" value="ConstantXML" />
+	</prefix>
 </aliases>

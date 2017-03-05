@@ -46,6 +46,7 @@ public class Router implements PageApplicationAware {
 	
 	public Route getRoute(String pmethod,String purl)
 	{
+		
 		for(Route route:routes)
 		{
 			System.out.println(purl+" "+route.getUrl()); 

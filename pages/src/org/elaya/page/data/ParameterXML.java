@@ -1,12 +1,11 @@
 package org.elaya.page.data;
 
 import org.elaya.page.core.PageSession;
-import org.elaya.page.receiver.ParameterType;
 
 public class ParameterXML extends XMLBaseDataItem {
 
 	private String name="";
-	private String variable;
+	private String variableName;
 	private ParameterType parameterType;
 	
 	public void setName(String pname)
@@ -19,14 +18,14 @@ public class ParameterXML extends XMLBaseDataItem {
 		return name;
 	}
 	
-	public void setVariable(String pvariable)
+	public void setVariableName(String pvariableName)
 	{
-		variable=pvariable;
+		variableName=pvariableName;
 	}
 	
-	public String getVariable()
+	public String getVariableName()
 	{
-		return variable;
+		return variableName;
 	}
 	
 	
@@ -46,7 +45,7 @@ public class ParameterXML extends XMLBaseDataItem {
 	public void processData(MapData pdata) throws XMLDataException{
 		try{
 			PageSession pageSession=pdata.get("pageSession",PageSession.class);
-			String realVarName=variable;
+			String realVarName=variableName;
 			if(realVarName==null){
 				realVarName=name;
 			}

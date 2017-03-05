@@ -9,6 +9,7 @@ import org.elaya.page.Errors.InvalidObjectType;
 import org.elaya.page.application.Application.DefaultDBConnectionNotSet;
 import org.elaya.page.core.Dynamic;
 import org.elaya.page.core.PageSession;
+import org.elaya.page.data.ParameterType;
 import org.json.JSONException;
 import org.json.JSONObject;
 

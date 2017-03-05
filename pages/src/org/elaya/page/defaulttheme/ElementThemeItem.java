@@ -82,4 +82,9 @@ public class ElementThemeItem extends org.elaya.page.widget.element.ElementTheme
 		writer.print("\n<input type='button' "+classProperty("button")+property("id",id)+property("value",text)+"/>\n");
 	}
 
+	@Override
+	public void olmapdiv(Writer pwriter, String pid,int pdivWidth,int pdivHeight) throws IOException {
+		pwriter.print("<div "+classProperty("olmap")+property("id",pid)+"style='width:"+escape(pdivWidth)+"px;height:"+escape(pdivHeight)+"px'"+"></div>");
+	}
+
 }

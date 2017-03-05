@@ -26,4 +26,5 @@ public abstract class ElementThemeItem extends ThemeItemBase {
 	public abstract void menuBarFooter(Writer pwriter) throws IOException;
 	public abstract void menu(Writer pwriter,String pid,String ptitle) throws IOException;
 	public abstract void button(Writer writer,String id,String text) throws IOException;
+	public abstract void olmapdiv(Writer writer,String id,int pdivWidth,int pdivHeight) throws IOException;
 }
