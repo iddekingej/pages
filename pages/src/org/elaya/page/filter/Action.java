@@ -1,10 +1,6 @@
 package org.elaya.page.filter;
 
-import java.io.IOException;
 import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.elaya.page.application.Application;
 import org.elaya.page.application.PageApplicationAware;
 import org.elaya.page.core.AuthorizationData;

@@ -1,6 +1,7 @@
 package org.elaya.page.widget;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedList;
 import java.util.List;
@@ -21,6 +22,7 @@ import org.elaya.page.Errors.LoadingAliasFailed;
 import org.elaya.page.Errors.ReplaceVarException;
 import org.elaya.page.UniqueNamedObjectList.DuplicateItemName;
 import org.elaya.page.application.Application.InvalidAliasType;
+import org.elaya.page.core.AttributeDecl;
 import org.elaya.page.core.Data;
 import org.elaya.page.core.DynamicMethod;
 import org.elaya.page.core.JSWriter;
@@ -79,6 +81,43 @@ public abstract class Element<T extends ThemeItemBase> extends DynamicMethod imp
 
 	public Element()
 	{
+	}
+	
+	public void validateElement()
+	{
+		
+	}
+	
+	private void validateAnnotation() throws ValidateError 
+	{
+		try{
+			Field[] fields=getClass().getDeclaredFields();
+
+			for(Field field:fields){
+				field.setAccessible(true);
+				AttributeDecl attr=field.getAnnotation(AttributeDecl.class);
+				if(attr!=null){
+					if(attr.mandatory()){
+						if(field.get(this)==null){
+							throw new ValidateError(field.getName()+" is mandatory,but not set");
+						}
+					}
+				}
+				field.setAccessible(false);
+			}
+		}catch(ValidateError e){
+			throw e;
+		}catch(Exception e){
+			throw new ValidateError(e.getMessage(),e);
+		}
+	}
+	public void validate() throws ValidateError 
+	{
+		validateElement();
+		validateAnnotation();
+		for(Element<?> element:elements){
+			element.validate();
+		}
 	}
 	
 	public void afterSetup() throws ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException

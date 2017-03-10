@@ -226,6 +226,11 @@ public abstract class XMLParser extends XMLParserBase<Object> {
 			child=child.getNextSibling();
 		}
 	}
+
+	protected void setObjectAttribute(Object pobject,String pattribute,String pvalue) throws DynamicException
+	{
+		DynamicObject.put(pobject, pattribute, pvalue);
+	}
 	
 	private void setAttribute(Object object,Node attribute,ElementVariant variant) throws XMLLoadException, SettingAttributeException
 	{
@@ -234,7 +239,7 @@ public abstract class XMLParser extends XMLParserBase<Object> {
 		if(variant == null || !variant.containsParameter(attributeName)){
 			if(!"name".equals(attributeName) && !"ref".equals(attributeName) && !"type".equals(attributeName) && !"file".equals(attributeName)){
 				try{
-					DynamicObject.put(object,attributeName,replaceVariables(attribute.getNodeValue()));
+					setObjectAttribute(object,attributeName,replaceVariables(attribute.getNodeValue()));
 				} catch(Exception e){
 					throw new Errors.SettingAttributeException(attributeName,object,e);
 				}

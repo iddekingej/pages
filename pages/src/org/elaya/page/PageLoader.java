@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.io.IOException;
 import org.elaya.page.application.Application;
 import org.elaya.page.widget.Page;
+import org.elaya.page.widget.ValidateError;
 import org.elaya.page.xml.XMLParserBase.XMLLoadException;
 
 public class PageLoader {
@@ -50,6 +51,7 @@ public class PageLoader {
  * @param pfileName
  * @param pcache
  * @return Loaded page from xml ui file
+ * @throws ValidateError 
  */
 	private Page loadNewPage(String pfileName,boolean pcache) throws XMLLoadException, IOException
 	{
@@ -58,6 +60,11 @@ public class PageLoader {
 		parser.setApplication(application);
 		initUiParser(parser);		
 		page=parser.parse(pfileName,Page.class);	
+		try{
+			page.validate();
+		}catch(Exception e){
+			throw new XMLLoadException(e.getMessage(),e,null);
+		}
 		if(pcache){
 			CacheEntry<Page> entry=new CacheEntry<>(page);
 			for(String depFile:parser.getFiles()){

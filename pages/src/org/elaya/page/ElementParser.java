@@ -2,9 +2,17 @@ package org.elaya.page;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.LinkedList;
 import org.elaya.page.Errors.ReplaceVarException;
 import org.elaya.page.application.AliasNamespace;
+import org.elaya.page.core.DynamicObject;
+import org.elaya.page.core.ExpressionAttribute;
+import org.elaya.page.core.Attribute;
+import org.elaya.page.core.AttributeDecl;
+import org.elaya.page.core.AttributeType;
+import org.elaya.page.core.Dynamic.DynamicException;
 import org.elaya.page.data.DataLayer;
 import org.elaya.page.data.XMLDataLayerParser;
 import org.elaya.page.widget.Element;
@@ -15,6 +23,8 @@ import org.elaya.page.xml.XMLAppParser;
 import org.elaya.page.xml.XMLConfig;
 import org.elaya.page.xml.XMLCustomConfig;
 import org.w3c.dom.Node;
+
+
 /**
  * Parses a page XML definition to objects representing the page.
  *
@@ -30,6 +40,31 @@ public class ElementParser extends XMLAppParser {
 		return getApplication().getConfigStream(pfileName);		
 	}
  
+	Class<?> getType()
+	{
+		AttributeDecl attr=getClass().getAnnotation(AttributeDecl.class);
+		return attr.type();
+	}
+	
+	@Override
+	protected void setObjectAttribute(Object pobject,String pattribute,String pvalue) throws DynamicException 
+	{
+		Object value;
+		try{
+			Field field=pobject.getClass().getDeclaredField(pattribute);
+			AttributeDecl attr=field.getAnnotation(AttributeDecl.class);
+			System.out.println(pattribute+":"+field.getType()+":"+attr+":"+Attribute.class.isAssignableFrom(field.getType()));
+			if(Attribute.class.isAssignableFrom(field.getType()) ){
+				System.out.println("Yes!!");
+				value=new ExpressionAttribute(attr.type(),pvalue);
+			} else {
+				value=pvalue;
+			}
+		}catch(Exception e){
+			throw new DynamicException(e.getMessage(),e);
+		}
+		DynamicObject.put(pobject, pattribute, value);
+	}
 
 	/**
 	 * Handle \<option\> node inside an \<options\> block

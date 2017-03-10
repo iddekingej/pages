@@ -2,28 +2,33 @@ package org.elaya.page.widget.element;
 
 import java.io.IOException;
 import java.util.Set;
-
 import javax.xml.parsers.ParserConfigurationException;
-
 import org.elaya.page.Errors.AliasNotFound;
 import org.elaya.page.Errors.LoadingAliasFailed;
 import org.elaya.page.Errors.ReplaceVarException;
 import org.elaya.page.application.Application.InvalidAliasType;
+import org.elaya.page.core.Attribute;
+import org.elaya.page.core.AttributeDecl;
 import org.elaya.page.core.Data;
 import org.elaya.page.core.JSWriter;
 import org.elaya.page.core.Writer;
 import org.elaya.page.widget.PageElement;
 import org.json.JSONException;
 import org.xml.sax.SAXException;
+
 public class OLMap extends PageElement<ElementThemeItem> {
 	private String gpxUrl;
 	private String lineColor;
 	private String divWidth="300";
 	private String divHeight="300";
-	private String minLat;
-	private String maxLat;
-	private String minLon;
-	private String maxLon;
+	@AttributeDecl(type=Float.class)
+	private Attribute minLat;
+	@AttributeDecl(type=Float.class)
+	private Attribute maxLat;
+	@AttributeDecl(type=Float.class)
+	private Attribute minLon;
+	@AttributeDecl(type=Float.class)
+	private Attribute maxLon;
 	
 	public void setGpxUrl(String pgpxUrl)
 	{
@@ -35,42 +40,42 @@ public class OLMap extends PageElement<ElementThemeItem> {
 		return gpxUrl;
 	}
 	
-	public void setMinLat(String pminLat)
+	public void setMinLat(Attribute pminLat)
 	{
 		minLat=pminLat;
 	}
 	
-	public String getMinLat()
+	public Attribute getMinLat()
 	{
 		return minLat;
 	}
 	
-	public void setMaxLat(String pmaxLat)
+	public void setMaxLat(Attribute pmaxLat)
 	{
 		maxLat=pmaxLat;
 	}
 	
-	public String getMaxLat()
+	public Attribute getMaxLat()
 	{
 		return maxLat;
 	}
 	
-	public void setMinLon(String pminLon)
+	public void setMinLon(Attribute pminLon)
 	{
 		minLon=pminLon;
 	}
 	
-	public String getMinLon()
+	public Attribute getMinLon()
 	{
 		return minLon;
 	}
 	
-	public void setMaxLon(String pmaxLon)
+	public void setMaxLon(Attribute pmaxLon)
 	{
 		maxLon=pmaxLon;
 	}
 	
-	public String getMaxLon()
+	public Attribute getMaxLon()
 	{
 		return maxLon;
 	}	
@@ -124,12 +129,22 @@ public class OLMap extends PageElement<ElementThemeItem> {
 	}
 	
 	@Override
-	protected void makeSetupJs(JSWriter pwriter,Data pdata) throws IOException, JSONException, ReplaceVarException, ParserConfigurationException, SAXException, InvalidAliasType, AliasNotFound, LoadingAliasFailed
+	protected void makeSetupJs(JSWriter pwriter,Data pdata) throws  ReplaceVarException, ParserConfigurationException, SAXException, IOException, InvalidAliasType, AliasNotFound, LoadingAliasFailed, JSONException 
 	{
-		float minLatVal=Float.parseFloat(pwriter.replaceVariables(pdata,minLat));
-		float maxLatVal=Float.parseFloat(pwriter.replaceVariables(pdata,maxLat));
-		float minLonVal=Float.parseFloat(pwriter.replaceVariables(pdata,minLon));
-		float maxLonVal=Float.parseFloat(pwriter.replaceVariables(pdata,maxLon));
+		float minLatVal;
+		float maxLatVal;
+		float minLonVal;
+		float maxLonVal;
+		try{
+			minLatVal=(Float)minLat.getValue(pdata);
+			maxLatVal=(Float)maxLat.getValue(pdata);
+			minLonVal=(Float)minLon.getValue(pdata);
+			maxLonVal=(Float)maxLon.getValue(pdata);
+		}catch(Exception e)
+		{
+			throw new ReplaceVarException(e.getMessage(),e); 
+		}
+
 		String gpxUrlVal=pwriter.processUrl(pdata, gpxUrl);
 		pwriter.printNl("this.setSize("+minLatVal+","+maxLatVal+","+minLonVal+","+maxLonVal+");\n");
 		if(gpxUrl != null && gpxUrl.length()>0){
