@@ -116,4 +116,47 @@ public class Errors {
 		}
 
 	}
+	
+	public static class RequestException extends Exception{
+		
+		private static final long serialVersionUID = -3532362067712785145L;
+
+		public RequestException(String pmessage){
+			super(pmessage);
+		}
+		
+		public RequestException(String pmessage,Throwable pprevious){
+			super(pmessage,pprevious);
+		}
+	}
+	
+	public static class RouterException extends RequestException{
+		
+		private static final long serialVersionUID = 7755661141104729497L;
+
+		public RouterException(String pmessage)
+		{
+			super(pmessage);
+		}
+		
+		public RouterException(String pmessage,Throwable pprevious)
+		{
+			super(pmessage,pprevious);
+		}
+	}
+	
+	public static class ContentException extends RequestException{
+
+		private static final long serialVersionUID = -1052942311794054498L;
+
+		public ContentException(String pmessage)
+		{
+			super(pmessage);
+		}
+		
+		public ContentException(String pmessage,Throwable perror)
+		{
+			super(pmessage,perror);
+		}
+	}
 }

@@ -18,19 +18,13 @@ import org.elaya.page.ElementVariant;
 import org.elaya.page.ElementVariantList;
 import org.elaya.page.ElementVariantParser;
 import org.elaya.page.Errors;
-import org.elaya.page.Errors.AliasNotFound;
+import org.elaya.page.Errors.ContentException;
 import org.elaya.page.Errors.LoadingAliasFailed;
 import org.elaya.page.Errors.NormalizeClassNameException;
-import org.elaya.page.core.DataException;
 import org.elaya.page.core.PageSession;
 import org.elaya.page.core.Url;
-import org.elaya.page.data.XMLBaseDataItem.XMLDataException;
-import org.elaya.page.formula.FormulaException;
-import org.elaya.page.receiver.Receiver.ReceiverException;
 import org.elaya.page.PageLoader;
 import org.elaya.page.UniqueNamedObjectList.DuplicateItemName;
-import org.elaya.page.application.Route.InvalidRouteTypeException;
-import org.elaya.page.widget.Element.DisplayException;
 import org.elaya.page.widget.Page;
 import org.elaya.page.xml.XMLParserBase.XMLLoadException;
 import org.xml.sax.SAXException;
@@ -47,15 +41,46 @@ public class Application{
 	private String routerFiles;
 	private LinkedList<Router> routers=new LinkedList<>();
 	private ElementVariantList elementVariants;
-	private DatabaseConnections databaseConnections=new DatabaseConnections(); 
+	/**
+	 * Database connections. This can be defined in application xml file 
+	 */
+	private DatabaseConnections databaseConnections=new DatabaseConnections();
+	/**
+	 * Hash map with all aliasses 
+	 */
 	private HashMap<String,AliasData> aliases;
+	/**
+	 * Base path to xml files
+	 */
 	private String xmlPath="../pages/"; 
+	/**
+	 * Default DB Connection name, used when connectToDefaultDB is called 
+	 */
 	private String defaultDBConnection;
+	/**
+	 * Class appended to relative class names in xml files(starting with a ".")
+	 */
 	private String classBase="";
+	/**
+	 * Page loader object , used for loading pages
+	 */
 	private PageLoader pageLoader;
+	/**
+	 * Base url path where images are stored
+	 */
 	private String imageBaseURL="resources/images/";
+	/**
+	 * Base url path where js files are stored
+	 */
 	private String jsBaseUrl="resources/js/";
-	private String cssBaseUrl="resources/css/"; 
+	/**
+	 * Base url path where css files are stored
+	 */
+	private String cssBaseUrl="resources/css/";
+	/**
+	 * Css files included with every page
+	 */
+	private String cssFiles;
 	/**
 	 *  If XML files are inside the WAR or on a external path 
 	 *  true=internal false=external
@@ -82,6 +107,7 @@ public class Application{
 		}
 	}
 	
+
 	
 	public void setExternalXML(Boolean pexternalXML)
 	{
@@ -136,7 +162,7 @@ public class Application{
 	/**
 	 * Connect to a named jdbc connection.
 	 * 
-	 * @param pname Name of conenction. Null for default connection.
+	 * @param pname Name of connection. Null for default connection.
 	 * @return JDBC connection 
 	 */
 	
@@ -160,7 +186,11 @@ public class Application{
 	}
 	
 	//--(Router )-------------------------------//
-	
+	/**
+	 * Load router xml files
+	 * 
+	 * @throws XMLLoadException
+	 */
 	public void loadRouter() throws XMLLoadException
 	{
 		if(routerFiles != null){
@@ -173,7 +203,8 @@ public class Application{
 		}
 	}
 	
-	public void routeRequest(HttpServletRequest prequest,HttpServletResponse presponse) throws InvalidRouteTypeException, IOException, DisplayException, SQLException, DefaultDBConnectionNotSet, ParserConfigurationException, SAXException, InvalidAliasType, AliasNotFound, LoadingAliasFailed, XMLLoadException, ReceiverException, DataException, ClassNotFoundException, FormulaException, XMLDataException 
+	
+	public void routeRequest(HttpServletRequest prequest,HttpServletResponse presponse) throws ContentException  
 	{
 		presponse.setCharacterEncoding("utf-8");
 		for(Router router:routers){
@@ -191,6 +222,16 @@ public class Application{
 	public String getJSBaseUrl()
 	{
 		return jsBaseUrl;
+	}
+	
+	public String getCssFiles()
+	{
+		return cssFiles;
+	}
+	
+	public void setCssFiles(String pcssFiles)
+	{
+		cssFiles=pcssFiles;
 	}
 	
 	public void setCSSBaseUrl(String pcssPath)

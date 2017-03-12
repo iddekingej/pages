@@ -1,23 +1,11 @@
 package org.elaya.page.application;
 
-import java.io.IOException;
-import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
-import javax.xml.parsers.ParserConfigurationException;
-import org.elaya.page.Errors.AliasNotFound;
-import org.elaya.page.Errors.LoadingAliasFailed;
-import org.elaya.page.application.Application.DefaultDBConnectionNotSet;
-import org.elaya.page.application.Application.InvalidAliasType;
-import org.elaya.page.application.Route.InvalidRouteTypeException;
-import org.elaya.page.core.DataException;
+import org.elaya.page.Errors.ContentException;
 import org.elaya.page.core.PageSession;
-import org.elaya.page.data.XMLBaseDataItem.XMLDataException;
-import org.elaya.page.formula.FormulaException;
-import org.elaya.page.receiver.Receiver.ReceiverException;
-import org.elaya.page.widget.Element.DisplayException;
-import org.elaya.page.xml.XMLParserBase.XMLLoadException;
-import org.xml.sax.SAXException;
+import org.elaya.page.Errors;
+
 
 public class Router implements PageApplicationAware {
 	private LinkedList<Route> routes=new LinkedList<>();
@@ -49,7 +37,6 @@ public class Router implements PageApplicationAware {
 		
 		for(Route route:routes)
 		{
-			System.out.println(purl+" "+route.getUrl()); 
 			if(route.getMethod().contains(pmethod) && route.getUrl().equals(purl)){
 				return route;
 			}
@@ -57,10 +44,14 @@ public class Router implements PageApplicationAware {
 		return null;
 	}
 	
-	public boolean handleRoute(PageSession psession) throws IOException, DisplayException, SQLException, DefaultDBConnectionNotSet, ParserConfigurationException, SAXException, InvalidAliasType, AliasNotFound, LoadingAliasFailed, XMLLoadException, ReceiverException, InvalidRouteTypeException, DataException, ClassNotFoundException, FormulaException, XMLDataException{		
+	public boolean handleRoute(PageSession psession) throws ContentException{		
 		Route route=getRoute(psession.getMethod(),psession.getURIPath());
 		if(route != null){
-			route.handleRoute(psession, application);
+			try{
+				route.handleRoute(psession, application);
+			}catch(Exception e){
+				throw new Errors.ContentException(e.getMessage(),e);
+			}
 			return true;
 		}
 		return false;

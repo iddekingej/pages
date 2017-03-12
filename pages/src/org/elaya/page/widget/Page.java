@@ -24,6 +24,8 @@ public class Page extends PageElement<PageThemeItem> implements PageApplicationA
  
 	private String url;
 	private boolean toWindowSize=false;
+	private String cssFiles;
+	
 	Application application;
 	DocumentType documentType=DocumentType.DT_XHTML;
 	
@@ -32,6 +34,16 @@ public class Page extends PageElement<PageThemeItem> implements PageApplicationA
 		setIsNamespace(true);
 	}
 
+	public void setCssFiles(String pcssFiles)
+	{
+		cssFiles=pcssFiles;
+	}
+	
+	public String getCssFiles()
+	{
+		return cssFiles;
+	}
+	
 	public void setDocumentType(DocumentType ptype)
 	{
 		documentType=ptype;
@@ -105,7 +117,11 @@ public class Page extends PageElement<PageThemeItem> implements PageApplicationA
 			css.add("@pagecss");
 			getAllCssFiles(css);
 			getAllJsFiles(js);
-
+			if(cssFiles!=null){
+				for(String cssFile:cssFiles.split(",")){
+					css.add(cssFile);
+				}
+			}
 			LinkedHashSet<String> procCss=processSetList(css,AliasNamespace.CSSFILE);
 			LinkedHashSet<String> procJs=processSetList(js,AliasNamespace.JSFILE);
 

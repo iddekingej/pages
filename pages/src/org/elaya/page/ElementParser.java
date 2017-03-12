@@ -3,7 +3,6 @@ package org.elaya.page;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.LinkedList;
 import org.elaya.page.Errors.ReplaceVarException;
 import org.elaya.page.application.AliasNamespace;
@@ -11,7 +10,6 @@ import org.elaya.page.core.DynamicObject;
 import org.elaya.page.core.ExpressionAttribute;
 import org.elaya.page.core.Attribute;
 import org.elaya.page.core.AttributeDecl;
-import org.elaya.page.core.AttributeType;
 import org.elaya.page.core.Dynamic.DynamicException;
 import org.elaya.page.data.DataLayer;
 import org.elaya.page.data.XMLDataLayerParser;
@@ -53,9 +51,7 @@ public class ElementParser extends XMLAppParser {
 		try{
 			Field field=pobject.getClass().getDeclaredField(pattribute);
 			AttributeDecl attr=field.getAnnotation(AttributeDecl.class);
-			System.out.println(pattribute+":"+field.getType()+":"+attr+":"+Attribute.class.isAssignableFrom(field.getType()));
 			if(Attribute.class.isAssignableFrom(field.getType()) ){
-				System.out.println("Yes!!");
 				value=new ExpressionAttribute(attr.type(),pvalue);
 			} else {
 				value=pvalue;
