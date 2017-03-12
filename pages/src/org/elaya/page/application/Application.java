@@ -40,7 +40,7 @@ public class Application{
 	private String elementVariantFiles;
 	private String routerFiles;
 	private LinkedList<Router> routers=new LinkedList<>();
-	private ElementVariantList elementVariants;
+	private LinkedList<ElementVariantList> elementVariants=new LinkedList<>();
 	/**
 	 * Database connections. This can be defined in application xml file 
 	 */
@@ -427,15 +427,19 @@ public class Application{
 			for(String variantFile:files){
 				ElementVariantParser variantParser=new ElementVariantParser();
 				variantParser.setApplication(this);
-				elementVariants=variantParser.parse(variantFile,ElementVariantList.class);
+				elementVariants.add(variantParser.parse(variantFile,ElementVariantList.class));
 			}
 		}
 	}
 	
 	public ElementVariant getVariantByName(String name) throws XMLLoadException
 	{
-		if(elementVariants != null){
-			return elementVariants.get(name,null);
+		ElementVariant ev;
+		for(ElementVariantList evs:elementVariants){
+			ev=evs.get(name,null);
+			if(ev != null){
+				return ev;
+			}
 		}
 		return null;
 	}

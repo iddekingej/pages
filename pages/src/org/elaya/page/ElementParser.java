@@ -125,23 +125,7 @@ public class ElementParser extends XMLAppParser {
 		}
 	}
 	
-	/**
-	 * This method determines if node refers a "ElementVariant". 
-	 * 
-	 * return If the node refers to a element variant, the ElementVariant object is returned
-	 *        Otherwise a "null" value is returned. 
-	 */
 	
-	@Override
-	protected ElementVariant getVariant(Node node) throws XMLLoadException, ReplaceVarException   
-	{
-		String className=this.getAttributeValue(node, "type");
-		ElementVariant variant=null;
-		if((className != null) && (className.charAt(0)=='@')){
-			variant=getApplication().getVariantByName(className.substring(1));
-		}
-		return variant;
-	}
 	
 	/**
 	 * Parser configuration,how to handle every element.
